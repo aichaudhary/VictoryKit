@@ -1,0 +1,90 @@
+{
+  "toolName": "endpointshield",
+  "tagline": "Endpoint Protection",
+  "subdomain": "EndpointShield.maula.ai",
+  "port": 3015,
+  "apiPort": 4015,
+  "mlPort": 8015,
+  "aiPort": 6015,
+  "databaseName": "EndpointShield_db",
+  
+  "systemPrompt": "You are endpointshield AI, an expert assistant for Endpoint Protection. You help users analyze, detect, and respond to security threats with advanced AI capabilities.",
+  
+  "functions": [
+    {
+      "name": "analyze_data",
+      "description": "Analyze input data using endpointshield capabilities",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "Data to analyze"
+          }
+        },
+        "required": ["data"]
+      }
+    },
+    {
+      "name": "get_results",
+      "description": "Retrieve analysis results",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Result ID"
+          }
+        },
+        "required": ["id"]
+      }
+    },
+    {
+      "name": "export_report",
+      "description": "Generate and export analysis report",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": ["pdf", "csv", "json"],
+            "description": "Export format"
+          }
+        },
+        "required": ["format"]
+      }
+    }
+  ],
+  
+  "colorTheme": {
+    "primary": "#3b82f6",
+    "secondary": "#8b5cf6",
+    "accent": "#06b6d4",
+    "background": "#0a0e27",
+    "surface": "#1a1f3a",
+    "text": "#ffffff"
+  },
+  
+  "navigationItems": [
+    {
+      "label": "Dashboard",
+      "path": "/dashboard",
+      "icon": "LayoutDashboard"
+    },
+    {
+      "label": "Analysis",
+      "path": "/analysis",
+      "icon": "Search"
+    },
+    {
+      "label": "Results",
+      "path": "/results",
+      "icon": "FileText"
+    },
+    {
+      "label": "Settings",
+      "path": "/settings",
+      "icon": "Settings"
+    }
+  ]
+}
