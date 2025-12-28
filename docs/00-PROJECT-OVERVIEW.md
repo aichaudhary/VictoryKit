@@ -134,21 +134,51 @@ MAULA.AI ECOSYSTEM
 
 ## 🎨 Key Features
 
+### 🪟 Neural Link Interface - The AI Window
+**Every tool is powered by the Neural Link Interface** - a Matrix-themed conversational AI workspace that transforms each tool from a static service into an autonomous AI assistant.
+
+**Core Neural Link Features:**
+- 🤖 **Multi-LLM Support**: Switch between Claude, GPT-4, Grok, Gemini, Mistral, Llama
+- 💬 **Multi-Session Chat**: Manage multiple conversations simultaneously
+- 🎙️ **Speech-to-Text**: Voice input for hands-free interaction
+- 🔴 **Live Audio Mode**: Real-time voice conversations with AI
+- 🌐 **Web Portal Mode**: AI can navigate and display web content
+- 🎨 **Canvas Workspace**: AI can create/edit code, documents, diagrams
+- 🔧 **Function Calling**: AI can execute tool-specific functions
+- 📱 **Multi-Tab Workspace**: Autonomous agent opens tabs and completes tasks
+- 💾 **Persistent Sessions**: All conversations saved per user, per tool
+- 🎯 **Tool-Specific Training**: Each tool's AI knows its domain expertise
+
+**User Experience Flow:**
+1. User visits maula.ai → Clicks FraudGuard card
+2. Sees tool introduction page → Clicks "Access Tool"
+3. Opens fguard.maula.ai → Neural Link Interface loads
+4. User types: "Analyze this transaction for fraud risks"
+5. AI assistant autonomously:
+   - Opens transaction analysis tab
+   - Runs ML fraud detection
+   - Opens risk visualization tab
+   - Generates report in canvas
+   - User "sits back, relaxes, and eats popcorn"
+
 ### Each Tool Includes:
-✅ Core security API/service  
-✅ Real-time AI assistant (conversational)  
-✅ Chat history (per user, per tool)  
-✅ LLM provider selection (user choice)  
-✅ Device/setting configuration via AI  
-✅ API documentation  
-✅ SDK for multiple languages  
-✅ Webhook support  
-✅ Analytics dashboard  
+✅ **Neural Link Interface** (customized for tool's domain)  
+✅ **Core security API/service** (fraud detection, IP analysis, etc.)  
+✅ **Autonomous AI assistant** (can perform multi-step tasks)  
+✅ **Multi-tab workspace** (agent opens tabs automatically)  
+✅ **Chat history** (per user, per tool, persistent)  
+✅ **LLM provider selection** (user chooses AI model)  
+✅ **Function calling** (tool-specific AI actions)  
+✅ **Real-time collaboration** (WebSocket-powered)  
+✅ **API documentation** (accessible within AI chat)  
+✅ **SDK for multiple languages**  
+✅ **Webhook support**  
+✅ **Analytics dashboard**  
 
 ### Platform-Wide Features:
-✅ Single Sign-On (SSO)  
-✅ Unified billing system  
-✅ API key management  
+✅ Single Sign-On (SSO) across all 50 tool subdomains  
+✅ Unified billing system (central grid station)  
+✅ API key management (auth.maula.ai)  
 ✅ Rate limiting & quotas  
 ✅ Admin dashboard  
 ✅ Analytics & monitoring  
@@ -191,14 +221,93 @@ MAULA.AI ECOSYSTEM
 
 ## 📐 Architecture Principles
 
-1. **Isolation**: Each tool is completely standalone
-2. **No Sharing**: Each tool has its own components, no shared code
-3. **Microservices**: Independent deployment & scaling
-4. **AI-First**: Every tool has conversational AI built-in
-5. **Multi-LLM**: Users choose their AI provider
+1. **Isolation**: Each tool is completely standalone (50 separate buildings)
+2. **No Sharing**: Each tool has its own components, no shared code between tools
+3. **Microservices**: Independent deployment & scaling for each tool
+4. **AI-First**: Every tool has Neural Link Interface built-in
+5. **Multi-LLM**: Users choose their AI provider (Claude, GPT, Grok, etc.)
 6. **Modular**: Add new tools without affecting existing ones
+7. **City Architecture**: 50 independent buildings + 1 central grid (auth/billing)
+8. **Autonomous Agents**: AI performs multi-step tasks without user intervention
+9. **Real-Time**: WebSocket-powered instant communication
+10. **Subdomain Isolation**: Each tool on own subdomain (fguard.maula.ai, ipintel.maula.ai, etc.)
 
 ---
 
-**Status:** Planning Phase  
-**Next Steps:** Design detailed architecture diagrams
+## 🏗️ Implementation Strategy
+
+### Phase 1: Central Grid Station (Foundation)
+Build the core infrastructure that powers all 50 tools:
+- ✅ Auth Service (auth.maula.ai) - JWT, SSO, user management
+- ✅ API Gateway (api.maula.ai) - Request routing, rate limiting
+- ✅ Main Landing Site (maula.ai) - 50 tool cards, tool detail pages
+- ✅ MongoDB Atlas setup (51 databases: 1 auth + 50 tools)
+- ✅ Nginx configuration (50+ subdomain routing)
+
+### Phase 2: First Complete Building (Vertical Slice)
+Build ONE tool 100% complete to validate the pattern:
+- ✅ Pick FraudGuard or IPIntel
+- ✅ Frontend: Neural Link Interface + tool UI
+- ✅ Backend: API + ML engine + AI endpoints
+- ✅ Database: Tool schemas + conversation storage
+- ✅ AI Integration: Custom function calling
+- ✅ Deploy to subdomain (fguard.maula.ai)
+- ✅ Test end-to-end: Auth → Tool → AI → Multi-tab
+
+### Phase 3: Replicate Pattern (49 Tools)
+Copy the proven pattern to remaining tools:
+- ✅ Use Tool #1 as template
+- ✅ Customize branding, functions, ML models
+- ✅ 2-3 tools per week (50-70% faster than Tool #1)
+- ✅ Deploy progressively to subdomains
+
+---
+
+## 📋 Neural Link Interface Components
+
+```
+Neural Link Interface (Base Template)
+│
+├─ 🎨 Components/
+│   ├─ App.tsx              # Main application
+│   ├─ Header.tsx           # LLM selector, settings, title
+│   ├─ Sidebar.tsx          # Chat sessions management
+│   ├─ ChatBox.tsx          # Message display, input, voice
+│   ├─ SettingsPanel.tsx    # AI configuration
+│   ├─ NavigationDrawer.tsx # Tool-specific navigation
+│   ├─ WebPortal.tsx        # Embedded browser for AI
+│   ├─ CanvasWorkspace.tsx  # Code/document editor
+│   └─ TabManager.tsx       # Multi-tab workspace (autonomous)
+│
+├─ 🔧 Services/
+│   ├─ geminiService.ts     # Google Gemini integration
+│   ├─ claudeService.ts     # Anthropic Claude integration
+│   ├─ openaiService.ts     # OpenAI GPT integration
+│   ├─ functionCalling.ts   # Tool-specific AI functions
+│   └─ websocketService.ts  # Real-time communication
+│
+├─ 📦 Types/
+│   ├─ types.ts             # Message, Session, Settings, Canvas, Tab
+│   └─ toolTypes.ts         # Tool-specific type definitions
+│
+├─ 🎯 Configuration/
+│   ├─ constants.tsx        # LLM providers, default settings
+│   ├─ neuralPresets.ts     # Pre-configured AI modes
+│   └─ toolConfig.json      # Tool-specific AI training
+│
+└─ 🎨 Styling/
+    ├─ App.css              # Matrix theme (dark + neon green)
+    └─ tailwind.config.js   # Cyberpunk design system
+```
+
+**Customization for Each Tool:**
+- Tool-specific function declarations (analyze_transaction, check_ip, verify_identity, etc.)
+- Custom AI system prompt (trained on tool's domain)
+- Branded color scheme (while keeping Matrix aesthetic)
+- Tool-specific UI components (fraud graphs, IP maps, KYC forms, etc.)
+- Unique navigation items and workspace layouts
+
+---
+
+**Status:** ✅ **Planning Complete** → 🚀 **Ready for Implementation**  
+**Next Steps:** Build Central Grid Station (auth-service + api-gateway + main-site)

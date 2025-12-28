@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # MongoDB for local development
+  mongodb:
+    image: mongo:latest
+    container_name: maula-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=maula_auth_db
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - maula-network
+    restart: unless-stopped
+
+  # Auth Service (Port 5000)
+  auth-service:
+    build: ./backend/shared-services/auth-service
+    container_name: auth-service
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongodb:27017/maula_auth_db
+      - JWT_SECRET=maula-ai-super-secret-jwt-key-change-in-production-2024
+      - JWT_EXPIRES_IN=7d
+    depends_on:
+      - mongodb
+    networks:
+      - maula-network
+    restart: unless-stopped
+    volumes:
+      - ./backend/shared-services/auth-service:/app
+      - /app/node_modules
+
+  # API Gateway (Port 4000)
+  api-gateway:
+    build: ./backend/shared-services/api-gateway
+    container_name: api-gateway
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - NODE_ENV=development
+      - AUTH_SERVICE_URL=http://auth-service:5000
+    depends_on:
+      - auth-service
+    networks:
+      - maula-network
+    restart: unless-stopped
+    volumes:
+      - ./backend/shared-services/api-gateway:/app
+      - /app/node_modules
+
+  # Main Dashboard (Port 3000)
+  main-dashboard:
+    build: ./frontend/main-dashboard
+    container_name: main-dashboard
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+      - NEXT_PUBLIC_AUTH_URL=http://localhost:5000
+    depends_on:
+      - api-gateway
+    networks:
+      - maula-network
+    restart: unless-stopped
+    volumes:
+      - ./frontend/main-dashboard:/app
+      - /app/node_modules
+      - /app/.next
+
+networks:
+  maula-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

@@ -5,16 +5,64 @@
 ```
 BACKEND ARCHITECTURE
 │
-├─ 🔐 Auth Service (Shared)
-│   └─ User authentication, JWT, OAuth
+├─ 🔐 Auth Service (Central Grid Station)
+│   └─ User authentication, JWT, OAuth, SSO for all 50 subdomains
 │
-├─ 🌐 API Gateway (Shared)
-│   └─ Route requests to tools
+├─ 🌐 API Gateway (Central Grid Station)
+│   └─ Route requests, rate limiting, API key validation
 │
-└─ 🛡️ 50 Independent Tool Backends
-    ├─ Each tool = Standalone microservice
-    ├─ Node.js (API) + Python (ML)
-    └─ Own database, logic, AI integration
+└─ 🛡️ 50 Independent Tool Backends (50 Buildings)
+    ├─ Each tool = 3 microservices:
+    │   ├─ API Service (Node.js) - REST endpoints
+    │   ├─ ML Engine (Python) - Machine learning models
+    │   └─ AI Assistant (Node.js) - Conversational AI + WebSocket
+    ├─ Own database connection
+    └─ Complete isolation (no code sharing)
+```
+
+**Total Microservices:** 152
+- 1 Auth Service
+- 1 API Gateway
+- 50 Tools × 3 Services = 150 tool microservices
+
+---
+
+## 🤖 AI Assistant Integration (CRITICAL)
+
+**Every tool backend MUST include AI Assistant endpoints** to support the Neural Link Interface on the frontend.
+
+### AI Assistant Service Architecture
+
+```
+Tool AI Assistant Service
+│
+├─ WebSocket Server (Real-time chat)
+│   ├─ Connection management
+│   ├─ Message broadcasting
+│   └─ Session persistence
+│
+├─ LLM Router (Multi-provider support)
+│   ├─ Google Gemini API
+│   ├─ Anthropic Claude API
+│   ├─ OpenAI GPT API
+│   ├─ xAI Grok API
+│   ├─ Mistral AI API
+│   └─ Meta Llama API (Together AI)
+│
+├─ Function Calling Engine
+│   ├─ Tool-specific function declarations
+│   ├─ Function execution handlers
+│   └─ Response formatting
+│
+├─ Conversation Storage
+│   ├─ Save chat sessions to MongoDB
+│   ├─ Load previous conversations
+│   └─ User preference persistence
+│
+└─ Context Management
+    ├─ Tool-specific system prompts
+    ├─ Conversation memory
+    └─ Multi-turn dialogue handling
 ```
 
 ---
