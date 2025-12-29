@@ -1,5 +1,5 @@
 const VulnScan = require('../models/Scan.model');
-const { ApiResponse, ApiError } = require('../../../../shared');
+const { ApiResponse, ApiError } = require('../../../../../shared');
 const vulnService = require('../services/vuln.service');
 const mlService = require('../services/ml.service');
 

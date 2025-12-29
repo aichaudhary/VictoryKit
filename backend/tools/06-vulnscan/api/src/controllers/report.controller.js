@@ -1,6 +1,6 @@
 const VulnReport = require('../models/Report.model');
 const VulnScan = require('../models/Scan.model');
-const { ApiResponse, ApiError } = require('../../../../shared');
+const { ApiResponse, ApiError } = require('../../../../../shared');
 
 class ReportController {
   async generateReport(req, res, next) {

@@ -1,5 +1,5 @@
 const PhishingUrl = require('../models/URL.model');
-const { ApiResponse, ApiError } = require('../../../../shared');
+const { ApiResponse, ApiError } = require('../../../../../shared');
 const phishingService = require('../services/phishing.service');
 const mlService = require('../services/ml.service');
 

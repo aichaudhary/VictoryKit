@@ -1,6 +1,6 @@
 const PhishingReport = require('../models/Report.model');
 const PhishingUrl = require('../models/URL.model');
-const { ApiResponse, ApiError } = require('../../../../shared');
+const { ApiResponse, ApiError } = require('../../../../../shared');
 
 class ReportController {
   async generateReport(req, res, next) {

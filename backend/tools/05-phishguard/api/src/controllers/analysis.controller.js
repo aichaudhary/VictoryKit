@@ -1,6 +1,6 @@
 const PhishingAnalysis = require('../models/Analysis.model');
 const PhishingUrl = require('../models/URL.model');
-const { ApiResponse, ApiError } = require('../../../../shared');
+const { ApiResponse, ApiError } = require('../../../../../shared');
 const phishingService = require('../services/phishing.service');
 
 class AnalysisController {

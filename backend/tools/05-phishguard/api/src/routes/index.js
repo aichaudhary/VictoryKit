@@ -1,6 +1,6 @@
 const express = require('express');
 const { body, query, param } = require('express-validator');
-const { validate, authenticate } = require('../../../../shared');
+const { validate, authenticate } = require('../../../../../shared');
 const urlController = require('../controllers/url.controller');
 const analysisController = require('../controllers/analysis.controller');
 const reportController = require('../controllers/report.controller');
