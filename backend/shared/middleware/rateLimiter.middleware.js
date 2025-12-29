@@ -1,5 +1,4 @@
 const rateLimit = require('express-rate-limit');
-const RedisStore = require('rate-limit-redis');
 const { ApiError } = require('../utils/apiError');
 
 // Create rate limiter for API endpoints
@@ -29,14 +28,6 @@ const createRateLimiter = (options = {}) => {
       throw ApiError.tooManyRequests(message);
     }
   };
-
-  // Use Redis for distributed rate limiting in production
-  if (process.env.REDIS_URL && process.env.NODE_ENV === 'production') {
-    limiterOptions.store = new RedisStore({
-      client: require('redis').createClient({ url: process.env.REDIS_URL }),
-      prefix: 'rl:'
-    });
-  }
 
   return rateLimit(limiterOptions);
 };
