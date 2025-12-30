@@ -12,7 +12,7 @@ interface Tool {
 
 export default function ToolCard({ tool }: { tool: Tool }) {
   return (
-    <Link href={`https://${tool.subdomain}`} target="_blank">
+    <Link href={`https://${tool.subdomain}`}>
       <div className="group relative overflow-hidden rounded-xl border border-purple-500/30 bg-slate-800/50 backdrop-blur p-6 transition-all hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105 cursor-pointer h-full">
         {/* Background gradient effect */}
         <div

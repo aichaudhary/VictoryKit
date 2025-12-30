@@ -58,3 +58,63 @@ export interface NavItem {
   tool: NeuralTool;
   description: string;
 }
+
+// Fraud Detection Types
+export interface Transaction {
+  id?: string;
+  transaction_id: string;
+  amount: number;
+  currency: string;
+  user_email: string;
+  user_ip: string;
+  device_fingerprint: string;
+  card_last_four: string;
+  merchant_category?: string;
+  country: string;
+  city?: string;
+  timestamp?: string;
+}
+
+export interface FraudIndicator {
+  type: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  weight: number;
+}
+
+export interface FraudScore {
+  transaction_id: string;
+  score: number;
+  risk_level: 'low' | 'medium' | 'high' | 'critical';
+  confidence: number;
+  indicators: FraudIndicator[];
+  recommendation?: string;
+}
+
+export interface Alert {
+  id?: string;
+  name: string;
+  description: string;
+  condition: string;
+  threshold: number;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  active: boolean;
+  created_at?: string;
+  triggered_count?: number;
+}
+
+export interface AnalyticsData {
+  total_transactions: number;
+  fraudulent_transactions: number;
+  risk_distribution: {
+    low: number;
+    medium: number;
+    high: number;
+    critical: number;
+  };
+  timeline: Array<{
+    date: string;
+    transactions: number;
+    risk_score: number;
+  }>;
+}
