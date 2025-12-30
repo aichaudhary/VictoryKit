@@ -56,8 +56,8 @@ build_frontend() {
     log_info "Building $tool frontend..."
 
     if [ ! -d "frontend/tools/$tool" ]; then
-        log_error "Tool directory frontend/tools/$tool not found"
-        exit 1
+        log_warning "Tool directory frontend/tools/$tool not found - skipping frontend build"
+        return 0  # Return success to skip this tool
     fi
 
     cd "frontend/tools/$tool"
@@ -66,12 +66,13 @@ build_frontend() {
 
     if [ $? -eq 0 ]; then
         log_success "$tool frontend built successfully"
+        cd ../../..
+        return 0
     else
         log_error "Failed to build $tool frontend"
-        exit 1
+        cd ../../..
+        return 1
     fi
-
-    cd ../../..
 }
 
 # Function to deploy tool to EC2
@@ -367,13 +368,16 @@ EOF"
 
         log_info "Deploying $tool..."
 
-        # Build frontend
-        build_frontend "$tool"
-
-        # Deploy frontend
-        deploy_tool "$tool" "$subdomain.fyzo.xyz" "$port"
-
-        # Update Nginx
+        if build_frontend "$tool"; then
+            # Deploy frontend
+            deploy_tool "$tool" "$subdomain.fyzo.xyz" "$port"
+            
+            # Update Nginx
+            update_nginx "$tool" "$subdomain" "$port" "$api_port" "$ai_port"
+        else
+            log_warning "Skipping $tool deployment due to frontend build failure"
+            continue
+        fi
         update_nginx "$tool" "$subdomain" "$port" "$api_port" "$ai_port"
 
         # Deploy backend
