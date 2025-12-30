@@ -339,9 +339,9 @@ main() {
         npm run build
         cd ../..
 
-        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo mkdir -p /var/www/fyzo.xyz /tmp/dashboard-dist-dir"
-        scp -i "$EC2_KEY" -o StrictHostKeyChecking=no -r "frontend/main-dashboard/out" "$EC2_HOST:/tmp/dashboard-dist-dir/"
-        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo mv /tmp/dashboard-dist-dir/out/* /var/www/fyzo.xyz/ && sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz"
+        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo mkdir -p /var/www/fyzo.xyz"
+        scp -i "$EC2_KEY" -o StrictHostKeyChecking=no -r "frontend/main-dashboard/out/." "$EC2_HOST:/var/www/fyzo.xyz/"
+        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz"
 
         ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo tee /etc/systemd/system/dashboard.service > /dev/null <<EOF
 [Unit]
