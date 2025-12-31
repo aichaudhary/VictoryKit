@@ -20,13 +20,19 @@ const Overlay: React.FC<OverlayProps> = ({ active, onActivate }) => {
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[linear-gradient(rgba(16,185,129,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.2)_1px,transparent_1px)] bg-[length:40px_40px]"></div>
 
       <div className="max-w-md w-full flex flex-col items-center relative z-10">
-        <pre className="text-green-400 text-[10px] sm:text-xs md:text-sm leading-tight glow-green text-center font-mono mb-8 select-none">
-          {`▖  ▖    ▜     ▄▖▄▖
-▛▖▞▌▀▌▌▌▐ ▀▌  ▌▌▐ 
-▌▝ ▌█▌▙▌▐▖█▌  ▛▌▟▖
---- NEURAL INTERFACE ---`}
-        </pre>
-        <h1 className="text-4xl sm:text-6xl font-bold text-gray-200 text-center tracking-tighter">
+        <div className="text-green-400 text-[8px] sm:text-[10px] md:text-xs leading-tight glow-green text-center font-mono mb-8 select-none whitespace-pre">
+          <div>╔═══════════════════════════╗</div>
+          <div>║  ███╗   ███╗  █████╗  ██╗ ║</div>
+          <div>║  ████╗ ████║ ██╔══██╗ ██║ ║</div>
+          <div>║  ██╔████╔██║ ███████║ ██║ ║</div>
+          <div>║  ██║╚██╔╝██║ ██╔══██║ ██║ ║</div>
+          <div>║  ██║ ╚═╝ ██║ ██║  ██║ ██║ ║</div>
+          <div>║  ╚═╝     ╚═╝ ╚═╝  ╚═╝ ╚═╝ ║</div>
+          <div>╠═══════════════════════════╣</div>
+          <div>║   NEURAL LINK INTERFACE   ║</div>
+          <div>╚═══════════════════════════╝</div>
+        </div>
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-200 text-center tracking-tighter">
           <span className="text-green-400 glow-green">Neural</span> 
           <span className="text-cyan-400 glow-cyan ml-2">Link</span>
         </h1>

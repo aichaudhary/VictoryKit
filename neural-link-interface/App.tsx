@@ -295,7 +295,7 @@ const App: React.FC = () => {
         />
         <div className="flex-grow flex relative overflow-hidden z-10">
           {(isLeftPanelOpen || isRightPanelOpen) && (
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-[50] transition-opacity animate-in fade-in duration-300" onClick={() => { setIsLeftPanelOpen(false); setIsRightPanelOpen(false); }}></div>
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-[55] transition-opacity animate-in fade-in duration-300" onClick={() => { setIsLeftPanelOpen(false); setIsRightPanelOpen(false); }}></div>
           )}
           <Sidebar sessions={sessions} onSelect={selectSession} onCreate={createNewSession} onDelete={deleteSession} isOpen={isLeftPanelOpen} />
           <ChatBox 

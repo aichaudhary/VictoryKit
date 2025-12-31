@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sessions, onSelect, onCreate, onDelet
   };
 
   return (
-    <aside className={`absolute top-0 left-0 h-full w-[85%] sm:w-64 md:w-72 bg-[#0a0a0a]/98 backdrop-blur-xl border-r border-gray-800/50 p-4 sm:p-6 transition-transform duration-500 ease-out z-[100] flex flex-col shadow-[20px_0_60px_rgba(0,0,0,0.5)] ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+    <aside className={`absolute top-0 left-0 h-full w-[85%] sm:w-64 md:w-72 bg-[#0a0a0a]/98 backdrop-blur-xl border-r border-gray-800/50 p-4 sm:p-6 transition-transform duration-500 ease-out z-[60] flex flex-col shadow-[20px_0_60px_rgba(0,0,0,0.5)] ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className="flex items-center gap-3 mb-6">
         <Terminal size={18} className="text-green-500" />
         <h2 className="text-green-400 font-bold glow-green uppercase tracking-tighter text-sm font-mono">
@@ -95,7 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sessions, onSelect, onCreate, onDelet
 
             {/* Session Actions Dropdown */}
             {activeMenu === s.id && (
-              <div className="absolute right-0 top-full mt-1 w-48 bg-[#0d0d0d] border border-gray-800 rounded-md shadow-2xl z-[110] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+              <div className="absolute right-0 top-full mt-1 w-48 bg-[#0d0d0d] border border-gray-800 rounded-md shadow-2xl z-[70] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 <div className="p-2 border-b border-gray-800 flex justify-between items-center bg-black/40">
                   <span className="text-[8px] text-gray-500 font-mono tracking-widest uppercase">Protocol Actions</span>
                   <button onClick={() => setActiveMenu(null)} className="text-gray-600 hover:text-white"><X size={10}/></button>
