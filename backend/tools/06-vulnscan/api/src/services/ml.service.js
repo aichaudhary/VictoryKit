@@ -1,5 +1,6 @@
 const axios = require('axios');
 const logger = require('../../../../../shared/utils/logger');
+const { getConnectors } = require('../../../../../shared/connectors');
 
 class MLService {
   constructor() {

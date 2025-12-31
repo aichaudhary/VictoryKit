@@ -26,6 +26,17 @@ class UrlController {
 
       await urlRecord.save();
 
+      // Trigger external security integrations
+      mlService.integrateWithSecurityStack(urlRecord._id, {
+        url,
+        domain,
+        urlFeatures,
+        userId: req.user.id
+      }).catch(error => {
+        console.error('Integration error:', error);
+        // Don't fail the analysis if integration fails
+      });
+
       setImmediate(async () => {
         try {
           const mlResult = await mlService.analyzeUrl({ url, domain, urlFeatures });

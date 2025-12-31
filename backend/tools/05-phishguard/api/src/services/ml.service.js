@@ -1,5 +1,6 @@
 const axios = require('axios');
 const logger = require('../../../../../shared/utils/logger');
+const { getConnectors } = require('../../../../../shared/connectors');
 
 class MLService {
   constructor() {
@@ -72,6 +73,94 @@ class MLService {
       modelName: 'rule-based',
       timestamp: new Date()
     };
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(analysisId, analysisData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log phishing analysis results
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'PhishingAnalysis_CL',
+            data: {
+              AnalysisId: analysisId,
+              UserId: analysisData.userId,
+              AnalysisType: analysisData.analysisType,
+              TimeRange: analysisData.timeRange,
+              Timestamp: new Date().toISOString(),
+              Source: 'PhishGuard'
+            }
+          }).catch(err => logger.warn('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for high-risk phishing
+      if (connectors.cortexXSOAR && analysisData.riskScore > 80) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `High-Risk Phishing Detected - ${analysisId}`,
+            type: 'Phishing',
+            severity: 'High',
+            details: {
+              analysisId,
+              riskScore: analysisData.riskScore,
+              phishingType: analysisData.phishingType,
+              url: analysisData.url
+            }
+          }).catch(err => logger.warn('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // CrowdStrike - Check for related IOCs
+      if (connectors.crowdstrike) {
+        integrationPromises.push(
+          connectors.crowdstrike.searchIOCs({
+            type: 'domain',
+            value: analysisData.domain
+          }).then(iocs => {
+            if (iocs.length > 0) {
+              logger.info(`Found ${iocs.length} related IOCs for domain ${analysisData.domain}`);
+              // Could trigger containment actions
+            }
+          }).catch(err => logger.warn('CrowdStrike IOC search failed:', err.message))
+        );
+      }
+
+      // Cloudflare - Update WAF rules if phishing detected
+      if (connectors.cloudflare && analysisData.isPhishing) {
+        integrationPromises.push(
+          connectors.cloudflare.createWAFRule({
+            description: `Block phishing domain: ${analysisData.domain}`,
+            expression: `http.host eq "${analysisData.domain}"`,
+            action: 'block'
+          }).catch(err => logger.warn('Cloudflare WAF rule creation failed:', err.message))
+        );
+      }
+
+      // OpenCTI - Enrich with threat intelligence
+      if (connectors.opencti) {
+        integrationPromises.push(
+          connectors.opencti.searchIndicators({
+            pattern: analysisData.url,
+            pattern_type: 'url'
+          }).then(indicators => {
+            if (indicators.length > 0) {
+              logger.info(`Found ${indicators.length} threat intelligence indicators`);
+            }
+          }).catch(err => logger.warn('OpenCTI enrichment failed:', err.message))
+        );
+      }
+
+      await Promise.allSettled(integrationPromises);
+      logger.info('PhishGuard security stack integration completed');
+
+    } catch (error) {
+      logger.error('PhishGuard integration error:', error);
+    }
   }
 }
 
