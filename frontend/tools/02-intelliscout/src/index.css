@@ -1,0 +1,380 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* IntelliScout Custom Styles */
+:root {
+  --is-primary: #22c55e;
+  --is-secondary: #10b981;
+  --is-accent: #06b6d4;
+  --is-warning: #f59e0b;
+  --is-danger: #ef4444;
+  --is-bg-dark: #0f172a;
+  --is-bg-darker: #020617;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(34, 197, 94, 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.3);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.5);
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
+  min-height: 100vh;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--is-primary) 0%,
+    var(--is-accent) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-intel {
+  background: linear-gradient(135deg, #22c55e 0%, #10b981 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow effects */
+.glow-green {
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.3), 0 0 40px rgba(34, 197, 94, 0.2),
+    0 0 60px rgba(34, 197, 94, 0.1);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(6, 182, 212, 0.2),
+    0 0 60px rgba(6, 182, 212, 0.1);
+}
+
+.glow-red {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), 0 0 40px rgba(239, 68, 68, 0.2),
+    0 0 60px rgba(239, 68, 68, 0.1);
+}
+
+.glow-orange {
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.3), 0 0 40px rgba(249, 115, 22, 0.2),
+    0 0 60px rgba(249, 115, 22, 0.1);
+}
+
+/* Animated border */
+@keyframes border-glow {
+  0%,
+  100% {
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+  50% {
+    border-color: rgba(34, 197, 94, 0.6);
+  }
+}
+
+.animated-border {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+/* Scanning animation */
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.scan-line {
+  animation: scan-line 2s linear infinite;
+}
+
+/* Pulse animations for severity indicators */
+@keyframes pulse-critical {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes pulse-high {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(249, 115, 22, 0);
+  }
+}
+
+@keyframes pulse-medium {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(234, 179, 8, 0);
+  }
+}
+
+@keyframes pulse-low {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0);
+  }
+}
+
+.pulse-critical {
+  animation: pulse-critical 2s ease-in-out infinite;
+}
+.pulse-high {
+  animation: pulse-high 2s ease-in-out infinite;
+}
+.pulse-medium {
+  animation: pulse-medium 2s ease-in-out infinite;
+}
+.pulse-low {
+  animation: pulse-low 2s ease-in-out infinite;
+}
+
+/* Severity gradient */
+.severity-gradient {
+  background: linear-gradient(
+    90deg,
+    #22c55e 0%,
+    #eab308 33%,
+    #f97316 66%,
+    #ef4444 100%
+  );
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.1);
+}
+
+/* Threat card styles */
+.threat-card {
+  @apply bg-slate-800/50 backdrop-blur rounded-xl border border-slate-700/50 p-4 transition-all;
+}
+
+.threat-card:hover {
+  @apply border-green-500/30;
+}
+
+.threat-card.critical {
+  @apply border-red-500/30 hover:border-red-500/50;
+}
+
+.threat-card.high {
+  @apply border-orange-500/30 hover:border-orange-500/50;
+}
+
+.threat-card.medium {
+  @apply border-yellow-500/30 hover:border-yellow-500/50;
+}
+
+.threat-card.low {
+  @apply border-green-500/30 hover:border-green-500/50;
+}
+
+/* Data grid */
+.intel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* IOC indicator styles */
+.ioc-tag {
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono;
+}
+
+.ioc-ip {
+  @apply bg-blue-500/20 text-blue-400 border border-blue-500/30;
+}
+.ioc-domain {
+  @apply bg-purple-500/20 text-purple-400 border border-purple-500/30;
+}
+.ioc-hash {
+  @apply bg-orange-500/20 text-orange-400 border border-orange-500/30;
+}
+.ioc-email {
+  @apply bg-pink-500/20 text-pink-400 border border-pink-500/30;
+}
+.ioc-url {
+  @apply bg-cyan-500/20 text-cyan-400 border border-cyan-500/30;
+}
+
+/* Loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 41, 59, 0.5) 25%,
+    rgba(51, 65, 85, 0.5) 50%,
+    rgba(30, 41, 59, 0.5) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Radar animation */
+@keyframes radar-sweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.radar-sweep {
+  animation: radar-sweep 4s linear infinite;
+}
+
+/* Globe animation for intelligence gathering */
+@keyframes globe-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+.globe-pulse {
+  animation: globe-pulse 3s ease-in-out infinite;
+}
+
+/* Matrix rain effect background (optional) */
+@keyframes matrix-fall {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* Typography */
+.font-mono-intel {
+  font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+}
+
+/* Custom button styles */
+.btn-intel {
+  @apply px-4 py-2 rounded-lg font-medium transition-all;
+  @apply bg-gradient-to-r from-green-600 to-emerald-600;
+  @apply hover:from-green-500 hover:to-emerald-500;
+  @apply text-white shadow-lg shadow-green-500/25;
+}
+
+.btn-intel:active {
+  @apply scale-95;
+}
+
+.btn-intel-outline {
+  @apply px-4 py-2 rounded-lg font-medium transition-all;
+  @apply border border-green-500/50 text-green-400;
+  @apply hover:bg-green-500/10 hover:border-green-500;
+}
+
+/* Notification badges */
+.badge-critical {
+  @apply bg-red-500/20 text-red-400 border border-red-500/30;
+}
+.badge-high {
+  @apply bg-orange-500/20 text-orange-400 border border-orange-500/30;
+}
+.badge-medium {
+  @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30;
+}
+.badge-low {
+  @apply bg-green-500/20 text-green-400 border border-green-500/30;
+}
+
+/* Table styles */
+.intel-table {
+  @apply w-full text-sm;
+}
+
+.intel-table th {
+  @apply text-left text-gray-400 font-medium py-3 px-4 border-b border-slate-700/50;
+}
+
+.intel-table td {
+  @apply py-3 px-4 border-b border-slate-700/30;
+}
+
+.intel-table tr:hover td {
+  @apply bg-slate-700/20;
+}
+
+/* Status indicators */
+.status-dot {
+  @apply w-2 h-2 rounded-full;
+}
+
+.status-active {
+  @apply bg-green-500;
+}
+.status-monitoring {
+  @apply bg-yellow-500;
+}
+.status-resolved {
+  @apply bg-gray-500;
+}
+.status-archived {
+  @apply bg-slate-500;
+}
