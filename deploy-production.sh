@@ -60,11 +60,28 @@ build_frontend() {
         return 0  # Return success to skip this tool
     fi
 
-    # Remote build commands
+    # Remote build commands - ensure Node.js is available
     ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "
         set -e
+
+        # Check if Node.js is installed, install if not
+        if ! command -v node >/dev/null 2>&1; then
+            echo 'Installing Node.js...'
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+        fi
+
+        # Ensure npm is available
+        if ! command -v npm >/dev/null 2>&1; then
+            echo 'npm not found, installing...'
+            sudo apt-get update
+            sudo apt-get install -y npm
+        fi
+
+        # Setup NVM if available
         export NVM_DIR=\"/home/ubuntu/.nvm\"
         [ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\"
+
         cd /var/www/$tool-frontend/repo/frontend/tools/$tool
         npm install
         npm run build
@@ -366,9 +383,24 @@ main() {
             sudo mkdir -p /var/www/fyzo.xyz/repo
             sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz
             
-            # Sync the project files using scp instead of rsync
+            # Sync the project files using scp + tar
             echo "Syncing project files to EC2..."
-            tar -czf - --exclude='.git' --exclude='node_modules' --exclude='*.log' . | ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo mkdir -p /var/www/fyzo.xyz/repo && cd /var/www/fyzo.xyz/repo && sudo tar -xzf - && sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz/repo"
+            # Create tar locally
+            tar -czf /tmp/victorykit-deploy.tar.gz --exclude='.git' --exclude='node_modules' --exclude='*.log' --exclude='.pm2' .
+
+            # Transfer tar file
+            scp -i "$EC2_KEY" -o StrictHostKeyChecking=no /tmp/victorykit-deploy.tar.gz "$EC2_HOST:/tmp/"
+
+            # Extract on remote server
+            ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "
+                sudo mkdir -p /var/www/fyzo.xyz/repo
+                sudo tar -xzf /tmp/victorykit-deploy.tar.gz -C /var/www/fyzo.xyz/repo
+                sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz/repo
+                rm /tmp/victorykit-deploy.tar.gz
+            "
+
+            # Cleanup local tar
+            rm -f /tmp/victorykit-deploy.tar.gz
 
             # Now, build the dashboard
             cd /var/www/fyzo.xyz/repo/frontend/main-dashboard

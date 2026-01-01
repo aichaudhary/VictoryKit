@@ -43,7 +43,6 @@ export const callGemini = async (
   const apiKey = process.env.API_KEY;
   if (!apiKey) return { text: "ERROR: API_KEY not provisioned." };
 
-  // Fix: Create instance right before use to ensure updated key selection
   const ai = new GoogleGenAI({ apiKey });
   
   try {
@@ -64,13 +63,11 @@ If the user mentions a document, file, or media they want to "work on", push it 
       tools: [{ functionDeclarations: [navigatePortalTool, updateCanvasTool] }]
     };
 
-    // Fix: Adjusted tool configuration logic. googleSearch is mutually exclusive with other tool categories.
     if (settings.activeTool === 'web_search' || settings.activeTool === 'browser' || settings.activeTool === 'deep_research') {
-      config.tools = [{ googleSearch: {} }];
+      config.tools.push({ googleSearch: {} });
       modelToUse = 'gemini-3-pro-preview'; 
     }
 
-    // Fix: When using thinkingConfig, set thinkingBudget
     if (settings.activeTool === 'thinking') {
       config.thinkingConfig = { thinkingBudget: 1024 };
     }
@@ -81,27 +78,25 @@ If the user mentions a document, file, or media they want to "work on", push it 
       config: config
     });
 
-    // Fix: Extract function calls using the built-in property
-    const functionCalls = response.functionCalls;
+    const functionCalls = response.candidates?.[0]?.content?.parts?.filter(p => p.functionCall);
     let navigationUrl: string | undefined;
     let canvasUpdate: Partial<CanvasState> | undefined;
     
     if (functionCalls) {
       for (const call of functionCalls) {
-        if (call.name === 'navigate_portal') {
-          navigationUrl = call.args.url as string;
-        } else if (call.name === 'update_canvas') {
+        if (call.functionCall.name === 'navigate_portal') {
+          navigationUrl = call.functionCall.args.url as string;
+        } else if (call.functionCall.name === 'update_canvas') {
           canvasUpdate = {
-            content: call.args.content as string,
-            type: call.args.type as any,
-            language: call.args.language as string,
-            title: (call.args.title as string) || settings.canvas.title
+            content: call.functionCall.args.content as string,
+            type: call.functionCall.args.type as any,
+            language: call.functionCall.args.language as string,
+            title: (call.functionCall.args.title as string) || settings.canvas.title
           };
         }
       }
     }
 
-    // Fix: Extract grounding URLs from groundingMetadata
     const urls = response.candidates?.[0]?.groundingMetadata?.groundingChunks
       ?.map((chunk: any) => chunk.web?.uri)
       .filter(Boolean);

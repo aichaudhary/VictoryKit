@@ -1,54 +1,19 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Send, 
-  Upload, 
-  Mic, 
-  Check, 
-  ExternalLink, 
-  Globe, 
-  MessageSquare, 
-  Edit3, 
-  Monitor, 
-  FileCode, 
-  FileText, 
-  Layout, 
-  Image as ImageIcon, 
-  Video,
-  Radio,
-  MicOff,
-  Paperclip
-} from 'lucide-react';
+import { Send, Upload, Mic, ThumbsUp, ThumbsDown, Copy, Share2, Volume2, Check, ExternalLink, Globe, MessageSquare, Edit3, Monitor, FileCode, FileText, Layout, PlayCircle, Image as ImageIcon, Video } from 'lucide-react';
 import { Message, SettingsState, WorkspaceMode } from '../types';
 
 interface ChatBoxProps {
   messages: Message[];
   isThinking: boolean;
-  isRecordingSTT: boolean;
-  isLiveActive: boolean;
   onSend: (text: string) => void;
-  onFileUpload: (file: File) => void;
-  onToggleSTT: () => void;
-  onToggleLive: () => void;
   agentSettings: SettingsState;
   onUpdateSettings: (settings: SettingsState) => void;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ 
-  messages, 
-  isThinking, 
-  isRecordingSTT,
-  isLiveActive,
-  onSend, 
-  onFileUpload,
-  onToggleSTT,
-  onToggleLive,
-  agentSettings, 
-  onUpdateSettings 
-}) => {
+const ChatBox: React.FC<ChatBoxProps> = ({ messages, isThinking, onSend, agentSettings, onUpdateSettings }) => {
   const [inputText, setInputText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (scrollRef.current && agentSettings.workspaceMode === 'CHAT') {
@@ -77,15 +42,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({
     });
   };
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onFileUpload(file);
-    }
-  };
-
   const renderCanvasContent = () => {
-    const { type, content } = agentSettings.canvas;
+    const { type, content, language } = agentSettings.canvas;
 
     switch (type) {
       case 'html':
@@ -127,7 +85,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({
 
   return (
     <main className="relative flex-grow bg-black/20 flex flex-col overflow-hidden z-10 m-2 sm:m-4 rounded-lg shadow-[0_0_40px_rgba(0,0,0,0.6)] border border-gray-800/40 backdrop-blur-md">
-      {/* Workspace Tabs */}
+      {/* Workspace Tabs - Matrix Themed */}
       <div className="flex items-center justify-between bg-[#0d0d0d] border-b border-gray-800/60 p-1">
         <div className="flex items-center gap-1">
           <button 
@@ -170,6 +128,9 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                 {msg.isImage ? (
                   <div className="relative group/img overflow-hidden rounded-lg border border-cyan-500/30 shadow-2xl cursor-pointer" onClick={() => onUpdateSettings({ ...agentSettings, canvas: { content: msg.text, type: 'image', title: 'Asset View' }, workspaceMode: 'CANVAS'})}>
                     <img src={msg.text} alt="Synth" className="max-w-full transition-transform duration-500 group-hover/img:scale-105" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                       <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest bg-black/80 px-4 py-2 rounded border border-cyan-500/30">Sync to Canvas</span>
+                    </div>
                   </div>
                 ) : (
                   <div className="text-gray-300 whitespace-pre-wrap break-words text-xs sm:text-sm leading-relaxed">{msg.text}</div>
@@ -218,6 +179,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({
                  agentSettings.canvas.type === 'html' ? <Layout size={18} className="text-orange-400" /> : 
                  <FileText size={18} className="text-emerald-400" />}
                 <span className="text-xs font-mono uppercase tracking-widest text-gray-400 font-bold">{agentSettings.canvas.title}</span>
+                {agentSettings.canvas.language && <span className="text-[9px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">{agentSettings.canvas.language.toUpperCase()}</span>}
+              </div>
+              <div className="text-[9px] text-gray-700 font-mono tracking-widest uppercase">
+                WORKSPACE_LOCKED // SYNC_ACTIVE
               </div>
             </div>
             <div className="flex-grow relative p-6 sm:p-12 overflow-y-auto custom-scrollbar">
@@ -229,77 +194,29 @@ const ChatBox: React.FC<ChatBoxProps> = ({
         </div>
       </div>
       
-      {/* Universal Input Bar - Redesigned with Send icon inside the typer */}
-      <div className="relative z-40 p-4 border-t border-gray-800/50 bg-[#0a0a0a]/90 backdrop-blur-xl flex items-center gap-3">
-        <input 
-          type="file" 
-          ref={fileInputRef} 
-          onChange={onFileChange} 
-          className="hidden" 
-        />
-        
-        {/* typer / input field container */}
+      {/* Universal Input Bar */}
+      <div className="relative z-40 p-4 border-t border-gray-800/50 flex items-center gap-3 bg-[#0a0a0a]/90 backdrop-blur-xl">
+        <button className="p-2 text-gray-600 hover:text-emerald-500 transition-colors hidden sm:block" onClick={() => onSend("Summarize the attached document into the canvas workspace.")}>
+          <Upload size={18} />
+        </button>
         <div className="flex-grow relative group">
           <input 
             type="text" 
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            className={`w-full bg-black/40 border border-gray-800 rounded px-4 py-3 pr-12 text-gray-200 placeholder:text-gray-700 font-mono text-sm focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/10 transition-all shadow-inner ${isRecordingSTT ? 'border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.2)]' : ''}`} 
+            className="w-full bg-black/40 border border-gray-800 rounded px-4 py-3 text-gray-200 placeholder:text-gray-700 font-mono text-sm focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/10 transition-all shadow-inner" 
             placeholder={
-              isRecordingSTT ? "Listening for neural broadcast..." :
               agentSettings.workspaceMode === 'PORTAL' ? "Send command to portal agent..." :
               agentSettings.workspaceMode === 'CANVAS' ? "Instruct workspace sync..." :
               "Enter neural directive..."
             } 
           />
-          
-          {/* Send Icon Inside Input */}
-          <button 
-            onClick={handleSend}
-            disabled={isThinking || !inputText.trim()}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-500 hover:text-emerald-400 disabled:text-gray-800 transition-colors p-1"
-            title="Transmit Protocol"
-          >
-            <Send size={18} className={!inputText.trim() ? "" : "glow-green"} />
-          </button>
-
-          {isRecordingSTT && (
-            <div className="absolute right-12 top-1/2 -translate-y-1/2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
-            </div>
-          )}
         </div>
-
-        {/* Feature Icons Section */}
-        <div className="flex items-center gap-1">
-          {/* File Upload Icon */}
-          <button 
-            onClick={() => fileInputRef.current?.click()}
-            className="p-2.5 text-gray-500 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-all border border-transparent hover:border-emerald-500/20"
-            title="Upload Protocol Asset"
-          >
-            <Paperclip size={20} />
-          </button>
-
-          {/* STS (Speech-to-Text) Mic Icon */}
-          <button 
-            onClick={onToggleSTT}
-            className={`p-2.5 rounded transition-all border ${isRecordingSTT ? 'bg-red-500/20 text-red-500 border-red-500/50' : 'text-gray-500 hover:text-cyan-400 hover:bg-cyan-500/10 border-transparent hover:border-cyan-500/20'}`}
-            title="Neural Audio Transcribe"
-          >
-            {isRecordingSTT ? <MicOff size={20} /> : <Mic size={20} />}
-          </button>
-
-          {/* Voice to Voice Conversation Icon */}
-          <button 
-            onClick={onToggleLive}
-            className={`p-2.5 rounded transition-all border ${isLiveActive ? 'bg-purple-500/20 text-purple-400 border-purple-500/50' : 'text-gray-500 hover:text-purple-400 hover:bg-purple-500/10 border-transparent hover:border-purple-500/20'}`}
-            title="Live Neural Uplink"
-          >
-            <Radio size={20} className={isLiveActive ? 'animate-pulse' : ''} />
-          </button>
-        </div>
+        <button onClick={handleSend} disabled={isThinking || !inputText.trim()} className="text-white bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-900 disabled:text-gray-700 px-5 py-3 rounded transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] active:scale-95 flex items-center justify-center gap-2 group border border-emerald-400/20">
+          <Send size={16} />
+          <span className="hidden sm:inline text-[10px] font-bold tracking-[0.2em] uppercase">Transmit</span>
+        </button>
       </div>
     </main>
   );
