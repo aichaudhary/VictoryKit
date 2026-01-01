@@ -367,7 +367,7 @@ main() {
             sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz
             
             # Sync the project files
-            rsync -avz -e 'ssh -i $EC2_KEY -o StrictHostKeyChecking=no' --exclude '.git' ./ '$EC2_HOST:/var/www/fyzo.xyz/repo/'
+            rsync -avz -e "ssh -i $EC2_KEY -o StrictHostKeyChecking=no" --exclude '.git' ./ "$EC2_HOST:/var/www/fyzo.xyz/repo/"
 
             # Now, build the dashboard
             cd /var/www/fyzo.xyz/repo/frontend/main-dashboard
