@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { logger } = require('../../../../../shared');
+const { getConnectors } = require('../../../../../shared/connectors');
 
 class MLService {
   constructor() {
@@ -151,6 +152,85 @@ class MLService {
         accessControlStrength: asset.accessControl?.authentication?.length || 0
       }
     };
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(incidentId, incidentData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log data protection incidents
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'DataProtectionIncident_CL',
+            data: {
+              IncidentId: incidentId,
+              AssetType: incidentData.assetType,
+              DataTypes: incidentData.dataTypes?.join(','),
+              RiskScore: incidentData.riskScore,
+              PIIDetected: incidentData.piiDetected,
+              BreachType: incidentData.breachType,
+              Timestamp: new Date().toISOString(),
+              Source: 'DataGuardian'
+            }
+          }).catch(err => logger.warn('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for data breaches
+      if (connectors.cortexXSOAR && incidentData.breachType) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Data Breach Incident - ${incidentId}`,
+            type: 'Data Breach',
+            severity: incidentData.riskScore > 80 ? 'Critical' : 'High',
+            details: {
+              incidentId,
+              assetType: incidentData.assetType,
+              dataTypes: incidentData.dataTypes,
+              riskScore: incidentData.riskScore,
+              breachType: incidentData.breachType
+            }
+          }).catch(err => logger.warn('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // CrowdStrike - Check for related IOCs if PII involved
+      if (connectors.crowdstrike && incidentData.piiDetected) {
+        integrationPromises.push(
+          connectors.crowdstrike.searchIOCs({
+            type: 'email',
+            value: incidentData.affectedUsers?.[0] || '*'
+          }).then(iocs => {
+            if (iocs.length > 0) {
+              logger.info(`Found ${iocs.length} related IOCs for PII incident`);
+            }
+          }).catch(err => logger.warn('CrowdStrike IOC search failed:', err.message))
+        );
+      }
+
+      // OpenCTI - Enrich with data breach intelligence
+      if (connectors.opencti && incidentData.breachType) {
+        integrationPromises.push(
+          connectors.opencti.searchIndicators({
+            pattern: incidentData.breachType,
+            pattern_type: 'attack-pattern'
+          }).then(indicators => {
+            if (indicators.length > 0) {
+              logger.info(`Found ${indicators.length} breach pattern indicators`);
+            }
+          }).catch(err => logger.warn('OpenCTI enrichment failed:', err.message))
+        );
+      }
+
+      await Promise.allSettled(integrationPromises);
+      logger.info('DataGuardian security stack integration completed');
+
+    } catch (error) {
+      logger.error('DataGuardian integration error:', error);
+    }
   }
 }
 

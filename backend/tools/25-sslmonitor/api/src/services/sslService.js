@@ -6,6 +6,7 @@ const tls = require('tls');
 const https = require('https');
 const Certificate = require('../models/Certificate');
 const Alert = require('../models/Alert');
+const { getConnectors } = require('../../../../../shared/connectors');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || 'http://localhost:8025';
 
@@ -404,6 +405,73 @@ const sslService = {
         }
         
         return alerts;
+    },
+
+    // Integration with external security stack
+    async integrateWithSecurityStack(scanId, scanData) {
+        try {
+            const connectors = getConnectors();
+            const integrationPromises = [];
+
+            // Microsoft Sentinel - Log SSL certificate issues
+            if (connectors.sentinel) {
+                integrationPromises.push(
+                    connectors.sentinel.ingestData({
+                        table: 'SSLCertificate_CL',
+                        data: {
+                            ScanId: scanId,
+                            Domain: scanData.domain,
+                            Issuer: scanData.issuer,
+                            ExpiryDate: scanData.expiryDate,
+                            DaysUntilExpiry: scanData.daysUntilExpiry,
+                            SecurityIssues: scanData.securityIssues?.length || 0,
+                            CriticalIssues: scanData.criticalIssues?.length || 0,
+                            Timestamp: new Date().toISOString(),
+                            Source: 'SSLMonitor'
+                        }
+                    }).catch(err => console.error('Sentinel integration failed:', err.message))
+                );
+            }
+
+            // Cortex XSOAR - Create incident for expiring or compromised certificates
+            if (connectors.cortexXSOAR && (scanData.daysUntilExpiry < 30 || scanData.criticalIssues > 0)) {
+                integrationPromises.push(
+                    connectors.cortexXSOAR.createIncident({
+                        name: `SSL Certificate Issue - ${scanData.domain}`,
+                        type: 'SSL Certificate',
+                        severity: scanData.criticalIssues > 0 ? 'Critical' : 'High',
+                        details: {
+                            scanId,
+                            domain: scanData.domain,
+                            expiryDate: scanData.expiryDate,
+                            daysUntilExpiry: scanData.daysUntilExpiry,
+                            securityIssues: scanData.securityIssues,
+                            criticalIssues: scanData.criticalIssues
+                        }
+                    }).catch(err => console.error('XSOAR integration failed:', err.message))
+                );
+            }
+
+            // Cloudflare - Update SSL/TLS settings for affected domains
+            if (connectors.cloudflare && scanData.securityIssues?.length > 0) {
+                integrationPromises.push(
+                    connectors.cloudflare.updateSSLSettings({
+                        zoneId: scanData.zoneId,
+                        settings: {
+                            ssl: 'strict',
+                            tls_1_2_only: true,
+                            min_tls_version: '1.2'
+                        }
+                    }).catch(err => console.error('Cloudflare SSL settings update failed:', err.message))
+                );
+            }
+
+            await Promise.allSettled(integrationPromises);
+            console.log('SSLMonitor security stack integration completed');
+
+        } catch (error) {
+            console.error('SSLMonitor integration error:', error);
+        }
     }
 };
 

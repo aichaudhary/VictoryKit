@@ -21,6 +21,15 @@ exports.createAnalysis = async (req, res) => {
 
     await analysis.save();
 
+    // Trigger external security integrations
+    analysisService.integrateWithSecurityStack(analysis._id, {
+      timeRange,
+      userId
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the analysis if integration fails
+    });
+
     // Start analysis in background
     analysisService.performAnalysis(analysis._id, userId, timeRange, filters);
 

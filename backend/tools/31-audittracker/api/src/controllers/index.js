@@ -1,4 +1,6 @@
 const axios = require('axios');
+const auditTrackerService = require('../services/auditTrackerService');
+
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || 'http://localhost:8031';
 
 exports.getStatus = async (req, res) => {
@@ -12,8 +14,24 @@ exports.getStatus = async (req, res) => {
 exports.analyze = async (req, res) => {
   try {
     const { data } = req.body;
-    const mlResponse = await axios.post(`${ML_ENGINE_URL}/analyze`, { data });
-    res.json({ success: true, result: mlResponse.data });
+    const result = await auditTrackerService.analyze(data);
+
+    // Trigger external security integrations
+    auditTrackerService.integrateWithSecurityStack(Date.now().toString(), {
+      analysisType: 'audit_log_analysis',
+      anomalies: result.anomalies || [],
+      alerts: result.alerts || [],
+      compliance: result.compliance || {},
+      totalLogs: result.totalLogs || 0,
+      suspiciousActivities: result.suspiciousActivities || 0,
+      severity: result.criticalAlerts > 0 ? 'critical' : result.suspiciousActivities > 5 ? 'high' : 'medium',
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the analysis if integration fails
+    });
+
+    res.json({ success: true, result });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -22,8 +40,24 @@ exports.analyze = async (req, res) => {
 exports.scan = async (req, res) => {
   try {
     const { target } = req.body;
-    const mlResponse = await axios.post(`${ML_ENGINE_URL}/scan`, { target });
-    res.json({ success: true, scanId: Date.now(), result: mlResponse.data });
+    const result = await auditTrackerService.scan(target);
+    const scanId = Date.now().toString();
+
+    // Trigger external security integrations
+    auditTrackerService.integrateWithSecurityStack(scanId, {
+      analysisType: 'audit_trail_scan',
+      target,
+      scanId,
+      anomalies: result.anomalies || 0,
+      compliance: result.compliance || {},
+      severity: result.anomalies > 3 ? 'high' : result.anomalies > 0 ? 'medium' : 'low',
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the scan if integration fails
+    });
+
+    res.json({ success: true, scanId, result });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { logger } = require('../../../../../shared');
+const { getConnectors } = require('../../../../../shared/connectors');
 
 class MLService {
   constructor() {
@@ -98,6 +99,71 @@ class MLService {
       recommendations: recommendations.slice(0, Math.min(gaps.length, 4)),
       priority: gaps.length > 5 ? 'immediate' : 'scheduled'
     };
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(auditId, auditData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log compliance audit results
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'ComplianceAudit_CL',
+            data: {
+              AuditId: auditId,
+              Framework: auditData.framework,
+              Organization: auditData.organization,
+              CriticalGaps: auditData.criticalGaps,
+              HighGaps: auditData.highGaps,
+              ComplianceScore: auditData.complianceScore,
+              Timestamp: new Date().toISOString(),
+              Source: 'ComplianceCheck'
+            }
+          }).catch(err => logger.warn('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for critical compliance gaps
+      if (connectors.cortexXSOAR && auditData.criticalGaps > 0) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Critical Compliance Gaps - ${auditId}`,
+            type: 'Compliance',
+            severity: 'High',
+            details: {
+              auditId,
+              framework: auditData.framework,
+              organization: auditData.organization,
+              criticalGaps: auditData.criticalGaps,
+              complianceScore: auditData.complianceScore
+            }
+          }).catch(err => logger.warn('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // OpenCTI - Enrich with regulatory threat intelligence
+      if (connectors.opencti && auditData.framework) {
+        integrationPromises.push(
+          connectors.opencti.searchIndicators({
+            pattern: auditData.framework,
+            pattern_type: 'threat-actor'
+          }).then(indicators => {
+            if (indicators.length > 0) {
+              logger.info(`Found ${indicators.length} regulatory threat indicators`);
+            }
+          }).catch(err => logger.warn('OpenCTI enrichment failed:', err.message))
+        );
+      }
+
+      await Promise.allSettled(integrationPromises);
+      logger.info('ComplianceCheck security stack integration completed');
+
+    } catch (error) {
+      logger.error('ComplianceCheck integration error:', error);
+    }
   }
 }
 

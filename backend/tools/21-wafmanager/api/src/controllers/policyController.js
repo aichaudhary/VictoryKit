@@ -132,6 +132,20 @@ exports.apply = async (req, res, next) => {
     ];
     await policy.save();
 
+    // Trigger external security integrations
+    wafService.integrateWithSecurityStack(policy._id, {
+      eventType: 'policy_application',
+      instanceName: targetInstances.map(i => i.name).join(', '),
+      provider: targetInstances[0]?.provider,
+      rulesDeployed: policy.rules?.length || 0,
+      ruleDeployment: true,
+      deployedRules: policy.rules || [],
+      severity: 'medium'
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the policy application if integration fails
+    });
+
     res.json({
       policy,
       deploymentResults: results,

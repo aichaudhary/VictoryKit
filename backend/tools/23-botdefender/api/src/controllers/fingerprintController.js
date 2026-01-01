@@ -114,6 +114,22 @@ const fingerprintController = {
         await fingerprint.save();
       }
 
+      // Trigger external security integrations for bot detection
+      if (analysis.isBot && analysis.score > 50) {
+        botService.integrateWithSecurityStack(fingerprint._id, {
+          ipAddress: clientIp,
+          userAgent: components?.userAgent,
+          score: analysis.score,
+          type: analysis.botType || 'unknown',
+          action: analysis.recommendedAction,
+          requestsCount: 1,
+          userId: req.user?.id
+        }).catch(error => {
+          console.error('Integration error:', error);
+          // Don't fail the analysis if integration fails
+        });
+      }
+
       res.json({
         success: true,
         data: {

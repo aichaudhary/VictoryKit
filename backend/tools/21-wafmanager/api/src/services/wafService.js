@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { getConnectors } = require("../../../../shared/connectors");
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8021";
 
@@ -139,6 +140,126 @@ class WAFService {
         estimatedLatency: rules.length * 0.5 + "ms",
       },
     };
+  }
+
+  // Integrate with external security stack
+  async integrateWithSecurityStack(entityId, data) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log WAF events and rule deployments
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'WAF_Events_CL',
+            data: {
+              EntityId: entityId,
+              EventType: data.eventType || 'rule_deployment',
+              InstanceName: data.instanceName,
+              Provider: data.provider,
+              RulesDeployed: data.rulesDeployed || 0,
+              BlockedRequests: data.blockedRequests || 0,
+              FalsePositives: data.falsePositives || 0,
+              Timestamp: new Date().toISOString(),
+              Severity: data.severity || 'medium'
+            }
+          }).catch(err => console.error('Sentinel WAF integration failed:', err))
+        );
+      }
+
+      // Cortex XSOAR - Create incidents for WAF attacks or misconfigurations
+      if (connectors.xsoar && (data.attackDetected || data.misconfiguration)) {
+        integrationPromises.push(
+          connectors.xsoar.createIncident({
+            type: data.attackDetected ? 'waf_attack' : 'waf_misconfiguration',
+            severity: data.severity || 'medium',
+            title: data.attackDetected ? 
+              `WAF Attack Detected: ${data.attackType || 'Unknown'} on ${data.instanceName}` :
+              `WAF Misconfiguration: ${data.instanceName}`,
+            description: data.description || 'WAF security event requiring investigation',
+            labels: {
+              entityId,
+              instanceName: data.instanceName,
+              provider: data.provider,
+              attackType: data.attackType,
+              blockedRequests: data.blockedRequests
+            }
+          }).catch(err => console.error('XSOAR WAF integration failed:', err))
+        );
+      }
+
+      // CrowdStrike - Update Falcon firewall rules if applicable
+      if (connectors.crowdstrike && data.ruleDeployment) {
+        integrationPromises.push(
+          connectors.crowdstrike.updateFirewallRules({
+            entityId,
+            rules: data.deployedRules || [],
+            instanceName: data.instanceName
+          }).catch(err => console.error('CrowdStrike WAF integration failed:', err))
+        );
+      }
+
+      // Cloudflare - Sync with Cloudflare WAF if using Cloudflare
+      if (connectors.cloudflare && data.provider === 'cloudflare') {
+        integrationPromises.push(
+          connectors.cloudflare.updateWAF({
+            zoneId: data.zoneId,
+            rules: data.deployedRules || [],
+            action: data.action || 'block'
+          }).catch(err => console.error('Cloudflare WAF integration failed:', err))
+        );
+      }
+
+      // Kong - Update rate limiting rules if API gateway involved
+      if (connectors.kong && data.apiProtection) {
+        integrationPromises.push(
+          connectors.kong.updateRateLimit({
+            serviceId: data.serviceId,
+            routes: data.protectedRoutes || [],
+            limits: data.rateLimits || {}
+          }).catch(err => console.error('Kong WAF integration failed:', err))
+        );
+      }
+
+      // Okta - Log security events for user context
+      if (connectors.okta && data.userId) {
+        integrationPromises.push(
+          connectors.okta.logSecurityEvent({
+            userId: data.userId,
+            eventType: 'waf_interaction',
+            details: {
+              entityId,
+              instanceName: data.instanceName,
+              action: data.action || 'block',
+              severity: data.severity
+            }
+          }).catch(err => console.error('Okta WAF integration failed:', err))
+        );
+      }
+
+      // OpenCTI - Enrich threat intelligence with WAF data
+      if (connectors.opencti && data.attackDetected) {
+        integrationPromises.push(
+          connectors.opencti.createIndicator({
+            type: 'waf_attack_pattern',
+            value: data.attackSignature || data.attackType,
+            description: `WAF detected attack pattern: ${data.attackType}`,
+            labels: ['waf', 'attack', data.provider],
+            confidence: data.confidence || 80,
+            entityId
+          }).catch(err => console.error('OpenCTI WAF integration failed:', err))
+        );
+      }
+
+      // Execute all integrations in parallel
+      await Promise.allSettled(integrationPromises);
+      console.log(`WAF integration completed for entity ${entityId}`);
+
+    } catch (error) {
+      console.error('WAF security stack integration error:', error);
+      // Don't throw - integration failures shouldn't break core functionality
+    }
   }
 }
 

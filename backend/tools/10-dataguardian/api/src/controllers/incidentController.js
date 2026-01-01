@@ -23,6 +23,20 @@ exports.create = async (req, res, next) => {
     incident.aiAnalysis = analysis;
 
     await incident.save();
+
+    // Trigger external security integrations
+    mlService.integrateWithSecurityStack(incident._id, {
+      assetType: incident.type,
+      dataTypes: incident.details?.dataTypes,
+      riskScore: analysis?.riskScore || 50,
+      piiDetected: incident.details?.containsPII || false,
+      breachType: incident.type,
+      userId: incident.userId
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the incident creation if integration fails
+    });
+
     logger.info(`Data incident created: ${incident._id}, severity: ${severity}`);
     
     res.status(201).json(ApiResponse.success(incident, 'Incident reported'));

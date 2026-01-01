@@ -105,6 +105,20 @@ exports.scan = async (req, res, next) => {
     endpoint.vulnerabilities = scanResult.vulnerabilities;
     await endpoint.save();
 
+    // Trigger external security integrations
+    apiService.integrateWithSecurityStack(endpoint._id, {
+      endpoint: endpoint.path,
+      vulnerabilitiesCount: scanResult.vulnerabilities?.length || 0,
+      criticalCount: scanResult.bySeverity?.critical || 0,
+      highCount: scanResult.bySeverity?.high || 0,
+      authIssues: scanResult.vulnerabilities?.filter(v => v.type === 'authentication').length || 0,
+      routeId: endpoint.routeId,
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the scan if integration fails
+    });
+
     res.json({
       endpointId: endpoint.endpointId,
       path: endpoint.path,

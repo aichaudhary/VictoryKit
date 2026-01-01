@@ -25,6 +25,19 @@ exports.createIncident = async (req, res) => {
 
     await incident.save();
 
+    // Trigger external security integrations
+    incidentService.integrateWithSecurityStack(incident._id, {
+      type: incident.type,
+      severity: incident.severity,
+      status: incident.status,
+      affectedAssets: incident.affectedAssets,
+      indicators: incident.indicators,
+      userId: incident.userId
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the incident creation if integration fails
+    });
+
     res.status(201).json({
       success: true,
       data: incident,

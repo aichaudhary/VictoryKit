@@ -4,6 +4,7 @@
  */
 
 const axios = require("axios");
+const { getConnectors } = require('../../../../../shared/connectors');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8011";
 
@@ -200,6 +201,80 @@ class IncidentService {
     };
 
     return playbooks[type] || playbooks.other;
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(incidentId, incidentData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log incident response activities
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'IncidentResponse_CL',
+            data: {
+              IncidentId: incidentId,
+              IncidentType: incidentData.type,
+              Severity: incidentData.severity,
+              Status: incidentData.status,
+              AffectedAssets: incidentData.affectedAssets?.length || 0,
+              IndicatorsCount: incidentData.indicators?.length || 0,
+              Timestamp: new Date().toISOString(),
+              Source: 'IncidentResponse'
+            }
+          }).catch(err => console.error('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create or update incident
+      if (connectors.cortexXSOAR) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Security Incident - ${incidentId}`,
+            type: incidentData.type,
+            severity: incidentData.severity,
+            details: {
+              incidentId,
+              type: incidentData.type,
+              severity: incidentData.severity,
+              status: incidentData.status,
+              affectedAssets: incidentData.affectedAssets,
+              indicators: incidentData.indicators
+            }
+          }).catch(err => console.error('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // CrowdStrike - Containment actions for endpoint incidents
+      if (connectors.crowdstrike && incidentData.affectedAssets?.length > 0) {
+        const containmentPromises = incidentData.affectedAssets.map(asset =>
+          connectors.crowdstrike.containHost({
+            hostId: asset,
+            action: 'isolate'
+          }).catch(err => console.error('CrowdStrike containment failed:', err.message))
+        );
+        integrationPromises.push(...containmentPromises);
+      }
+
+      // OpenCTI - Enrich with threat intelligence
+      if (connectors.opencti && incidentData.indicators) {
+        const tiPromises = incidentData.indicators.map(indicator =>
+          connectors.opencti.searchIndicators({
+            pattern: indicator.value,
+            pattern_type: indicator.type
+          }).catch(err => console.error('OpenCTI enrichment failed:', err.message))
+        );
+        integrationPromises.push(...tiPromises);
+      }
+
+      await Promise.allSettled(integrationPromises);
+      console.log('IncidentResponse security stack integration completed');
+
+    } catch (error) {
+      console.error('IncidentResponse integration error:', error);
+    }
   }
 }
 

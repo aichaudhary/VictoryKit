@@ -110,6 +110,22 @@ exports.calculateRisk = async (req, res, next) => {
     assessment.summary = calculation.summary;
     await assessment.save();
 
+    // Trigger external security integrations
+    riskService.integrateWithSecurityStack(assessment._id, {
+      name: assessment.name,
+      type: assessment.type,
+      totalRisks: calculation.summary.totalRisks,
+      criticalRisks: calculation.summary.risksByLevel.critical || 0,
+      highRisks: calculation.summary.risksByLevel.high || 0,
+      averageRiskScore: calculation.summary.averageRiskScore,
+      residualRiskScore: calculation.summary.residualRiskScore,
+      risks: assessment.risks,
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the assessment if integration fails
+    });
+
     res.json(calculation);
   } catch (error) {
     next(error);

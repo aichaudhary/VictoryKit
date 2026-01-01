@@ -60,17 +60,21 @@ build_frontend() {
         return 0  # Return success to skip this tool
     fi
 
-    cd "frontend/tools/$tool"
-    npm install
-    npm run build
+    # Remote build commands
+    ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "
+        set -e
+        export NVM_DIR=\"/home/ubuntu/.nvm\"
+        [ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\"
+        cd /var/www/$tool-frontend/repo/frontend/tools/$tool
+        npm install
+        npm run build
+    "
 
     if [ $? -eq 0 ]; then
         log_success "$tool frontend built successfully"
-        cd ../../..
         return 0
     else
         log_error "Failed to build $tool frontend"
-        cd ../../..
         return 1
     fi
 }

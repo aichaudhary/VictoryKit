@@ -6,6 +6,7 @@
 const LogAnalysis = require("../models/LogAnalysis");
 const LogEntry = require("../models/LogEntry");
 const logService = require("./logService");
+const { getConnectors } = require('../../../../../shared/connectors');
 
 class AnalysisService {
   async performAnalysis(analysisId, userId, timeRange, filters = {}) {
@@ -121,6 +122,70 @@ class AnalysisService {
 
     // Cap at 100
     return Math.min(100, score);
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(analysisId, analysisData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log log analysis results
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'LogAnalysis_CL',
+            data: {
+              AnalysisId: analysisId,
+              TimeRange: analysisData.timeRange,
+              LogEntriesCount: analysisData.logEntriesCount,
+              ErrorCount: analysisData.errorCount,
+              CriticalCount: analysisData.criticalCount,
+              RiskScore: analysisData.riskScore,
+              AnomaliesDetected: analysisData.anomaliesCount,
+              Timestamp: new Date().toISOString(),
+              Source: 'LogAnalyzer'
+            }
+          }).catch(err => console.error('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for high-risk log analysis
+      if (connectors.cortexXSOAR && analysisData.riskScore > 70) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `High-Risk Log Analysis - ${analysisId}`,
+            type: 'Log Analysis',
+            severity: analysisData.riskScore > 90 ? 'Critical' : 'High',
+            details: {
+              analysisId,
+              timeRange: analysisData.timeRange,
+              logEntriesCount: analysisData.logEntriesCount,
+              errorCount: analysisData.errorCount,
+              riskScore: analysisData.riskScore,
+              anomaliesCount: analysisData.anomaliesCount
+            }
+          }).catch(err => console.error('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // OpenCTI - Check for known attack patterns in logs
+      if (connectors.opencti && analysisData.patterns) {
+        const tiPromises = analysisData.patterns.map(pattern =>
+          connectors.opencti.searchIndicators({
+            pattern: pattern.name,
+            pattern_type: 'attack-pattern'
+          }).catch(err => console.error('OpenCTI enrichment failed:', err.message))
+        );
+        integrationPromises.push(...tiPromises);
+      }
+
+      await Promise.allSettled(integrationPromises);
+      console.log('LogAnalyzer security stack integration completed');
+
+    } catch (error) {
+      console.error('LogAnalyzer integration error:', error);
+    }
   }
 }
 

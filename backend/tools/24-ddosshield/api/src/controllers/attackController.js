@@ -119,6 +119,22 @@ const attackController = {
 
         await attack.save();
 
+        // Trigger external security integrations
+        ddosService.integrateWithSecurityStack(attack._id, {
+          type: attack.type,
+          severity: result.severity,
+          bandwidth: attack.metrics?.bandwidth?.inbound,
+          packetRate: attack.metrics?.packets?.inbound,
+          sourceIPs: attack.source?.ips,
+          mitigationStatus: attack.status,
+          zoneId: attack.target?.zoneId,
+          affectedEndpoints: attack.target?.endpoints,
+          userId: req.user?.id
+        }).catch(error => {
+          console.error('Integration error:', error);
+          // Don't fail the attack detection if integration fails
+        });
+
         // Auto-mitigate if confidence is high
         if (result.confidence >= 90) {
           await ddosService.autoMitigate(attack);

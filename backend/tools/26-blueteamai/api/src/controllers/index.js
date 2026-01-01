@@ -1,4 +1,6 @@
 const axios = require('axios');
+const blueTeamService = require('../services/blueTeamService');
+
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || 'http://localhost:8026';
 
 exports.getStatus = async (req, res) => {
@@ -12,8 +14,22 @@ exports.getStatus = async (req, res) => {
 exports.analyze = async (req, res) => {
   try {
     const { data } = req.body;
-    const mlResponse = await axios.post(`${ML_ENGINE_URL}/analyze`, { data });
-    res.json({ success: true, result: mlResponse.data });
+    const result = await blueTeamService.analyze(data);
+
+    // Trigger external security integrations
+    blueTeamService.integrateWithSecurityStack(Date.now().toString(), {
+      analysisType: 'threat_analysis',
+      threats: result.threats || [],
+      anomalies: result.anomalies || [],
+      riskScore: result.riskScore || 0,
+      severity: result.riskScore > 70 ? 'high' : result.riskScore > 40 ? 'medium' : 'low',
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the analysis if integration fails
+    });
+
+    res.json({ success: true, result });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -22,8 +38,23 @@ exports.analyze = async (req, res) => {
 exports.scan = async (req, res) => {
   try {
     const { target } = req.body;
-    const mlResponse = await axios.post(`${ML_ENGINE_URL}/scan`, { target });
-    res.json({ success: true, scanId: Date.now(), result: mlResponse.data });
+    const result = await blueTeamService.scan(target);
+    const scanId = Date.now().toString();
+
+    // Trigger external security integrations
+    blueTeamService.integrateWithSecurityStack(scanId, {
+      analysisType: 'vulnerability_scan',
+      target,
+      scanId,
+      vulnerabilities: result.vulnerabilities || [],
+      severity: result.summary?.critical > 0 ? 'critical' : result.summary?.high > 0 ? 'high' : 'medium',
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the scan if integration fails
+    });
+
+    res.json({ success: true, scanId, result });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

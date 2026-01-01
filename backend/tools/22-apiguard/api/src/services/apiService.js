@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { getConnectors } = require('../../../../../shared/connectors');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8022";
 
@@ -233,6 +234,81 @@ class APIService {
         return acc;
       }, {}),
     };
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(scanId, scanData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log API security scan results
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'APISecurityScan_CL',
+            data: {
+              ScanId: scanId,
+              APIEndpoint: scanData.endpoint,
+              VulnerabilitiesFound: scanData.vulnerabilitiesCount,
+              CriticalIssues: scanData.criticalCount,
+              HighIssues: scanData.highCount,
+              AuthenticationIssues: scanData.authIssues,
+              Timestamp: new Date().toISOString(),
+              Source: 'APIGuard'
+            }
+          }).catch(err => console.error('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for critical API vulnerabilities
+      if (connectors.cortexXSOAR && scanData.criticalCount > 0) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Critical API Vulnerabilities - ${scanId}`,
+            type: 'API Security',
+            severity: 'Critical',
+            details: {
+              scanId,
+              endpoint: scanData.endpoint,
+              vulnerabilitiesCount: scanData.vulnerabilitiesCount,
+              criticalCount: scanData.criticalCount,
+              highCount: scanData.highCount
+            }
+          }).catch(err => console.error('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // Kong - Update API gateway policies for vulnerable endpoints
+      if (connectors.kong && scanData.vulnerabilitiesCount > 0) {
+        integrationPromises.push(
+          connectors.kong.updateRoute({
+            routeId: scanData.routeId,
+            config: {
+              rateLimit: { second: 10 }, // Reduce rate limit for vulnerable endpoints
+              cors: { enabled: false } // Disable CORS for vulnerable endpoints
+            }
+          }).catch(err => console.error('Kong policy update failed:', err.message))
+        );
+      }
+
+      // Cloudflare - Create WAF rules for API protection
+      if (connectors.cloudflare && scanData.vulnerabilitiesCount > 0) {
+        integrationPromises.push(
+          connectors.cloudflare.createWAFRule({
+            description: `Block attacks on vulnerable API: ${scanData.endpoint}`,
+            expression: `http.request.uri.path eq "${scanData.endpoint}" and cf.threat_score ge 20`,
+            action: 'block'
+          }).catch(err => console.error('Cloudflare WAF rule creation failed:', err.message))
+        );
+      }
+
+      await Promise.allSettled(integrationPromises);
+      console.log('APIGuard security stack integration completed');
+
+    } catch (error) {
+      console.error('APIGuard integration error:', error);
+    }
   }
 }
 

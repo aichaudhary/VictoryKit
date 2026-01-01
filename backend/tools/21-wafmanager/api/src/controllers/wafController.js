@@ -109,6 +109,20 @@ exports.sync = async (req, res, next) => {
     instance.statistics = syncResult.statistics || instance.statistics;
     await instance.save();
 
+    // Trigger external security integrations
+    wafService.integrateWithSecurityStack(instance._id, {
+      eventType: 'sync_completed',
+      instanceName: instance.name,
+      provider: instance.provider,
+      blockedRequests: syncResult.statistics?.blockedRequests || 0,
+      totalRequests: syncResult.statistics?.totalRequests || 0,
+      rulesSynced: syncResult.rules?.synced || 0,
+      severity: 'low'
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the sync if integration fails
+    });
+
     res.json({
       instance,
       syncResult,

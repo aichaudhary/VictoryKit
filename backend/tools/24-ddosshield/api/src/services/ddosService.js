@@ -3,6 +3,7 @@
  */
 
 const Blocklist = require("../models/Blocklist");
+const { getConnectors } = require('../../../../../shared/connectors');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8024";
 
@@ -368,6 +369,82 @@ const ddosService = {
     }
     return null;
   },
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(attackId, attackData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log DDoS attack detection
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'DDoSAttack_CL',
+            data: {
+              AttackId: attackId,
+              AttackType: attackData.type,
+              Severity: attackData.severity,
+              Bandwidth: attackData.bandwidth,
+              PacketRate: attackData.packetRate,
+              SourceIPs: attackData.sourceIPs?.length || 0,
+              MitigationStatus: attackData.mitigationStatus,
+              Timestamp: new Date().toISOString(),
+              Source: 'DDoSShield'
+            }
+          }).catch(err => console.error('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for active DDoS attacks
+      if (connectors.cortexXSOAR && attackData.severity === 'critical') {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `DDoS Attack Detected - ${attackId}`,
+            type: 'DDoS Attack',
+            severity: 'Critical',
+            details: {
+              attackId,
+              attackType: attackData.type,
+              bandwidth: attackData.bandwidth,
+              packetRate: attackData.packetRate,
+              sourceIPs: attackData.sourceIPs
+            }
+          }).catch(err => console.error('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // Cloudflare - Enable DDoS protection and rate limiting
+      if (connectors.cloudflare && attackData.severity !== 'low') {
+        integrationPromises.push(
+          connectors.cloudflare.enableDDoSProtection({
+            zoneId: attackData.zoneId,
+            level: attackData.severity === 'critical' ? 'aggressive' : 'medium'
+          }).catch(err => console.error('Cloudflare DDoS protection failed:', err.message))
+        );
+      }
+
+      // Kong - Implement rate limiting for affected endpoints
+      if (connectors.kong && attackData.affectedEndpoints) {
+        const rateLimitPromises = attackData.affectedEndpoints.map(endpoint =>
+          connectors.kong.createRateLimit({
+            route: endpoint,
+            config: {
+              second: 10, // Very low rate limit during attack
+              policy: 'local'
+            }
+          }).catch(err => console.error('Kong rate limit creation failed:', err.message))
+        );
+        integrationPromises.push(...rateLimitPromises);
+      }
+
+      await Promise.allSettled(integrationPromises);
+      console.log('DDoSShield security stack integration completed');
+
+    } catch (error) {
+      console.error('DDoSShield integration error:', error);
+    }
+  }
 };
 
 module.exports = ddosService;

@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { getConnectors } = require('../../../../../shared/connectors');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8019";
 
@@ -303,6 +304,71 @@ class RiskService {
         "Report to stakeholders",
       ],
     };
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(assessmentId, assessmentData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log risk assessment results
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'RiskAssessment_CL',
+            data: {
+              AssessmentId: assessmentId,
+              AssessmentName: assessmentData.name,
+              AssessmentType: assessmentData.type,
+              TotalRisks: assessmentData.totalRisks,
+              CriticalRisks: assessmentData.criticalRisks,
+              HighRisks: assessmentData.highRisks,
+              AverageRiskScore: assessmentData.averageRiskScore,
+              ResidualRiskScore: assessmentData.residualRiskScore,
+              Timestamp: new Date().toISOString(),
+              Source: 'RiskAssess'
+            }
+          }).catch(err => console.error('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for high-risk assessments
+      if (connectors.cortexXSOAR && assessmentData.criticalRisks > 0) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Critical Risk Assessment - ${assessmentData.name}`,
+            type: 'Risk Assessment',
+            severity: 'High',
+            details: {
+              assessmentId,
+              name: assessmentData.name,
+              type: assessmentData.type,
+              totalRisks: assessmentData.totalRisks,
+              criticalRisks: assessmentData.criticalRisks,
+              averageRiskScore: assessmentData.averageRiskScore
+            }
+          }).catch(err => console.error('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // OpenCTI - Enrich with threat intelligence for risk factors
+      if (connectors.opencti && assessmentData.risks) {
+        const tiPromises = assessmentData.risks.map(risk =>
+          connectors.opencti.searchIndicators({
+            pattern: risk.category || risk.name,
+            pattern_type: 'threat-actor'
+          }).catch(err => console.error('OpenCTI enrichment failed:', err.message))
+        );
+        integrationPromises.push(...tiPromises);
+      }
+
+      await Promise.allSettled(integrationPromises);
+      console.log('RiskAssess security stack integration completed');
+
+    } catch (error) {
+      console.error('RiskAssess integration error:', error);
+    }
   }
 }
 

@@ -1,6 +1,7 @@
 const ComplianceAudit = require('../models/Audit');
 const ComplianceControl = require('../models/Control');
 const complianceService = require('../services/complianceService');
+const mlService = require('../services/mlService');
 const { ApiResponse, ApiError, logger } = require('../../../../../shared');
 
 exports.create = async (req, res, next) => {
@@ -121,6 +122,16 @@ exports.assess = async (req, res, next) => {
 
     audit.status = 'in-progress';
     await audit.save();
+
+    // Trigger external security integrations
+    mlService.integrateWithSecurityStack(audit._id, {
+      framework: audit.frameworks?.[0] || 'unknown',
+      organization: audit.scope?.organization || 'unknown',
+      userId: audit.userId
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the audit if integration fails
+    });
 
     const controls = await ComplianceControl.find({ auditId: audit._id });
     

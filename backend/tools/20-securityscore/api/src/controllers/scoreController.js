@@ -120,6 +120,22 @@ exports.calculate = async (req, res, next) => {
 
     await score.save();
 
+    // Trigger external security integrations
+    scoreService.integrateWithSecurityStack(score._id, {
+      organization: score.entityName,
+      overallScore: calculation.overallScore,
+      previousScore: score.history[score.history.length - 2]?.score || 0,
+      scoreChange: calculation.overallScore - (score.history[score.history.length - 2]?.score || 0),
+      criticalIssues: calculation.risks?.filter(r => r.level === 'critical').length || 0,
+      highIssues: calculation.risks?.filter(r => r.level === 'high').length || 0,
+      riskLevel: calculation.overallScore < 40 ? 'critical' : calculation.overallScore < 70 ? 'high' : 'medium',
+      weakCategories: Object.entries(calculation.categories).filter(([_, cat]) => cat.score < 60).map(([name, _]) => name),
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the score calculation if integration fails
+    });
+
     res.json({
       score,
       calculation,

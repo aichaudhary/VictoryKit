@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { getConnectors } = require('../../../../../shared/connectors');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8020";
 
@@ -239,6 +240,71 @@ class ScoreService {
         ),
         confidence: 0.6,
       };
+    }
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(scoreId, scoreData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log security score calculations
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'SecurityScore_CL',
+            data: {
+              ScoreId: scoreId,
+              Organization: scoreData.organization,
+              OverallScore: scoreData.overallScore,
+              PreviousScore: scoreData.previousScore,
+              ScoreChange: scoreData.scoreChange,
+              CriticalIssues: scoreData.criticalIssues,
+              HighIssues: scoreData.highIssues,
+              RiskLevel: scoreData.riskLevel,
+              Timestamp: new Date().toISOString(),
+              Source: 'SecurityScore'
+            }
+          }).catch(err => console.error('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for critically low security scores
+      if (connectors.cortexXSOAR && scoreData.overallScore < 40) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Critical Security Score - ${scoreData.organization}`,
+            type: 'Security Score',
+            severity: 'Critical',
+            details: {
+              scoreId,
+              organization: scoreData.organization,
+              overallScore: scoreData.overallScore,
+              criticalIssues: scoreData.criticalIssues,
+              highIssues: scoreData.highIssues,
+              riskLevel: scoreData.riskLevel
+            }
+          }).catch(err => console.error('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // OpenCTI - Enrich with threat intelligence based on score weaknesses
+      if (connectors.opencti && scoreData.weakCategories) {
+        const tiPromises = scoreData.weakCategories.map(category =>
+          connectors.opencti.searchIndicators({
+            pattern: category,
+            pattern_type: 'attack-pattern'
+          }).catch(err => console.error('OpenCTI enrichment failed:', err.message))
+        );
+        integrationPromises.push(...tiPromises);
+      }
+
+      await Promise.allSettled(integrationPromises);
+      console.log('SecurityScore security stack integration completed');
+
+    } catch (error) {
+      console.error('SecurityScore integration error:', error);
     }
   }
 }

@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { logger } = require('../../../../../shared');
+const { getConnectors } = require('../../../../../shared/connectors');
 
 class MLService {
   constructor() {
@@ -100,6 +101,68 @@ class MLService {
     });
 
     return { secrets, detectionType: 'pattern-based' };
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(scanId, scanData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log code analysis results
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'CodeAnalysis_CL',
+            data: {
+              ScanId: scanId,
+              Repository: scanData.repository,
+              Language: scanData.language,
+              CriticalIssues: scanData.criticalCount,
+              HighIssues: scanData.highCount,
+              SecretsFound: scanData.secretsCount,
+              Timestamp: new Date().toISOString(),
+              Source: 'SecureCode'
+            }
+          }).catch(err => logger.warn('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for critical code issues or secrets
+      if (connectors.cortexXSOAR && (scanData.criticalCount > 0 || scanData.secretsCount > 0)) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Critical Code Security Issues - ${scanId}`,
+            type: 'Code Security',
+            severity: scanData.secretsCount > 0 ? 'Critical' : 'High',
+            details: {
+              scanId,
+              repository: scanData.repository,
+              language: scanData.language,
+              criticalCount: scanData.criticalCount,
+              secretsCount: scanData.secretsCount
+            }
+          }).catch(err => logger.warn('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // OpenCTI - Check for known code vulnerabilities
+      if (connectors.opencti && scanData.vulnerabilities) {
+        const vulnPromises = scanData.vulnerabilities.map(vuln =>
+          connectors.opencti.searchIndicators({
+            pattern: vuln.cve || vuln.title,
+            pattern_type: 'cve'
+          }).catch(err => logger.warn('OpenCTI CVE lookup failed:', err.message))
+        );
+        integrationPromises.push(...vulnPromises);
+      }
+
+      await Promise.allSettled(integrationPromises);
+      logger.info('SecureCode security stack integration completed');
+
+    } catch (error) {
+      logger.error('SecureCode integration error:', error);
+    }
   }
 }
 

@@ -117,7 +117,22 @@ const certificateController = {
                     connection: result.connection,
                     certificate: certificate._id
                 }).save();
-                
+
+                // Trigger external security integrations
+                sslService.integrateWithSecurityStack(certificate._id, {
+                    domain: certificate.domain,
+                    issuer: certificate.issuer,
+                    expiryDate: certificate.validity?.notAfter,
+                    daysUntilExpiry: certificate.daysUntilExpiry,
+                    securityIssues: certificate.security?.issues,
+                    criticalIssues: certificate.security?.issues?.filter(i => i.severity === 'critical'),
+                    zoneId: certificate.zoneId,
+                    userId: req.user?.id
+                }).catch(error => {
+                    console.error('Integration error:', error);
+                    // Don't fail the scan if integration fails
+                });
+
                 res.json({
                     success: true,
                     data: certificate

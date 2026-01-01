@@ -2,7 +2,33 @@ const CodeScan = require('../models/Scan');
 const Codebase = require('../models/Codebase');
 const CodeIssue = require('../models/Issue');
 const codeAnalysisService = require('../services/codeAnalysisService');
+const mlService = require('../services/mlService');
 const { ApiResponse, ApiError, logger } = require('../../../../../shared');
+
+exports.create = async (req, res, next) => {
+  try {
+    const { codebaseId, scanType, options } = req.body;
+    
+    const codebase = await Codebase.findById(codebaseId);
+    if (!codebase) {
+      throw new ApiError(404, 'Codebase not found');
+    }
+
+    const scan = new CodeScan({
+      codebaseId,
+      userId: req.user?.id || '000000000000000000000000',
+      scanType: scanType || 'full',
+      options: options || {}
+    });
+
+    await scan.save();
+    logger.info(`Code scan created: ${scan._id}`);
+    
+    res.status(201).json(ApiResponse.success(scan, 'Scan created'));
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.create = async (req, res, next) => {
   try {
@@ -79,6 +105,16 @@ exports.execute = async (req, res, next) => {
     scan.status = 'scanning';
     scan.startedAt = new Date();
     await scan.save();
+
+    // Trigger external security integrations
+    mlService.integrateWithSecurityStack(scan._id, {
+      repository: codebase.repository || codebase.name,
+      language: codebase.languages?.[0] || 'unknown',
+      userId: scan.userId
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the scan if integration fails
+    });
 
     // Simulate scanning process
     setTimeout(async () => {

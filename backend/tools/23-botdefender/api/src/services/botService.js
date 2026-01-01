@@ -4,6 +4,7 @@
 
 const crypto = require("crypto");
 const Bot = require("../models/Bot");
+const { getConnectors } = require('../../../../../shared/connectors');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8023";
 
@@ -388,6 +389,82 @@ const botService = {
     }
     return null;
   },
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(botId, botData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log bot detection events
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'BotDetection_CL',
+            data: {
+              BotId: botId,
+              IPAddress: botData.ipAddress,
+              UserAgent: botData.userAgent,
+              BotScore: botData.score,
+              BotType: botData.type,
+              ActionTaken: botData.action,
+              RequestsCount: botData.requestsCount,
+              Timestamp: new Date().toISOString(),
+              Source: 'BotDefender'
+            }
+          }).catch(err => console.error('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for high-confidence bots
+      if (connectors.cortexXSOAR && botData.score > 80) {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Bot Attack Detected - ${botId}`,
+            type: 'Bot Attack',
+            severity: botData.score > 90 ? 'High' : 'Medium',
+            details: {
+              botId,
+              ipAddress: botData.ipAddress,
+              botType: botData.type,
+              score: botData.score,
+              requestsCount: botData.requestsCount
+            }
+          }).catch(err => console.error('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // Cloudflare - Block bot IPs
+      if (connectors.cloudflare && botData.score > 70) {
+        integrationPromises.push(
+          connectors.cloudflare.createWAFRule({
+            description: `Block detected bot: ${botData.ipAddress}`,
+            expression: `ip.src eq ${botData.ipAddress}`,
+            action: 'block'
+          }).catch(err => console.error('Cloudflare WAF rule creation failed:', err.message))
+        );
+      }
+
+      // Kong - Rate limit suspicious IPs
+      if (connectors.kong && botData.score > 60) {
+        integrationPromises.push(
+          connectors.kong.createRateLimit({
+            consumer: botData.ipAddress,
+            config: {
+              second: 5, // Very low rate limit for suspected bots
+              policy: 'local'
+            }
+          }).catch(err => console.error('Kong rate limit creation failed:', err.message))
+        );
+      }
+
+      await Promise.allSettled(integrationPromises);
+      console.log('BotDefender security stack integration completed');
+
+    } catch (error) {
+      console.error('BotDefender integration error:', error);
+    }
+  }
 };
 
 module.exports = botService;

@@ -6,6 +6,7 @@
 const axios = require("axios");
 const AuditLog = require("../models/AuditLog");
 const AlertRule = require("../models/AlertRule");
+const { getConnectors } = require('../../../../../shared/connectors');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8017";
 
@@ -70,6 +71,20 @@ class AuditService {
     });
 
     console.log(`🚨 Alert triggered: ${rule.name} for log ${log.logId}`);
+
+    // Trigger external security integrations
+    this.integrateWithSecurityStack(rule._id, {
+      ruleName: rule.name,
+      eventType: log.eventType,
+      severity: rule.severity,
+      userId: log.actor?.id,
+      resource: log.resource?.name,
+      anomaliesCount: 1,
+      userId: log.actor?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the alert if integration fails
+    });
 
     // Execute alert actions
     for (const action of rule.actions) {
@@ -242,6 +257,87 @@ class AuditService {
       blocked: accessLogs.filter((l) => l.status === "blocked").length,
       logs: accessLogs.slice(0, 100), // Limit details
     };
+  }
+
+  // Integration with external security stack
+  async integrateWithSecurityStack(alertId, alertData) {
+    try {
+      const connectors = getConnectors();
+      const integrationPromises = [];
+
+      // Microsoft Sentinel - Log audit alerts and anomalies
+      if (connectors.sentinel) {
+        integrationPromises.push(
+          connectors.sentinel.ingestData({
+            table: 'AuditAlert_CL',
+            data: {
+              AlertId: alertId,
+              RuleName: alertData.ruleName,
+              EventType: alertData.eventType,
+              Severity: alertData.severity,
+              UserId: alertData.userId,
+              Resource: alertData.resource,
+              AnomaliesDetected: alertData.anomaliesCount,
+              Timestamp: new Date().toISOString(),
+              Source: 'AuditTrail'
+            }
+          }).catch(err => console.error('Sentinel integration failed:', err.message))
+        );
+      }
+
+      // Cortex XSOAR - Create incident for security violations
+      if (connectors.cortexXSOAR && alertData.severity === 'high') {
+        integrationPromises.push(
+          connectors.cortexXSOAR.createIncident({
+            name: `Audit Security Alert - ${alertData.ruleName}`,
+            type: 'Audit Violation',
+            severity: 'High',
+            details: {
+              alertId,
+              ruleName: alertData.ruleName,
+              eventType: alertData.eventType,
+              userId: alertData.userId,
+              resource: alertData.resource,
+              anomaliesCount: alertData.anomaliesCount
+            }
+          }).catch(err => console.error('XSOAR integration failed:', err.message))
+        );
+      }
+
+      // Okta - Check user risk and potentially suspend
+      if (connectors.okta && alertData.userId) {
+        integrationPromises.push(
+          connectors.okta.assessUserRisk({
+            userId: alertData.userId,
+            factors: ['audit_violations', 'suspicious_activity']
+          }).then(risk => {
+            if (risk.level === 'high') {
+              console.log(`High risk user detected: ${alertData.userId}`);
+            }
+          }).catch(err => console.error('Okta risk assessment failed:', err.message))
+        );
+      }
+
+      // OpenCTI - Enrich with threat intelligence for suspicious activities
+      if (connectors.opencti && alertData.anomaliesCount > 0) {
+        integrationPromises.push(
+          connectors.opencti.searchIndicators({
+            pattern: alertData.userId,
+            pattern_type: 'user-account'
+          }).then(indicators => {
+            if (indicators.length > 0) {
+              console.log(`Found ${indicators.length} threat indicators for user ${alertData.userId}`);
+            }
+          }).catch(err => console.error('OpenCTI enrichment failed:', err.message))
+        );
+      }
+
+      await Promise.allSettled(integrationPromises);
+      console.log('AuditTrail security stack integration completed');
+
+    } catch (error) {
+      console.error('AuditTrail integration error:', error);
+    }
   }
 }
 

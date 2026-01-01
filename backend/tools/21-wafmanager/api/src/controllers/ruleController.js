@@ -108,6 +108,19 @@ exports.deploy = async (req, res, next) => {
     rule.deployed = true;
     await rule.save();
 
+    // Trigger external security integrations
+    wafService.integrateWithSecurityStack(rule._id, {
+      eventType: 'rule_deployment',
+      instanceName: rule.instanceId?.name,
+      provider: rule.instanceId?.provider,
+      ruleDeployment: true,
+      deployedRules: [rule],
+      severity: 'medium'
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the deployment if integration fails
+    });
+
     res.json({
       rule,
       deployment: deployResult,

@@ -1,4 +1,6 @@
 const axios = require('axios');
+const zeroTrustService = require('../services/zeroTrustService');
+
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || 'http://localhost:8032';
 
 exports.getStatus = async (req, res) => {
@@ -12,8 +14,24 @@ exports.getStatus = async (req, res) => {
 exports.analyze = async (req, res) => {
   try {
     const { data } = req.body;
-    const mlResponse = await axios.post(`${ML_ENGINE_URL}/analyze`, { data });
-    res.json({ success: true, result: mlResponse.data });
+    const result = await zeroTrustService.analyze(data);
+
+    // Trigger external security integrations
+    zeroTrustService.integrateWithSecurityStack(Date.now().toString(), {
+      analysisType: 'zero_trust_evaluation',
+      accessViolations: result.accessViolations || [],
+      trustScore: result.trustScore || {},
+      recommendations: result.recommendations || [],
+      totalAccessEvents: result.totalAccessEvents || 0,
+      riskFactors: result.riskFactors || 0,
+      severity: result.trustScore?.score < 50 ? 'critical' : result.trustScore?.score < 70 ? 'high' : 'medium',
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the analysis if integration fails
+    });
+
+    res.json({ success: true, result });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -22,8 +40,24 @@ exports.analyze = async (req, res) => {
 exports.scan = async (req, res) => {
   try {
     const { target } = req.body;
-    const mlResponse = await axios.post(`${ML_ENGINE_URL}/scan`, { target });
-    res.json({ success: true, scanId: Date.now(), result: mlResponse.data });
+    const result = await zeroTrustService.scan(target);
+    const scanId = Date.now().toString();
+
+    // Trigger external security integrations
+    zeroTrustService.integrateWithSecurityStack(scanId, {
+      analysisType: 'zero_trust_compliance_scan',
+      target,
+      scanId,
+      trustScore: result.trustScore || {},
+      violations: result.violations || 0,
+      severity: result.trustScore?.score < 50 ? 'critical' : result.trustScore?.score < 70 ? 'high' : 'medium',
+      userId: req.user?.id
+    }).catch(error => {
+      console.error('Integration error:', error);
+      // Don't fail the scan if integration fails
+    });
+
+    res.json({ success: true, scanId, result });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
