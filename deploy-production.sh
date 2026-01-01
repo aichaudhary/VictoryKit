@@ -357,15 +357,28 @@ main() {
     # Deploy main dashboard
     log_info "Deploying main dashboard..."
     if [ -d "frontend/main-dashboard" ]; then
-        cd frontend/main-dashboard
-        npm install
-        npm run build
-        cd ../..
+        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "
+            set -e
+            export NVM_DIR=\"/home/ubuntu/.nvm\"
+            [ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\"
+            
+            # First, ensure the base directory and repo exist
+            sudo mkdir -p /var/www/fyzo.xyz/repo
+            sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz
+            
+            # Sync the project files
+            rsync -avz -e 'ssh -i $EC2_KEY -o StrictHostKeyChecking=no' --exclude '.git' ./ '$EC2_HOST:/var/www/fyzo.xyz/repo/'
 
-        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo mkdir -p /var/www/fyzo.xyz && sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz"
-        scp -i "$EC2_KEY" -o StrictHostKeyChecking=no -r "frontend/main-dashboard/out/." "$EC2_HOST:/var/www/fyzo.xyz/"
-        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz"
-
+            # Now, build the dashboard
+            cd /var/www/fyzo.xyz/repo/frontend/main-dashboard
+            npm install
+            npm run build
+            
+            # Copy build output to serving directory
+            sudo mkdir -p /var/www/fyzo.xyz/live
+            sudo cp -r out/. /var/www/fyzo.xyz/live/
+        "
+        
         ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo tee /etc/systemd/system/dashboard.service > /dev/null <<EOF
 [Unit]
 Description=MAULA.AI Dashboard
@@ -374,7 +387,7 @@ After=network.target
 [Service]
 Type=simple
 User=ubuntu
-WorkingDirectory=/var/www/fyzo.xyz
+WorkingDirectory=/var/www/fyzo.xyz/live
 ExecStart=/usr/bin/serve -s . -l 3000
 Restart=always
 
