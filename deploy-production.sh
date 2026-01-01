@@ -366,8 +366,9 @@ main() {
             sudo mkdir -p /var/www/fyzo.xyz/repo
             sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz
             
-            # Sync the project files
-            rsync -avz -e "ssh -i $EC2_KEY -o StrictHostKeyChecking=no" --exclude '.git' ./ "$EC2_HOST:/var/www/fyzo.xyz/repo/"
+            # Sync the project files using scp instead of rsync
+            echo "Syncing project files to EC2..."
+            tar -czf - --exclude='.git' --exclude='node_modules' --exclude='*.log' . | ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo mkdir -p /var/www/fyzo.xyz/repo && cd /var/www/fyzo.xyz/repo && sudo tar -xzf - && sudo chown -R ubuntu:ubuntu /var/www/fyzo.xyz/repo"
 
             # Now, build the dashboard
             cd /var/www/fyzo.xyz/repo/frontend/main-dashboard
