@@ -1,0 +1,151 @@
+{
+  "toolName": "FraudGuard",
+  "tagline": "AI-Powered Fraud Detection",
+  "subdomain": "fguard.maula.ai",
+  "port": 3001,
+  "apiPort": 4001,
+  "mlPort": 8001,
+  "aiPort": 6001,
+  "wsUrl": "ws://localhost:6001/ws",
+
+  "systemPrompt": "You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models. You help users analyze transactions, detect suspicious patterns, calculate fraud risk scores (0-100), identify fraud indicators, and generate detailed fraud reports. You can autonomously perform multi-step fraud analysis tasks, open multiple tabs for visualization, and provide actionable recommendations for risk mitigation. Always explain fraud concepts in clear, non-technical language while being thorough in your analysis.",
+
+  "functions": [
+    {
+      "name": "analyze_transaction",
+      "description": "Analyze a transaction for fraud indicators and calculate risk score",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "transaction_id": { "type": "string", "description": "Unique transaction ID" },
+          "amount": { "type": "number", "description": "Transaction amount in USD" },
+          "user_ip": { "type": "string", "description": "User's IP address" },
+          "device_fingerprint": { "type": "string", "description": "Device fingerprint hash" },
+          "email": { "type": "string", "description": "User email address" },
+          "card_last4": { "type": "string", "description": "Last 4 digits of card number" },
+          "merchant_id": { "type": "string", "description": "Merchant identifier" }
+        },
+        "required": ["transaction_id", "amount"]
+      }
+    },
+    {
+      "name": "get_fraud_score",
+      "description": "Get the fraud risk score for a specific transaction",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "transaction_id": { "type": "string", "description": "Transaction ID to get score for" }
+        },
+        "required": ["transaction_id"]
+      }
+    },
+    {
+      "name": "open_risk_visualization",
+      "description": "Open a new tab with risk graphs, charts, and heat maps",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "transaction_id": { "type": "string", "description": "Transaction ID to visualize" },
+          "chart_type": { "type": "string", "enum": ["risk_breakdown", "timeline", "comparison", "heatmap"], "description": "Type of visualization" }
+        }
+      }
+    },
+    {
+      "name": "generate_fraud_report",
+      "description": "Generate a comprehensive fraud analysis report",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "transaction_ids": { "type": "array", "items": { "type": "string" }, "description": "Array of transaction IDs to include" },
+          "report_type": { "type": "string", "enum": ["summary", "detailed", "executive"], "description": "Type of report to generate" },
+          "include_recommendations": { "type": "boolean", "description": "Include mitigation recommendations" }
+        },
+        "required": ["transaction_ids"]
+      }
+    },
+    {
+      "name": "monitor_transaction_stream",
+      "description": "Start real-time monitoring of transaction stream for fraud patterns",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "merchant_id": { "type": "string", "description": "Merchant to monitor" },
+          "threshold_score": { "type": "number", "description": "Risk score threshold for alerts", "minimum": 0, "maximum": 100 },
+          "alert_channels": { "type": "array", "items": { "type": "string", "enum": ["email", "slack", "webhook"] }, "description": "Alert notification channels" }
+        }
+      }
+    }
+  ],
+
+  "ui": {
+    "primaryColor": "#dc2626",
+    "secondaryColor": "#7f1d1d",
+    "accentColor": "#fca5a5",
+    "backgroundColor": "#fef2f2",
+    "textColor": "#1f2937",
+    "borderRadius": "8px",
+    "fontFamily": "Inter, sans-serif"
+  },
+
+  "capabilities": [
+    "Real-time transaction analysis",
+    "Risk score calculation (0-100)",
+    "Fraud pattern detection",
+    "Device fingerprinting analysis",
+    "IP geolocation and risk assessment",
+    "Velocity checks and behavioral analysis",
+    "Machine learning model predictions",
+    "Interactive risk visualizations",
+    "Automated fraud alerts",
+    "Comprehensive reporting",
+    "Multi-merchant support",
+    "API integration capabilities"
+  ],
+
+  "integrations": [
+    "Payment processors (Stripe, PayPal, Square)",
+    "Banking APIs",
+    "Fraud databases (MaxMind, ThreatMetrix)",
+    "SIEM systems",
+    "Email validation services",
+    "Device intelligence platforms"
+  ],
+
+  "apiEndpoints": {
+    "analyze": "/api/fraudguard/analyze",
+    "score": "/api/fraudguard/score",
+    "report": "/api/fraudguard/report",
+    "monitor": "/api/fraudguard/monitor",
+    "visualize": "/api/fraudguard/visualize"
+  },
+
+  "defaultLLM": "claude-3-5-sonnet-20241022",
+  "fallbackLLMs": ["gpt-4o", "grok-beta", "gemini-pro"],
+  "maxTokens": 4096,
+  "temperature": 0.3,
+
+  "welcomeMessage": "Welcome to FraudGuard AI! I'm your intelligent fraud detection assistant. I can analyze transactions in real-time, calculate risk scores, detect suspicious patterns, and help you prevent financial losses. What transaction would you like me to examine?",
+
+  "quickActions": [
+    {
+      "label": "Analyze Transaction",
+      "action": "analyze_transaction",
+      "icon": "🔍"
+    },
+    {
+      "label": "Get Risk Score",
+      "action": "get_fraud_score",
+      "icon": "📊"
+    },
+    {
+      "label": "Generate Report",
+      "action": "generate_fraud_report",
+      "icon": "📋"
+    },
+    {
+      "label": "Start Monitoring",
+      "action": "monitor_transaction_stream",
+      "icon": "👁️"
+    }
+  ]
+}

@@ -1,4 +1,3 @@
-
 import { SettingsState, NavItem } from './types';
 
 export const PROVIDER_CONFIG = [

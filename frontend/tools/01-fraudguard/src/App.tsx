@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import FraudGuardTool from "./components/FraudGuardTool";
-import NeuralLinkInterface from "./components/NeuralLinkInterface";
+import NeuralLinkInterface from "../neural-link-interface";
 
 function App() {
   return (
@@ -13,4 +13,3 @@ function App() {
 }
 
 export default App;
-// UI State

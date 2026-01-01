@@ -1,4 +1,3 @@
-
 export type Sender = 'YOU' | 'AGENT' | 'SYSTEM';
 
 export interface Message {
@@ -18,15 +17,15 @@ export interface ChatSession {
   settings: SettingsState;
 }
 
-export type NeuralTool = 
-  | 'none' 
-  | 'image_gen' 
-  | 'thinking' 
-  | 'deep_research' 
-  | 'shopping' 
-  | 'study' 
-  | 'web_search' 
-  | 'canvas' 
+export type NeuralTool =
+  | 'none'
+  | 'image_gen'
+  | 'thinking'
+  | 'deep_research'
+  | 'shopping'
+  | 'study'
+  | 'web_search'
+  | 'canvas'
   | 'quizzes'
   | 'browser';
 
@@ -57,4 +56,17 @@ export interface NavItem {
   icon: string;
   tool: NeuralTool;
   description: string;
+}
+
+export interface NeuralConfig {
+  toolName: string;
+  systemPrompt: string;
+  functions: any[];
+  ui: {
+    theme: string;
+    primaryColor: string;
+    secondaryColor: string;
+  };
+  capabilities: string[];
+  wsUrl: string;
 }

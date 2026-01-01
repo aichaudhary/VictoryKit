@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { X, Cpu, Activity, Zap, ChevronRight } from 'lucide-react';
 import { NAV_ITEMS } from '../constants';

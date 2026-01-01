@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, Plus, MoreVertical, Terminal, Share2, Copy, Download, Trash2, X, Archive } from 'lucide-react';
 import { ChatSession } from '../types';

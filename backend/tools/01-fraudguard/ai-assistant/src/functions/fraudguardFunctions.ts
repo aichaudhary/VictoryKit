@@ -43,6 +43,8 @@ export class FraudGuardFunctions {
     this.tools.set('get_transaction_history', this.getTransactionHistory.bind(this));
     this.tools.set('create_alert', this.createAlert.bind(this));
     this.tools.set('export_report', this.exportReport.bind(this));
+    this.tools.set('navigate_portal', this.navigatePortal.bind(this));
+    this.tools.set('update_canvas', this.updateCanvas.bind(this));
   }
 
   getToolDefinitions(): ToolDefinition[] {
@@ -159,6 +161,31 @@ export class FraudGuardFunctions {
             title: { type: 'string', description: 'Report title' },
           },
           required: ['format'],
+        },
+      },
+      {
+        name: 'navigate_portal',
+        description: 'Navigate to a specific URL in the neural portal for research or visualization.',
+        parameters: {
+          type: 'object',
+          properties: {
+            url: { type: 'string', description: 'The URL to navigate to' },
+            reason: { type: 'string', description: 'Reason for navigation' },
+          },
+          required: ['url'],
+        },
+      },
+      {
+        name: 'update_canvas',
+        description: 'Update the neural canvas with content for collaborative work.',
+        parameters: {
+          type: 'object',
+          properties: {
+            content: { type: 'string', description: 'Content to display on canvas' },
+            type: { type: 'string', enum: ['text', 'code', 'html', 'image'], description: 'Content type' },
+            title: { type: 'string', description: 'Canvas title' },
+          },
+          required: ['content', 'type'],
         },
       },
     ];
@@ -332,6 +359,32 @@ export class FraudGuardFunctions {
       display: {
         type: 'text',
         content: `Report export initiated. Format: ${args.format.toUpperCase()}`,
+      },
+    };
+  }
+
+  private async navigatePortal(args: Record<string, any>): Promise<FunctionResult> {
+    const { url, reason } = args;
+    
+    return {
+      success: true,
+      data: { url, reason, navigated: true },
+      display: {
+        type: 'text',
+        content: `Navigating to: ${url}${reason ? ` (${reason})` : ''}`,
+      },
+    };
+  }
+
+  private async updateCanvas(args: Record<string, any>): Promise<FunctionResult> {
+    const { content, type, title } = args;
+    
+    return {
+      success: true,
+      data: { content, type, title, updated: true },
+      display: {
+        type: 'text',
+        content: `Canvas updated with ${type} content${title ? `: ${title}` : ''}`,
       },
     };
   }

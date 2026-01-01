@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Columns, Menu, Trash2, ExternalLink, Lock, ChevronRight } from 'lucide-react';
 
@@ -12,11 +11,11 @@ interface HeaderProps {
   rightOpen: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-  onToggleLeft, 
-  onToggleRight, 
-  onToggleNav, 
-  onClear, 
+const Header: React.FC<HeaderProps> = ({
+  onToggleLeft,
+  onToggleRight,
+  onToggleNav,
+  onClear,
   onLock,
   leftOpen,
   rightOpen
@@ -24,28 +23,28 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className="bg-[#111]/90 backdrop-blur-md border-b border-gray-700 p-3 flex items-center justify-between flex-shrink-0 z-50">
       <div className="flex items-center gap-2 md:gap-4">
-        <button 
+        <button
           onClick={onToggleLeft}
           className={`text-gray-400 hover:text-white hover-glow p-1 transition-colors ${leftOpen ? 'text-green-400' : ''}`}
         >
           <Columns size={20} />
         </button>
 
-        <button 
+        <button
           onClick={onToggleNav}
           className="text-green-400 hover:text-white p-1 transition-colors"
         >
           <Menu size={24} />
         </button>
 
-        <button 
+        <button
           onClick={onClear}
           className="text-red-400 hover:text-red-300 p-1 transition-colors"
         >
           <Trash2 size={20} />
         </button>
 
-        <button 
+        <button
           onClick={() => window.open('https://ai.google.dev', '_blank')}
           className="text-cyan-400 hover:text-white p-1 transition-colors"
         >
@@ -54,14 +53,14 @@ const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
-        <button 
+        <button
           onClick={onLock}
           className="bg-gray-800/80 hover:bg-gray-700/80 text-red-400 p-2 rounded-full transition-colors"
         >
           <Lock size={18} />
         </button>
 
-        <button 
+        <button
           onClick={onToggleRight}
           className={`text-gray-400 hover:text-white hover-glow p-1 transition-colors ${rightOpen ? 'text-cyan-400' : ''}`}
         >
