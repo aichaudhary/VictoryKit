@@ -5,6 +5,9 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  
+  // Production base path for subdomain deployment
+  base: "/",
 
   server: {
     port: 3002,
@@ -14,10 +17,9 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:4002",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
       },
       "/ws": {
-        target: "ws://localhost:6002",
+        target: "ws://localhost:4002",
         ws: true,
         changeOrigin: true,
       },

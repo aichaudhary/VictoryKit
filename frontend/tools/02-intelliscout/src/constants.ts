@@ -90,9 +90,13 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const API_ENDPOINTS = {
-  INTELLISCOUT_API: "http://localhost:4002",
-  ML_API: "http://localhost:8002",
-  AI_API: "http://localhost:6002",
+  // Production endpoints - use /api proxy for subdomain deployment
+  INTELLISCOUT_API: "/api",
+  ML_API: "/api/ml",
+  AI_API: "/api/ai",
+  WS_URL: typeof window !== 'undefined' 
+    ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws`
+    : "ws://localhost:4002/ws",
 };
 
 export const NEURAL_PRESETS: Record<string, { prompt: string; temp: number }> =

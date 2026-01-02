@@ -1,0 +1,242 @@
+{
+  "toolName": "DataLossPrevention",
+  "tagline": "Enterprise Data Loss Prevention",
+  "subdomain": "dlp.maula.ai",
+  "port": 3041,
+  "apiPort": 4041,
+  "mlPort": 8041,
+  "aiPort": 6041,
+  "databaseName": "dlp_db",
+  
+  "systemPrompt": "You are DLP AI, an expert assistant for Data Loss Prevention. You help users scan content for sensitive data, create and manage DLP policies, investigate incidents, and protect organizational data from unauthorized exposure. You can analyze documents, emails, and endpoints for PII, financial data, healthcare information, and credentials.",
+  
+  "functions": [
+    {
+      "name": "scan_content",
+      "description": "Scan text content for sensitive data patterns (PII, financial, healthcare, credentials)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Text content to scan for sensitive data"
+          },
+          "patterns": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Specific patterns to check (SSN, CREDIT_CARD, EMAIL, etc.)"
+          }
+        },
+        "required": ["content"]
+      }
+    },
+    {
+      "name": "scan_file",
+      "description": "Scan uploaded file for sensitive data",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "description": "ID of the uploaded file to scan"
+          }
+        },
+        "required": ["fileId"]
+      }
+    },
+    {
+      "name": "create_policy",
+      "description": "Create a new DLP policy with conditions and actions",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Policy name"
+          },
+          "dataTypes": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Data types to monitor (PII, Financial, Healthcare)"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["allow", "block", "quarantine", "encrypt", "warn", "audit"],
+            "description": "Action to take when policy is triggered"
+          }
+        },
+        "required": ["name", "dataTypes", "action"]
+      }
+    },
+    {
+      "name": "get_incidents",
+      "description": "Get DLP incidents with optional filters",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Filter by severity"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["open", "investigating", "contained", "remediated", "closed"],
+            "description": "Filter by status"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Maximum number of incidents to return"
+          }
+        }
+      }
+    },
+    {
+      "name": "classify_data",
+      "description": "Auto-classify content sensitivity level",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Content to classify"
+          }
+        },
+        "required": ["content"]
+      }
+    },
+    {
+      "name": "anonymize_data",
+      "description": "Anonymize/redact sensitive data in content",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Content to anonymize"
+          }
+        },
+        "required": ["content"]
+      }
+    },
+    {
+      "name": "get_dashboard",
+      "description": "Get DLP dashboard statistics and metrics",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "export_report",
+      "description": "Generate and export DLP report",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": ["pdf", "csv", "json"],
+            "description": "Export format"
+          },
+          "reportType": {
+            "type": "string",
+            "enum": ["incidents", "policies", "risk-summary", "compliance"],
+            "description": "Type of report to generate"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Report start date (ISO format)"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "Report end date (ISO format)"
+          }
+        },
+        "required": ["format", "reportType"]
+      }
+    }
+  ],
+  
+  "colorTheme": {
+    "primary": "#3b82f6",
+    "secondary": "#8b5cf6",
+    "accent": "#06b6d4",
+    "background": "#0a0e27",
+    "surface": "#1a1f3a",
+    "text": "#ffffff",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "error": "#ef4444",
+    "critical": "#dc2626"
+  },
+  
+  "navigationItems": [
+    {
+      "label": "Dashboard",
+      "path": "/dashboard",
+      "icon": "LayoutDashboard"
+    },
+    {
+      "label": "Content Scanner",
+      "path": "/scanner",
+      "icon": "Search"
+    },
+    {
+      "label": "Policies",
+      "path": "/policies",
+      "icon": "Shield"
+    },
+    {
+      "label": "Incidents",
+      "path": "/incidents",
+      "icon": "AlertTriangle"
+    },
+    {
+      "label": "Classifications",
+      "path": "/classifications",
+      "icon": "Tags"
+    },
+    {
+      "label": "Endpoints",
+      "path": "/endpoints",
+      "icon": "Monitor"
+    },
+    {
+      "label": "Reports",
+      "path": "/reports",
+      "icon": "FileText"
+    },
+    {
+      "label": "Settings",
+      "path": "/settings",
+      "icon": "Settings"
+    }
+  ],
+  
+  "sensitiveDataTypes": [
+    { "key": "PII", "label": "Personal Identifiable Information", "color": "#ef4444" },
+    { "key": "FINANCIAL", "label": "Financial Data", "color": "#f59e0b" },
+    { "key": "HEALTH", "label": "Healthcare/PHI", "color": "#8b5cf6" },
+    { "key": "CREDENTIALS", "label": "Credentials/Secrets", "color": "#dc2626" },
+    { "key": "IP", "label": "Intellectual Property", "color": "#3b82f6" }
+  ],
+  
+  "classificationLevels": [
+    { "level": "public", "label": "Public", "color": "#10b981" },
+    { "level": "internal", "label": "Internal", "color": "#3b82f6" },
+    { "level": "confidential", "label": "Confidential", "color": "#f59e0b" },
+    { "level": "restricted", "label": "Restricted", "color": "#ef4444" },
+    { "level": "top_secret", "label": "Top Secret", "color": "#dc2626" }
+  ],
+  
+  "complianceFrameworks": [
+    "GDPR",
+    "HIPAA",
+    "PCI-DSS",
+    "SOX",
+    "CCPA",
+    "FERPA",
+    "GLBA",
+    "ISO-27001"
+  ]
+}

@@ -3,9 +3,37 @@ const { body, param, query } = require('express-validator');
 const threatController = require('../controllers/threat.controller');
 const detectionController = require('../controllers/detection.controller');
 const reportController = require('../controllers/report.controller');
+const feedsController = require('../controllers/feeds.controller');
 const { validate } = require('../../../../shared/middleware/validation.middleware');
 
 const router = express.Router();
+
+// ============================================================================
+// Real-Time Threat Feeds Routes (NEW)
+// ============================================================================
+
+// Free feeds (no API key required)
+router.get('/feeds/free', feedsController.getAllFreeFeeds);
+router.get('/feeds/stats', feedsController.getRealTimeStats);
+router.get('/feeds/urlhaus', feedsController.getURLhausRecent);
+router.get('/feeds/threatfox', feedsController.getThreatFoxRecent);
+router.get('/feeds/feodo', feedsController.getFeodoTrackerC2);
+router.get('/feeds/sslbl', feedsController.getSSLBlacklist);
+router.get('/feeds/malwarebazaar', feedsController.getMalwareBazaarRecent);
+
+// Comprehensive lookup
+router.get('/feeds/lookup/:indicator', feedsController.lookupIndicator);
+
+// Individual paid service lookups
+router.get('/feeds/virustotal/:indicator', feedsController.virusTotalLookup);
+router.get('/feeds/abuseipdb/:ip', feedsController.abuseIPDBCheck);
+router.get('/feeds/shodan/:ip', feedsController.shodanLookup);
+router.get('/feeds/alienvault/:indicator', feedsController.alienVaultLookup);
+router.get('/feeds/greynoise/:ip', feedsController.greyNoiseCheck);
+router.get('/feeds/ibmxforce/:indicator', feedsController.ibmXForceLookup);
+
+// API key status
+router.get('/feeds/status', feedsController.getApiKeyStatus);
 
 // ============================================================================
 // Threat Routes

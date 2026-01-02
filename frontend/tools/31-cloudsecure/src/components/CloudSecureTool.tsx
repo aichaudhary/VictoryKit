@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Cloud,
   Shield,
@@ -12,17 +12,12 @@ import {
   RefreshCw,
   Globe,
   Activity,
+  AlertCircle,
+  TrendingUp,
+  Target,
+  Settings,
 } from "lucide-react";
-
-interface CloudFinding {
-  id: string;
-  resource: string;
-  provider: "aws" | "azure" | "gcp";
-  severity: "critical" | "high" | "medium" | "low";
-  category: string;
-  description: string;
-  recommendation: string;
-}
+import cloudSecureAPI, { CloudFinding, Scan, DashboardData, AttackPath } from "../services/api";
 
 interface ScanResult {
   score: number;
@@ -30,6 +25,7 @@ interface ScanResult {
   findings: CloudFinding[];
   complianceStatus: { framework: string; score: number }[];
   scanTime: string;
+  attackPaths?: { id: string; name: string; severity: string; riskScore: number }[];
 }
 
 const mockFindings: CloudFinding[] = [
@@ -88,6 +84,11 @@ export default function CloudSecureTool() {
   const [liveFindings, setLiveFindings] = useState<CloudFinding[]>([]);
   const [scanProgress, setScanProgress] = useState(0);
   const [currentResource, setCurrentResource] = useState("");
+  const [currentScanId, setCurrentScanId] = useState<string | null>(null);
+  const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>(["CIS", "SOC2", "PCI-DSS", "HIPAA"]);
+  const [apiConnected, setApiConnected] = useState<boolean | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const resources = [
     "EC2 Instances",
@@ -98,11 +99,113 @@ export default function CloudSecureTool() {
     "Lambda Functions",
     "Azure VMs",
     "GKE Clusters",
+    "Security Groups",
+    "Key Vaults",
+    "Storage Accounts",
+    "Cloud SQL",
   ];
 
+  // Check API health on mount
   useEffect(() => {
-    if (isScanning) {
-      const interval = setInterval(() => {
+    const checkAPI = async () => {
+      try {
+        await cloudSecureAPI.checkHealth();
+        setApiConnected(true);
+        // Load dashboard data
+        const dashResponse = await cloudSecureAPI.getDashboard();
+        if (dashResponse.success) {
+          setDashboardData(dashResponse.data);
+        }
+      } catch (err) {
+        console.warn("CloudSecure API not available, using mock mode");
+        setApiConnected(false);
+      }
+    };
+    checkAPI();
+  }, []);
+
+  // Poll for scan status
+  useEffect(() => {
+    if (!currentScanId || !isScanning) return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const statusResponse = await cloudSecureAPI.getScanStatus(currentScanId);
+        const scan = statusResponse.data.scan;
+        
+        setScanProgress(scan.progress);
+        setCurrentResource(resources[Math.floor(Math.random() * resources.length)]);
+
+        if (scan.status === 'completed') {
+          clearInterval(pollInterval);
+          setIsScanning(false);
+          setScanProgress(100);
+          
+          // Get full results
+          const resultsResponse = await cloudSecureAPI.getScanResults(currentScanId);
+          const { scan: completedScan, findings } = resultsResponse.data;
+          
+          setLiveFindings(findings.slice(0, 10));
+          setResult({
+            score: calculateSecurityScore(completedScan.results!),
+            totalResources: completedScan.results!.totalResources,
+            findings: findings,
+            complianceStatus: completedScan.results!.complianceScores,
+            scanTime: new Date(completedScan.completedAt!).toLocaleTimeString(),
+          });
+        } else if (scan.status === 'failed') {
+          clearInterval(pollInterval);
+          setIsScanning(false);
+          setError('Scan failed. Please try again.');
+        }
+      } catch (err) {
+        console.error('Error polling scan status:', err);
+      }
+    }, 2000);
+
+    return () => clearInterval(pollInterval);
+  }, [currentScanId, isScanning]);
+
+  const calculateSecurityScore = (results: any): number => {
+    if (!results) return 0;
+    const { findingsCount } = results;
+    const totalFindings = findingsCount.critical + findingsCount.high + findingsCount.medium + findingsCount.low;
+    if (totalFindings === 0) return 100;
+    
+    const weightedScore = 
+      (findingsCount.critical * 25) + 
+      (findingsCount.high * 15) + 
+      (findingsCount.medium * 5) + 
+      (findingsCount.low * 1);
+    
+    return Math.max(0, Math.min(100, 100 - Math.round(weightedScore / results.totalResources * 10)));
+  };
+
+  const handleScan = async () => {
+    setIsScanning(true);
+    setLiveFindings([]);
+    setScanProgress(0);
+    setResult(null);
+    setError(null);
+
+    if (apiConnected) {
+      try {
+        const scanConfig = {
+          name: `Security Scan - ${new Date().toISOString()}`,
+          providers: provider === 'all' ? ['aws', 'azure', 'gcp'] : [provider],
+          scanType,
+          frameworks: selectedFrameworks,
+        };
+
+        const response = await cloudSecureAPI.startScan(scanConfig);
+        setCurrentScanId(response.data.scan._id);
+      } catch (err: any) {
+        setError(err.message || 'Failed to start scan');
+        setIsScanning(false);
+      }
+    } else {
+      // Mock mode - simulate scan
+      const mockInterval = setInterval(() => {
         setScanProgress((p) => Math.min(p + Math.random() * 15, 95));
         setCurrentResource(
           resources[Math.floor(Math.random() * resources.length)]
@@ -112,32 +215,37 @@ export default function CloudSecureTool() {
           if (finding) setLiveFindings((prev) => [...prev, finding]);
         }
       }, 800);
-      return () => clearInterval(interval);
+
+      setTimeout(() => {
+        clearInterval(mockInterval);
+        setIsScanning(false);
+        setScanProgress(100);
+        setResult({
+          score: 72,
+          totalResources: 156,
+          findings: mockFindings,
+          complianceStatus: [
+            { framework: "CIS AWS", score: 78 },
+            { framework: "SOC 2", score: 85 },
+            { framework: "PCI-DSS", score: 65 },
+            { framework: "HIPAA", score: 70 },
+          ],
+          scanTime: new Date().toLocaleTimeString(),
+          attackPaths: [
+            { id: "1", name: "Public S3 → IAM Escalation → RDS Access", severity: "critical", riskScore: 92 },
+            { id: "2", name: "Open SSH → EC2 Pivot → S3 Exfil", severity: "high", riskScore: 78 },
+          ],
+        });
+      }, 6000);
     }
-  }, [isScanning, liveFindings.length]);
+  };
 
-  const handleScan = () => {
-    setIsScanning(true);
-    setLiveFindings([]);
-    setScanProgress(0);
-    setResult(null);
-
-    setTimeout(() => {
-      setIsScanning(false);
-      setScanProgress(100);
-      setResult({
-        score: 72,
-        totalResources: 156,
-        findings: mockFindings,
-        complianceStatus: [
-          { framework: "CIS AWS", score: 78 },
-          { framework: "SOC 2", score: 85 },
-          { framework: "PCI-DSS", score: 65 },
-          { framework: "HIPAA", score: 70 },
-        ],
-        scanTime: new Date().toLocaleTimeString(),
-      });
-    }, 6000);
+  const toggleFramework = (fw: string) => {
+    setSelectedFrameworks(prev => 
+      prev.includes(fw) 
+        ? prev.filter(f => f !== fw)
+        : [...prev, fw]
+    );
   };
 
   const getSeverityColor = (severity: string) => {
@@ -166,6 +274,36 @@ export default function CloudSecureTool() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">CloudSecure</h1>
           <p className="text-sky-300">Cloud Security Posture Management</p>
+          
+          {/* API Connection Status */}
+          <div className="flex items-center justify-center gap-2 mt-3">
+            {apiConnected === null ? (
+              <span className="flex items-center gap-2 text-sm text-sky-400">
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                Connecting to API...
+              </span>
+            ) : apiConnected ? (
+              <span className="flex items-center gap-2 text-sm text-green-400">
+                <CheckCircle className="w-4 h-4" />
+                API Connected (Live Mode)
+              </span>
+            ) : (
+              <span className="flex items-center gap-2 text-sm text-yellow-400">
+                <AlertCircle className="w-4 h-4" />
+                Demo Mode (API Offline)
+              </span>
+            )}
+          </div>
+
+          {/* Error Display */}
+          {error && (
+            <div className="mt-3 p-3 bg-red-900/30 border border-red-500/50 rounded-lg text-red-300 text-sm max-w-md mx-auto">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                {error}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 3-Column Layout */}
@@ -211,14 +349,20 @@ export default function CloudSecureTool() {
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                {["CIS", "SOC2", "PCI", "HIPAA"].map((fw) => (
+                {["CIS", "SOC2", "PCI-DSS", "HIPAA"].map((fw) => (
                   <label
                     key={fw}
-                    className="flex items-center gap-2 p-3 rounded-lg bg-sky-950/50 border border-sky-700/30 cursor-pointer hover:border-sky-500/50 transition-all"
+                    className={`flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-all ${
+                      selectedFrameworks.includes(fw)
+                        ? "bg-sky-800/50 border border-sky-500/50"
+                        : "bg-sky-950/50 border border-sky-700/30 hover:border-sky-500/30"
+                    }`}
+                    onClick={() => toggleFramework(fw)}
                   >
                     <input
                       type="checkbox"
-                      defaultChecked
+                      checked={selectedFrameworks.includes(fw)}
+                      onChange={() => toggleFramework(fw)}
                       className="rounded text-sky-500"
                     />
                     <span className="text-sm text-sky-200">{fw}</span>
@@ -423,6 +567,40 @@ export default function CloudSecureTool() {
                     ))}
                   </div>
                 </div>
+
+                {/* Attack Paths */}
+                {result.attackPaths && result.attackPaths.length > 0 && (
+                  <div>
+                    <p className="text-sm font-medium text-sky-300 mb-2 flex items-center gap-2">
+                      <Target className="w-4 h-4 text-red-400" />
+                      Attack Paths Detected
+                    </p>
+                    <div className="space-y-2">
+                      {result.attackPaths.map((path) => (
+                        <div
+                          key={path.id}
+                          className={`p-2 rounded-lg border ${
+                            path.severity === 'critical'
+                              ? 'bg-red-900/20 border-red-500/30'
+                              : 'bg-orange-900/20 border-orange-500/30'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className={`text-xs font-bold uppercase ${
+                              path.severity === 'critical' ? 'text-red-400' : 'text-orange-400'
+                            }`}>
+                              {path.severity}
+                            </span>
+                            <span className="text-xs text-sky-300">
+                              Risk: {path.riskScore}%
+                            </span>
+                          </div>
+                          <p className="text-xs text-sky-200">{path.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <p className="text-xs text-sky-500 text-center">
                   Scanned at {result.scanTime}

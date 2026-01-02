@@ -1,3 +1,5 @@
+// DLP Types - Data Loss Prevention Tool #41
+
 export type Sender = 'YOU' | 'AGENT' | 'SYSTEM';
 
 export interface Message {
@@ -24,18 +26,18 @@ export interface ChatSession {
   settings: SettingsState;
 }
 
-export type NeuralTool = 
+export type DLPTool = 
   | 'none' 
-  | 'fraud_analysis'
-  | 'risk_visualization'
-  | 'transaction_history'
-  | 'alerts'
+  | 'content_scan'
+  | 'file_scan'
+  | 'cloud_scan'
+  | 'policy_manager'
+  | 'incident_response'
+  | 'endpoint_monitor'
   | 'reports'
-  | 'web_search'
-  | 'canvas'
-  | 'browser';
+  | 'integrations';
 
-export type WorkspaceMode = 'CHAT' | 'PORTAL' | 'CANVAS' | 'FRAUD_DASHBOARD';
+export type WorkspaceMode = 'CHAT' | 'PORTAL' | 'CANVAS' | 'DLP_DASHBOARD';
 
 export interface CanvasState {
   content: string;
@@ -51,53 +53,150 @@ export interface SettingsState {
   maxTokens: number;
   provider: string;
   model: string;
-  activeTool: NeuralTool;
+  activeTool: DLPTool;
   workspaceMode: WorkspaceMode;
   portalUrl: string;
   canvas: CanvasState;
+  autoRemediation: boolean;
+  scanOnUpload: boolean;
 }
 
 export interface NavItem {
   label: string;
   icon: string;
-  tool: NeuralTool;
+  tool: DLPTool;
   description: string;
 }
 
-// FraudGuard Specific Types
-export interface Transaction {
+// DLP Specific Types
+export interface ScanResult {
   id: string;
-  transaction_id: string;
-  amount: number;
-  currency: string;
-  user_ip?: string;
-  device_fingerprint?: string;
-  email?: string;
-  card_last4?: string;
-  merchant_id?: string;
+  scanId: string;
+  source: 'content' | 'file' | 'email' | 'cloud' | 'endpoint';
+  fileName?: string;
+  riskScore: number;
+  riskLevel: 'critical' | 'high' | 'medium' | 'low';
+  findings: Finding[];
   timestamp: string;
-  status: 'pending' | 'approved' | 'declined' | 'flagged';
-  fraud_score?: number;
-  risk_level?: 'low' | 'medium' | 'high';
+  scannedBy?: string;
+  status: 'clean' | 'violation' | 'quarantined';
 }
 
-export interface FraudScore {
-  transaction_id: string;
-  score: number;
-  risk_level: 'low' | 'medium' | 'high';
-  confidence: number;
-  indicators: FraudIndicator[];
-  recommendation: string;
-  ml_model_version: string;
-  analyzed_at: string;
-}
-
-export interface FraudIndicator {
+export interface Finding {
   type: string;
-  severity: 'low' | 'medium' | 'high';
-  description: string;
-  weight: number;
+  category: string;
+  count: number;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  locations: string[];
+  redactedSample?: string;
 }
+
+export type PolicyAction = 'block' | 'alert' | 'quarantine' | 'encrypt' | 'log';
+export type PolicyScopeType = 'all' | 'email' | 'cloud' | 'endpoint' | 'web';
+
+export interface DLPPolicy {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
+  dataTypes: string[];
+  actions: PolicyAction[];
+  scope: PolicyScopeType[];
+  patterns: string[];
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DLPIncident {
+  id: string;
+  policyId?: string;
+  policyName?: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  status: 'open' | 'investigating' | 'resolved' | 'dismissed';
+  type: string;
+  source: string;
+  destination: string;
+  user?: string;
+  dataTypes: string[];
+  matchCount: number;
+  action: string;
+  description: string;
+  filePath?: string;
+  resolution?: string;
+  timestamp: string;
+  resolvedAt?: string;
+  resolvedBy?: string;
+  notes?: string;
+}
+
+export interface CloudIntegration {
+  id: string;
+  name: string;
+  type: 'microsoft365' | 'google' | 'slack' | 'aws' | 'azure' | 'dropbox' | 'box';
+  status: 'connected' | 'disconnected' | 'error';
+  lastSync?: string;
+  itemsScanned?: number;
+  violationsFound?: number;
+  icon: string;
+}
+
+export interface EndpointAgent {
+  id: string;
+  hostname: string;
+  os: string;
+  osVersion: string;
+  agentVersion: string;
+  status: 'online' | 'offline' | 'warning';
+  lastSeen: string;
+  user?: string;
+  ip?: string;
+  policyGroups: string[];
+  features: {
+    usbMonitoring: boolean;
+    clipboardMonitoring: boolean;
+    printMonitoring: boolean;
+    screenCapture: boolean;
+    fileTransfer: boolean;
+  };
+  stats?: {
+    blockedActions: number;
+    alertsGenerated: number;
+    filesScanned: number;
+  };
+}
+
+export interface DashboardStats {
+  totalScans: number;
+  totalViolations: number;
+  activeIncidents: number;
+  policiesEnabled: number;
+  riskScore: number;
+  dataTypesProtected: number;
+  endpointsMonitored: number;
+  cloudAppsConnected: number;
+}
+
+export interface DataClassification {
+  id: string;
+  name: string;
+  description: string;
+  level: 'public' | 'internal' | 'confidential' | 'restricted';
+  dataTypes: string[];
+  retentionDays: number;
+  encryptionRequired: boolean;
+}
+
+export type DLPTab = 'dashboard' | 'scan' | 'policies' | 'incidents' | 'integrations' | 'endpoints' | 'reports';
+
+// Data Type Categories
+export const DATA_CATEGORIES = {
+  PII: ['ssn', 'driver_license', 'passport', 'national_id', 'date_of_birth'],
+  FINANCIAL: ['credit_card', 'bank_account', 'routing_number', 'tax_id', 'swift_code'],
+  HEALTHCARE: ['medical_record', 'insurance_id', 'diagnosis', 'prescription', 'hipaa'],
+  CREDENTIALS: ['password', 'api_key', 'access_token', 'private_key', 'secret'],
+  CORPORATE: ['confidential', 'trade_secret', 'internal_only', 'restricted'],
+} as const;
 
 export interface Alert {
   id: string;
@@ -126,4 +225,28 @@ export interface Tab {
   content: any;
   status: 'loading' | 'active' | 'complete' | 'error';
   aiGenerated: boolean;
+}
+
+// Transaction type for FraudGuard compatibility
+export interface Transaction {
+  id: string;
+  amount: number;
+  currency: string;
+  user_email: string;
+  merchant_name: string;
+  merchant_category: string;
+  card_last_four: string;
+  timestamp: string;
+  ip_address: string;
+  location_city: string;
+  fraud_score?: number;
+  status?: 'pending' | 'approved' | 'declined' | 'flagged';
+}
+
+// Fraud Score type
+export interface FraudScore {
+  score: number;
+  risk_level: 'low' | 'medium' | 'high' | 'critical';
+  indicators: string[];
+  recommendation: string;
 }

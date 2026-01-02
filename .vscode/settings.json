@@ -135,5 +135,6 @@
     "08-securecode": 4008,
     "09-compliancecheck": 4009,
     "10-dataguardian": 4010
-  }
+  },
+  "postman.settings.dotenv-detection-notification-visibility": false
 }

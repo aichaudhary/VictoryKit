@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   Shield,
   Search,
@@ -9,6 +9,8 @@ import {
   Target,
   Wifi,
   Globe,
+  AlertTriangle,
+  RefreshCw,
 } from "lucide-react";
 import VulnScanForm, { ScanFormData } from "./VulnScanForm";
 import LiveScanPanel, {
@@ -21,6 +23,11 @@ import AnimatedVulnResult, {
   RiskLevel,
   Vulnerability,
 } from "./AnimatedVulnResult";
+import { scanApi, dashboardApi, Scan } from "../services/vulnscan.api";
+
+// Environment check - use real API if available
+const USE_REAL_API = import.meta.env.VITE_USE_REAL_API === 'true';
+const POLL_INTERVAL = 2000; // 2 seconds
 
 // Simulated vulnerability database
 const VULN_DATABASE: Vulnerability[] = [
@@ -109,14 +116,60 @@ const VulnScanTool: React.FC = () => {
   const [discoveredPorts, setDiscoveredPorts] = useState<DiscoveredPort[]>([]);
   const [currentTarget, setCurrentTarget] = useState<string | undefined>();
   const [progress, setProgress] = useState(0);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [isOnline, setIsOnline] = useState(true);
   const [stats, setStats] = useState({
-    scansToday: 1284,
-    vulnsDetected: 3847,
-    avgScanTime: 12.4,
-    hostsScanned: 847,
+    scansToday: 0,
+    vulnsDetected: 0,
+    avgScanTime: 0,
+    hostsScanned: 0,
   });
 
   const abortRef = useRef(false);
+  const pollRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Load initial stats from API
+  useEffect(() => {
+    const loadStats = async () => {
+      if (!USE_REAL_API) {
+        // Fallback to mock stats
+        setStats({
+          scansToday: 1284,
+          vulnsDetected: 3847,
+          avgScanTime: 12.4,
+          hostsScanned: 847,
+        });
+        return;
+      }
+
+      try {
+        const dashboardData = await dashboardApi.getDashboardData();
+        setStats({
+          scansToday: dashboardData.scanStats?.totalScans || 0,
+          vulnsDetected: dashboardData.scanStats?.totalVulnerabilities || 0,
+          avgScanTime: dashboardData.scanStats?.averageDuration || 0,
+          hostsScanned: dashboardData.assetStats?.total || 0,
+        });
+        setIsOnline(true);
+        setApiError(null);
+      } catch (error) {
+        console.warn('Could not load dashboard stats, using simulation mode:', error);
+        setIsOnline(false);
+        // Fallback to mock stats
+        setStats({
+          scansToday: 1284,
+          vulnsDetected: 3847,
+          avgScanTime: 12.4,
+          hostsScanned: 847,
+        });
+      }
+    };
+
+    loadStats();
+    // Refresh stats every 30 seconds
+    const interval = setInterval(loadStats, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -465,6 +518,257 @@ const VulnScanTool: React.FC = () => {
     };
   };
 
+  // Real API scan handler
+  const runRealScan = async (data: ScanFormData): Promise<ScanResult | null> => {
+    const startTime = Date.now();
+    setApiError(null);
+
+    // Initialize steps
+    const scanSteps: ScanStep[] = [
+      { id: "init", label: "Initialize Scanner", status: "running" },
+      { id: "discovery", label: "Host Discovery", status: "pending" },
+      { id: "ports", label: "Port Scanning", status: "pending" },
+      { id: "services", label: "Service Detection", status: "pending" },
+      { id: "os", label: "OS Fingerprinting", status: "pending" },
+      { id: "vulns", label: "Vulnerability Detection", status: "pending" },
+      { id: "ssl", label: "SSL/TLS Analysis", status: "pending" },
+      { id: "cve", label: "CVE Matching", status: "pending" },
+      { id: "report", label: "Generate Report", status: "pending" },
+    ];
+    setSteps(scanSteps);
+    setProgress(5);
+
+    try {
+      // Create scan via API
+      addEvent({
+        type: "info",
+        severity: "info",
+        message: "Creating scan job on server...",
+      });
+
+      const scan = await scanApi.createScan({
+        targetType: data.scanType === 'web' ? 'web_application' : 
+                    data.scanType === 'network' ? 'network' : 'host',
+        targetIdentifier: data.target,
+        scanType: data.scanType === 'quick' ? 'quick' : 
+                  data.scanType === 'full' ? 'full' : 
+                  data.scanType === 'stealth' ? 'unauthenticated' : 'quick',
+        scanConfig: {
+          ports: { range: data.portRange },
+          depth: data.scanType,
+          options: data.options
+        }
+      });
+
+      updateStep("init", { status: "complete" });
+      setProgress(10);
+
+      addEvent({
+        type: "info",
+        severity: "info",
+        message: `Scan ${scan.scanId} created successfully`,
+      });
+
+      // Poll for scan progress
+      return await pollScanProgress(scan._id, scanSteps, startTime);
+
+    } catch (error: any) {
+      console.error('Scan failed:', error);
+      setApiError(error.message || 'Scan failed');
+      addEvent({
+        type: "warning",
+        severity: "high",
+        message: `Scan error: ${error.message}`,
+      });
+      
+      // Mark all pending steps as failed
+      setSteps(prev => prev.map(s => 
+        s.status === 'pending' || s.status === 'running' 
+          ? { ...s, status: 'error' as const } 
+          : s
+      ));
+      
+      return null;
+    }
+  };
+
+  // Poll scan progress from API
+  const pollScanProgress = async (scanId: string, steps: ScanStep[], startTime: number): Promise<ScanResult | null> => {
+    return new Promise((resolve) => {
+      const poll = async () => {
+        if (abortRef.current) {
+          resolve(null);
+          return;
+        }
+
+        try {
+          const scan = await scanApi.getScanById(scanId);
+          
+          // Update progress based on scan status
+          const progressData = scan.progress || { percentage: 0, currentPhase: '', message: '' };
+          setProgress(progressData.percentage || 0);
+          
+          // Update steps based on current phase
+          updateStepsFromPhase(progressData.currentPhase);
+
+          // Add events from scan
+          if (progressData.message) {
+            addEvent({
+              type: "info",
+              severity: "info",
+              message: progressData.message,
+            });
+          }
+
+          // Update discovered ports
+          if (scan.results?.services) {
+            const ports: DiscoveredPort[] = scan.results.services.map((svc: any) => ({
+              port: svc.port,
+              state: 'open',
+              service: svc.service,
+              version: svc.version
+            }));
+            setDiscoveredPorts(ports);
+            setPortsOpen(ports.length);
+          }
+
+          if (scan.results?.openPorts) {
+            setPortsScanned(scan.results.openPorts.length);
+          }
+
+          // Check if scan is complete
+          if (scan.status === 'completed' || scan.status === 'failed') {
+            if (pollRef.current) {
+              clearTimeout(pollRef.current);
+              pollRef.current = null;
+            }
+
+            if (scan.status === 'completed') {
+              const result = convertScanToResult(scan, startTime);
+              resolve(result);
+            } else {
+              setApiError('Scan failed on server');
+              resolve(null);
+            }
+            return;
+          }
+
+          // Continue polling
+          pollRef.current = setTimeout(poll, POLL_INTERVAL);
+        } catch (error: any) {
+          console.error('Poll error:', error);
+          setApiError(error.message);
+          resolve(null);
+        }
+      };
+
+      poll();
+    });
+  };
+
+  // Update step status based on phase
+  const updateStepsFromPhase = (phase: string) => {
+    const phaseMap: Record<string, string[]> = {
+      'initializing': ['init'],
+      'host_discovery': ['init', 'discovery'],
+      'port_scanning': ['init', 'discovery', 'ports'],
+      'service_detection': ['init', 'discovery', 'ports', 'services'],
+      'os_detection': ['init', 'discovery', 'ports', 'services', 'os'],
+      'vulnerability_scanning': ['init', 'discovery', 'ports', 'services', 'os', 'vulns'],
+      'ssl_analysis': ['init', 'discovery', 'ports', 'services', 'os', 'vulns', 'ssl'],
+      'cve_matching': ['init', 'discovery', 'ports', 'services', 'os', 'vulns', 'ssl', 'cve'],
+      'generating_report': ['init', 'discovery', 'ports', 'services', 'os', 'vulns', 'ssl', 'cve', 'report'],
+    };
+
+    const completedSteps = phaseMap[phase] || [];
+    
+    setSteps(prev => prev.map(s => {
+      if (completedSteps.includes(s.id)) {
+        if (s.id === completedSteps[completedSteps.length - 1]) {
+          return { ...s, status: 'running' };
+        }
+        return { ...s, status: 'complete' };
+      }
+      return s;
+    }));
+  };
+
+  // Convert API scan result to frontend format
+  const convertScanToResult = (scan: Scan, startTime: number): ScanResult => {
+    const summary = scan.results?.summary || { critical: 0, high: 0, medium: 0, low: 0, info: 0, total: 0 };
+    
+    // Calculate risk level
+    let riskLevel: RiskLevel;
+    let riskScore: number;
+
+    if (summary.critical > 0) {
+      riskLevel = "CRITICAL";
+      riskScore = Math.min(100, 80 + summary.critical * 5);
+    } else if (summary.high >= 2) {
+      riskLevel = "HIGH";
+      riskScore = Math.min(79, 60 + summary.high * 5);
+    } else if (summary.high >= 1 || summary.medium >= 3) {
+      riskLevel = "MEDIUM";
+      riskScore = Math.min(59, 40 + summary.medium * 5);
+    } else if (summary.total > 0) {
+      riskLevel = "LOW";
+      riskScore = Math.min(39, 20 + summary.total * 3);
+    } else {
+      riskLevel = "SECURE";
+      riskScore = Math.max(5, scan.results?.openPorts?.length || 0);
+    }
+
+    // Generate recommendations
+    const recommendations: string[] = [];
+    if (summary.critical > 0) {
+      recommendations.push("Immediately patch critical vulnerabilities");
+    }
+    if (summary.high > 0) {
+      recommendations.push("Schedule patching for high-severity issues within 7 days");
+    }
+    if ((scan.results?.openPorts?.length || 0) > 5) {
+      recommendations.push("Review open ports and close unnecessary services");
+    }
+    recommendations.push("Implement regular vulnerability scanning schedule");
+    recommendations.push("Enable intrusion detection/prevention systems");
+
+    // Mark all steps complete
+    setSteps(prev => prev.map(s => ({ ...s, status: 'complete' as const })));
+    setProgress(100);
+
+    return {
+      riskLevel,
+      riskScore,
+      target: scan.targetIdentifier,
+      scanType: scan.scanType,
+      summary: generateSummaryText(riskLevel, summary, scan.targetIdentifier, scan.results?.openPorts?.length || 0),
+      portsScanned: scan.results?.openPorts?.length || 0,
+      portsOpen: scan.results?.openPorts?.length || 0,
+      servicesDetected: scan.results?.services?.length || 0,
+      vulnerabilities: [], // Will be loaded separately if needed
+      osDetected: scan.results?.osDetection?.name || 'Unknown',
+      sslGrade: undefined, // From SSL analysis
+      headerScore: 75,
+      recommendations,
+      scanDuration: Date.now() - startTime,
+    };
+  };
+
+  const generateSummaryText = (riskLevel: RiskLevel, summary: any, target: string, portsOpen: number): string => {
+    switch (riskLevel) {
+      case 'CRITICAL':
+        return `Critical security issues detected on ${target}. ${summary.critical} critical and ${summary.high} high severity vulnerabilities require immediate attention.`;
+      case 'HIGH':
+        return `Significant vulnerabilities found on ${target}. ${summary.total} total issues discovered across ${portsOpen} open ports.`;
+      case 'MEDIUM':
+        return `Moderate security concerns on ${target}. ${summary.total} vulnerabilities identified that should be addressed.`;
+      case 'LOW':
+        return `Minor issues found on ${target}. Overall security posture is acceptable with ${summary.total} low-risk findings.`;
+      default:
+        return `No significant vulnerabilities detected on ${target}. ${portsOpen} open ports found with good security configuration.`;
+    }
+  };
+
   const handleScan = async (data: ScanFormData) => {
     setIsScanning(true);
     setResult(null);
@@ -474,12 +778,22 @@ const VulnScanTool: React.FC = () => {
     setVulnsFound(0);
     setDiscoveredPorts([]);
     setProgress(0);
-    setCurrentTarget(undefined);
+    setCurrentTarget(data.target);
+    setApiError(null);
     abortRef.current = false;
 
     try {
-      const scanResult = await runScan(data);
-      if (!abortRef.current) {
+      let scanResult: ScanResult | null;
+
+      if (USE_REAL_API && isOnline) {
+        // Use real API
+        scanResult = await runRealScan(data);
+      } else {
+        // Fallback to simulation
+        scanResult = await runScan(data);
+      }
+
+      if (!abortRef.current && scanResult) {
         setResult(scanResult);
         setStats((prev) => ({
           ...prev,
@@ -488,8 +802,9 @@ const VulnScanTool: React.FC = () => {
           hostsScanned: prev.hostsScanned + 1,
         }));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Scan failed:", error);
+      setApiError(error.message);
       addEvent({
         type: "warning",
         severity: "high",
@@ -503,6 +818,10 @@ const VulnScanTool: React.FC = () => {
 
   const handleCancel = () => {
     abortRef.current = true;
+    if (pollRef.current) {
+      clearTimeout(pollRef.current);
+      pollRef.current = null;
+    }
     setIsScanning(false);
     setCurrentTarget(undefined);
     addEvent({
@@ -671,13 +990,19 @@ const VulnScanTool: React.FC = () => {
               <span>VulnScan v6.0 • VictoryKit Security Suite</span>
             </div>
             <div className="flex items-center gap-4 text-sm text-gray-600">
+              {apiError && (
+                <span className="text-amber-400 flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  API Error
+                </span>
+              )}
               <span>CVE Database Synced</span>
               <span>•</span>
-              <span>Real-time Scanning</span>
+              <span>{USE_REAL_API && isOnline ? 'Live API' : 'Simulation Mode'}</span>
               <span>•</span>
-              <span className="text-green-400 flex items-center gap-1">
+              <span className={`flex items-center gap-1 ${isOnline ? 'text-green-400' : 'text-amber-400'}`}>
                 <Activity className="w-3 h-3" />
-                Online
+                {isOnline ? 'Online' : 'Offline'}
               </span>
             </div>
           </div>
