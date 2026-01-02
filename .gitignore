@@ -1,3 +1,13 @@
+# ===============================
+# ⚠️  VICTORYKIT DEVELOPMENT POLICY
+# ===============================
+# 🚫 NO NEW TOOLS: All 50 tools are finalized (01-50)
+# 🔍 CHECK: docs/TOOLS-MASTER-INVENTORY.md before working
+# 💻 VIOLATION: New tool creation = immediate removal
+# ===============================
+# Recent cleanup: Removed 31-cloudsecure, 32-apishield (Jan 2, 2026)
+# ===============================
+
 # Dependencies
 node_modules/
 */node_modules/

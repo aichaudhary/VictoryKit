@@ -6,6 +6,20 @@
 
 ---
 
+## ⚠️ **CRITICAL WARNING: NO DUPLICATE TOOLS ALLOWED**
+
+> **🚫 STRICT POLICY**: All 50 security tools are already created and finalized.
+> **❌ NEVER CREATE NEW TOOLS** - Only update and work with existing tools (01-50).
+> **🔍 CHECK MASTER INVENTORY**: Always verify tool numbers in `docs/TOOLS-MASTER-INVENTORY.md`
+> **📋 TOOL NUMBERS**: 01-fraudguard, 02-intelliscout, ..., 50-bugbountyai
+> **💻 VIOLATION CONSEQUENCES**: Any new tool creation will be immediately removed.
+
+**Recent Incident**: Duplicate tools 31-cloudsecure and 32-apishield were removed (Jan 2, 2026).
+**Keep Originals**: 31-audittracker, 32-zerotrustai only.
+**Check Duplicates**: Run `./scripts/check-duplicates.sh` before working.
+
+---
+
 ## 🚀 What is MAULA.AI?
 
 MAULA.AI is a comprehensive security platform featuring **50+ standalone security tools**, each powered by **real-time conversational AI assistants**. Every tool combines powerful security capabilities with multi-LLM AI support (Claude, GPT, Grok, Mistral, Gemini, Llama).

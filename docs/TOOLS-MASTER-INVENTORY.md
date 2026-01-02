@@ -6,6 +6,17 @@
 
 ---
 
+## 🚨 **CRITICAL WARNING: NO NEW TOOLS ALLOWED**
+
+> **🚫 STRICT POLICY**: All 50 tools are finalized. DO NOT create new tools.
+> **✅ ONLY UPDATE EXISTING**: Work only with tools 01-50 listed below.
+> **🔍 VERIFY BEFORE WORKING**: Check this file for correct tool names/numbers.
+> **💻 VIOLATION**: New tool creation = immediate removal + developer warning.
+>
+> **RECENT CLEANUP**: Removed duplicates 31-cloudsecure, 32-apishield (Jan 2, 2026)
+
+---
+
 ## 📋 COMPLETE TOOL LIST (1-50)
 
 ### Category 1: Fraud & Threat Detection (01-05)
