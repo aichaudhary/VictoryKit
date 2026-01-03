@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   Code,
   Shield,
@@ -12,6 +12,8 @@ import {
   RefreshCcw,
   Download,
   Share2,
+  Cloud,
+  CloudOff,
 } from "lucide-react";
 import CodeAnalysisForm, { CodeAnalysisFormData } from "./CodeAnalysisForm";
 import LiveCodePanel, {
@@ -23,6 +25,7 @@ import AnimatedSecurityResult, {
   SecurityMetrics,
   Vulnerability,
 } from "./AnimatedSecurityResult";
+import { securecodeAPI, ScanResult, Finding } from "../api/securecode.api";
 
 const SecureCodeTool: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -35,7 +38,161 @@ const SecureCodeTool: React.FC = () => {
   const [filesScanned, setFilesScanned] = useState(0);
   const [dependenciesChecked, setDependenciesChecked] = useState(0);
   const [metrics, setMetrics] = useState<SecurityMetrics | null>(null);
+  const [apiAvailable, setApiAvailable] = useState<boolean | null>(null);
+  const [useRealApi, setUseRealApi] = useState(true);
   const abortRef = useRef(false);
+
+  // Check API availability on mount
+  useEffect(() => {
+    checkApiHealth();
+  }, []);
+
+  const checkApiHealth = async () => {
+    try {
+      const response = await securecodeAPI.getStats();
+      setApiAvailable(response.success);
+    } catch {
+      setApiAvailable(false);
+    }
+  };
+
+  // Convert API findings to component issues
+  const convertFindingsToIssues = (findings: Finding[]): CodeIssue[] => {
+    return findings.map((finding, idx) => ({
+      id: finding.id || `issue-${idx + 1}`,
+      line: finding.line || 1,
+      column: finding.column || 1,
+      severity: finding.severity,
+      type: finding.type || finding.title,
+      message: finding.description,
+      code: finding.codeSnippet || '',
+      suggestion: finding.suggestedFix || '',
+    }));
+  };
+
+  // Convert API result to metrics
+  const convertResultToMetrics = (result: ScanResult, issues: CodeIssue[]): SecurityMetrics => {
+    return {
+      score: result.securityScore,
+      grade: result.securityScore >= 90 ? 'A' : result.securityScore >= 80 ? 'B' : result.securityScore >= 70 ? 'C' : result.securityScore >= 60 ? 'D' : 'F',
+      issues: {
+        critical: result.summary.critical,
+        high: result.summary.high,
+        medium: result.summary.medium,
+        low: result.summary.low,
+        info: result.summary.info,
+      },
+      categories: {
+        injection: issues.filter(i => i.type.toLowerCase().includes('injection')).length,
+        xss: issues.filter(i => i.type.toLowerCase().includes('xss')).length,
+        secrets: issues.filter(i => i.type.toLowerCase().includes('secret') || i.type.toLowerCase().includes('credential')).length,
+        crypto: issues.filter(i => i.type.toLowerCase().includes('crypto') || i.type.toLowerCase().includes('weak')).length,
+        auth: issues.filter(i => i.type.toLowerCase().includes('auth')).length,
+        dependencies: result.findings.filter(f => f.scanner === 'dependency-check').length,
+        other: 0,
+      },
+      vulnerabilities: result.findings
+        .filter(f => f.scanner === 'dependency-check')
+        .map((f, idx) => ({
+          id: f.id || `vuln-${idx}`,
+          package: f.title.split(' ')[0] || 'unknown',
+          version: '0.0.0',
+          severity: f.severity,
+          cve: f.cweId || '',
+          title: f.description,
+          fixVersion: 'latest',
+        })),
+      scannedFiles: result.metadata?.filesScanned || 1,
+      scannedLines: result.metadata?.linesOfCode || code.split('\n').length,
+      analysisTime: (result.metadata?.duration || 3000) / 1000,
+    };
+  };
+
+  // Real API analysis
+  const runRealAnalysis = async (data: CodeAnalysisFormData) => {
+    const analysisStages: ScanStage[] = [
+      { name: "Parsing", status: "pending" },
+      { name: "SAST", status: "pending" },
+      { name: "Secrets", status: "pending" },
+      { name: "Dependencies", status: "pending" },
+      { name: "Reporting", status: "pending" },
+    ];
+    setStages(analysisStages);
+
+    const updateStage = (idx: number, status: ScanStage["status"]) => {
+      setStages(prev => prev.map((s, i) => (i === idx ? { ...s, status } : s)));
+      setEvents(prev => [...prev, { type: "stage", stage: { ...analysisStages[idx], status }, timestamp: Date.now() }]);
+    };
+
+    try {
+      // Stage 1: Parsing
+      updateStage(0, "running");
+      await new Promise(r => setTimeout(r, 500));
+      updateStage(0, "complete");
+
+      // Stage 2: SAST
+      updateStage(1, "running");
+      const sastResult = await securecodeAPI.runSastScan(data.code, data.language !== 'auto' ? data.language : undefined);
+      
+      if (sastResult.success && sastResult.data) {
+        const sastIssues = convertFindingsToIssues(sastResult.data.findings);
+        for (const issue of sastIssues) {
+          setIssues(prev => [...prev, issue]);
+          setEvents(prev => [...prev, { type: "issue", issue, timestamp: Date.now() }]);
+          await new Promise(r => setTimeout(r, 100));
+        }
+      }
+      updateStage(1, "complete");
+
+      // Stage 3: Secrets
+      updateStage(2, "running");
+      const secretsResult = await securecodeAPI.runSecretsScan(data.code);
+      
+      if (secretsResult.success && secretsResult.data) {
+        const secretIssues = convertFindingsToIssues(secretsResult.data.findings);
+        for (const issue of secretIssues) {
+          setIssues(prev => [...prev, issue]);
+          setEvents(prev => [...prev, { type: "issue", issue, timestamp: Date.now() }]);
+          await new Promise(r => setTimeout(r, 100));
+        }
+      }
+      updateStage(2, "complete");
+
+      // Stage 4: Dependencies (if package.json-like content detected)
+      updateStage(3, "running");
+      if (data.code.includes('"dependencies"') || data.code.includes('"devDependencies"')) {
+        const depResult = await securecodeAPI.runDependencyScan(data.code);
+        if (depResult.success && depResult.data) {
+          setDependenciesChecked(depResult.data.findings.length);
+        }
+      }
+      updateStage(3, "complete");
+
+      // Stage 5: Run full scan for final metrics
+      updateStage(4, "running");
+      const fullResult = await securecodeAPI.runFullScan({
+        code: data.code,
+        language: data.language !== 'auto' ? data.language : undefined,
+        scanTypes: ['sast', 'secrets', 'dependencies'],
+        includeFixSuggestions: true,
+      });
+
+      if (fullResult.success && fullResult.data) {
+        const allIssues = convertFindingsToIssues(fullResult.data.findings);
+        setIssues(allIssues);
+        const calculatedMetrics = convertResultToMetrics(fullResult.data, allIssues);
+        setMetrics(calculatedMetrics);
+        updateStage(4, "complete");
+        setEvents(prev => [...prev, { type: "complete", timestamp: Date.now() }]);
+        return true;
+      } else {
+        throw new Error(fullResult.error || 'Scan failed');
+      }
+    } catch (error) {
+      console.error('API analysis failed:', error);
+      return false;
+    }
+  };
 
   const simulateAnalysis = useCallback(async (data: CodeAnalysisFormData) => {
     abortRef.current = false;
@@ -49,6 +206,19 @@ const SecureCodeTool: React.FC = () => {
     setDependenciesChecked(0);
     setMetrics(null);
 
+    // Try real API first if available and enabled
+    if (useRealApi && apiAvailable) {
+      const apiSuccess = await runRealAnalysis(data);
+      if (apiSuccess) {
+        setIsAnalyzing(false);
+        setAnalysisComplete(true);
+        return;
+      }
+      // Fall through to simulation if API fails
+      console.log('API analysis failed, falling back to simulation');
+    }
+
+    // Simulation mode
     const analysisStages: ScanStage[] = [
       { name: "Parsing", status: "pending" },
       { name: "SAST", status: "pending" },
@@ -352,6 +522,24 @@ const SecureCodeTool: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* API Status Toggle */}
+              <button
+                onClick={() => setUseRealApi(!useRealApi)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs transition-all ${
+                  useRealApi && apiAvailable
+                    ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                    : 'bg-slate-800/50 text-gray-500 border border-slate-700'
+                }`}
+                title={apiAvailable ? 'Click to toggle API mode' : 'API unavailable - simulation mode'}
+              >
+                {apiAvailable ? (
+                  useRealApi ? <Cloud className="w-3 h-3" /> : <CloudOff className="w-3 h-3" />
+                ) : (
+                  <CloudOff className="w-3 h-3" />
+                )}
+                {apiAvailable ? (useRealApi ? 'Live API' : 'Simulation') : 'Offline'}
+              </button>
+
               {analysisComplete && (
                 <>
                   <button

@@ -1,13 +1,24 @@
+// Main routes file for FirewallAI API
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers');
 
-router.get('/status', controller.getStatus);
-router.post('/analyze', controller.analyze);
-router.get('/reports', controller.getReports);
-router.get('/reports/:id', controller.getReportById);
-router.post('/scan', controller.scan);
-router.get('/config', controller.getConfig);
-router.put('/config', controller.updateConfig);
+// Import all route modules
+const firewallRoutes = require('./firewallRoutes');
+
+// Mount routes
+router.use('/firewall', firewallRoutes);
+
+// API info endpoint
+router.get('/', (req, res) => {
+  res.json({
+    service: 'FirewallAI API',
+    version: '1.0.0',
+    endpoints: {
+      firewall: '/api/v1/firewallai/firewall',
+      health: '/health'
+    },
+    documentation: '/api/docs'
+  });
+});
 
 module.exports = router;

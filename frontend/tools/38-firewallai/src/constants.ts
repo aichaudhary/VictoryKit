@@ -122,3 +122,16 @@ export const API_ENDPOINTS = {
     ws: '/ws/ai'
   }
 };
+
+export const VENDOR_CONFIG = {
+  pfsense: { name: 'pfSense' },
+  palo_alto: { name: 'Palo Alto Networks' },
+  fortinet: { name: 'Fortinet' },
+  checkpoint: { name: 'Check Point' },
+  cisco_asa: { name: 'Cisco ASA' },
+  aws_firewall: { name: 'AWS Network Firewall' },
+  azure_firewall: { name: 'Azure Firewall' },
+  gcp_armor: { name: 'Google Cloud Armor' },
+  cloudflare: { name: 'Cloudflare WAF' },
+  akamai: { name: 'Akamai Kona Site Defender' },
+};

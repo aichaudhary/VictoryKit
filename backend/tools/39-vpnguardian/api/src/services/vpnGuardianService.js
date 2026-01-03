@@ -1,9 +1,74 @@
 const axios = require('axios');
 const { getConnectors } = require('../../../../../../shared/connectors');
+const VPNConnection = require('../models/VPNConnection');
+const VPNPolicy = require('../models/VPNPolicy');
+const VPNSecurityAlert = require('../models/VPNSecurityAlert');
+const VPNUser = require('../models/VPNUser');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || 'http://localhost:8039';
 
 class VPNGuardianService {
+  constructor() {
+    this.vpnProviders = {
+      openvpn: {
+        apiKey: process.env.VPNGUARDIAN_OPENVPN_API_KEY,
+        baseUrl: 'https://api.openvpn.net/v1'
+      },
+      wireguard: {
+        apiKey: process.env.VPNGUARDIAN_WIREGUARD_API_KEY,
+        baseUrl: 'https://api.wireguard.com/v1'
+      },
+      cisco: {
+        apiKey: process.env.VPNGUARDIAN_CISCO_ANYCONNECT_API_KEY,
+        baseUrl: 'https://api.cisco.com/vpn/v1'
+      },
+      paloalto: {
+        apiKey: process.env.VPNGUARDIAN_PALO_ALTO_GLOBALPROTECT_API_KEY,
+        baseUrl: 'https://api.paloaltonetworks.com/vpn/v1'
+      },
+      fortinet: {
+        apiKey: process.env.VPNGUARDIAN_FORTINET_FORTICLIENT_API_KEY,
+        baseUrl: 'https://api.fortinet.com/vpn/v1'
+      },
+      checkpoint: {
+        apiKey: process.env.VPNGUARDIAN_CHECKPOINT_ENDPOINT_SECURITY_API_KEY,
+        baseUrl: 'https://api.checkpoint.com/vpn/v1'
+      },
+      juniper: {
+        apiKey: process.env.VPNGUARDIAN_JUNIPER_PULSE_SECURE_API_KEY,
+        baseUrl: 'https://api.juniper.net/vpn/v1'
+      },
+      microsoft: {
+        apiKey: process.env.VPNGUARDIAN_MICROSOFT_ALWAYS_ON_VPN_API_KEY,
+        baseUrl: 'https://management.azure.com/vpn/v1'
+      },
+      aws: {
+        apiKey: process.env.VPNGUARDIAN_AWS_CLIENT_VPN_API_KEY,
+        baseUrl: 'https://ec2.amazonaws.com/vpn/v1'
+      },
+      azure: {
+        apiKey: process.env.VPNGUARDIAN_AZURE_POINT_TO_SITE_VPN_API_KEY,
+        baseUrl: 'https://management.azure.com/vpn/v1'
+      },
+      gcp: {
+        apiKey: process.env.VPNGUARDIAN_GOOGLE_CLOUD_VPN_API_KEY,
+        baseUrl: 'https://www.googleapis.com/compute/v1/vpn'
+      },
+      cloudflare: {
+        apiKey: process.env.VPNGUARDIAN_CLOUDFLARE_WARP_API_KEY,
+        baseUrl: 'https://api.cloudflare.com/vpn/v1'
+      },
+      nordvpn: {
+        apiKey: process.env.VPNGUARDIAN_NORDVPN_API_KEY,
+        baseUrl: 'https://api.nordvpn.com/v1'
+      },
+      expressvpn: {
+        apiKey: process.env.VPNGUARDIAN_EXPRESSVPN_API_KEY,
+        baseUrl: 'https://api.expressvpn.com/v1'
+      }
+    };
+  }
+
   async analyze(data) {
     try {
       const mlResponse = await axios.post(`${ML_ENGINE_URL}/analyze`, { data });
@@ -20,6 +85,333 @@ class VPNGuardianService {
     } catch (error) {
       throw new Error(`ML scan failed: ${error.message}`);
     }
+  }
+
+  // VPN Connection Management
+  async createConnection(connectionData) {
+    try {
+      const connection = new VPNConnection({
+        ...connectionData,
+        connectionId: `conn_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      });
+      await connection.save();
+      return connection;
+    } catch (error) {
+      throw new Error(`Failed to create connection: ${error.message}`);
+    }
+  }
+
+  async getConnections(filters = {}) {
+    try {
+      const query = {};
+      if (filters.userId) query.userId = filters.userId;
+      if (filters.status) query.status = filters.status;
+      if (filters.vpnProvider) query.vpnProvider = filters.vpnProvider;
+
+      return await VPNConnection.find(query).sort({ createdAt: -1 });
+    } catch (error) {
+      throw new Error(`Failed to get connections: ${error.message}`);
+    }
+  }
+
+  async updateConnection(connectionId, updates) {
+    try {
+      const connection = await VPNConnection.findOneAndUpdate(
+        { connectionId },
+        { ...updates, updatedAt: new Date() },
+        { new: true }
+      );
+      if (!connection) throw new Error('Connection not found');
+      return connection;
+    } catch (error) {
+      throw new Error(`Failed to update connection: ${error.message}`);
+    }
+  }
+
+  async disconnectConnection(connectionId) {
+    try {
+      const connection = await this.updateConnection(connectionId, {
+        status: 'disconnected',
+        'sessionInfo.disconnectedAt': new Date()
+      });
+
+      // Calculate session duration
+      if (connection.sessionInfo.connectedAt && connection.sessionInfo.disconnectedAt) {
+        const duration = Math.floor(
+          (connection.sessionInfo.disconnectedAt - connection.sessionInfo.connectedAt) / 1000
+        );
+        await this.updateConnection(connectionId, {
+          'sessionInfo.duration': duration
+        });
+      }
+
+      return connection;
+    } catch (error) {
+      throw new Error(`Failed to disconnect: ${error.message}`);
+    }
+  }
+
+  // VPN Policy Management
+  async createPolicy(policyData) {
+    try {
+      const policy = new VPNPolicy({
+        ...policyData,
+        policyId: `policy_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      });
+      await policy.save();
+      return policy;
+    } catch (error) {
+      throw new Error(`Failed to create policy: ${error.message}`);
+    }
+  }
+
+  async getPolicies(filters = {}) {
+    try {
+      const query = {};
+      if (filters.vpnProvider) query.vpnProvider = filters.vpnProvider;
+      if (filters.status) query.status = filters.status;
+
+      return await VPNPolicy.find(query).sort({ createdAt: -1 });
+    } catch (error) {
+      throw new Error(`Failed to get policies: ${error.message}`);
+    }
+  }
+
+  async applyPolicyToUser(policyId, userId) {
+    try {
+      const policy = await VPNPolicy.findOne({ policyId });
+      if (!policy) throw new Error('Policy not found');
+
+      const user = await VPNUser.findOne({ userId });
+      if (!user) throw new Error('User not found');
+
+      // Apply policy rules to user
+      await VPNUser.findOneAndUpdate(
+        { userId },
+        {
+          $addToSet: {
+            'vpnAccess.allowedProviders': { $each: policy.securitySettings.protocols }
+          },
+          updatedAt: new Date()
+        }
+      );
+
+      await VPNPolicy.findOneAndUpdate(
+        { policyId },
+        {
+          $addToSet: {
+            appliedTo: { type: 'user', id: userId, name: user.username }
+          },
+          lastApplied: new Date(),
+          updatedAt: new Date()
+        }
+      );
+
+      return { success: true, message: 'Policy applied successfully' };
+    } catch (error) {
+      throw new Error(`Failed to apply policy: ${error.message}`);
+    }
+  }
+
+  // Security Analysis and Threat Detection
+  async analyzeConnectionSecurity(connectionId) {
+    try {
+      const connection = await VPNConnection.findOne({ connectionId });
+      if (!connection) throw new Error('Connection not found');
+
+      // Analyze security metrics
+      const securityAnalysis = {
+        encryptionStrength: this._analyzeEncryptionStrength(connection.securityMetrics.encryptionStrength),
+        protocolSecurity: this._analyzeProtocolSecurity(connection.securityMetrics.protocol),
+        certificateStatus: connection.securityMetrics.certificateValid,
+        threatLevel: 'low',
+        recommendations: []
+      };
+
+      // Check for anomalies
+      const anomalies = await this._detectAnomalies(connection);
+
+      if (anomalies.length > 0) {
+        securityAnalysis.threatLevel = 'high';
+        securityAnalysis.recommendations.push('Immediate security review required');
+      }
+
+      // Update connection with analysis results
+      await this.updateConnection(connectionId, {
+        threatLevel: securityAnalysis.threatLevel,
+        'alerts': [
+          ...connection.alerts,
+          ...anomalies.map(anomaly => ({
+            type: 'security',
+            severity: anomaly.severity,
+            message: anomaly.message,
+            timestamp: new Date()
+          }))
+        ]
+      });
+
+      return securityAnalysis;
+    } catch (error) {
+      throw new Error(`Security analysis failed: ${error.message}`);
+    }
+  }
+
+  async createSecurityAlert(alertData) {
+    try {
+      const alert = new VPNSecurityAlert({
+        ...alertData,
+        alertId: `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      });
+      await alert.save();
+
+      // Trigger integrations
+      await this.integrateWithSecurityStack(alert.alertId, alert);
+
+      return alert;
+    } catch (error) {
+      throw new Error(`Failed to create alert: ${error.message}`);
+    }
+  }
+
+  async getSecurityAlerts(filters = {}) {
+    try {
+      const query = {};
+      if (filters.userId) query.userId = filters.userId;
+      if (filters.severity) query.severity = filters.severity;
+      if (filters.status) query.status = filters.status;
+
+      return await VPNSecurityAlert.find(query).sort({ createdAt: -1 });
+    } catch (error) {
+      throw new Error(`Failed to get alerts: ${error.message}`);
+    }
+  }
+
+  // User Management
+  async createUser(userData) {
+    try {
+      const user = new VPNUser({
+        ...userData,
+        userId: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      });
+      await user.save();
+      return user;
+    } catch (error) {
+      throw new Error(`Failed to create user: ${error.message}`);
+    }
+  }
+
+  async getUsers(filters = {}) {
+    try {
+      const query = {};
+      if (filters.status) query.status = filters.status;
+      if (filters.role) query.role = filters.role;
+
+      return await VPNUser.find(query).sort({ createdAt: -1 });
+    } catch (error) {
+      throw new Error(`Failed to get users: ${error.message}`);
+    }
+  }
+
+  // VPN Provider Integrations
+  async getProviderStatus(provider) {
+    try {
+      const providerConfig = this.vpnProviders[provider];
+      if (!providerConfig) throw new Error('Provider not supported');
+
+      const response = await axios.get(`${providerConfig.baseUrl}/status`, {
+        headers: { 'Authorization': `Bearer ${providerConfig.apiKey}` }
+      });
+
+      return response.data;
+    } catch (error) {
+      throw new Error(`Failed to get provider status: ${error.message}`);
+    }
+  }
+
+  async connectToProvider(provider, connectionData) {
+    try {
+      const providerConfig = this.vpnProviders[provider];
+      if (!providerConfig) throw new Error('Provider not supported');
+
+      const response = await axios.post(`${providerConfig.baseUrl}/connect`, connectionData, {
+        headers: { 'Authorization': `Bearer ${providerConfig.apiKey}` }
+      });
+
+      return response.data;
+    } catch (error) {
+      throw new Error(`Failed to connect to provider: ${error.message}`);
+    }
+  }
+
+  // Real-time Monitoring
+  async getConnectionMetrics(connectionId) {
+    try {
+      const connection = await VPNConnection.findOne({ connectionId });
+      if (!connection) throw new Error('Connection not found');
+
+      return {
+        connectionId,
+        status: connection.status,
+        metrics: {
+          latency: Math.floor(Math.random() * 100) + 10, // Mock data
+          bandwidth: {
+            upload: Math.floor(Math.random() * 50) + 10,
+            download: Math.floor(Math.random() * 100) + 20
+          },
+          packetLoss: Math.random() * 5,
+          uptime: connection.sessionInfo.duration || 0
+        },
+        security: {
+          encryptionStrength: connection.securityMetrics.encryptionStrength,
+          threatLevel: connection.threatLevel
+        }
+      };
+    } catch (error) {
+      throw new Error(`Failed to get metrics: ${error.message}`);
+    }
+  }
+
+  // Private helper methods
+  _analyzeEncryptionStrength(strength) {
+    const strengths = { 'weak': 1, 'medium': 2, 'strong': 3, 'excellent': 4 };
+    return strengths[strength] || 1;
+  }
+
+  _analyzeProtocolSecurity(protocol) {
+    const secureProtocols = ['wireguard', 'ikev2', 'ipsec'];
+    return secureProtocols.includes(protocol) ? 'secure' : 'insecure';
+  }
+
+  async _detectAnomalies(connection) {
+    const anomalies = [];
+
+    // Check for geographic anomalies
+    if (connection.location && connection.userId) {
+      const userConnections = await VPNConnection.find({
+        userId: connection.userId,
+        status: 'connected'
+      });
+
+      const locations = userConnections.map(c => c.location?.country).filter(Boolean);
+      if (locations.length > 1 && !locations.includes(connection.location.country)) {
+        anomalies.push({
+          type: 'geographic-anomaly',
+          severity: 'high',
+          message: 'Connection from unusual geographic location'
+        });
+      }
+    }
+
+    // Check for protocol anomalies
+    if (connection.securityMetrics.protocol === 'pptp') {
+      anomalies.push({
+        type: 'protocol-anomaly',
+        severity: 'critical',
+        message: 'Insecure VPN protocol detected'
+      });
+    }
+
+    return anomalies;
   }
 
   async integrateWithSecurityStack(entityId, data) {
@@ -43,9 +435,7 @@ class VPNGuardianService {
             dataVolumes: data.dataVolumes || [],
             geographicAnomalies: data.geographicAnomalies || []
           }
-        }).catch(err => ({ error: `Sentinel integration failed: ${err.message}` }))
-      );
-    }
+        }).catch(err => ({ error: `Sentinel integration failed: ${err.message}` })));
 
     // Cortex XSOAR - Create incidents for VPN security breaches
     if (connectors.xsoar && (data.threatLevel === 'high' || data.threatLevel === 'critical')) {
@@ -150,4 +540,4 @@ class VPNGuardianService {
   }
 }
 
-module.exports = new VPNGuardianService();
+module.exports = new VPNGuardianService();;

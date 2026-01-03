@@ -1,7 +1,7 @@
 {
   "name": "incidentresponse-api",
-  "version": "1.0.0",
-  "description": "IncidentResponse API - AI-Powered Security Incident Management",
+  "version": "2.0.0",
+  "description": "IncidentResponse API - AI-Powered Security Incident Management with Real-Time Integrations",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -14,7 +14,9 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "helmet": "^7.1.0",
-    "mongoose": "^8.0.3"
+    "mongoose": "^8.0.3",
+    "nodemailer": "^6.9.7",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "jest": "^29.7.0",

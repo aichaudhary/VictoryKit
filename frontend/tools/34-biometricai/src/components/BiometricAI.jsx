@@ -28,7 +28,9 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  Badge
+  Badge,
+  Fab,
+  Snackbar
 } from '@mui/material';
 import {
   CameraAlt,
@@ -48,10 +50,17 @@ import {
   Lock,
   VerifiedUser,
   Cancel,
-  Refresh
+  Refresh,
+  Wifi,
+  WifiOff,
+  LiveTv,
+  Analytics,
+  Notifications,
+  Speed
 } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 // Create dark theme
 const theme = createTheme({
@@ -90,11 +99,29 @@ function BiometricAI() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
 
+  // Real-time features
+  const [socket, setSocket] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [realTimeData, setRealTimeData] = useState({
+    faceConfidence: 0,
+    voiceConfidence: 0,
+    behavioralConfidence: 0,
+    liveAnalysis: false,
+    processingTime: 0
+  });
+  const [liveAlerts, setLiveAlerts] = useState([]);
+  const [performanceMetrics, setPerformanceMetrics] = useState({
+    fps: 0,
+    latency: 0,
+    processingTime: 0
+  });
+
   // Media refs
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const animationFrameRef = useRef(null);
 
   // Biometric data
   const [biometricData, setBiometricData] = useState({
@@ -114,7 +141,9 @@ function BiometricAI() {
     behavioralEnabled: true,
     realTimeAnalysis: true,
     riskThreshold: 70,
-    autoLock: true
+    autoLock: true,
+    liveAlerts: true,
+    performanceMonitoring: true
   });
 
   // Authentication history
@@ -123,9 +152,80 @@ function BiometricAI() {
   useEffect(() => {
     initializeCamera();
     initializeBehavioralTracking();
+    initializeWebSocket();
     loadSettings();
     loadAuthHistory();
+
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
   }, []);
+
+  const initializeWebSocket = () => {
+    const newSocket = io(API_BASE_URL, {
+      transports: ['websocket', 'polling'],
+      upgrade: true,
+    });
+
+    newSocket.on('connect', () => {
+      console.log('Connected to BiometricAI server');
+      setIsConnected(true);
+      addAlert('Real-time connection established', 'success');
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('Disconnected from BiometricAI server');
+      setIsConnected(false);
+      addAlert('Real-time connection lost', 'warning');
+    });
+
+    newSocket.on('auth_progress', (data) => {
+      setRealTimeData(prev => ({
+        ...prev,
+        ...data,
+        liveAnalysis: true
+      }));
+    });
+
+    newSocket.on('auth_result', (data) => {
+      setResults(data.methods || {});
+      setConfidence(data.confidence || 0);
+      setRiskScore(data.risk_score || 0);
+      setAuthStatus(data.success ? 'success' : 'failed');
+      setRealTimeData(prev => ({ ...prev, liveAnalysis: false }));
+    });
+
+    newSocket.on('alert', (alert) => {
+      addLiveAlert(alert.message, alert.severity);
+    });
+
+    newSocket.on('performance', (metrics) => {
+      setPerformanceMetrics(metrics);
+    });
+
+    setSocket(newSocket);
+  };
+
+  const addLiveAlert = (message, severity = 'info') => {
+    const alert = {
+      id: Date.now(),
+      message,
+      severity,
+      timestamp: new Date().toISOString(),
+      live: true
+    };
+    setLiveAlerts(prev => [alert, ...prev.slice(0, 2)]); // Keep last 3 live alerts
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      setLiveAlerts(prev => prev.filter(a => a.id !== alert.id));
+    }, 5000);
+  };
 
   const initializeCamera = async () => {
     try {
@@ -135,10 +235,63 @@ function BiometricAI() {
       });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        if (settings.realTimeAnalysis && isConnected) {
+          startRealTimeAnalysis();
+        }
       }
     } catch (error) {
       console.error('Camera initialization failed:', error);
       addAlert('Camera access denied. Please enable camera permissions.', 'warning');
+    }
+  };
+
+  const startRealTimeAnalysis = () => {
+    if (!videoRef.current || !canvasRef.current || !socket) return;
+
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    const context = canvas.getContext('2d');
+
+    let frameCount = 0;
+    let lastTime = Date.now();
+
+    const analyzeFrame = () => {
+      if (!settings.realTimeAnalysis || !isConnected) return;
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0);
+
+      const imageData = canvas.toDataURL('image/jpeg', 0.8);
+
+      // Send frame for real-time analysis
+      socket.emit('analyze_frame', {
+        image: imageData.split(',')[1],
+        timestamp: Date.now()
+      });
+
+      // Calculate FPS
+      frameCount++;
+      const currentTime = Date.now();
+      if (currentTime - lastTime >= 1000) {
+        setPerformanceMetrics(prev => ({
+          ...prev,
+          fps: Math.round((frameCount * 1000) / (currentTime - lastTime))
+        }));
+        frameCount = 0;
+        lastTime = currentTime;
+      }
+
+      animationFrameRef.current = requestAnimationFrame(analyzeFrame);
+    };
+
+    analyzeFrame();
+  };
+
+  const stopRealTimeAnalysis = () => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
   };
 
@@ -312,26 +465,33 @@ function BiometricAI() {
     try {
       const payload = {
         userId: 'current_user', // In production, get from auth context
-        biometricData: biometricData
+        biometricData: biometricData,
+        realTime: isConnected && settings.realTimeAnalysis
       };
 
-      const response = await axios.post(`${API_BASE_URL}/authenticate`, payload);
-
-      const result = response.data;
-      setResults(result.methods || {});
-      setConfidence(result.confidence || 0);
-      setRiskScore(result.risk_score || 0);
-
-      if (result.success) {
-        setAuthStatus('success');
-        addAlert('Authentication successful!', 'success');
+      if (isConnected && settings.realTimeAnalysis) {
+        // Use WebSocket for real-time authentication
+        socket.emit('authenticate', payload);
+        addAlert('Real-time authentication started', 'info');
       } else {
-        setAuthStatus('failed');
-        addAlert('Authentication failed. Please try again.', 'error');
+        // Fallback to HTTP request
+        const response = await axios.post(`${API_BASE_URL}/authenticate`, payload);
+
+        const result = response.data;
+        setResults(result.methods || {});
+        setConfidence(result.confidence || 0);
+        setRiskScore(result.risk_score || 0);
+
+        if (result.success) {
+          setAuthStatus('success');
+          addAlert('Authentication successful!', 'success');
+        } else {
+          setAuthStatus('failed');
+          addAlert('Authentication failed. Please try again.', 'error');
+        }
+
+        saveAuthHistory(result);
       }
-
-      saveAuthHistory(result);
-
     } catch (error) {
       console.error('Authentication error:', error);
       setAuthStatus('failed');
@@ -398,6 +558,62 @@ function BiometricAI() {
             {alert.message}
           </Alert>
         ))}
+
+        {/* Real-time Status */}
+        <Paper elevation={3} sx={{ p: 2, mb: 3, background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {isConnected ? (
+                <Wifi sx={{ mr: 1, color: 'success.main' }} />
+              ) : (
+                <WifiOff sx={{ mr: 1, color: 'error.main' }} />
+              )}
+              <Typography variant="h6">
+                Real-time Status: {isConnected ? 'Connected' : 'Disconnected'}
+              </Typography>
+            </Box>
+
+            {settings.performanceMonitoring && (
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <Chip
+                  icon={<Speed />}
+                  label={`${performanceMetrics.fps} FPS`}
+                  size="small"
+                  color="primary"
+                  variant="outlined"
+                />
+                <Chip
+                  icon={<Analytics />}
+                  label={`${performanceMetrics.latency}ms`}
+                  size="small"
+                  color="secondary"
+                  variant="outlined"
+                />
+              </Box>
+            )}
+          </Box>
+
+          {/* Live Alerts */}
+          {liveAlerts.length > 0 && (
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="subtitle2" sx={{ mb: 1, color: 'primary.main' }}>
+                <Notifications sx={{ mr: 1, fontSize: '1rem' }} />
+                Live Alerts
+              </Typography>
+              {liveAlerts.map((alert) => (
+                <Alert
+                  key={alert.id}
+                  severity={alert.severity}
+                  size="small"
+                  sx={{ mb: 1 }}
+                  icon={<LiveTv />}
+                >
+                  {alert.message}
+                </Alert>
+              ))}
+            </Box>
+          )}
+        </Paper>
 
         {/* Authentication Status */}
         <Paper elevation={3} sx={{ p: 3, mb: 3, background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)' }}>
@@ -500,7 +716,8 @@ function BiometricAI() {
                       height: '200px',
                       objectFit: 'cover',
                       borderRadius: '8px',
-                      background: '#000'
+                      background: '#000',
+                      border: realTimeData.liveAnalysis ? '2px solid #00ff88' : '2px solid transparent'
                     }}
                   />
                   <canvas ref={canvasRef} style={{ display: 'none' }} />
@@ -509,6 +726,16 @@ function BiometricAI() {
                       size={40}
                       sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
                     />
+                  )}
+                  {realTimeData.liveAnalysis && (
+                    <Box sx={{ position: 'absolute', top: 8, right: 8 }}>
+                      <Chip
+                        label={`${Math.round(realTimeData.faceConfidence * 100)}%`}
+                        size="small"
+                        color={realTimeData.faceConfidence > 0.8 ? 'success' : realTimeData.faceConfidence > 0.6 ? 'warning' : 'error'}
+                        sx={{ fontWeight: 'bold' }}
+                      />
+                    </Box>
                   )}
                 </Box>
 
@@ -635,6 +862,23 @@ function BiometricAI() {
           </Button>
         </Box>
 
+        {/* Floating Action Button for Real-time Control */}
+        <Fab
+          color={realTimeData.liveAnalysis ? 'secondary' : 'primary'}
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
+          onClick={() => {
+            if (realTimeData.liveAnalysis) {
+              stopRealTimeAnalysis();
+              setRealTimeData(prev => ({ ...prev, liveAnalysis: false }));
+            } else if (isConnected) {
+              startRealTimeAnalysis();
+            }
+          }}
+          disabled={!isConnected}
+        >
+          {realTimeData.liveAnalysis ? <LiveTv /> : <Analytics />}
+        </Fab>
+
         {/* Results Display */}
         {Object.keys(results).length > 0 && (
           <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
@@ -712,10 +956,36 @@ function BiometricAI() {
                 control={
                   <Switch
                     checked={settings.realTimeAnalysis}
-                    onChange={(e) => setSettings(prev => ({ ...prev, realTimeAnalysis: e.target.checked }))}
+                    onChange={(e) => {
+                      const enabled = e.target.checked;
+                      setSettings(prev => ({ ...prev, realTimeAnalysis: enabled }));
+                      if (enabled && isConnected) {
+                        startRealTimeAnalysis();
+                      } else {
+                        stopRealTimeAnalysis();
+                      }
+                    }}
                   />
                 }
                 label="Real-time Analysis"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={settings.liveAlerts}
+                    onChange={(e) => setSettings(prev => ({ ...prev, liveAlerts: e.target.checked }))}
+                  />
+                }
+                label="Live Alerts"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={settings.performanceMonitoring}
+                    onChange={(e) => setSettings(prev => ({ ...prev, performanceMonitoring: e.target.checked }))}
+                  />
+                }
+                label="Performance Monitoring"
               />
               <FormControlLabel
                 control={

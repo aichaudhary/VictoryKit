@@ -1,6 +1,6 @@
 /**
  * Incident Model
- * Security incident tracking
+ * Security incident tracking with real-world integrations
  */
 
 const mongoose = require("mongoose");
@@ -17,14 +17,58 @@ const affectedAssetSchema = new mongoose.Schema({
   type: { type: String },
   hostname: { type: String },
   ipAddress: { type: String },
+  platform: { type: String },
+  status: { type: String },
+  discoveredBy: { type: String },
   impact: { type: String, enum: ["critical", "high", "medium", "low"] },
 });
 
 const indicatorSchema = new mongoose.Schema({
-  type: { type: String, enum: ["ip", "domain", "hash", "url", "email"] },
+  type: { type: String, enum: ["ip", "domain", "hash", "url", "email", "file"] },
   value: { type: String, required: true },
   malicious: { type: Boolean, default: false },
   source: { type: String },
+  enrichment: { type: mongoose.Schema.Types.Mixed },
+  firstSeen: { type: Date },
+  lastSeen: { type: Date },
+});
+
+// External ticket reference schema
+const externalTicketSchema = new mongoose.Schema({
+  system: { type: String, required: true },
+  ticketId: { type: String },
+  sysId: { type: String },
+  incidentId: { type: String },
+  incidentNumber: { type: Number },
+  url: { type: String },
+  status: { type: String },
+  createdAt: { type: Date, default: Date.now },
+});
+
+// Containment actions schema
+const containmentSchema = new mongoose.Schema({
+  isolatedEndpoints: [{ type: String }],
+  blockedIPs: [{ type: String }],
+  disabledAccounts: [{ type: String }],
+  lastAction: { type: Date },
+  status: { type: String, enum: ["not_started", "in_progress", "complete"] },
+});
+
+// AI Analysis result schema
+const aiAnalysisSchema = new mongoose.Schema({
+  analysis: { type: mongoose.Schema.Types.Mixed },
+  provider: { type: String },
+  model: { type: String },
+  simulated: { type: Boolean, default: false },
+  analyzedAt: { type: Date },
+});
+
+// SIEM correlation schema
+const correlationSchema = new mongoose.Schema({
+  matches: [{ type: mongoose.Schema.Types.Mixed }],
+  sources: [{ type: String }],
+  timeRange: { type: String },
+  correlatedAt: { type: Date },
 });
 
 const incidentSchema = new mongoose.Schema(
@@ -54,6 +98,8 @@ const incidentSchema = new mongoose.Schema(
       },
       category: { type: String },
       techniques: [{ type: String }],
+      mitreTechniques: [{ type: String }],
+      attackVector: { type: String },
       confidence: { type: Number, min: 0, max: 100 },
     },
     severity: {
@@ -96,11 +142,26 @@ const incidentSchema = new mongoose.Schema(
     assignedTeam: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     leadInvestigator: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     playbook: { type: mongoose.Schema.Types.ObjectId, ref: "Playbook" },
+    
+    // Real-world integration fields
+    externalTickets: [externalTicketSchema],
+    containment: containmentSchema,
+    aiAnalysis: aiAnalysisSchema,
+    correlations: correlationSchema,
+    
+    // Notification tracking
+    notificationsSent: [{
+      channel: { type: String },
+      sentAt: { type: Date },
+      success: { type: Boolean },
+    }],
+    
     metrics: {
       timeToDetect: { type: Number },
       timeToRespond: { type: Number },
       timeToContain: { type: Number },
       timeToResolve: { type: Number },
+      riskScore: { type: Number, min: 0, max: 100 },
     },
     detectedAt: { type: Date },
     containedAt: { type: Date },
@@ -125,5 +186,7 @@ incidentSchema.pre("save", async function (next) {
 incidentSchema.index({ userId: 1, status: 1, severity: 1 });
 incidentSchema.index({ incidentId: 1 });
 incidentSchema.index({ "classification.type": 1 });
+incidentSchema.index({ "indicators.value": 1 });
+incidentSchema.index({ "externalTickets.ticketId": 1 });
 
 module.exports = mongoose.model("Incident", incidentSchema);

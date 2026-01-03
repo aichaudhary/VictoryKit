@@ -1,124 +1,175 @@
 import { SettingsState, NavItem } from './types';
 
-export const PROVIDER_CONFIG = [
+export const VPN_PROVIDERS = [
+  { id: 'openvpn', name: 'OpenVPN', color: '#FF6B35', icon: '🔒' },
+  { id: 'wireguard', name: 'WireGuard', color: '#4ECDC4', icon: '⚡' },
+  { id: 'cisco', name: 'Cisco AnyConnect', color: '#1E3A8A', icon: '🌐' },
+  { id: 'paloalto', name: 'Palo Alto GlobalProtect', color: '#DC2626', icon: '🛡️' },
+  { id: 'fortinet', name: 'Fortinet FortiClient', color: '#059669', icon: '🏰' },
+  { id: 'checkpoint', name: 'Check Point Endpoint Security', color: '#7C3AED', icon: '✅' },
+  { id: 'juniper', name: 'Juniper Pulse Secure', color: '#EA580C', icon: '🌿' },
+  { id: 'microsoft', name: 'Microsoft Always On VPN', color: '#2563EB', icon: '🪟' },
+  { id: 'aws', name: 'AWS Client VPN', color: '#FF9900', icon: '☁️' },
+  { id: 'azure', name: 'Azure Point-to-Site VPN', color: '#0078D4', icon: '☁️' },
+  { id: 'gcp', name: 'Google Cloud VPN', color: '#4285F4', icon: '☁️' },
+  { id: 'cloudflare', name: 'Cloudflare WARP', color: '#F59E0B', icon: '⚡' },
+  { id: 'nordvpn', name: 'NordVPN', color: '#4F46E5', icon: '🛡️' },
+  { id: 'expressvpn', name: 'ExpressVPN', color: '#10B981', icon: '🚀' },
+  { id: 'other', name: 'Other', color: '#6B7280', icon: '🔧' }
+];
+
+export const CONNECTION_STATUSES = [
+  { id: 'connected', label: 'Connected', color: '#10B981', icon: '🟢' },
+  { id: 'connecting', label: 'Connecting', color: '#F59E0B', icon: '🟡' },
+  { id: 'disconnected', label: 'Disconnected', color: '#6B7280', icon: '⚪' },
+  { id: 'failed', label: 'Failed', color: '#EF4444', icon: '🔴' },
+  { id: 'suspended', label: 'Suspended', color: '#F97316', icon: '🟠' }
+];
+
+export const THREAT_LEVELS = [
+  { id: 'low', label: 'Low', color: '#10B981', bgColor: '#D1FAE5' },
+  { id: 'medium', label: 'Medium', color: '#F59E0B', bgColor: '#FEF3C7' },
+  { id: 'high', label: 'High', color: '#F97316', bgColor: '#FED7AA' },
+  { id: 'critical', label: 'Critical', color: '#EF4444', bgColor: '#FECACA' }
+];
+
+export const ALERT_TYPES = [
+  { id: 'unauthorized-access', label: 'Unauthorized Access', severity: 'high' },
+  { id: 'suspicious-traffic', label: 'Suspicious Traffic', severity: 'medium' },
+  { id: 'weak-encryption', label: 'Weak Encryption', severity: 'high' },
+  { id: 'certificate-expiry', label: 'Certificate Expiry', severity: 'medium' },
+  { id: 'protocol-anomaly', label: 'Protocol Anomaly', severity: 'high' },
+  { id: 'geographic-anomaly', label: 'Geographic Anomaly', severity: 'medium' },
+  { id: 'brute-force', label: 'Brute Force Attack', severity: 'critical' },
+  { id: 'malware-detected', label: 'Malware Detected', severity: 'critical' },
+  { id: 'data-leak', label: 'Data Leak', severity: 'critical' },
+  { id: 'policy-violation', label: 'Policy Violation', severity: 'medium' },
+  { id: 'session-anomaly', label: 'Session Anomaly', severity: 'low' },
+  { id: 'bandwidth-abuse', label: 'Bandwidth Abuse', severity: 'low' }
+];
+
+export const PROTOCOLS = [
+  { id: 'wireguard', label: 'WireGuard', security: 'excellent' },
+  { id: 'ikev2', label: 'IKEv2/IPsec', security: 'excellent' },
+  { id: 'ipsec', label: 'IPsec', security: 'strong' },
+  { id: 'openvpn', label: 'OpenVPN', security: 'strong' },
+  { id: 'pptp', label: 'PPTP', security: 'weak' },
+  { id: 'sstp', label: 'SSTP', security: 'medium' },
+  { id: 'l2tp', label: 'L2TP/IPsec', security: 'medium' }
+];
+
+export const ENCRYPTION_STRENGTHS = [
+  { id: 'weak', label: 'Weak', color: '#EF4444' },
+  { id: 'medium', label: 'Medium', color: '#F59E0B' },
+  { id: 'strong', label: 'Strong', color: '#10B981' },
+  { id: 'excellent', label: 'Excellent', color: '#059669' }
+];
+
+export const NAV_ITEMS: NavItem[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: '📊', path: '/dashboard' },
+  { id: 'connections', label: 'Connections', icon: '🔗', path: '/connections' },
+  { id: 'policies', label: 'Policies', icon: '📋', path: '/policies' },
+  { id: 'alerts', label: 'Security Alerts', icon: '🚨', path: '/alerts' },
+  { id: 'users', label: 'Users', icon: '👥', path: '/users' },
+  { id: 'analytics', label: 'Analytics', icon: '📈', path: '/analytics' }
+];
+
+export const DASHBOARD_METRICS = [
   {
-    id: 'gemini',
-    name: 'Google Gemini',
-    models: ['gemini-2.5-flash-preview', 'gemini-2.5-pro-preview', 'gemini-2.0-flash']
+    id: 'total-connections',
+    label: 'Total Connections',
+    icon: '🔗',
+    color: 'blue',
+    format: 'number'
   },
   {
-    id: 'openai',
-    name: 'OpenAI',
-    models: ['gpt-4o', 'gpt-4-turbo', 'gpt-4o-mini']
+    id: 'active-connections',
+    label: 'Active Connections',
+    icon: '🟢',
+    color: 'green',
+    format: 'number'
   },
   {
-    id: 'anthropic',
-    name: 'Anthropic Claude',
-    models: ['claude-sonnet-4-20250514', 'claude-3-5-sonnet-20241022', 'claude-3-haiku-20240307']
+    id: 'security-alerts',
+    label: 'Security Alerts',
+    icon: '🚨',
+    color: 'red',
+    format: 'number'
   },
   {
-    id: 'xai',
-    name: 'xAI Grok',
-    models: ['grok-2', 'grok-2-mini']
-  },
-  {
-    id: 'mistral',
-    name: 'Mistral AI',
-    models: ['mistral-large-latest', 'mistral-medium', 'mistral-small']
-  },
-  {
-    id: 'meta',
-    name: 'Meta Llama',
-    models: ['llama-3.1-405b', 'llama-3.1-70b', 'llama-3.1-8b']
+    id: 'bandwidth-usage',
+    label: 'Bandwidth Usage',
+    icon: '📊',
+    color: 'purple',
+    format: 'data'
   }
 ];
 
 export const DEFAULT_SETTINGS: SettingsState = {
-  customPrompt: `You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models.
+  customPrompt: `You are VPNGuardian AI, an expert in VPN security, network protection, and threat detection with deep knowledge of cybersecurity, encryption protocols, and secure remote access.
 
 CAPABILITIES:
-- Analyze transactions for fraud indicators and calculate risk scores (0-100)
-- Detect suspicious patterns in transaction data
-- Provide actionable recommendations for risk mitigation
-- Generate detailed fraud reports
-- Create alerts for high-risk transactions
+- Monitor VPN connections and detect security threats
+- Analyze connection patterns and identify anomalies
+- Provide security recommendations and policy suggestions
+- Generate VPN security reports and compliance documentation
+- Alert on suspicious activities and potential breaches
 
 AVAILABLE FUNCTIONS:
-- analyze_transaction: Analyze a transaction for fraud indicators
-- get_fraud_score: Get the fraud risk score for a transaction
-- open_risk_visualization: Open charts and graphs for analysis
-- get_transaction_history: Fetch transaction history with filters
-- create_alert: Create fraud monitoring alerts
-- export_report: Generate and export fraud reports
-
-Always be thorough in your analysis and explain findings in clear, non-technical language.`,
-  agentName: "FraudGuard AI",
-  temperature: 0.7,
-  maxTokens: 4096,
-  provider: 'gemini',
-  model: "gemini-2.5-flash-preview",
-  activeTool: 'fraud_analysis',
-  workspaceMode: 'CHAT',
-  portalUrl: 'https://www.google.com/search?igu=1',
-  canvas: {
-    content: "// FraudGuard Workspace\n\nReady for fraud analysis.",
-    type: 'text',
-    title: 'FraudGuard_Canvas'
-  }
-};
-
-export const NAV_ITEMS: NavItem[] = [
-  { label: 'Fraud Analysis', icon: '🛡️', tool: 'fraud_analysis', description: 'Analyze transactions for fraud' },
-  { label: 'Risk Dashboard', icon: '📊', tool: 'risk_visualization', description: 'View risk charts and graphs' },
-  { label: 'Transaction History', icon: '📜', tool: 'transaction_history', description: 'Browse past transactions' },
-  { label: 'Alerts', icon: '🔔', tool: 'alerts', description: 'Manage fraud alerts' },
-  { label: 'Reports', icon: '📄', tool: 'reports', description: 'Generate fraud reports' },
-  { label: 'Web Portal', icon: '🌐', tool: 'browser', description: 'Open web browser' },
-  { label: 'Canvas', icon: '🖌️', tool: 'canvas', description: 'Collaborative workspace' },
-  { label: 'Web Search', icon: '🔍', tool: 'web_search', description: 'Search the web' }
-];
-
-export const FRAUD_PRESETS: Record<string, { prompt: string; temp: number }> = {
-  thorough: { 
-    prompt: "Perform extremely detailed fraud analysis. Check every indicator, cross-reference patterns, and provide comprehensive risk assessment.", 
-    temp: 0.3 
-  },
-  quick: { 
-    prompt: "Perform quick fraud screening. Focus on major red flags and provide a rapid risk assessment.", 
-    temp: 0.5 
-  },
-  educational: { 
-    prompt: "Explain fraud analysis in educational terms. Help the user understand fraud patterns and detection methods.", 
-    temp: 0.7 
-  },
-  investigative: { 
-    prompt: "Take an investigative approach. Look for hidden patterns, connections, and potential fraud networks.", 
-    temp: 0.4 
-  }
-};
-
-export const RISK_COLORS = {
-  low: '#00ff88',
-  medium: '#ffaa00',
-  high: '#ff0055'
+- monitor_connections: Monitor active VPN connections
+- analyze_security: Analyze connection security metrics
+- detect_threats: Detect potential security threats
+- generate_reports: Generate security and compliance reports
+- manage_policies: Create and manage VPN security policies`,
+  agentName: 'VPNGuardian AI',
+  temperature: 0.7
 };
 
 export const API_ENDPOINTS = {
-  fraudguard: {
-    analyze: '/api/fraudguard/analyze',
-    score: '/api/fraudguard/score',
-    transactions: '/api/fraudguard/transactions',
-    analytics: '/api/fraudguard/analytics',
-    alerts: '/api/fraudguard/alerts',
-    reports: '/api/fraudguard/reports'
-  },
-  ml: {
-    predict: '/api/ml/predict',
-    score: '/api/ml/score',
-    train: '/api/ml/train'
-  },
-  ai: {
-    chat: '/api/ai/chat',
-    ws: '/ws/ai'
-  }
+  base: '/api/v1/vpnguardian',
+  status: '/status',
+  connections: '/connections',
+  policies: '/policies',
+  alerts: '/alerts',
+  users: '/users',
+  analytics: '/analytics'
 };
+
+export const POLL_INTERVALS = {
+  connections: 30000, // 30 seconds
+  alerts: 15000, // 15 seconds
+  metrics: 60000 // 1 minute
+};
+
+export const CHART_COLORS = {
+  primary: '#3B82F6',
+  secondary: '#10B981',
+  warning: '#F59E0B',
+  danger: '#EF4444',
+  info: '#6B7280',
+  success: '#059669'
+};
+
+export const COMPLIANCE_FRAMEWORKS = [
+  { id: 'gdpr', label: 'GDPR', description: 'General Data Protection Regulation' },
+  { id: 'hipaa', label: 'HIPAA', description: 'Health Insurance Portability and Accountability Act' },
+  { id: 'pci', label: 'PCI DSS', description: 'Payment Card Industry Data Security Standard' },
+  { id: 'sox', label: 'SOX', description: 'Sarbanes-Oxley Act' },
+  { id: 'nist', label: 'NIST', description: 'National Institute of Standards and Technology' },
+  { id: 'iso27001', label: 'ISO 27001', description: 'Information Security Management Systems' }
+];
+
+export const TIME_RANGES = [
+  { id: '1h', label: 'Last Hour', value: 60 * 60 * 1000 },
+  { id: '24h', label: 'Last 24 Hours', value: 24 * 60 * 60 * 1000 },
+  { id: '7d', label: 'Last 7 Days', value: 7 * 24 * 60 * 60 * 1000 },
+  { id: '30d', label: 'Last 30 Days', value: 30 * 24 * 60 * 60 * 1000 },
+  { id: '90d', label: 'Last 90 Days', value: 90 * 24 * 60 * 60 * 1000 }
+];
+
+export const EXPORT_FORMATS = [
+  { id: 'pdf', label: 'PDF Report', icon: '📄' },
+  { id: 'csv', label: 'CSV Data', icon: '📊' },
+  { id: 'json', label: 'JSON Export', icon: '🔧' },
+  { id: 'xml', label: 'XML Export', icon: '📋' }
+];

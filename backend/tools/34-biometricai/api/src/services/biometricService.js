@@ -1,5 +1,4 @@
 const axios = require("axios");
-const { getConnectors } = require("../../../../shared/connectors");
 const BiometricSession = require('../models/BiometricSession.model');
 const UserBiometricProfile = require('../models/UserBiometricProfile.model');
 const BiometricAlert = require('../models/BiometricAlert.model');
@@ -8,8 +7,8 @@ const ML_ENGINE_URL = process.env.ML_ENGINE_URL || "http://localhost:8034";
 
 class BiometricAIService {
   constructor() {
-    this.connectors = getConnectors();
     this.apiKeys = {
+      // Face Recognition APIs
       azure: {
         face: process.env.AZURE_FACE_API_KEY,
         endpoint: process.env.AZURE_FACE_ENDPOINT
@@ -24,6 +23,38 @@ class BiometricAIService {
         speech: process.env.GOOGLE_SPEECH_API_KEY,
         projectId: process.env.GOOGLE_CLOUD_PROJECT_ID
       },
+      facePlusPlus: {
+        apiKey: process.env.FACE_PLUS_PLUS_API_KEY,
+        apiSecret: process.env.FACE_PLUS_PLUS_API_SECRET
+      },
+      kairos: {
+        appId: process.env.KAIROS_APP_ID,
+        appKey: process.env.KAIROS_APP_KEY
+      },
+
+      // Fingerprint Recognition
+      suprema: {
+        apiKey: process.env.SUPREMA_BIOMINI_API_KEY,
+        endpoint: process.env.SUPREMA_BIOMINI_ENDPOINT
+      },
+      digitalPersona: {
+        apiKey: process.env.DIGITAL_PERSONA_API_KEY,
+        endpoint: process.env.DIGITAL_PERSONA_ENDPOINT
+      },
+
+      // Voice Recognition
+      respeecher: {
+        apiKey: process.env.RESPEECHER_API_KEY,
+        endpoint: process.env.RESPEECHER_ENDPOINT
+      },
+
+      // Iris Recognition
+      irisGuard: {
+        apiKey: process.env.IRIS_GUARD_API_KEY,
+        endpoint: process.env.IRIS_GUARD_ENDPOINT
+      },
+
+      // Behavioral Biometrics
       typingdna: {
         apiKey: process.env.TYPING_DNA_API_KEY,
         endpoint: process.env.TYPING_DNA_ENDPOINT
@@ -31,6 +62,50 @@ class BiometricAIService {
       biocatch: {
         apiKey: process.env.BIO_CATCH_API_KEY,
         endpoint: process.env.BIO_CATCH_ENDPOINT
+      },
+      behavioSec: {
+        apiKey: process.env.BEHAVIO_SEC_API_KEY,
+        endpoint: process.env.BEHAVIO_SEC_ENDPOINT
+      },
+
+      // Security Integrations
+      splunk: {
+        hecUrl: process.env.SPLUNK_HEC_URL,
+        hecToken: process.env.SPLUNK_HEC_TOKEN
+      },
+      virustotal: {
+        apiKey: process.env.VIRUSTOTAL_API_KEY
+      },
+      abuseipdb: {
+        apiKey: process.env.ABUSEIPDB_API_KEY
+      },
+      twilio: {
+        accountSid: process.env.TWILIO_ACCOUNT_SID,
+        authToken: process.env.TWILIO_AUTH_TOKEN,
+        phoneNumber: process.env.TWILIO_PHONE_NUMBER
+      },
+      sendgrid: {
+        apiKey: process.env.SENDGRID_API_KEY,
+        fromEmail: process.env.FROM_EMAIL
+      },
+      firebase: {
+        serverKey: process.env.FIREBASE_SERVER_KEY
+      },
+      onesignal: {
+        appId: process.env.ONESIGNAL_APP_ID,
+        apiKey: process.env.ONESIGNAL_API_KEY
+      },
+      crowdstrike: {
+        apiKey: process.env.CROWDSTRIKE_API_KEY,
+        baseUrl: process.env.CROWDSTRIKE_BASE_URL
+      },
+      xsoar: {
+        apiKey: process.env.XSOAR_API_KEY,
+        baseUrl: process.env.XSOAR_BASE_URL
+      },
+      elasticsearch: {
+        url: process.env.ELASTICSEARCH_URL,
+        apiKey: process.env.ELASTICSEARCH_API_KEY
       }
     };
   }
@@ -305,11 +380,7 @@ class BiometricAIService {
       };
     } catch (error) {
       console.error('Behavioral authentication error:', error.message);
-      return {
-        success: false,
-        confidence: 0.3,
-        error: error.message
-      };
+      return this.fallbackBehavioralAuth(behavioralData, profile);
     }
   }
 
@@ -432,16 +503,32 @@ class BiometricAIService {
 
   // Fallback methods for when APIs are unavailable
   fallbackFaceAuth(faceData, profile) {
-    const confidence = Math.random() * 0.4 + 0.6; // 0.6-1.0
+    // Basic face template matching fallback
+    let confidence = 0.6;
+
+    if (faceData.template && profile.faceTemplate) {
+      // Simple template similarity (in production, use proper face recognition)
+      const similarity = this.calculateTemplateSimilarity(faceData.template, profile.faceTemplate);
+      confidence = Math.max(0.5, similarity);
+    }
+
     return {
-      success: confidence >= profile.settings.confidenceThreshold,
+      success: confidence >= (profile.settings?.confidenceThreshold || 0.8),
       confidence,
       method: 'fallback'
     };
   }
 
   fallbackFingerprintAuth(fingerprintData, profile) {
-    const confidence = Math.random() * 0.3 + 0.7; // 0.7-1.0
+    // Basic fingerprint template matching fallback
+    let confidence = 0.7;
+
+    if (fingerprintData.template && profile.fingerprintTemplate) {
+      // Simple template comparison (in production, use proper fingerprint matching)
+      const similarity = this.calculateTemplateSimilarity(fingerprintData.template, profile.fingerprintTemplate);
+      confidence = Math.max(0.6, similarity);
+    }
+
     return {
       success: confidence >= 0.8,
       confidence,
@@ -449,13 +536,326 @@ class BiometricAIService {
     };
   }
 
-  fallbackVoiceAuth(voiceData, profile) {
-    const confidence = Math.random() * 0.5 + 0.5; // 0.5-1.0
+  fallbackBehavioralAuth(behavioralData, profile) {
+    // Simple pattern matching fallback for behavioral biometrics
+    let confidence = 0.5;
+
+    if (behavioralData.typing) {
+      // Basic typing pattern analysis
+      const avgKeyPressTime = behavioralData.typing.keyPressTimes?.reduce((a, b) => a + b, 0) / behavioralData.typing.keyPressTimes?.length || 0;
+      const avgKeyReleaseTime = behavioralData.typing.keyReleaseTimes?.reduce((a, b) => a + b, 0) / behavioralData.typing.keyReleaseTimes?.length || 0;
+
+      // Compare with stored patterns (simplified)
+      if (profile.typingPatterns) {
+        const storedAvgPress = profile.typingPatterns.avgKeyPressTime || 100;
+        const storedAvgRelease = profile.typingPatterns.avgKeyReleaseTime || 150;
+
+        const pressDiff = Math.abs(avgKeyPressTime - storedAvgPress) / storedAvgPress;
+        const releaseDiff = Math.abs(avgKeyReleaseTime - storedAvgRelease) / storedAvgRelease;
+
+        confidence += (1 - (pressDiff + releaseDiff) / 2) * 0.3;
+      }
+    }
+
+    if (behavioralData.mouse) {
+      // Basic mouse movement analysis
+      const avgSpeed = behavioralData.mouse.speeds?.reduce((a, b) => a + b, 0) / behavioralData.mouse.speeds?.length || 0;
+
+      if (profile.mousePatterns) {
+        const storedAvgSpeed = profile.mousePatterns.avgSpeed || 500;
+        const speedDiff = Math.abs(avgSpeed - storedAvgSpeed) / storedAvgSpeed;
+        confidence += (1 - speedDiff) * 0.2;
+      }
+    }
+
     return {
-      success: confidence >= profile.settings.confidenceThreshold,
+      success: confidence >= 0.7,
+      confidence: Math.max(0.3, Math.min(1.0, confidence)),
+      method: 'fallback'
+    };
+  }
+
+  fallbackVoiceAuth(voiceData, profile) {
+    // Basic voice pattern matching fallback
+    let confidence = 0.5;
+
+    if (voiceData.audio && profile.voiceTemplate) {
+      // Simple audio feature comparison (in production, use proper voice recognition)
+      const features = this.extractAudioFeatures(voiceData.audio);
+      const storedFeatures = profile.voiceTemplate.features;
+
+      if (features && storedFeatures) {
+        const similarity = this.calculateFeatureSimilarity(features, storedFeatures);
+        confidence = Math.max(0.4, similarity);
+      }
+    }
+
+    return {
+      success: confidence >= (profile.settings?.confidenceThreshold || 0.7),
       confidence,
       method: 'fallback'
     };
+  }
+
+  // User enrollment and profile management
+  async enrollUser(userId, biometricData, profileData = {}) {
+    try {
+      // Check if profile already exists
+      let profile = await UserBiometricProfile.findOne({ userId });
+
+      if (profile) {
+        throw new Error('User already enrolled. Use update instead.');
+      }
+
+      // Create new profile
+      profile = new UserBiometricProfile({
+        userId,
+        profiles: {
+          face: biometricData.face ? {
+            template: biometricData.face.template,
+            enrolledAt: new Date(),
+            lastVerified: new Date()
+          } : null,
+          fingerprint: biometricData.fingerprint ? {
+            template: biometricData.fingerprint.template,
+            enrolledAt: new Date(),
+            lastVerified: new Date()
+          } : null,
+          voice: biometricData.voice ? {
+            template: biometricData.voice.template,
+            features: biometricData.voice.features,
+            enrolledAt: new Date(),
+            lastVerified: new Date()
+          } : null,
+          behavioral: biometricData.behavioral ? {
+            typingPatterns: biometricData.behavioral.typing,
+            mousePatterns: biometricData.behavioral.mouse,
+            enrolledAt: new Date(),
+            lastVerified: new Date()
+          } : null
+        },
+        settings: {
+          confidenceThreshold: profileData.confidenceThreshold || 0.8,
+          requireMultiModal: profileData.requireMultiModal || false,
+          enabledModalities: profileData.enabledModalities || ['face', 'fingerprint', 'voice', 'behavioral'],
+          ...profileData.settings
+        },
+        securitySettings: {
+          maxFailedAttempts: profileData.maxFailedAttempts || 5,
+          lockoutDuration: profileData.lockoutDuration || 30 * 60 * 1000, // 30 minutes
+          requireLocationVerification: profileData.requireLocationVerification || false,
+          ...profileData.securitySettings
+        }
+      });
+
+      await profile.save();
+
+      return {
+        success: true,
+        profile: profile.toObject(),
+        message: 'User enrolled successfully'
+      };
+    } catch (error) {
+      console.error('User enrollment error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  async updateBiometricProfile(userId, biometricData, profileData = {}) {
+    try {
+      const profile = await UserBiometricProfile.findOne({ userId });
+
+      if (!profile) {
+        throw new Error('Biometric profile not found');
+      }
+
+      // Update biometric data
+      if (biometricData.face) {
+        profile.profiles.face = {
+          ...profile.profiles.face,
+          template: biometricData.face.template,
+          lastUpdated: new Date()
+        };
+      }
+
+      if (biometricData.fingerprint) {
+        profile.profiles.fingerprint = {
+          ...profile.profiles.fingerprint,
+          template: biometricData.fingerprint.template,
+          lastUpdated: new Date()
+        };
+      }
+
+      if (biometricData.voice) {
+        profile.profiles.voice = {
+          ...profile.profiles.voice,
+          template: biometricData.voice.template,
+          features: biometricData.voice.features,
+          lastUpdated: new Date()
+        };
+      }
+
+      if (biometricData.behavioral) {
+        profile.profiles.behavioral = {
+          ...profile.profiles.behavioral,
+          typingPatterns: biometricData.behavioral.typing,
+          mousePatterns: biometricData.behavioral.mouse,
+          lastUpdated: new Date()
+        };
+      }
+
+      // Update settings
+      if (profileData.settings) {
+        profile.settings = { ...profile.settings, ...profileData.settings };
+      }
+
+      if (profileData.securitySettings) {
+        profile.securitySettings = { ...profile.securitySettings, ...profileData.securitySettings };
+      }
+
+      await profile.save();
+
+      return {
+        success: true,
+        profile: profile.toObject(),
+        message: 'Profile updated successfully'
+      };
+    } catch (error) {
+      console.error('Profile update error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  async deleteBiometricProfile(userId) {
+    try {
+      const result = await UserBiometricProfile.findOneAndDelete({ userId });
+
+      if (!result) {
+        throw new Error('Biometric profile not found');
+      }
+
+      // Also delete associated sessions and alerts
+      await BiometricSession.deleteMany({ userId });
+      await BiometricAlert.deleteMany({ userId });
+
+      return {
+        success: true,
+        message: 'Profile and associated data deleted successfully'
+      };
+    } catch (error) {
+      console.error('Profile deletion error:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  async getBiometricProfile(userId) {
+    try {
+      const profile = await UserBiometricProfile.findOne({ userId });
+
+      if (!profile) {
+        return null;
+      }
+
+      return profile.toObject();
+    } catch (error) {
+      console.error('Profile retrieval error:', error);
+      throw error;
+    }
+  }
+
+  async getBiometricSessions(userId, options = {}) {
+    try {
+      const { limit = 10, offset = 0 } = options;
+
+      const sessions = await BiometricSession.find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .skip(offset);
+
+      return sessions.map(session => session.toObject());
+    } catch (error) {
+      console.error('Sessions retrieval error:', error);
+      throw error;
+    }
+  }
+
+  async getSecurityEvents(options = {}) {
+    try {
+      const { limit = 50, offset = 0, type, severity } = options;
+
+      let query = {};
+      if (type) query.type = type;
+      if (severity) query.severity = severity;
+
+      const events = await BiometricAlert.find(query)
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .skip(offset);
+
+      return events.map(event => event.toObject());
+    } catch (error) {
+      console.error('Security events retrieval error:', error);
+      throw error;
+    }
+  }
+
+  async createSecurityAlert(alertData) {
+    try {
+      const alert = new BiometricAlert({
+        ...alertData,
+        createdAt: new Date()
+      });
+
+      await alert.save();
+
+      // Trigger external integrations
+      await this.integrateWithSecurityStack(`alert_${alert._id}`, {
+        alertType: alertData.type,
+        severity: alertData.severity,
+        message: alertData.message,
+        details: alertData.details,
+        userId: alertData.userId
+      });
+
+      return alert.toObject();
+    } catch (error) {
+      console.error('Security alert creation error:', error);
+      throw error;
+    }
+  }
+
+  async logSecurityEvent(eventData) {
+    try {
+      // Create a security alert for significant events
+      if (eventData.type.includes('FAILED') || eventData.type.includes('SUSPICIOUS')) {
+        await this.createSecurityAlert({
+          type: eventData.type,
+          severity: eventData.type.includes('FAILED') ? 'medium' : 'low',
+          message: `Security event: ${eventData.type}`,
+          details: eventData,
+          userId: eventData.userId
+        });
+      }
+
+      // Log to external systems if configured
+      await this.integrateWithSecurityStack(`event_${Date.now()}`, {
+        eventType: eventData.type,
+        details: eventData,
+        timestamp: eventData.timestamp || new Date()
+      });
+    } catch (error) {
+      console.error('Security event logging error:', error);
+      // Don't throw - logging failures shouldn't break main flow
+    }
   }
 
   // Generate security recommendations
@@ -553,269 +953,6 @@ class BiometricAIService {
       findings: [],
       riskScore: Math.random() * 50
     };
-  }
-}
-
-module.exports = new BiometricAIService();
-
-  // Fallback analysis when ML engine is unavailable
-  fallbackAnalysis(data) {
-    const securityAlerts = [];
-    const authenticity = { score: 88, confidence: 'high' };
-    const recommendations = [];
-
-    // Analyze biometric authentication attempts
-    if (data.authAttempts) {
-      const attempts = Array.isArray(data.authAttempts) ? data.authAttempts : [data.authAttempts];
-      let failedAttempts = 0;
-      let spoofingAttempts = 0;
-      let unusualPatterns = 0;
-
-      for (const attempt of attempts) {
-        const attemptData = typeof attempt === 'string' ? { status: attempt } : attempt;
-
-        if (attemptData.status === 'failed' || attemptData.success === false) {
-          failedAttempts++;
-        }
-
-        if (attemptData.spoofingDetected || attemptData.liveness === false) {
-          spoofingAttempts++;
-          securityAlerts.push({
-            type: 'spoofing_attempt',
-            severity: 'critical',
-            description: 'Biometric spoofing attempt detected',
-            confidence: attemptData.confidence || 85
-          });
-        }
-
-        if (attemptData.anomaly || attemptData.unusual) {
-          unusualPatterns++;
-          if (unusualPatterns > 2) {
-            securityAlerts.push({
-              type: 'unusual_pattern',
-              severity: 'medium',
-              description: 'Unusual biometric authentication patterns detected',
-              occurrences: unusualPatterns
-            });
-          }
-        }
-      }
-
-      if (failedAttempts > attempts.length * 0.3) {
-        securityAlerts.push({
-          type: 'high_failure_rate',
-          severity: 'high',
-          description: `${failedAttempts} failed authentication attempts out of ${attempts.length}`,
-          failureRate: (failedAttempts / attempts.length) * 100
-        });
-      }
-    }
-
-    // Analyze device and sensor integrity
-    if (data.devices) {
-      const devices = Array.isArray(data.devices) ? data.devices : [data.devices];
-      let compromisedDevices = 0;
-      let tamperedSensors = 0;
-
-      for (const device of devices) {
-        if (device.compromised || device.tampered) {
-          compromisedDevices++;
-          securityAlerts.push({
-            type: 'device_compromise',
-            severity: 'critical',
-            description: `Biometric device ${device.id || device.name} appears compromised`,
-            deviceId: device.id
-          });
-        }
-
-        if (device.sensorTampered) {
-          tamperedSensors++;
-        }
-      }
-
-      if (tamperedSensors > 0) {
-        securityAlerts.push({
-          type: 'sensor_tampering',
-          severity: 'high',
-          description: `${tamperedSensors} sensors show signs of tampering`,
-          count: tamperedSensors
-        });
-      }
-    }
-
-    // Calculate authenticity score
-    const alertScore = securityAlerts.reduce((score, alert) => {
-      return score + (alert.severity === 'critical' ? 20 : alert.severity === 'high' ? 10 : 3);
-    }, 0);
-    authenticity.score = Math.max(0, 100 - alertScore);
-    authenticity.confidence = authenticity.score > 90 ? 'very_high' : authenticity.score > 80 ? 'high' : authenticity.score > 70 ? 'medium' : 'low';
-
-    // Generate recommendations
-    if (securityAlerts.some(a => a.type === 'spoofing_attempt')) {
-      recommendations.push({
-        priority: 'critical',
-        action: 'Implement additional anti-spoofing measures',
-        reason: 'Biometric spoofing detected'
-      });
-    }
-
-    if (authenticity.score < 70) {
-      recommendations.push({
-        priority: 'high',
-        action: 'Review and recalibrate biometric systems',
-        reason: 'Low authenticity confidence detected'
-      });
-    }
-
-    return {
-      securityAlerts,
-      authenticity,
-      recommendations,
-      totalAttempts: data.authAttempts?.length || 0,
-      devicesAnalyzed: data.devices?.length || 0,
-      alertCount: securityAlerts.length,
-      criticalAlerts: securityAlerts.filter(a => a.severity === 'critical').length,
-      systemHealth: authenticity.confidence === 'high' || authenticity.confidence === 'very_high' ? 'good' : 'needs_attention'
-    };
-  }
-
-  // Fallback scan when ML engine is unavailable
-  fallbackScan(target) {
-    return {
-      target,
-      scanId: Date.now(),
-      authenticity: { score: 82, confidence: 'medium' },
-      alerts: 1,
-      status: 'completed',
-      note: 'ML engine unavailable, basic biometric analysis completed'
-    };
-  }
-
-  // Integrate with external security stack
-  async integrateWithSecurityStack(entityId, data) {
-    try {
-      const connectors = getConnectors();
-      const integrationPromises = [];
-
-      // Microsoft Sentinel - Log biometric analysis and security alerts
-      if (connectors.sentinel) {
-        integrationPromises.push(
-          connectors.sentinel.ingestData({
-            table: 'Biometric_Analysis_CL',
-            data: {
-              EntityId: entityId,
-              AnalysisType: data.analysisType || 'biometric_security_analysis',
-              Target: data.target,
-              AuthenticityScore: data.authenticity?.score || 0,
-              AuthenticityConfidence: data.authenticity?.confidence || 'unknown',
-              SecurityAlerts: data.securityAlerts?.length || 0,
-              CriticalAlerts: data.criticalAlerts || 0,
-              TotalAttempts: data.totalAttempts || 0,
-              DevicesAnalyzed: data.devicesAnalyzed || 0,
-              SystemHealth: data.systemHealth || 'unknown',
-              ScanId: data.scanId,
-              Timestamp: new Date().toISOString(),
-              Severity: data.severity || 'medium'
-            }
-          }).catch(err => console.error('Sentinel BiometricAI integration failed:', err))
-        );
-      }
-
-      // Cortex XSOAR - Create incidents for biometric security alerts
-      if (connectors.xsoar && data.securityAlerts?.length > 0) {
-        const criticalAlerts = data.securityAlerts.filter(a => a.severity === 'critical');
-        if (criticalAlerts.length > 0) {
-          integrationPromises.push(
-            connectors.xsoar.createIncident({
-              type: 'biometric_security_alert',
-              severity: 'critical',
-              title: `Biometric Security Alert: ${criticalAlerts[0].type}`,
-              description: `Biometric analysis detected ${data.securityAlerts.length} security alerts with authenticity score of ${data.authenticity?.score}`,
-              labels: {
-                entityId,
-                target: data.target,
-                authenticityScore: data.authenticity?.score,
-                criticalAlerts: data.criticalAlerts,
-                totalAttempts: data.totalAttempts
-              }
-            }).catch(err => console.error('XSOAR BiometricAI integration failed:', err))
-          );
-        }
-      }
-
-      // CrowdStrike - Trigger biometric security responses
-      if (connectors.crowdstrike && data.securityAlerts?.some(a => a.severity === 'critical')) {
-        integrationPromises.push(
-          connectors.crowdstrike.biometricSecurityResponse({
-            entityId,
-            alerts: data.securityAlerts.filter(a => a.severity === 'critical'),
-            action: 'lock_accounts',
-            reason: 'Critical biometric security alerts detected'
-          }).catch(err => console.error('CrowdStrike BiometricAI integration failed:', err))
-        );
-      }
-
-      // Cloudflare - Update access policies for biometric compromise
-      if (connectors.cloudflare && data.authenticity?.score < 70) {
-        integrationPromises.push(
-          connectors.cloudflare.updateBiometricPolicies({
-            authenticityScore: data.authenticity.score,
-            alerts: data.securityAlerts || [],
-            action: 'require_additional_verification',
-            reason: 'Low biometric authenticity detected'
-          }).catch(err => console.error('Cloudflare BiometricAI integration failed:', err))
-        );
-      }
-
-      // Kong - Implement strict API access controls
-      if (connectors.kong && data.securityAlerts?.length > 0) {
-        integrationPromises.push(
-          connectors.kong.enforceBiometricSecurity({
-            alerts: data.securityAlerts,
-            authenticityScore: data.authenticity?.score,
-            action: 'heightened_authentication',
-            reason: 'Biometric security alerts detected'
-          }).catch(err => console.error('Kong BiometricAI integration failed:', err))
-        );
-      }
-
-      // Okta - Update adaptive access and MFA policies
-      if (connectors.okta) {
-        integrationPromises.push(
-          connectors.okta.updateBiometricPolicies({
-            entityId,
-            authenticityScore: data.authenticity?.score,
-            alerts: data.securityAlerts?.map(a => a.type) || [],
-            confidence: data.authenticity?.confidence,
-            action: data.authenticity?.score < 60 ? 'require_alternative_auth' : 'maintain_current'
-          }).catch(err => console.error('Okta BiometricAI integration failed:', err))
-        );
-      }
-
-      // OpenCTI - Create indicators for biometric security threats
-      if (connectors.opencti && data.securityAlerts?.length > 0) {
-        for (const alert of data.securityAlerts) {
-          integrationPromises.push(
-            connectors.opencti.createIndicator({
-              type: 'biometric_security_threat',
-              value: alert.type,
-              description: alert.description,
-              labels: ['biometric_ai', 'security_alert', alert.severity],
-              confidence: alert.confidence || 85,
-              entityId
-            }).catch(err => console.error('OpenCTI BiometricAI integration failed:', err))
-          );
-        }
-      }
-
-      // Execute all integrations in parallel
-      await Promise.allSettled(integrationPromises);
-      console.log(`Biometric AI integration completed for entity ${entityId}`);
-
-    } catch (error) {
-      console.error('Biometric AI security stack integration error:', error);
-      // Don't throw - integration failures shouldn't break core functionality
-    }
   }
 }
 

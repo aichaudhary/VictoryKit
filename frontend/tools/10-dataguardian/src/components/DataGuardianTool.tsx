@@ -1,7 +1,23 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import DataGuardianForm, { DataGuardianConfig } from "./DataGuardianForm";
 import LiveDataGuardianPanel from "./LiveDataGuardianPanel";
 import AnimatedDataGuardianResult from "./AnimatedDataGuardianResult";
+import {
+  dataGuardianApi,
+  simulatedData,
+  DSRDashboard,
+  ConsentDashboard,
+  RetentionDashboard,
+  DataSubjectRequest,
+  DSRType,
+  DSRStatus,
+  Regulation,
+  DataDiscoveryResult,
+  PIAResult,
+} from "../api/dataguardian.api";
+
+// ============= Tab Type =============
+type ActiveTab = 'scanner' | 'dsr' | 'consent' | 'retention' | 'dashboard';
 
 interface DataFinding {
   id: string;
@@ -120,6 +136,38 @@ const credentialCategories = [
 ];
 
 const DataGuardianTool: React.FC = () => {
+  // Tab state
+  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  
+  // Dashboard states
+  const [dsrDashboard, setDsrDashboard] = useState<DSRDashboard | null>(null);
+  const [consentDashboard, setConsentDashboard] = useState<ConsentDashboard | null>(null);
+  const [retentionDashboard, setRetentionDashboard] = useState<RetentionDashboard | null>(null);
+  const [complianceScore, setComplianceScore] = useState<number>(0);
+  const [isLoadingDashboard, setIsLoadingDashboard] = useState(false);
+  const [apiConnected, setApiConnected] = useState(false);
+  
+  // DSR states
+  const [dsrList, setDsrList] = useState<DataSubjectRequest[]>([]);
+  const [isLoadingDSR, setIsLoadingDSR] = useState(false);
+  const [showDSRForm, setShowDSRForm] = useState(false);
+  const [dsrFormData, setDsrFormData] = useState({
+    type: 'access' as DSRType,
+    email: '',
+    name: '',
+    regulation: 'GDPR' as Regulation,
+  });
+  
+  // Data Discovery states
+  const [discoveryResult, setDiscoveryResult] = useState<DataDiscoveryResult | null>(null);
+  const [isDiscovering, setIsDiscovering] = useState(false);
+  const [discoveryEmail, setDiscoveryEmail] = useState('');
+  
+  // PIA states
+  const [piaResult, setPiaResult] = useState<PIAResult | null>(null);
+  const [isPIARunning, setIsPIARunning] = useState(false);
+
+  // Scanner states (existing)
   const [isScanning, setIsScanning] = useState(false);
   const [scanComplete, setScanComplete] = useState(false);
   const [currentPhase, setCurrentPhase] = useState("");
@@ -138,6 +186,139 @@ const DataGuardianTool: React.FC = () => {
   });
   const [result, setResult] = useState<ScanResult | null>(null);
   const [config, setConfig] = useState<DataGuardianConfig | null>(null);
+
+  // Load dashboard on mount
+  useEffect(() => {
+    loadUnifiedDashboard();
+  }, []);
+
+  const loadUnifiedDashboard = async () => {
+    setIsLoadingDashboard(true);
+    try {
+      const response = await dataGuardianApi.getUnifiedDashboard();
+      if (response.success && response.data) {
+        setDsrDashboard(response.data.dsr);
+        setConsentDashboard(response.data.consent);
+        setRetentionDashboard(response.data.retention);
+        setComplianceScore(response.data.complianceScore);
+        setApiConnected(true);
+      } else {
+        // Use simulated data
+        setDsrDashboard(simulatedData.dsrDashboard);
+        setConsentDashboard(simulatedData.consentDashboard);
+        setRetentionDashboard(simulatedData.retentionDashboard);
+        setComplianceScore(simulatedData.unifiedDashboard.complianceScore);
+        setApiConnected(false);
+      }
+    } catch (error) {
+      console.error('Failed to load dashboard:', error);
+      // Fallback to simulated
+      setDsrDashboard(simulatedData.dsrDashboard);
+      setConsentDashboard(simulatedData.consentDashboard);
+      setRetentionDashboard(simulatedData.retentionDashboard);
+      setComplianceScore(simulatedData.unifiedDashboard.complianceScore);
+      setApiConnected(false);
+    }
+    setIsLoadingDashboard(false);
+  };
+
+  const loadDSRList = async () => {
+    setIsLoadingDSR(true);
+    try {
+      const response = await dataGuardianApi.getDSRs({ limit: 20 });
+      if (response.success && response.data) {
+        setDsrList(response.data.dsrs);
+      } else {
+        // Generate simulated DSRs
+        setDsrList([
+          simulatedData.generateDSR('access', 'pending'),
+          simulatedData.generateDSR('erasure', 'in-progress'),
+          simulatedData.generateDSR('portability', 'completed'),
+        ]);
+      }
+    } catch (error) {
+      console.error('Failed to load DSRs:', error);
+      setDsrList([
+        simulatedData.generateDSR('access', 'pending'),
+        simulatedData.generateDSR('erasure', 'in-progress'),
+      ]);
+    }
+    setIsLoadingDSR(false);
+  };
+
+  const handleCreateDSR = async () => {
+    try {
+      const response = await dataGuardianApi.createDSR({
+        type: dsrFormData.type,
+        dataSubject: {
+          email: dsrFormData.email,
+          name: dsrFormData.name,
+        },
+        regulation: dsrFormData.regulation,
+      });
+      
+      if (response.success && response.data) {
+        setDsrList(prev => [response.data!.dsr, ...prev]);
+      } else {
+        // Simulate creating a DSR
+        const newDSR = simulatedData.generateDSR(dsrFormData.type, 'pending');
+        newDSR.dataSubject.email = dsrFormData.email;
+        newDSR.dataSubject.name = dsrFormData.name;
+        newDSR.regulation = dsrFormData.regulation;
+        setDsrList(prev => [newDSR, ...prev]);
+      }
+      
+      setShowDSRForm(false);
+      setDsrFormData({ type: 'access', email: '', name: '', regulation: 'GDPR' });
+    } catch (error) {
+      console.error('Failed to create DSR:', error);
+    }
+  };
+
+  const handleDataDiscovery = async () => {
+    if (!discoveryEmail) return;
+    
+    setIsDiscovering(true);
+    try {
+      const response = await dataGuardianApi.discoverData({ email: discoveryEmail });
+      if (response.success && response.data) {
+        setDiscoveryResult(response.data);
+      } else {
+        // Use simulated discovery result
+        setDiscoveryResult({
+          ...simulatedData.discoveryResult,
+          query: discoveryEmail,
+        });
+      }
+    } catch (error) {
+      console.error('Discovery failed:', error);
+      setDiscoveryResult({
+        ...simulatedData.discoveryResult,
+        query: discoveryEmail,
+      });
+    }
+    setIsDiscovering(false);
+  };
+
+  const handlePIA = async () => {
+    setIsPIARunning(true);
+    try {
+      const response = await dataGuardianApi.performPIA({
+        projectName: 'New Project Assessment',
+        dataCategories: ['personal', 'behavioral', 'financial'],
+        processingPurposes: ['analytics', 'marketing', 'service-delivery'],
+      });
+      if (response.success && response.data) {
+        setPiaResult(response.data);
+      } else {
+        setPiaResult(simulatedData.piaResult);
+      }
+    } catch (error) {
+      console.error('PIA failed:', error);
+      setPiaResult(simulatedData.piaResult);
+    }
+    setIsPIARunning(false);
+  };
 
   const addEvent = useCallback(
     (type: ScanEvent["type"], message: string, details?: string) => {
@@ -634,76 +815,649 @@ const DataGuardianTool: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-950 via-green-900 to-emerald-950 grid-pattern">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <header className="text-center mb-8">
+        <header className="text-center mb-6">
           <h1 className="text-3xl font-bold text-green-100 mb-2">
             🛡️ DataGuardian
           </h1>
           <p className="text-green-400/70">
-            AI-Powered Data Privacy & Protection Scanner
+            AI-Powered Data Privacy & Protection Platform
           </p>
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <span className={`w-2 h-2 rounded-full ${apiConnected ? 'bg-green-400' : 'bg-yellow-400'}`}></span>
+            <span className="text-xs text-green-500">
+              {apiConnected ? 'API Connected' : 'Simulation Mode'}
+            </span>
+          </div>
         </header>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {/* Left Column - Form */}
-          <div className="lg:col-span-1">
-            <div className="bg-green-950/50 backdrop-blur-sm rounded-2xl border border-green-800/30 p-6">
-              <DataGuardianForm onSubmit={runScan} isScanning={isScanning} />
-            </div>
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-green-950/50 rounded-xl p-1 flex gap-1 border border-green-800/30">
+            {[
+              { id: 'dashboard', label: '📊 Dashboard', icon: '📊' },
+              { id: 'dsr', label: '📝 DSR Management', icon: '📝' },
+              { id: 'consent', label: '✅ Consent', icon: '✅' },
+              { id: 'retention', label: '📁 Retention', icon: '📁' },
+              { id: 'scanner', label: '🔍 PII Scanner', icon: '🔍' },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as ActiveTab)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  activeTab === tab.id
+                    ? 'bg-green-600 text-white'
+                    : 'text-green-400 hover:bg-green-800/30'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
+        </div>
 
-          {/* Middle Column - Live Panel */}
-          <div className="lg:col-span-1">
-            <LiveDataGuardianPanel
-              isScanning={isScanning}
-              currentPhase={currentPhase}
-              overallProgress={overallProgress}
-              sourceProgress={sourceProgress}
-              findings={findings}
-              events={events}
-              stats={stats}
-            />
-          </div>
-
-          {/* Right Column - Results */}
-          <div className="lg:col-span-1">
-            {scanComplete && result ? (
-              <AnimatedDataGuardianResult
-                result={result}
-                onReset={handleReset}
-              />
-            ) : (
-              <div className="bg-green-950/30 rounded-2xl border border-green-800/30 p-8 h-full flex flex-col items-center justify-center text-center">
-                <div className="shield-container mb-6">
-                  <div className="w-20 h-20 rounded-full bg-green-900/30 flex items-center justify-center">
-                    <span className="text-4xl">🛡️</span>
+        {/* Dashboard Tab */}
+        {activeTab === 'dashboard' && (
+          <div className="max-w-7xl mx-auto">
+            {/* Compliance Score */}
+            <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6 mb-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-green-100 mb-1">Privacy Compliance Score</h2>
+                  <p className="text-green-500/70 text-sm">Overall privacy health across your organization</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-4xl font-bold text-green-400">{complianceScore.toFixed(1)}%</div>
+                  <div className={`text-sm ${complianceScore >= 90 ? 'text-green-400' : complianceScore >= 70 ? 'text-yellow-400' : 'text-red-400'}`}>
+                    {complianceScore >= 90 ? 'Excellent' : complianceScore >= 70 ? 'Good' : 'Needs Attention'}
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold text-green-200 mb-2">
-                  Privacy Analysis Results
-                </h3>
-                <p className="text-green-500/70 max-w-xs">
-                  Configure your data sources and start a scan to discover and
-                  protect sensitive data across your organization.
-                </p>
-                <div className="mt-6 grid grid-cols-2 gap-3 w-full max-w-xs">
-                  <div className="p-3 bg-green-900/20 rounded-lg text-center">
-                    <p className="text-2xl font-bold text-green-400">6</p>
-                    <p className="text-xs text-green-500">Data Types</p>
+              </div>
+              <div className="mt-4 bg-green-900/30 rounded-full h-3 overflow-hidden">
+                <div 
+                  className={`h-full rounded-full transition-all duration-1000 ${
+                    complianceScore >= 90 ? 'bg-green-500' : complianceScore >= 70 ? 'bg-yellow-500' : 'bg-red-500'
+                  }`}
+                  style={{ width: `${complianceScore}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {/* Dashboard Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              {/* DSR Overview */}
+              <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-2xl">📝</span>
+                  <h3 className="text-lg font-semibold text-green-100">Data Subject Requests</h3>
+                </div>
+                {dsrDashboard ? (
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-green-400/70">Total DSRs</span>
+                      <span className="text-xl font-bold text-green-300">{dsrDashboard.overview.total}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="bg-yellow-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-yellow-400">{dsrDashboard.overview.pending}</div>
+                        <div className="text-xs text-yellow-500/70">Pending</div>
+                      </div>
+                      <div className="bg-blue-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-blue-400">{dsrDashboard.overview.inProgress}</div>
+                        <div className="text-xs text-blue-500/70">In Progress</div>
+                      </div>
+                      <div className="bg-green-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-green-400">{dsrDashboard.overview.completed}</div>
+                        <div className="text-xs text-green-500/70">Completed</div>
+                      </div>
+                      <div className="bg-red-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-red-400">{dsrDashboard.overview.overdue}</div>
+                        <div className="text-xs text-red-500/70">Overdue</div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-green-800/30">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-green-500/70">Compliance Rate</span>
+                        <span className="text-green-400 font-medium">{dsrDashboard.complianceRate}%</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-3 bg-green-900/20 rounded-lg text-center">
-                    <p className="text-2xl font-bold text-green-400">8</p>
-                    <p className="text-xs text-green-500">Regulations</p>
+                ) : (
+                  <div className="animate-pulse space-y-3">
+                    <div className="h-8 bg-green-800/30 rounded"></div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="h-16 bg-green-800/30 rounded"></div>
+                      <div className="h-16 bg-green-800/30 rounded"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Consent Overview */}
+              <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-2xl">✅</span>
+                  <h3 className="text-lg font-semibold text-green-100">Consent Management</h3>
+                </div>
+                {consentDashboard ? (
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-green-400/70">Total Consents</span>
+                      <span className="text-xl font-bold text-green-300">{consentDashboard.overview.total.toLocaleString()}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="bg-green-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-green-400">{consentDashboard.overview.granted.toLocaleString()}</div>
+                        <div className="text-xs text-green-500/70">Granted</div>
+                      </div>
+                      <div className="bg-red-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-red-400">{consentDashboard.overview.denied.toLocaleString()}</div>
+                        <div className="text-xs text-red-500/70">Denied</div>
+                      </div>
+                      <div className="bg-orange-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-orange-400">{consentDashboard.overview.withdrawn}</div>
+                        <div className="text-xs text-orange-500/70">Withdrawn</div>
+                      </div>
+                      <div className="bg-gray-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-gray-400">{consentDashboard.overview.expired}</div>
+                        <div className="text-xs text-gray-500/70">Expired</div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-green-800/30">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-green-500/70">Consent Rate</span>
+                        <span className="text-green-400 font-medium">{consentDashboard.consentRate}%</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="animate-pulse space-y-3">
+                    <div className="h-8 bg-green-800/30 rounded"></div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="h-16 bg-green-800/30 rounded"></div>
+                      <div className="h-16 bg-green-800/30 rounded"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Retention Overview */}
+              <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-2xl">📁</span>
+                  <h3 className="text-lg font-semibold text-green-100">Data Retention</h3>
+                </div>
+                {retentionDashboard ? (
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-green-400/70">Active Policies</span>
+                      <span className="text-xl font-bold text-green-300">{retentionDashboard.overview.activePolicies}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="bg-blue-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-blue-400">{(retentionDashboard.overview.recordsManaged / 1000000).toFixed(1)}M</div>
+                        <div className="text-xs text-blue-500/70">Records Managed</div>
+                      </div>
+                      <div className="bg-green-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-green-400">{(retentionDashboard.overview.recordsDisposed / 1000000).toFixed(1)}M</div>
+                        <div className="text-xs text-green-500/70">Disposed</div>
+                      </div>
+                      <div className="bg-yellow-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-yellow-400">{retentionDashboard.pendingApprovals}</div>
+                        <div className="text-xs text-yellow-500/70">Pending Approval</div>
+                      </div>
+                      <div className="bg-purple-900/20 rounded-lg p-2 text-center">
+                        <div className="text-lg font-bold text-purple-400">{retentionDashboard.overview.legalHoldActive}</div>
+                        <div className="text-xs text-purple-500/70">Legal Holds</div>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-green-800/30">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-green-500/70">Compliance Rate</span>
+                        <span className="text-green-400 font-medium">{retentionDashboard.complianceRate}%</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="animate-pulse space-y-3">
+                    <div className="h-8 bg-green-800/30 rounded"></div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="h-16 bg-green-800/30 rounded"></div>
+                      <div className="h-16 bg-green-800/30 rounded"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6">
+              <h3 className="text-lg font-semibold text-green-100 mb-4">Quick Actions</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button 
+                  onClick={() => setActiveTab('dsr')}
+                  className="p-4 bg-green-900/30 rounded-xl hover:bg-green-800/40 transition-colors text-left"
+                >
+                  <span className="text-2xl mb-2 block">📝</span>
+                  <span className="text-green-200 font-medium">New DSR</span>
+                  <p className="text-xs text-green-500/70 mt-1">Create data subject request</p>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('scanner')}
+                  className="p-4 bg-green-900/30 rounded-xl hover:bg-green-800/40 transition-colors text-left"
+                >
+                  <span className="text-2xl mb-2 block">🔍</span>
+                  <span className="text-green-200 font-medium">PII Scan</span>
+                  <p className="text-xs text-green-500/70 mt-1">Scan for sensitive data</p>
+                </button>
+                <button 
+                  onClick={handlePIA}
+                  disabled={isPIARunning}
+                  className="p-4 bg-green-900/30 rounded-xl hover:bg-green-800/40 transition-colors text-left disabled:opacity-50"
+                >
+                  <span className="text-2xl mb-2 block">📋</span>
+                  <span className="text-green-200 font-medium">Run PIA</span>
+                  <p className="text-xs text-green-500/70 mt-1">Privacy Impact Assessment</p>
+                </button>
+                <button 
+                  onClick={loadUnifiedDashboard}
+                  disabled={isLoadingDashboard}
+                  className="p-4 bg-green-900/30 rounded-xl hover:bg-green-800/40 transition-colors text-left disabled:opacity-50"
+                >
+                  <span className="text-2xl mb-2 block">🔄</span>
+                  <span className="text-green-200 font-medium">Refresh</span>
+                  <p className="text-xs text-green-500/70 mt-1">Update all dashboards</p>
+                </button>
+              </div>
+            </div>
+
+            {/* PIA Result Modal */}
+            {piaResult && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-green-950 rounded-2xl border border-green-800/30 p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-semibold text-green-100">Privacy Impact Assessment</h3>
+                    <button onClick={() => setPiaResult(null)} className="text-green-500 hover:text-green-300">✕</button>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold ${
+                        piaResult.riskLevel === 'low' ? 'bg-green-900 text-green-400' :
+                        piaResult.riskLevel === 'medium' ? 'bg-yellow-900 text-yellow-400' :
+                        piaResult.riskLevel === 'high' ? 'bg-orange-900 text-orange-400' :
+                        'bg-red-900 text-red-400'
+                      }`}>
+                        {piaResult.riskScore}
+                      </div>
+                      <div>
+                        <div className="text-green-200 font-medium">{piaResult.projectName}</div>
+                        <div className={`text-sm ${
+                          piaResult.riskLevel === 'low' ? 'text-green-400' :
+                          piaResult.riskLevel === 'medium' ? 'text-yellow-400' :
+                          piaResult.riskLevel === 'high' ? 'text-orange-400' :
+                          'text-red-400'
+                        }`}>
+                          {piaResult.riskLevel.toUpperCase()} RISK
+                        </div>
+                        {piaResult.dpiaRequired && (
+                          <span className="text-xs bg-red-900/50 text-red-400 px-2 py-0.5 rounded mt-1 inline-block">DPIA Required</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="border-t border-green-800/30 pt-4">
+                      <h4 className="text-green-200 font-medium mb-2">Findings</h4>
+                      <div className="space-y-2">
+                        {piaResult.findings.map((finding, i) => (
+                          <div key={i} className="bg-green-900/20 rounded-lg p-3">
+                            <div className="text-green-300 font-medium">{finding.area}</div>
+                            <p className="text-sm text-green-400/70 mt-1">{finding.finding}</p>
+                            <div className="mt-2 flex gap-2 text-xs">
+                              <span className="bg-red-900/30 text-red-400 px-2 py-0.5 rounded">{finding.risk}</span>
+                            </div>
+                            <p className="text-xs text-green-500 mt-2">💡 {finding.recommendation}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
           </div>
-        </div>
+        )}
+
+        {/* DSR Tab */}
+        {activeTab === 'dsr' && (
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6 mb-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold text-green-100">Data Subject Requests</h2>
+                <div className="flex gap-3">
+                  <button
+                    onClick={loadDSRList}
+                    disabled={isLoadingDSR}
+                    className="px-4 py-2 bg-green-800/50 text-green-300 rounded-lg hover:bg-green-700/50 transition-colors disabled:opacity-50"
+                  >
+                    {isLoadingDSR ? 'Loading...' : '🔄 Refresh'}
+                  </button>
+                  <button
+                    onClick={() => setShowDSRForm(true)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors"
+                  >
+                    + New DSR
+                  </button>
+                </div>
+              </div>
+
+              {/* DSR Form Modal */}
+              {showDSRForm && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                  <div className="bg-green-950 rounded-2xl border border-green-800/30 p-6 max-w-md w-full">
+                    <h3 className="text-lg font-semibold text-green-100 mb-4">Create Data Subject Request</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm text-green-400 mb-1">Request Type</label>
+                        <select
+                          value={dsrFormData.type}
+                          onChange={(e) => setDsrFormData(prev => ({ ...prev, type: e.target.value as DSRType }))}
+                          className="w-full bg-green-900/50 border border-green-700 rounded-lg px-3 py-2 text-green-200"
+                        >
+                          <option value="access">Access Request</option>
+                          <option value="erasure">Erasure (Right to be Forgotten)</option>
+                          <option value="portability">Data Portability</option>
+                          <option value="rectification">Rectification</option>
+                          <option value="restriction">Processing Restriction</option>
+                          <option value="objection">Objection</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm text-green-400 mb-1">Subject Email</label>
+                        <input
+                          type="email"
+                          value={dsrFormData.email}
+                          onChange={(e) => setDsrFormData(prev => ({ ...prev, email: e.target.value }))}
+                          placeholder="user@example.com"
+                          className="w-full bg-green-900/50 border border-green-700 rounded-lg px-3 py-2 text-green-200 placeholder-green-600"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm text-green-400 mb-1">Subject Name</label>
+                        <input
+                          type="text"
+                          value={dsrFormData.name}
+                          onChange={(e) => setDsrFormData(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="John Doe"
+                          className="w-full bg-green-900/50 border border-green-700 rounded-lg px-3 py-2 text-green-200 placeholder-green-600"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm text-green-400 mb-1">Regulation</label>
+                        <select
+                          value={dsrFormData.regulation}
+                          onChange={(e) => setDsrFormData(prev => ({ ...prev, regulation: e.target.value as Regulation }))}
+                          className="w-full bg-green-900/50 border border-green-700 rounded-lg px-3 py-2 text-green-200"
+                        >
+                          <option value="GDPR">GDPR</option>
+                          <option value="CCPA">CCPA</option>
+                          <option value="LGPD">LGPD</option>
+                          <option value="PIPEDA">PIPEDA</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      <div className="flex gap-3 pt-2">
+                        <button
+                          onClick={() => setShowDSRForm(false)}
+                          className="flex-1 px-4 py-2 bg-green-800/50 text-green-300 rounded-lg hover:bg-green-700/50"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleCreateDSR}
+                          disabled={!dsrFormData.email}
+                          className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 disabled:opacity-50"
+                        >
+                          Create DSR
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* DSR List */}
+              <div className="space-y-3">
+                {dsrList.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-green-500/70 mb-4">No DSRs found. Click "Load DSRs" or create a new one.</p>
+                    <button
+                      onClick={loadDSRList}
+                      className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-600"
+                    >
+                      Load DSRs
+                    </button>
+                  </div>
+                ) : (
+                  dsrList.map((dsr) => (
+                    <div key={dsr.requestId} className="bg-green-900/20 rounded-xl p-4 border border-green-800/30">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-green-200 font-medium">{dsr.requestId}</span>
+                            <span className={`text-xs px-2 py-0.5 rounded ${
+                              dsr.status === 'completed' ? 'bg-green-900/50 text-green-400' :
+                              dsr.status === 'in-progress' ? 'bg-blue-900/50 text-blue-400' :
+                              dsr.status === 'pending' ? 'bg-yellow-900/50 text-yellow-400' :
+                              'bg-gray-900/50 text-gray-400'
+                            }`}>
+                              {dsr.status}
+                            </span>
+                            <span className="text-xs bg-purple-900/50 text-purple-400 px-2 py-0.5 rounded">
+                              {dsr.type}
+                            </span>
+                          </div>
+                          <p className="text-sm text-green-400/70 mt-1">{dsr.dataSubject.email}</p>
+                          <p className="text-xs text-green-500/50 mt-1">
+                            Regulation: {dsr.regulation} | Due: {new Date(dsr.timeline.dueDate).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          {dsr.daysRemaining !== undefined && (
+                            <span className={`text-sm ${dsr.daysRemaining <= 5 ? 'text-red-400' : 'text-green-400'}`}>
+                              {dsr.daysRemaining} days left
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Data Discovery Section */}
+            <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6">
+              <h3 className="text-lg font-semibold text-green-100 mb-4">Data Discovery</h3>
+              <div className="flex gap-3 mb-4">
+                <input
+                  type="text"
+                  value={discoveryEmail}
+                  onChange={(e) => setDiscoveryEmail(e.target.value)}
+                  placeholder="Enter email or identifier to search..."
+                  className="flex-1 bg-green-900/50 border border-green-700 rounded-lg px-4 py-2 text-green-200 placeholder-green-600"
+                />
+                <button
+                  onClick={handleDataDiscovery}
+                  disabled={!discoveryEmail || isDiscovering}
+                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 disabled:opacity-50"
+                >
+                  {isDiscovering ? 'Searching...' : '🔍 Discover'}
+                </button>
+              </div>
+
+              {discoveryResult && (
+                <div className="bg-green-900/20 rounded-xl p-4 border border-green-800/30">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="text-green-200 font-medium">Results for: {discoveryResult.query}</span>
+                    <span className="text-xs text-green-500">{discoveryResult.systemsSearched} systems searched</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4 mb-4">
+                    <div className="text-center p-3 bg-green-800/20 rounded-lg">
+                      <div className="text-2xl font-bold text-green-400">{discoveryResult.recordsFound}</div>
+                      <div className="text-xs text-green-500/70">Records Found</div>
+                    </div>
+                    <div className="text-center p-3 bg-green-800/20 rounded-lg">
+                      <div className="text-2xl font-bold text-green-400">{discoveryResult.categories.length}</div>
+                      <div className="text-xs text-green-500/70">Data Categories</div>
+                    </div>
+                    <div className="text-center p-3 bg-green-800/20 rounded-lg">
+                      <div className="text-2xl font-bold text-yellow-400">{discoveryResult.sensitiveData.length}</div>
+                      <div className="text-xs text-yellow-500/70">Sensitive Findings</div>
+                    </div>
+                  </div>
+                  {discoveryResult.recommendations.length > 0 && (
+                    <div className="border-t border-green-800/30 pt-3">
+                      <p className="text-sm text-green-400 font-medium mb-2">Recommendations:</p>
+                      <ul className="text-xs text-green-500/70 space-y-1">
+                        {discoveryResult.recommendations.map((rec, i) => (
+                          <li key={i}>• {rec}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Consent Tab - Placeholder */}
+        {activeTab === 'consent' && (
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6">
+              <h2 className="text-xl font-semibold text-green-100 mb-6">Consent Management</h2>
+              {consentDashboard && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-green-900/30 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-green-400">{consentDashboard.overview.total.toLocaleString()}</div>
+                    <div className="text-sm text-green-500/70">Total Consents</div>
+                  </div>
+                  <div className="bg-green-900/30 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-green-400">{consentDashboard.consentRate}%</div>
+                    <div className="text-sm text-green-500/70">Consent Rate</div>
+                  </div>
+                  <div className="bg-yellow-900/30 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-yellow-400">{consentDashboard.expiringThisMonth}</div>
+                    <div className="text-sm text-yellow-500/70">Expiring Soon</div>
+                  </div>
+                  <div className="bg-red-900/30 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-red-400">{consentDashboard.overview.withdrawn}</div>
+                    <div className="text-sm text-red-500/70">Withdrawn</div>
+                  </div>
+                </div>
+              )}
+              <div className="text-center py-8 text-green-500/70">
+                <p>Consent preference center and detailed management coming soon.</p>
+                <p className="text-sm mt-2">Use the API at /consent/* endpoints for full functionality.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Retention Tab - Placeholder */}
+        {activeTab === 'retention' && (
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-green-950/50 rounded-2xl border border-green-800/30 p-6">
+              <h2 className="text-xl font-semibold text-green-100 mb-6">Data Retention Policies</h2>
+              {retentionDashboard && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-green-900/30 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-green-400">{retentionDashboard.overview.activePolicies}</div>
+                    <div className="text-sm text-green-500/70">Active Policies</div>
+                  </div>
+                  <div className="bg-blue-900/30 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-blue-400">{(retentionDashboard.overview.recordsManaged / 1000000).toFixed(1)}M</div>
+                    <div className="text-sm text-blue-500/70">Records Managed</div>
+                  </div>
+                  <div className="bg-purple-900/30 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-purple-400">{retentionDashboard.overview.legalHoldActive}</div>
+                    <div className="text-sm text-purple-500/70">Legal Holds</div>
+                  </div>
+                  <div className="bg-yellow-900/30 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-yellow-400">{retentionDashboard.pendingApprovals}</div>
+                    <div className="text-sm text-yellow-500/70">Pending Approvals</div>
+                  </div>
+                </div>
+              )}
+              <div className="text-center py-8 text-green-500/70">
+                <p>Retention policy management and legal hold controls coming soon.</p>
+                <p className="text-sm mt-2">Use the API at /retention/* endpoints for full functionality.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Scanner Tab (Original) */}
+        {activeTab === 'scanner' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {/* Left Column - Form */}
+            <div className="lg:col-span-1">
+              <div className="bg-green-950/50 backdrop-blur-sm rounded-2xl border border-green-800/30 p-6">
+                <DataGuardianForm onSubmit={runScan} isScanning={isScanning} />
+              </div>
+            </div>
+
+            {/* Middle Column - Live Panel */}
+            <div className="lg:col-span-1">
+              <LiveDataGuardianPanel
+                isScanning={isScanning}
+                currentPhase={currentPhase}
+                overallProgress={overallProgress}
+                sourceProgress={sourceProgress}
+                findings={findings}
+                events={events}
+                stats={stats}
+              />
+            </div>
+
+            {/* Right Column - Results */}
+            <div className="lg:col-span-1">
+              {scanComplete && result ? (
+                <AnimatedDataGuardianResult
+                  result={result}
+                  onReset={handleReset}
+                />
+              ) : (
+                <div className="bg-green-950/30 rounded-2xl border border-green-800/30 p-8 h-full flex flex-col items-center justify-center text-center">
+                  <div className="shield-container mb-6">
+                    <div className="w-20 h-20 rounded-full bg-green-900/30 flex items-center justify-center">
+                      <span className="text-4xl">🛡️</span>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-green-200 mb-2">
+                    Privacy Analysis Results
+                  </h3>
+                  <p className="text-green-500/70 max-w-xs">
+                    Configure your data sources and start a scan to discover and
+                    protect sensitive data across your organization.
+                  </p>
+                  <div className="mt-6 grid grid-cols-2 gap-3 w-full max-w-xs">
+                    <div className="p-3 bg-green-900/20 rounded-lg text-center">
+                      <p className="text-2xl font-bold text-green-400">6</p>
+                      <p className="text-xs text-green-500">Data Types</p>
+                    </div>
+                    <div className="p-3 bg-green-900/20 rounded-lg text-center">
+                      <p className="text-2xl font-bold text-green-400">8</p>
+                      <p className="text-xs text-green-500">Regulations</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <footer className="text-center mt-8 text-green-600 text-sm">
-          Part of VictoryKit Security Suite • DataGuardian v1.0
+          Part of VictoryKit Security Suite • DataGuardian v2.0
         </footer>
       </div>
     </div>

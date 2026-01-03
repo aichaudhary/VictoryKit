@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   ClipboardCheck,
   Shield,
@@ -11,6 +11,11 @@ import {
   Database,
   Server,
   Globe,
+  Wifi,
+  WifiOff,
+  Zap,
+  AlertTriangle,
+  CheckCircle2,
 } from "lucide-react";
 import ComplianceForm, { ComplianceFormData } from "./ComplianceForm";
 import LiveCompliancePanel, {
@@ -22,6 +27,7 @@ import LiveCompliancePanel, {
 import AnimatedComplianceResult, {
   ComplianceMetrics,
 } from "./AnimatedComplianceResult";
+import { complianceCheckApi, simulatedData, Framework, GapAnalysis } from "../api/compliancecheck.api";
 
 const ComplianceCheckTool: React.FC = () => {
   const [isAssessing, setIsAssessing] = useState(false);
@@ -34,7 +40,85 @@ const ComplianceCheckTool: React.FC = () => {
   const [totalControls, setTotalControls] = useState(0);
   const [checkedControls, setCheckedControls] = useState(0);
   const [metrics, setMetrics] = useState<ComplianceMetrics | null>(null);
+  const [apiConnected, setApiConnected] = useState<boolean | null>(null);
+  const [availableFrameworks, setAvailableFrameworks] = useState<Framework[]>([]);
+  const [gapAnalysis, setGapAnalysis] = useState<GapAnalysis | null>(null);
+  const [useSimulation, setUseSimulation] = useState(false);
   const abortRef = useRef(false);
+
+  // Check API connection on mount
+  useEffect(() => {
+    const checkApiConnection = async () => {
+      try {
+        const result = await complianceCheckApi.getComplianceStatus();
+        if (result.success) {
+          setApiConnected(true);
+          // Try to load available frameworks
+          const frameworksResult = await complianceCheckApi.listFrameworks();
+          if (frameworksResult.success && frameworksResult.data?.frameworks) {
+            setAvailableFrameworks(frameworksResult.data.frameworks);
+          }
+        } else {
+          setApiConnected(false);
+          setUseSimulation(true);
+        }
+      } catch (error) {
+        console.error('API connection check failed:', error);
+        setApiConnected(false);
+        setUseSimulation(true);
+      }
+    };
+
+    checkApiConnection();
+  }, []);
+
+  // Real API assessment
+  const runRealAssessment = useCallback(async (data: ComplianceFormData) => {
+    try {
+      // Create assessment via API
+      const createResult = await complianceCheckApi.createAssessment({
+        name: `Compliance Assessment - ${new Date().toLocaleDateString()}`,
+        frameworks: data.frameworks,
+        scope: {
+          systems: [data.systemId || 'default-system'],
+          departments: data.departments || [],
+          dataTypes: data.dataTypes || [],
+        },
+      });
+
+      if (!createResult.success || !createResult.data?.assessment) {
+        console.warn('Failed to create assessment via API, falling back to simulation');
+        return null;
+      }
+
+      const assessmentId = createResult.data.assessment.id;
+
+      // Start assessment
+      await complianceCheckApi.startAssessment(assessmentId);
+
+      // Run automated tests
+      const testResult = await complianceCheckApi.runAutomatedTests(assessmentId);
+      
+      // Run AI gap analysis
+      const gapResult = await complianceCheckApi.analyzeGaps(assessmentId);
+      if (gapResult.success && gapResult.data) {
+        setGapAnalysis(gapResult.data);
+      }
+
+      // Generate report
+      const reportResult = await complianceCheckApi.generateReport(assessmentId);
+      
+      return {
+        testResult: testResult.data,
+        gapAnalysis: gapResult.data,
+        report: reportResult.data,
+        assessmentId,
+      };
+    } catch (error) {
+      console.error('Real assessment failed:', error);
+      return null;
+    }
+  }, []);
 
   const controlTemplates: Record<
     string,
@@ -308,6 +392,7 @@ const ComplianceCheckTool: React.FC = () => {
     setEvents([]);
     setCheckedControls(0);
     setMetrics(null);
+    setGapAnalysis(null);
 
     const assessmentStages: AssessmentStage[] = [
       { name: "Initialize", status: "pending" },
@@ -317,6 +402,16 @@ const ComplianceCheckTool: React.FC = () => {
       { name: "Generate Report", status: "pending" },
     ];
     setStages(assessmentStages);
+
+    // Try real API assessment first if connected
+    let apiResult = null;
+    if (apiConnected && !useSimulation) {
+      updateStage(0, "running", assessmentStages);
+      apiResult = await runRealAssessment(data);
+      if (apiResult) {
+        updateStage(0, "complete", assessmentStages);
+      }
+    }
 
     // Build categories from selected frameworks
     const allCategories: ControlCategory[] = [];
@@ -340,7 +435,7 @@ const ComplianceCheckTool: React.FC = () => {
 
     const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-    const updateStage = (idx: number, status: AssessmentStage["status"]) => {
+    const updateStage = (idx: number, status: AssessmentStage["status"], stagesArr = assessmentStages) => {
       setStages((prev) =>
         prev.map((s, i) => (i === idx ? { ...s, status } : s))
       );
@@ -348,17 +443,19 @@ const ComplianceCheckTool: React.FC = () => {
         ...prev,
         {
           type: "stage",
-          stage: { ...assessmentStages[idx], status },
+          stage: { ...stagesArr[idx], status },
           timestamp: Date.now(),
         },
       ]);
     };
 
-    // Stage 1: Initialize
-    updateStage(0, "running");
-    await delay(600);
-    if (abortRef.current) return;
-    updateStage(0, "complete");
+    // Stage 1: Initialize (may have already happened if API was used)
+    if (!apiResult) {
+      updateStage(0, "running");
+      await delay(600);
+      if (abortRef.current) return;
+      updateStage(0, "complete");
+    }
 
     // Stage 2: Collect Evidence
     updateStage(1, "running");
@@ -563,7 +660,7 @@ const ComplianceCheckTool: React.FC = () => {
     setEvents((prev) => [...prev, { type: "complete", timestamp: Date.now() }]);
     setIsAssessing(false);
     setAssessmentComplete(true);
-  }, []);
+  }, [apiConnected, useSimulation, runRealAssessment]);
 
   const handleCancel = () => {
     abortRef.current = true;
@@ -581,6 +678,12 @@ const ComplianceCheckTool: React.FC = () => {
     setTotalControls(0);
     setCheckedControls(0);
     setMetrics(null);
+    setGapAnalysis(null);
+  };
+
+  // Toggle simulation mode
+  const toggleSimulation = () => {
+    setUseSimulation(!useSimulation);
   };
 
   return (
@@ -607,6 +710,32 @@ const ComplianceCheckTool: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* API Connection Status */}
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs ${
+                apiConnected === null 
+                  ? 'bg-slate-800/50 text-gray-400'
+                  : apiConnected 
+                    ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-800/50'
+                    : 'bg-amber-900/30 text-amber-400 border border-amber-800/50'
+              }`}>
+                {apiConnected === null ? (
+                  <>
+                    <div className="w-2 h-2 rounded-full bg-gray-500 animate-pulse" />
+                    Connecting...
+                  </>
+                ) : apiConnected ? (
+                  <>
+                    <Wifi className="w-3 h-3" />
+                    API Connected
+                  </>
+                ) : (
+                  <>
+                    <WifiOff className="w-3 h-3" />
+                    Simulation Mode
+                  </>
+                )}
+              </div>
+              
               {assessmentComplete && (
                 <>
                   <button

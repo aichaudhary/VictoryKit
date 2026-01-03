@@ -32,32 +32,37 @@ const { RedpandaConnector, RedpandaProducer, RedpandaConsumer } = require('./mes
 // SIEM & SOAR
 const { SentinelConnector } = require('./siem/SentinelConnector');
 const { CortexXSOARConnector } = require('./soar/CortexXSOARConnector');
+const { ChronicleConnector } = require('./siem/ChronicleConnector');
+const { TinesConnector } = require('./soar/TinesConnector');
 
 // Identity & Access
 const { OktaConnector } = require('./identity/OktaConnector');
-const { CedarPolicyEngine, OPAConnector } = require('./policy/PolicyConnector');
+const { KeycloakConnector, FIDO2Manager } = require('./identity/KeycloakConnector');
+// const { CedarPolicyEngine, OPAConnector } = require('./policy/PolicyConnector'); // TODO: Create policy connector
 
 // Network & Edge
 const { KongConnector } = require('./gateway/KongConnector');
 const { CloudflareConnector } = require('./cdn/CloudflareConnector');
-const { ZeekConnector, SuricataConnector } = require('./network/NetworkConnector');
+const { FastlyConnector } = require('./cdn/FastlyConnector');
+// const { ZeekConnector, SuricataConnector } = require('./network/NetworkConnector'); // TODO: Create network connector
 
 // Endpoint & Cloud
 const { CrowdStrikeConnector } = require('./edr/CrowdStrikeConnector');
 const { WizConnector } = require('./cspm/WizConnector');
-const { CapeSandboxConnector } = require('./sandbox/CapeSandboxConnector');
+const { SentinelOneConnector } = require('./edr/SentinelOneConnector');
+// const { CapeSandboxConnector } = require('./sandbox/CapeSandboxConnector'); // TODO: Create sandbox connector
 
 // Threat Intelligence
 const { OpenCTIConnector } = require('./threatintel/OpenCTIConnector');
 
 // Collaboration & Alerting
-const { LinearConnector } = require('./ticketing/LinearConnector');
-const { SlackConnector, DiscordConnector } = require('./comms/CommsConnector');
-const { IncidentIOConnector } = require('./alerting/IncidentIOConnector');
+// const { LinearConnector } = require('./ticketing/LinearConnector'); // TODO: Create ticketing connector
+// const { SlackConnector, DiscordConnector } = require('./comms/CommsConnector'); // TODO: Create comms connector
+// const { IncidentIOConnector } = require('./alerting/IncidentIOConnector'); // TODO: Create alerting connector
 
 // Compliance & Secrets
-const { VantaConnector } = require('./grc/VantaConnector');
-const { InfisicalConnector } = require('./secrets/InfisicalConnector');
+// const { VantaConnector } = require('./grc/VantaConnector'); // TODO: Create GRC connector
+// const { InfisicalConnector } = require('./secrets/InfisicalConnector'); // TODO: Create secrets connector
 
 // Global registry instance
 const registry = new ConnectorRegistry();
@@ -142,89 +147,89 @@ async function initializeConnectors(config = {}) {
   }
 
   // Network Sensors
-  if (config.zeek) {
-    const zeek = new ZeekConnector(config.zeek);
-    await zeek.connect();
-    registry.register('zeek', zeek);
-    connectors.push(zeek);
-  }
+  // if (config.zeek) {
+  //   const zeek = new ZeekConnector(config.zeek);
+  //   await zeek.connect();
+  //   registry.register('zeek', zeek);
+  //   connectors.push(zeek);
+  // }
 
-  if (config.suricata) {
-    const suricata = new SuricataConnector(config.suricata);
-    await suricata.connect();
-    registry.register('suricata', suricata);
-    connectors.push(suricata);
-  }
+  // if (config.suricata) {
+  //   const suricata = new SuricataConnector(config.suricata);
+  //   await suricata.connect();
+  //   registry.register('suricata', suricata);
+  //   connectors.push(suricata);
+  // }
 
   // Sandbox
-  if (config.capesandbox) {
-    const cape = new CapeSandboxConnector(config.capesandbox);
-    await cape.connect();
-    registry.register('capesandbox', cape);
-    connectors.push(cape);
-  }
+  // if (config.capesandbox) {
+  //   const cape = new CapeSandboxConnector(config.capesandbox);
+  //   await cape.connect();
+  //   registry.register('capesandbox', cape);
+  //   connectors.push(cape);
+  // }
 
   // Ticketing
-  if (config.linear) {
-    const linear = new LinearConnector(config.linear);
-    await linear.connect();
-    registry.register('linear', linear);
-    connectors.push(linear);
-  }
+  // if (config.linear) {
+  //   const linear = new LinearConnector(config.linear);
+  //   await linear.connect();
+  //   registry.register('linear', linear);
+  //   connectors.push(linear);
+  // }
 
   // Communications
-  if (config.slack) {
-    const slack = new SlackConnector(config.slack);
-    await slack.connect();
-    registry.register('slack', slack);
-    connectors.push(slack);
-  }
+  // if (config.slack) {
+  //   const slack = new SlackConnector(config.slack);
+  //   await slack.connect();
+  //   registry.register('slack', slack);
+  //   connectors.push(slack);
+  // }
 
-  if (config.discord) {
-    const discord = new DiscordConnector(config.discord);
-    await discord.connect();
-    registry.register('discord', discord);
-    connectors.push(discord);
-  }
+  // if (config.discord) {
+  //   const discord = new DiscordConnector(config.discord);
+  //   await discord.connect();
+  //   registry.register('discord', discord);
+  //   connectors.push(discord);
+  // }
 
   // Alerting
-  if (config.incidentio) {
-    const incidentio = new IncidentIOConnector(config.incidentio);
-    await incidentio.connect();
-    registry.register('incidentio', incidentio);
-    connectors.push(incidentio);
-  }
+  // if (config.incidentio) {
+  //   const incidentio = new IncidentIOConnector(config.incidentio);
+  //   await incidentio.connect();
+  //   registry.register('incidentio', incidentio);
+  //   connectors.push(incidentio);
+  // }
 
   // GRC
-  if (config.vanta) {
-    const vanta = new VantaConnector(config.vanta);
-    await vanta.connect();
-    registry.register('vanta', vanta);
-    connectors.push(vanta);
-  }
+  // if (config.vanta) {
+  //   const vanta = new VantaConnector(config.vanta);
+  //   await vanta.connect();
+  //   registry.register('vanta', vanta);
+  //   connectors.push(vanta);
+  // }
 
   // Secrets
-  if (config.infisical) {
-    const infisical = new InfisicalConnector(config.infisical);
-    await infisical.connect();
-    registry.register('infisical', infisical);
-    connectors.push(infisical);
-  }
+  // if (config.infisical) {
+  //   const infisical = new InfisicalConnector(config.infisical);
+  //   await infisical.connect();
+  //   registry.register('infisical', infisical);
+  //   connectors.push(infisical);
+  // }
 
   // Policy Engines
-  if (config.opa) {
-    const opa = new OPAConnector(config.opa);
-    await opa.connect();
-    registry.register('opa', opa);
-    connectors.push(opa);
-  }
+  // if (config.opa) {
+  //   const opa = new OPAConnector(config.opa);
+  //   await opa.connect();
+  //   registry.register('opa', opa);
+  //   connectors.push(opa);
+  // }
 
-  if (config.cedar) {
-    const cedar = new CedarPolicyEngine(config.cedar);
-    await cedar.connect();
-    registry.register('cedar', cedar);
-    connectors.push(cedar);
-  }
+  // if (config.cedar) {
+  //   const cedar = new CedarPolicyEngine(config.cedar);
+  //   await cedar.connect();
+  //   registry.register('cedar', cedar);
+  //   connectors.push(cedar);
+  // }
 
   return connectors;
 }
@@ -236,6 +241,18 @@ async function initializeConnectors(config = {}) {
  */
 function getConnector(name) {
   return registry.get(name);
+}
+
+/**
+ * Get all connectors as an object
+ * @returns {Object} Object with connector names as keys and instances as values
+ */
+function getConnectors() {
+  const all = {};
+  for (const [name, connector] of registry.connectors.entries()) {
+    all[name] = connector;
+  }
+  return all;
 }
 
 /**
@@ -266,36 +283,37 @@ module.exports = {
   // Identity
   KeycloakConnector,
   FIDO2Manager,
-  CedarPolicyEngine,
-  OPAConnector,
+  // CedarPolicyEngine, // TODO: Create policy connector
+  // OPAConnector, // TODO: Create policy connector
 
   // Network & Edge
   KongConnector,
   FastlyConnector,
-  ZeekConnector,
-  SuricataConnector,
+  // ZeekConnector, // TODO: Create network connector
+  // SuricataConnector, // TODO: Create network connector
 
   // Endpoint & Cloud
   SentinelOneConnector,
   WizConnector,
-  CapeSandboxConnector,
+  // CapeSandboxConnector, // TODO: Create sandbox connector
 
   // Threat Intel
   OpenCTIConnector,
 
   // Collaboration
-  LinearConnector,
-  SlackConnector,
-  DiscordConnector,
-  IncidentIOConnector,
+  // LinearConnector, // TODO: Create ticketing connector
+  // SlackConnector, // TODO: Create comms connector
+  // DiscordConnector, // TODO: Create comms connector
+  // IncidentIOConnector, // TODO: Create alerting connector
 
   // Compliance
-  VantaConnector,
-  InfisicalConnector,
+  // VantaConnector, // TODO: Create GRC connector
+  // InfisicalConnector, // TODO: Create secrets connector
 
   // Registry & Lifecycle
   registry,
   initializeConnectors,
   getConnector,
+  getConnectors,
   shutdownConnectors,
 };
