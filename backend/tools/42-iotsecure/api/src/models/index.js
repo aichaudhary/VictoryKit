@@ -4,13 +4,13 @@
  * This module exports all MongoDB models for the IoTSecure platform.
  * 
  * Models:
- * - Device: IoT device inventory and management
- * - Vulnerability: CVE/vulnerability tracking
- * - Scan: Network and security scan operations
- * - Alert: Security alerts and notifications
- * - Baseline: Behavioral baselines for anomaly detection
- * - Firmware: Firmware inventory and security analysis
- * - Segment: Network segmentation and access control
+ * - Device: IoT device inventory and management (cameras, sensors, PLCs, etc.)
+ * - Vulnerability: CVE/vulnerability tracking from NVD, Shodan, Censys
+ * - Scan: Network discovery and security scan operations
+ * - Alert: Security alerts and real-time notifications
+ * - Baseline: Behavioral baselines for ML anomaly detection
+ * - Firmware: Firmware inventory, analysis, and update management
+ * - Segment: Network segmentation, firewall rules, and access control
  */
 
 const Device = require('./Device');

@@ -1,124 +1,198 @@
+// WirelessWatch Constants - Enterprise Wireless Network Security Monitoring
+
 import { SettingsState, NavItem } from './types';
 
-export const PROVIDER_CONFIG = [
-  {
-    id: 'gemini',
-    name: 'Google Gemini',
-    models: ['gemini-2.5-flash-preview', 'gemini-2.5-pro-preview', 'gemini-2.0-flash']
-  },
-  {
-    id: 'openai',
-    name: 'OpenAI',
-    models: ['gpt-4o', 'gpt-4-turbo', 'gpt-4o-mini']
-  },
-  {
-    id: 'anthropic',
-    name: 'Anthropic Claude',
-    models: ['claude-sonnet-4-20250514', 'claude-3-5-sonnet-20241022', 'claude-3-haiku-20240307']
-  },
-  {
-    id: 'xai',
-    name: 'xAI Grok',
-    models: ['grok-2', 'grok-2-mini']
-  },
-  {
-    id: 'mistral',
-    name: 'Mistral AI',
-    models: ['mistral-large-latest', 'mistral-medium', 'mistral-small']
-  },
-  {
-    id: 'meta',
-    name: 'Meta Llama',
-    models: ['llama-3.1-405b', 'llama-3.1-70b', 'llama-3.1-8b']
-  }
-];
-
 export const DEFAULT_SETTINGS: SettingsState = {
-  customPrompt: `You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models.
-
-CAPABILITIES:
-- Analyze transactions for fraud indicators and calculate risk scores (0-100)
-- Detect suspicious patterns in transaction data
-- Provide actionable recommendations for risk mitigation
-- Generate detailed fraud reports
-- Create alerts for high-risk transactions
-
-AVAILABLE FUNCTIONS:
-- analyze_transaction: Analyze a transaction for fraud indicators
-- get_fraud_score: Get the fraud risk score for a transaction
-- open_risk_visualization: Open charts and graphs for analysis
-- get_transaction_history: Fetch transaction history with filters
-- create_alert: Create fraud monitoring alerts
-- export_report: Generate and export fraud reports
-
-Always be thorough in your analysis and explain findings in clear, non-technical language.`,
-  agentName: "FraudGuard AI",
+  customPrompt: 'You are WirelessWatch, an AI-powered wireless network security monitoring assistant. Help users detect rogue access points, analyze signal quality, identify threats, and manage wireless security.',
+  agentName: 'WirelessWatch AI',
   temperature: 0.7,
   maxTokens: 4096,
-  provider: 'gemini',
-  model: "gemini-2.5-flash-preview",
-  activeTool: 'fraud_analysis',
-  workspaceMode: 'CHAT',
-  portalUrl: 'https://www.google.com/search?igu=1',
+  provider: 'openai',
+  model: 'gpt-4',
+  activeTool: 'network_monitor',
+  workspaceMode: 'WIRELESS_DASHBOARD',
+  portalUrl: '',
   canvas: {
-    content: "// FraudGuard Workspace\n\nReady for fraud analysis.",
+    content: '',
     type: 'text',
-    title: 'FraudGuard_Canvas'
+    title: 'Wireless Analysis Canvas'
   }
 };
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Fraud Analysis', icon: '🛡️', tool: 'fraud_analysis', description: 'Analyze transactions for fraud' },
-  { label: 'Risk Dashboard', icon: '📊', tool: 'risk_visualization', description: 'View risk charts and graphs' },
-  { label: 'Transaction History', icon: '📜', tool: 'transaction_history', description: 'Browse past transactions' },
-  { label: 'Alerts', icon: '🔔', tool: 'alerts', description: 'Manage fraud alerts' },
-  { label: 'Reports', icon: '📄', tool: 'reports', description: 'Generate fraud reports' },
-  { label: 'Web Portal', icon: '🌐', tool: 'browser', description: 'Open web browser' },
-  { label: 'Canvas', icon: '🖌️', tool: 'canvas', description: 'Collaborative workspace' },
-  { label: 'Web Search', icon: '🔍', tool: 'web_search', description: 'Search the web' }
+  {
+    label: 'Dashboard',
+    icon: 'LayoutDashboard',
+    tool: 'network_monitor',
+    description: 'Wireless network overview and health metrics'
+  },
+  {
+    label: 'Access Points',
+    icon: 'Radio',
+    tool: 'access_points',
+    description: 'Manage and monitor access points'
+  },
+  {
+    label: 'Clients',
+    icon: 'Laptop',
+    tool: 'clients',
+    description: 'Connected devices and client management'
+  },
+  {
+    label: 'Security Alerts',
+    icon: 'ShieldAlert',
+    tool: 'security_alerts',
+    description: 'Security incidents and threat alerts'
+  },
+  {
+    label: 'Threat Detection',
+    icon: 'Radar',
+    tool: 'threat_detection',
+    description: 'Rogue AP and evil twin detection'
+  },
+  {
+    label: 'Signal Analysis',
+    icon: 'Activity',
+    tool: 'signal_analysis',
+    description: 'RF analysis and interference detection'
+  },
+  {
+    label: 'Reports',
+    icon: 'FileText',
+    tool: 'reports',
+    description: 'Compliance reports and analytics'
+  },
+  {
+    label: 'Settings',
+    icon: 'Settings',
+    tool: 'settings',
+    description: 'Configure monitoring preferences'
+  }
 ];
 
-export const FRAUD_PRESETS: Record<string, { prompt: string; temp: number }> = {
-  thorough: { 
-    prompt: "Perform extremely detailed fraud analysis. Check every indicator, cross-reference patterns, and provide comprehensive risk assessment.", 
-    temp: 0.3 
+export const PROVIDER_CONFIG = {
+  openai: {
+    name: 'OpenAI GPT-4',
+    models: ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo']
   },
-  quick: { 
-    prompt: "Perform quick fraud screening. Focus on major red flags and provide a rapid risk assessment.", 
-    temp: 0.5 
+  anthropic: {
+    name: 'Anthropic Claude',
+    models: ['claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku']
   },
-  educational: { 
-    prompt: "Explain fraud analysis in educational terms. Help the user understand fraud patterns and detection methods.", 
-    temp: 0.7 
-  },
-  investigative: { 
-    prompt: "Take an investigative approach. Look for hidden patterns, connections, and potential fraud networks.", 
-    temp: 0.4 
+  azure: {
+    name: 'Azure OpenAI',
+    models: ['gpt-4', 'gpt-35-turbo']
   }
 };
 
-export const RISK_COLORS = {
-  low: '#00ff88',
-  medium: '#ffaa00',
-  high: '#ff0055'
-};
-
-export const API_ENDPOINTS = {
-  fraudguard: {
-    analyze: '/api/fraudguard/analyze',
-    score: '/api/fraudguard/score',
-    transactions: '/api/fraudguard/transactions',
-    analytics: '/api/fraudguard/analytics',
-    alerts: '/api/fraudguard/alerts',
-    reports: '/api/fraudguard/reports'
+export const ALERT_TYPES = {
+  'rogue-access-point': {
+    label: 'Rogue Access Point',
+    color: 'red',
+    icon: 'Radio'
   },
-  ml: {
-    predict: '/api/ml/predict',
-    score: '/api/ml/score',
-    train: '/api/ml/train'
+  'evil-twin-attack': {
+    label: 'Evil Twin Attack',
+    color: 'red',
+    icon: 'Copy'
   },
-  ai: {
-    chat: '/api/ai/chat',
-    ws: '/ws/ai'
+  'deauth-flood': {
+    label: 'Deauthentication Flood',
+    color: 'orange',
+    icon: 'Zap'
+  },
+  'weak-encryption': {
+    label: 'Weak Encryption',
+    color: 'yellow',
+    icon: 'Unlock'
+  },
+  'mac-spoofing': {
+    label: 'MAC Spoofing',
+    color: 'orange',
+    icon: 'UserX'
+  },
+  'signal-jamming': {
+    label: 'Signal Jamming',
+    color: 'red',
+    icon: 'WifiOff'
+  },
+  'channel-interference': {
+    label: 'Channel Interference',
+    color: 'yellow',
+    icon: 'Radio'
+  },
+  'unauthorized-client': {
+    label: 'Unauthorized Client',
+    color: 'orange',
+    icon: 'UserMinus'
+  },
+  'probe-request-flood': {
+    label: 'Probe Request Flood',
+    color: 'yellow',
+    icon: 'Search'
+  },
+  'beacon-manipulation': {
+    label: 'Beacon Manipulation',
+    color: 'red',
+    icon: 'AlertTriangle'
   }
 };
+
+export const SEVERITY_COLORS = {
+  info: 'blue',
+  low: 'green',
+  medium: 'yellow',
+  high: 'orange',
+  critical: 'red'
+};
+
+export const STATUS_COLORS = {
+  online: 'green',
+  offline: 'red',
+  degraded: 'yellow',
+  maintenance: 'blue',
+  active: 'green',
+  inactive: 'gray',
+  quarantined: 'red',
+  connected: 'green',
+  disconnected: 'gray',
+  roaming: 'blue',
+  blocked: 'red'
+};
+
+export const DEVICE_ICONS: Record<string, string> = {
+  laptop: 'Laptop',
+  smartphone: 'Smartphone',
+  tablet: 'Tablet',
+  iot: 'Cpu',
+  printer: 'Printer',
+  unknown: 'HelpCircle'
+};
+
+export const ENCRYPTION_STRENGTH = {
+  'WPA3-Enterprise': { level: 'excellent', score: 100 },
+  'WPA3-Personal': { level: 'excellent', score: 95 },
+  'WPA2-Enterprise': { level: 'good', score: 85 },
+  'WPA2-Personal': { level: 'acceptable', score: 70 },
+  'WPA': { level: 'weak', score: 40 },
+  'WEP': { level: 'vulnerable', score: 15 },
+  'Open': { level: 'none', score: 0 }
+};
+
+export const WIFI_PROVIDERS = [
+  { id: 'meraki', name: 'Cisco Meraki', icon: '🌐' },
+  { id: 'aruba', name: 'Aruba Networks', icon: '📡' },
+  { id: 'unifi', name: 'Ubiquiti UniFi', icon: '📶' },
+  { id: 'ruckus', name: 'Ruckus Wireless', icon: '🔌' },
+  { id: 'mist', name: 'Juniper Mist', icon: '☁️' },
+  { id: 'fortinet', name: 'Fortinet FortiAP', icon: '🛡️' },
+  { id: 'extreme', name: 'Extreme Networks', icon: '🌍' }
+];
+
+export const FREQUENCY_BANDS = [
+  { value: '2.4GHz', label: '2.4 GHz', channels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+  { value: '5GHz', label: '5 GHz', channels: [36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 149, 153, 157, 161, 165] },
+  { value: '6GHz', label: '6 GHz', channels: [1, 5, 9, 13, 17, 21, 25, 29, 33, 37, 41, 45, 49, 53, 57, 61, 65, 69, 73, 77, 81, 85, 89, 93] }
+];
+
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4040/api/v1/wirelesswatch';

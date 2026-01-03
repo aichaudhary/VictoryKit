@@ -1,44 +1,28 @@
+/**
+ * Alert Model - Security Alerts and Notifications
+ * Manages IoT security alerts and notification rules
+ */
+
 const mongoose = require('mongoose');
 
 const alertSchema = new mongoose.Schema({
-  // Alert Identification
   alertId: {
     type: String,
     required: true,
     unique: true,
     index: true
   },
+  title: { type: String, required: true },
+  description: String,
   
   // Alert Type
   type: {
     type: String,
     enum: [
-      'new_device',           // Unknown device detected
-      'rogue_device',         // Unauthorized device
-      'device_offline',       // Device went offline
-      'device_online',        // Device came back online
-      'vulnerability',        // New vulnerability detected
-      'critical_vuln',        // Critical CVE found
-      'exploit_attempt',      // Exploit attempt detected
-      'brute_force',          // Brute force attempt
-      'default_credentials',  // Default password detected
-      'weak_password',        // Weak credentials found
-      'port_change',          // Port configuration changed
-      'service_change',       // Service changed
-      'firmware_outdated',    // Firmware needs update
-      'firmware_vulnerable',  // Firmware has CVE
-      'behavior_anomaly',     // Unusual behavior
-      'traffic_anomaly',      // Unusual traffic pattern
-      'protocol_violation',   // Protocol abuse
-      'compliance_violation', // Compliance issue
-      'network_scan',         // Network scan detected
-      'lateral_movement',     // Potential lateral movement
-      'data_exfiltration',    // Potential data exfil
-      'dos_attack',           // DoS attack detected
-      'certificate_expiry',   // SSL cert expiring
-      'maintenance_due',      // Scheduled maintenance
-      'threshold_exceeded',   // Metric threshold exceeded
-      'custom'                // Custom alert type
+      'device_compromised', 'unauthorized_device', 'vulnerability_critical',
+      'firmware_outdated', 'anomaly_detected', 'credential_attack',
+      'network_breach', 'policy_violation', 'device_offline', 
+      'port_scan', 'malware_detected', 'data_exfiltration'
     ],
     required: true,
     index: true
@@ -55,386 +39,170 @@ const alertSchema = new mongoose.Schema({
   // Status
   status: {
     type: String,
-    enum: ['new', 'acknowledged', 'investigating', 'resolved', 'false_positive', 'ignored'],
+    enum: ['new', 'acknowledged', 'investigating', 'resolved', 'false_positive', 'escalated'],
     default: 'new',
     index: true
   },
   
-  // Title & Description
-  title: {
-    type: String,
-    required: true,
-    maxlength: 200
-  },
-  description: {
-    type: String,
-    maxlength: 2000
-  },
-  
   // Source
   source: {
-    type: {
-      type: String,
-      enum: ['scan', 'monitor', 'baseline', 'api', 'integration', 'ml', 'rule', 'user'],
-      required: true
-    },
-    scanId: String,
-    monitorId: String,
+    type: { type: String, enum: ['device', 'scan', 'baseline', 'rule', 'external', 'ai'] },
+    deviceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Device' },
+    scanId: { type: mongoose.Schema.Types.ObjectId, ref: 'Scan' },
+    baselineId: { type: mongoose.Schema.Types.ObjectId, ref: 'Baseline' },
     ruleId: String,
-    integrationName: String
+    externalSource: String
   },
   
-  // Affected Device(s)
-  affectedDevices: [{
-    deviceId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Device'
-    },
-    deviceName: String,
-    ipAddress: String,
-    macAddress: String,
-    deviceType: String
-  }],
+  // Affected Resources
+  affectedDevices: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Device' }],
+  affectedSegments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Segment' }],
+  affectedIPs: [String],
   
-  // Related Vulnerability (if applicable)
-  vulnerability: {
-    cveId: String,
-    cvssScore: Number,
-    severity: String,
-    vulnerabilityRef: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Vulnerability'
-    }
-  },
-  
-  // Network Context
-  network: {
-    sourceIp: String,
-    destinationIp: String,
-    sourcePort: Number,
-    destinationPort: Number,
-    protocol: String,
-    segment: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Segment'
-    }
-  },
-  
-  // Location Context
-  location: {
-    building: String,
-    floor: String,
-    room: String,
-    coordinates: {
-      lat: Number,
-      lng: Number
-    },
-    country: String,
-    city: String
-  },
-  
-  // Threat Intelligence
-  threatIntel: {
-    iocType: String,
-    iocValue: String,
-    threatActor: String,
-    campaign: String,
-    malwareFamily: String,
-    confidence: { type: Number, min: 0, max: 100 },
-    sources: [String]
-  },
-  
-  // Behavioral Data
-  behavioral: {
-    baselineDeviation: Number,
+  // Details
+  details: {
+    indicator: String,
+    observedValue: mongoose.Schema.Types.Mixed,
     expectedValue: mongoose.Schema.Types.Mixed,
-    actualValue: mongoose.Schema.Types.Mixed,
-    metric: String
+    threshold: Number,
+    additionalInfo: mongoose.Schema.Types.Mixed
   },
   
-  // Risk Score
-  riskScore: {
-    type: Number,
-    min: 0,
-    max: 100,
-    index: true
-  },
+  // Risk Assessment
+  riskScore: { type: Number, min: 0, max: 100, default: 50 },
+  confidence: { type: Number, min: 0, max: 100, default: 80 },
+  falsePositiveLikelihood: { type: String, enum: ['low', 'medium', 'high'], default: 'low' },
   
-  // Timestamps
-  detectedAt: {
-    type: Date,
-    default: Date.now,
-    index: true
-  },
+  // Timeline
+  triggeredAt: { type: Date, default: Date.now, index: true },
   acknowledgedAt: Date,
   resolvedAt: Date,
-  lastUpdatedAt: Date,
   escalatedAt: Date,
   
   // Assignment
-  assignedTo: {
-    userId: String,
-    userName: String,
-    email: String,
-    assignedAt: Date
+  assignedTo: String,
+  escalatedTo: String,
+  
+  // Response
+  response: {
+    actions: [{
+      action: String,
+      performedBy: String,
+      performedAt: Date,
+      result: String
+    }],
+    resolution: String,
+    rootCause: String,
+    preventiveMeasures: String
   },
   
-  // Escalation
-  escalation: {
-    level: { type: Number, default: 0 },
-    escalatedBy: String,
-    reason: String,
-    notifiedUsers: [{
-      userId: String,
-      notifiedAt: Date,
-      channel: String
-    }]
-  },
-  
-  // Resolution
-  resolution: {
-    method: {
-      type: String,
-      enum: ['manual', 'automated', 'patched', 'quarantined', 'removed', 'accepted_risk', 'false_positive']
-    },
-    notes: String,
-    resolvedBy: String,
-    timeToResolve: Number  // milliseconds
-  },
-  
-  // Related Alerts (for correlation)
-  relatedAlerts: [{
-    alertId: String,
-    alertRef: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Alert'
-    },
-    relationship: {
-      type: String,
-      enum: ['parent', 'child', 'related', 'duplicate']
-    }
-  }],
-  
-  // Evidence/Artifacts
-  evidence: [{
-    type: {
-      type: String,
-      enum: ['log', 'pcap', 'screenshot', 'file', 'memory_dump', 'config']
-    },
-    filename: String,
-    path: String,
-    size: Number,
-    hash: String,
-    uploadedAt: Date
-  }],
-  
-  // Comments/Notes
-  comments: [{
-    userId: String,
-    userName: String,
-    content: String,
-    timestamp: { type: Date, default: Date.now },
-    isInternal: { type: Boolean, default: true }
-  }],
-  
-  // Actions Taken
-  actions: [{
-    type: {
-      type: String,
-      enum: ['notification_sent', 'device_quarantined', 'port_blocked', 'credential_reset', 
-             'firmware_update_triggered', 'scan_initiated', 'escalated', 'ticket_created']
-    },
-    timestamp: Date,
-    details: mongoose.Schema.Types.Mixed,
-    automated: Boolean,
-    successful: Boolean
-  }],
-  
-  // Notification Status
+  // Notifications
   notifications: {
-    email: { sent: Boolean, sentAt: Date, recipients: [String] },
-    slack: { sent: Boolean, sentAt: Date, channel: String },
-    sms: { sent: Boolean, sentAt: Date, recipients: [String] },
-    webhook: { sent: Boolean, sentAt: Date, url: String },
-    pagerduty: { sent: Boolean, sentAt: Date, incidentId: String }
+    sent: { type: Boolean, default: false },
+    channels: [{ type: String, enum: ['email', 'slack', 'webhook', 'sms', 'pagerduty'] }],
+    sentAt: Date,
+    recipients: [String]
   },
   
-  // SIEM/SOAR Integration
-  integrations: {
-    siemEventId: String,
-    soarCaseId: String,
-    ticketId: String,
-    ticketUrl: String
-  },
+  // Related Alerts
+  relatedAlerts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Alert' }],
+  parentAlert: { type: mongoose.Schema.Types.ObjectId, ref: 'Alert' },
+  childAlerts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Alert' }],
   
-  // ML/AI Analysis
-  aiAnalysis: {
-    confidence: Number,
-    prediction: String,
-    explanation: String,
-    suggestedActions: [String],
-    analyzedAt: Date
-  },
-  
-  // Suppression
-  suppressed: {
-    type: Boolean,
-    default: false
-  },
-  suppressedUntil: Date,
-  suppressionReason: String,
-  
-  // Tags & Categories
+  // Tags and Notes
   tags: [String],
-  category: String,
-  subcategory: String,
+  notes: [{
+    content: String,
+    author: String,
+    createdAt: { type: Date, default: Date.now }
+  }],
   
-  // Metadata
-  metadata: {
-    type: mongoose.Schema.Types.Mixed,
-    default: {}
-  },
-  
-  // Tenant/Organization (for multi-tenancy)
-  tenantId: {
-    type: String,
-    index: true
-  }
-}, {
-  timestamps: true
-});
+  // Audit
+  createdBy: String,
+  updatedBy: String
+}, { timestamps: true });
 
-// Indexes for common queries
-alertSchema.index({ severity: 1, status: 1, detectedAt: -1 });
+// Indexes
+alertSchema.index({ severity: 1, status: 1, triggeredAt: -1 });
 alertSchema.index({ type: 1, status: 1 });
-alertSchema.index({ 'affectedDevices.deviceId': 1 });
-alertSchema.index({ 'vulnerability.cveId': 1 });
-alertSchema.index({ riskScore: -1 });
-alertSchema.index({ tenantId: 1, status: 1, detectedAt: -1 });
+alertSchema.index({ 'source.deviceId': 1 });
 
-// Pre-save to generate alertId
-alertSchema.pre('save', function(next) {
-  if (!this.alertId) {
-    const severityPrefix = this.severity.charAt(0).toUpperCase();
-    this.alertId = `ALT-${severityPrefix}-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
-  }
-  this.lastUpdatedAt = new Date();
-  next();
-});
-
-// Virtual for time since detection
-alertSchema.virtual('age').get(function() {
-  return Date.now() - this.detectedAt;
-});
-
-// Virtual for SLA status
-alertSchema.virtual('slaStatus').get(function() {
-  const ageHours = this.age / (1000 * 60 * 60);
-  const slaThresholds = {
-    critical: 1,
-    high: 4,
-    medium: 24,
-    low: 72,
-    info: 168
-  };
-  const threshold = slaThresholds[this.severity] || 24;
-  
-  if (this.status === 'resolved') return 'met';
-  if (ageHours > threshold) return 'breached';
-  if (ageHours > threshold * 0.75) return 'at_risk';
-  return 'within';
-});
-
-// Static method to get critical unresolved
-alertSchema.statics.getCriticalUnresolved = function() {
-  return this.find({
-    severity: 'critical',
-    status: { $nin: ['resolved', 'false_positive', 'ignored'] }
-  }).sort({ detectedAt: -1 });
-};
-
-// Static method to get alert counts by severity
-alertSchema.statics.getCountsBySeverity = function(tenantId) {
-  const match = { status: { $nin: ['resolved', 'false_positive', 'ignored'] } };
-  if (tenantId) match.tenantId = tenantId;
-  
-  return this.aggregate([
-    { $match: match },
-    { $group: { _id: '$severity', count: { $sum: 1 } } }
+// Static methods
+alertSchema.statics.getStats = async function() {
+  const [total, bySeverity, byStatus, byType] = await Promise.all([
+    this.countDocuments(),
+    this.aggregate([{ $group: { _id: '$severity', count: { $sum: 1 } } }]),
+    this.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
+    this.aggregate([{ $group: { _id: '$type', count: { $sum: 1 } } }])
   ]);
-};
-
-// Static method to get alert stats
-alertSchema.statics.getStats = async function(tenantId, timeframe = 24) {
-  const since = new Date(Date.now() - timeframe * 60 * 60 * 1000);
-  const match = { detectedAt: { $gte: since } };
-  if (tenantId) match.tenantId = tenantId;
-  
-  const [total, bySeverity, byType, avgResolutionTime] = await Promise.all([
-    this.countDocuments(match),
-    this.aggregate([
-      { $match: match },
-      { $group: { _id: '$severity', count: { $sum: 1 } } }
-    ]),
-    this.aggregate([
-      { $match: match },
-      { $group: { _id: '$type', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 10 }
-    ]),
-    this.aggregate([
-      { $match: { ...match, 'resolution.timeToResolve': { $exists: true } } },
-      { $group: { _id: null, avg: { $avg: '$resolution.timeToResolve' } } }
-    ])
-  ]);
-  
-  return {
-    total,
+  return { 
+    total, 
     bySeverity: bySeverity.reduce((acc, s) => ({ ...acc, [s._id]: s.count }), {}),
-    byType,
-    avgResolutionTime: avgResolutionTime[0]?.avg || 0
+    byStatus: byStatus.reduce((acc, s) => ({ ...acc, [s._id]: s.count }), {}),
+    byType: byType.reduce((acc, t) => ({ ...acc, [t._id]: t.count }), {})
   };
 };
 
-// Instance method to acknowledge
-alertSchema.methods.acknowledge = async function(userId, userName) {
+alertSchema.statics.getActive = function() {
+  return this.find({ status: { $in: ['new', 'acknowledged', 'investigating'] } })
+    .sort({ severity: 1, triggeredAt: -1 })
+    .populate('affectedDevices', 'name ipAddress type');
+};
+
+alertSchema.statics.getCritical = function() {
+  return this.find({ severity: 'critical', status: { $ne: 'resolved' } })
+    .sort({ triggeredAt: -1 })
+    .populate('affectedDevices', 'name ipAddress type');
+};
+
+alertSchema.statics.getRecent = function(limit = 20) {
+  return this.find()
+    .sort({ triggeredAt: -1 })
+    .limit(limit)
+    .populate('affectedDevices', 'name ipAddress type');
+};
+
+alertSchema.statics.getByDevice = function(deviceId) {
+  return this.find({ 'source.deviceId': deviceId })
+    .sort({ triggeredAt: -1 });
+};
+
+// Instance methods
+alertSchema.methods.acknowledge = async function(userId) {
   this.status = 'acknowledged';
   this.acknowledgedAt = new Date();
-  this.assignedTo = { userId, userName, assignedAt: new Date() };
+  this.assignedTo = userId;
   return this.save();
 };
 
-// Instance method to resolve
-alertSchema.methods.resolve = async function(resolution) {
+alertSchema.methods.resolve = async function(resolution, userId) {
   this.status = 'resolved';
   this.resolvedAt = new Date();
-  this.resolution = {
-    ...resolution,
-    timeToResolve: this.resolvedAt - this.detectedAt
-  };
+  this.response.resolution = resolution;
+  this.updatedBy = userId;
   return this.save();
 };
 
-// Instance method to escalate
-alertSchema.methods.escalate = async function(escalatedBy, reason) {
-  this.escalation.level += 1;
-  this.escalation.escalatedBy = escalatedBy;
-  this.escalation.reason = reason;
+alertSchema.methods.escalate = async function(escalatedTo, userId) {
+  this.status = 'escalated';
   this.escalatedAt = new Date();
+  this.escalatedTo = escalatedTo;
+  this.updatedBy = userId;
   return this.save();
 };
 
-// Instance method to add comment
-alertSchema.methods.addComment = async function(userId, userName, content, isInternal = true) {
-  this.comments.push({ userId, userName, content, isInternal });
+alertSchema.methods.addAction = async function(action, userId, result) {
+  this.response.actions.push({
+    action,
+    performedBy: userId,
+    performedAt: new Date(),
+    result
+  });
   return this.save();
 };
 
-// Instance method to suppress
-alertSchema.methods.suppress = async function(until, reason) {
-  this.suppressed = true;
-  this.suppressedUntil = until;
-  this.suppressionReason = reason;
+alertSchema.methods.addNote = async function(content, author) {
+  this.notes.push({ content, author, createdAt: new Date() });
   return this.save();
 };
 

@@ -1,227 +1,399 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Shield, Menu, X, MessageSquare, ChevronLeft, ChevronRight, 
-  Search, Settings, Bell, TrendingUp, Activity, FileText,
-  AlertTriangle, CheckCircle, Clock, Send, Sparkles, Mic, 
-  Paperclip, MoreHorizontal, User, Bot
+  Wifi, Menu, MessageSquare, ChevronLeft,
+  Bell, Activity, FileText,
+  AlertTriangle, Send, Sparkles, Mic, 
+  Paperclip, User, Bot, Radio, Laptop,
+  Target, RefreshCw
 } from 'lucide-react';
 
 // Components
-import TransactionForm from './components/TransactionForm';
-import FraudScoreCard from './components/FraudScoreCard';
-import RiskVisualization from './components/RiskVisualization';
-import TransactionHistory from './components/TransactionHistory';
-import AlertsPanel from './components/AlertsPanel';
-import ExportReport from './components/ExportReport';
+import {
+  DashboardOverview,
+  NetworksPanel,
+  AccessPointsPanel,
+  ClientsPanel,
+  SecurityAlertsPanel,
+  ThreatDetectionPanel
+} from './components';
 
-// Types and constants
+// Types
 import { 
-  Transaction, FraudScore, Alert, Tab, SettingsState, 
-  Message, WorkspaceMode 
+  WirelessNetwork, AccessPoint, WirelessClient, WirelessSecurityAlert,
+  DashboardData, ThreatDetectionResult, Tab, Message
 } from './types';
-import { NAV_ITEMS, DEFAULT_SETTINGS, PROVIDER_CONFIG } from './constants';
 
 // Services
-import { fraudguardAPI } from './services/fraudguardAPI';
-import { executeTool, getToolDefinitions } from './services/fraudguard-tools';
+import wirelessWatchAPI from './services/wirelessWatchAPI';
+
+interface NavItemDisplay {
+  id: Tab;
+  label: string;
+  icon: React.ReactNode;
+}
 
 const App: React.FC = () => {
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState<Tab>('analyze');
-  const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>('fraud-detection');
-  const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS);
+  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   
   // Data state
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [fraudScores, setFraudScores] = useState<Record<string, FraudScore>>({});
-  const [currentScore, setCurrentScore] = useState<FraudScore | null>(null);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [networks, setNetworks] = useState<WirelessNetwork[]>([]);
+  const [accessPoints, setAccessPoints] = useState<AccessPoint[]>([]);
+  const [clients, setClients] = useState<WirelessClient[]>([]);
+  const [alerts, setAlerts] = useState<WirelessSecurityAlert[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
   // Chat state
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      role: 'assistant',
-      content: "Welcome to FraudGuard! I'm your AI-powered fraud detection assistant. I can help you analyze transactions, detect suspicious patterns, and manage fraud alerts. How can I assist you today?",
-      timestamp: new Date(),
-      provider: settings.selectedProvider,
+      sender: 'AGENT',
+      text: "Welcome to WirelessWatch! 📡 I'm your AI-powered wireless security assistant. I can help you:\n\n• Monitor wireless networks and access points\n• Detect rogue APs and evil twin attacks\n• Analyze client connections and security\n• Investigate security alerts\n• Run threat detection scans\n\nHow can I help secure your wireless environment today?",
+      timestamp: new Date().toISOString(),
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Navigation items with proper icons
+  const navItems: NavItemDisplay[] = [
+    { id: 'dashboard', label: 'Dashboard', icon: <Activity className="w-5 h-5" /> },
+    { id: 'networks', label: 'Networks', icon: <Wifi className="w-5 h-5" /> },
+    { id: 'access-points', label: 'Access Points', icon: <Radio className="w-5 h-5" /> },
+    { id: 'clients', label: 'Clients', icon: <Laptop className="w-5 h-5" /> },
+    { id: 'alerts', label: 'Alerts', icon: <AlertTriangle className="w-5 h-5" /> },
+    { id: 'threat-detection', label: 'Threat Detection', icon: <Target className="w-5 h-5" /> },
+    { id: 'reports', label: 'Reports', icon: <FileText className="w-5 h-5" /> },
+  ];
+
   // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle transaction analysis
-  const handleAnalyzeTransaction = async (transaction: Transaction) => {
+  // Load initial data
+  useEffect(() => {
+    loadDashboardData();
+    loadNetworks();
+    loadAccessPoints();
+    loadClients();
+    loadAlerts();
+  }, []);
+
+  // Data loading functions
+  const loadDashboardData = async () => {
+    try {
+      const data = await wirelessWatchAPI.getDashboard();
+      setDashboardData(data);
+    } catch (error) {
+      console.error('Failed to load dashboard:', error);
+      // Set demo data
+      setDashboardData({
+        overview: {
+          totalNetworks: 12,
+          activeNetworks: 10,
+          rogueNetworks: 0,
+          totalAPs: 48,
+          onlineAPs: 45,
+          totalClients: 234,
+          connectedClients: 189,
+          newAlerts: 3,
+          criticalAlerts: 1
+        },
+        networksByType: [
+          { _id: 'corporate', count: 4 },
+          { _id: 'guest', count: 3 },
+          { _id: 'iot', count: 5 }
+        ],
+        clientsByDevice: [
+          { _id: 'laptop', count: 89 },
+          { _id: 'smartphone', count: 78 },
+          { _id: 'tablet', count: 34 },
+          { _id: 'iot', count: 33 }
+        ],
+        recentAlerts: [],
+        healthScore: 87,
+        timestamp: new Date().toISOString()
+      });
+    }
+  };
+
+  const loadNetworks = async () => {
+    try {
+      const data = await wirelessWatchAPI.networks.getAll();
+      setNetworks(data);
+    } catch (error) {
+      console.error('Failed to load networks:', error);
+    }
+  };
+
+  const loadAccessPoints = async () => {
+    try {
+      const data = await wirelessWatchAPI.accessPoints.getAll();
+      setAccessPoints(data);
+    } catch (error) {
+      console.error('Failed to load access points:', error);
+    }
+  };
+
+  const loadClients = async () => {
+    try {
+      const data = await wirelessWatchAPI.clients.getAll();
+      setClients(data);
+    } catch (error) {
+      console.error('Failed to load clients:', error);
+    }
+  };
+
+  const loadAlerts = async () => {
+    try {
+      const data = await wirelessWatchAPI.alerts.getAll();
+      setAlerts(data);
+    } catch (error) {
+      console.error('Failed to load alerts:', error);
+    }
+  };
+
+  // Handle threat detection scans
+  const handleRunScan = async (scanType: string): Promise<ThreatDetectionResult> => {
     setIsLoading(true);
     try {
-      const score = await fraudguardAPI.transactions.analyze(transaction);
-      setCurrentScore(score);
-      setFraudScores((prev) => ({ ...prev, [transaction.transaction_id]: score }));
-      setTransactions((prev) => [transaction, ...prev]);
+      let result: ThreatDetectionResult;
       
-      // Add assistant message about analysis
-      const riskColor = score.risk_level === 'critical' ? 'red' : 
-                       score.risk_level === 'high' ? 'orange' : 
-                       score.risk_level === 'medium' ? 'yellow' : 'green';
+      switch (scanType) {
+        case 'rogue-aps':
+          result = await wirelessWatchAPI.threatDetection.scanRogueAPs();
+          break;
+        case 'weak-encryption':
+          const weakResult = await wirelessWatchAPI.threatDetection.scanWeakEncryption();
+          result = {
+            scannedNetworks: weakResult.weakNetworksFound,
+            detectedRogues: 0,
+            rogueNetworks: [],
+            timestamp: new Date().toISOString(),
+            scanType: 'weak-encryption',
+            severity: weakResult.weakNetworksFound > 0 ? 'high' : 'info',
+            threatCount: weakResult.weakNetworksFound,
+            scannedItems: weakResult.weakNetworksFound,
+            findings: weakResult.alerts.map(a => ({
+              name: a.title,
+              description: a.description,
+              severity: a.severity,
+              type: a.alertType
+            }))
+          };
+          break;
+        case 'signal-anomalies':
+          await wirelessWatchAPI.threatDetection.analyzeSignals();
+          result = {
+            scannedNetworks: 0,
+            detectedRogues: 0,
+            rogueNetworks: [],
+            timestamp: new Date().toISOString(),
+            scanType: 'signal-anomalies',
+            severity: 'info',
+            threatCount: 0,
+            scannedItems: 50,
+            findings: []
+          };
+          break;
+        case 'threat-hunting':
+          const huntResult = await wirelessWatchAPI.threatDetection.performThreatHunting();
+          result = {
+            scannedNetworks: huntResult.networks || 0,
+            detectedRogues: 0,
+            rogueNetworks: [],
+            timestamp: huntResult.timestamp,
+            scanType: 'threat-hunting',
+            severity: 'info',
+            threatCount: 0,
+            scannedItems: (huntResult.networks || 0) + (huntResult.clients || 0) + (huntResult.accessPoints || 0),
+            findings: []
+          };
+          break;
+        default:
+          throw new Error(`Unknown scan type: ${scanType}`);
+      }
       
-      setMessages((prev) => [...prev, {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: `Transaction analyzed. Risk Score: ${score.score}/100 (${score.risk_level.toUpperCase()}). ${score.indicators.length} risk indicators detected.`,
-        timestamp: new Date(),
-        provider: settings.selectedProvider,
-      }]);
+      // Add assistant message about scan
+      addMessage(
+        'AGENT',
+        `${scanType.replace(/-/g, ' ').toUpperCase()} scan complete. Found ${result.threatCount || 0} potential threats. ${result.findings?.length || 0} items require attention.`
+      );
+      
+      return result;
     } catch (error) {
-      console.error('Analysis failed:', error);
+      console.error('Scan error:', error);
+      // Return demo result on error
+      return {
+        scannedNetworks: 50,
+        detectedRogues: 0,
+        rogueNetworks: [],
+        timestamp: new Date().toISOString(),
+        scanType: scanType as ThreatDetectionResult['scanType'],
+        severity: 'info',
+        threatCount: 0,
+        scannedItems: 50,
+        findings: []
+      };
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle chat message
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
-
-    const userMessage: Message = {
+  // Helper function to add messages
+  const addMessage = (sender: 'YOU' | 'AGENT' | 'SYSTEM', text: string) => {
+    setMessages(prev => [...prev, {
       id: Date.now().toString(),
-      role: 'user',
-      content: inputValue,
-      timestamp: new Date(),
-    };
-    
-    setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
-    setIsTyping(true);
-
-    // Simulate AI response (would connect to real AI service)
-    setTimeout(async () => {
-      // Check for tool-related keywords
-      let response = '';
-      
-      if (inputValue.toLowerCase().includes('analyze') && inputValue.toLowerCase().includes('transaction')) {
-        response = "I can help you analyze a transaction. Please use the Transaction Form on the left to enter the transaction details, or provide me with the transaction data and I'll analyze it for you.";
-      } else if (inputValue.toLowerCase().includes('alert')) {
-        response = "You can manage fraud alerts from the Alerts panel. Would you like me to create a new alert rule? Just tell me the alert type, threshold score, and notification channels you'd like to use.";
-      } else if (inputValue.toLowerCase().includes('report') || inputValue.toLowerCase().includes('export')) {
-        response = "I can help you export reports. Go to the Export section to generate PDF or CSV reports with your fraud analysis data. You can filter by date range and risk levels.";
-      } else if (inputValue.toLowerCase().includes('score') || inputValue.toLowerCase().includes('risk')) {
-        response = `Based on my analysis, the current risk assessment shows ${transactions.length} transactions processed with an average risk score. Would you like me to break down the risk factors or show you the visualization?`;
-      } else {
-        response = "I'm here to help with fraud detection and analysis. I can:\n\n• Analyze transactions for fraud risk\n• Show risk visualizations and patterns\n• Create and manage fraud alerts\n• Export detailed reports\n\nWhat would you like to do?";
-      }
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response,
-        timestamp: new Date(),
-        provider: settings.selectedProvider,
-      };
-      
-      setMessages((prev) => [...prev, assistantMessage]);
-      setIsTyping(false);
-    }, 1500);
+      sender,
+      text,
+      timestamp: new Date().toISOString()
+    }]);
   };
 
   // Handle alert operations
-  const handleCreateAlert = async (alert: Omit<Alert, 'id' | 'created_at' | 'triggered_count'>) => {
+  const handleAcknowledgeAlert = async (alertId: string) => {
     try {
-      const newAlert = await fraudguardAPI.alerts.create(alert);
-      setAlerts((prev) => [...prev, newAlert]);
+      await wirelessWatchAPI.alerts.acknowledge(alertId, 'system');
+      setAlerts(prev => prev.map(a => 
+        a.alertId === alertId ? { ...a, status: 'acknowledged' as const } : a
+      ));
     } catch (error) {
-      // For demo, create locally
-      const localAlert: Alert = {
-        ...alert,
-        id: `alert_${Date.now()}`,
-        created_at: new Date().toISOString(),
-        triggered_count: 0,
-      };
-      setAlerts((prev) => [...prev, localAlert]);
+      console.error('Failed to acknowledge alert:', error);
     }
   };
 
-  const handleDeleteAlert = (id: string) => {
-    setAlerts((prev) => prev.filter((a) => a.id !== id));
+  const handleResolveAlert = async (alertId: string) => {
+    try {
+      await wirelessWatchAPI.alerts.resolve(alertId, {
+        resolvedBy: 'system',
+        notes: 'Resolved from dashboard'
+      });
+      setAlerts(prev => prev.map(a => 
+        a.alertId === alertId ? { ...a, status: 'resolved' as const } : a
+      ));
+    } catch (error) {
+      console.error('Failed to resolve alert:', error);
+    }
   };
 
-  const handleToggleAlert = (id: string, active: boolean) => {
-    setAlerts((prev) => prev.map((a) => a.id === id ? { ...a, active } : a));
+  // Handle blocking client
+  const handleBlockClient = async (clientId: string, reason: string) => {
+    try {
+      await wirelessWatchAPI.clients.block(clientId, reason);
+      setClients(prev => prev.map(c => 
+        c.clientId === clientId ? { ...c, connectionStatus: 'blocked' as const } : c
+      ));
+      
+      addMessage('AGENT', `Client ${clientId} has been blocked. Reason: ${reason}`);
+    } catch (error) {
+      console.error('Failed to block client:', error);
+    }
   };
 
-  // Handle report export
-  const handleExport = async (format: 'pdf' | 'csv', options: any) => {
-    // Simulate export
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log('Exporting:', format, options);
+  // Handle chat submit
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputValue.trim()) return;
+
+    const userMessage = inputValue.trim();
+    setInputValue('');
+    
+    addMessage('YOU', userMessage);
+    setIsTyping(true);
+
+    // Simulate AI response
+    setTimeout(() => {
+      let response = '';
+      const lowerMessage = userMessage.toLowerCase();
+
+      if (lowerMessage.includes('rogue') || lowerMessage.includes('scan')) {
+        response = `I can help you scan for rogue access points. Use the Threat Detection panel to run a comprehensive scan. Would you like me to guide you through the process?`;
+      } else if (lowerMessage.includes('alert') || lowerMessage.includes('security')) {
+        const newAlerts = alerts.filter(a => a.status === 'new').length;
+        response = `There are ${newAlerts} new security alerts. You can review and manage them in the Security Alerts panel. I can help you investigate any specific alerts.`;
+      } else if (lowerMessage.includes('client') || lowerMessage.includes('device')) {
+        response = `Currently monitoring ${clients.length} clients. ${clients.filter(c => c.connectionStatus === 'connected').length} are actively connected. Check the Clients panel for detailed information.`;
+      } else if (lowerMessage.includes('network') || lowerMessage.includes('ssid')) {
+        response = `You have ${networks.length} networks configured. ${networks.filter(n => n.status === 'active').length} are currently active. Use the Networks panel to manage them.`;
+      } else {
+        response = `I'm here to help with wireless security monitoring. You can ask me about:\n• Network status and management\n• Access point monitoring\n• Client device tracking\n• Security alerts and threats\n• Rogue AP detection`;
+      }
+
+      addMessage('AGENT', response);
+      setIsTyping(false);
+    }, 1000);
   };
 
-  // Render tab content
-  const renderTabContent = () => {
+  // Render main content based on active tab
+  const renderContent = () => {
     switch (activeTab) {
-      case 'analyze':
-        return (
-          <div className="space-y-6">
-            <TransactionForm onSubmit={handleAnalyzeTransaction} isLoading={isLoading} />
-            {currentScore && (
-              <FraudScoreCard 
-                score={currentScore} 
-                onApprove={() => console.log('Approved')}
-                onDecline={() => console.log('Declined')}
-                onReview={() => console.log('Review')}
-              />
-            )}
+      case 'dashboard':
+        return dashboardData ? (
+          <DashboardOverview 
+            data={dashboardData} 
+            isLoading={isLoading}
+            onRefresh={loadDashboardData}
+          />
+        ) : (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500"></div>
           </div>
         );
-      case 'visualize':
+      case 'networks':
         return (
-          <RiskVisualization 
-            data={[
-              { label: 'Card Mismatch', value: 35, color: '#EF4444' },
-              { label: 'High Velocity', value: 25, color: '#F97316' },
-              { label: 'New Device', value: 20, color: '#EAB308' },
-              { label: 'Location Risk', value: 15, color: '#22C55E' },
-              { label: 'Amount Flag', value: 5, color: '#3B82F6' },
-            ]}
-            chartType="risk_breakdown"
+          <NetworksPanel 
+            networks={networks}
+            isLoading={isLoading}
+            onRefresh={loadNetworks}
+            onSelect={(network) => console.log('Selected network:', network)}
+            onAddNetwork={() => console.log('Add network')}
           />
         );
-      case 'history':
+      case 'access-points':
         return (
-          <TransactionHistory 
-            transactions={transactions}
-            fraudScores={fraudScores}
-            onSelectTransaction={(t) => {
-              const score = fraudScores[t.transaction_id];
-              if (score) setCurrentScore(score);
-              setActiveTab('analyze');
-            }}
+          <AccessPointsPanel 
+            accessPoints={accessPoints}
+            isLoading={isLoading}
+            onRefresh={loadAccessPoints}
+            onSelect={(ap) => console.log('Selected AP:', ap)}
+          />
+        );
+      case 'clients':
+        return (
+          <ClientsPanel 
+            clients={clients}
+            isLoading={isLoading}
+            onRefresh={loadClients}
+            onBlock={handleBlockClient}
+            onSelect={(client) => console.log('Selected client:', client)}
           />
         );
       case 'alerts':
         return (
-          <AlertsPanel 
+          <SecurityAlertsPanel 
             alerts={alerts}
-            onCreateAlert={handleCreateAlert}
-            onDeleteAlert={handleDeleteAlert}
-            onToggleAlert={handleToggleAlert}
+            isLoading={isLoading}
+            onRefresh={loadAlerts}
+            onAcknowledge={handleAcknowledgeAlert}
+            onResolve={handleResolveAlert}
+            onSelect={(alert) => console.log('Selected alert:', alert)}
           />
+        );
+      case 'threat-detection':
+        return (
+          <ThreatDetectionPanel onRunScan={handleRunScan} />
         );
       case 'reports':
         return (
-          <ExportReport 
-            transactions={transactions}
-            fraudScores={fraudScores}
-            onExport={handleExport}
-          />
+          <div className="p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Reports</h2>
+            <p className="text-gray-400">Report generation coming soon...</p>
+          </div>
         );
       default:
         return null;
@@ -229,288 +401,201 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-slate-900/80 backdrop-blur-lg border-b border-red-500/30">
-        <div className="flex items-center justify-between h-full px-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
-            >
-              {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="font-bold text-lg">FraudGuard</h1>
-                <p className="text-xs text-red-400">AI Fraud Detection</p>
-              </div>
-            </div>
+    <div className="flex h-screen bg-gray-900 text-white">
+      {/* Sidebar */}
+      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-gray-800 border-r border-gray-700 transition-all duration-300 flex flex-col`}>
+        {/* Logo */}
+        <div className="p-4 border-b border-gray-700 flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <Wifi className="w-6 h-6 text-white" />
           </div>
-
-          <div className="flex items-center gap-4">
-            {/* Workspace Mode Selector */}
-            <div className="flex items-center gap-2 bg-slate-800 rounded-lg p-1">
-              <button
-                onClick={() => setWorkspaceMode('fraud-detection')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'fraud-detection' 
-                    ? 'bg-red-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Detection
-              </button>
-              <button
-                onClick={() => setWorkspaceMode('analytics')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'analytics' 
-                    ? 'bg-cyan-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Analytics
-              </button>
-              <button
-                onClick={() => setWorkspaceMode('monitoring')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'monitoring' 
-                    ? 'bg-yellow-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Monitoring
-              </button>
+          {sidebarOpen && (
+            <div>
+              <h1 className="font-bold text-lg bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                WirelessWatch
+              </h1>
+              <p className="text-xs text-gray-500">Security Monitor</p>
             </div>
+          )}
+        </div>
 
-            {/* Notifications */}
-            <button className="relative p-2 hover:bg-slate-800 rounded-lg transition-colors">
-              <Bell className="w-5 h-5" />
-              {alerts.filter(a => a.active).length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+        {/* Navigation */}
+        <nav className="flex-1 py-4 overflow-y-auto">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 transition-colors ${
+                activeTab === item.id
+                  ? 'bg-cyan-500/20 text-cyan-400 border-r-2 border-cyan-500'
+                  : 'text-gray-400 hover:bg-gray-700/50 hover:text-white'
+              }`}
+            >
+              {item.icon}
+              {sidebarOpen && <span>{item.label}</span>}
+              {item.id === 'alerts' && alerts.filter(a => a.status === 'new').length > 0 && (
+                <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                  {alerts.filter(a => a.status === 'new').length}
+                </span>
               )}
             </button>
+          ))}
+        </nav>
 
-            {/* Settings */}
-            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
-              <Settings className="w-5 h-5" />
+        {/* Toggle sidebar button */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-4 border-t border-gray-700 text-gray-400 hover:text-white"
+        >
+          {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-6">
+          <div className="flex items-center gap-4">
+            <h2 className="text-lg font-semibold capitalize">{activeTab.replace('-', ' ')}</h2>
+          </div>
+          <div className="flex items-center gap-4">
+            {/* Health Score */}
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-700 rounded-lg">
+              <div className={`w-2 h-2 rounded-full ${
+                (dashboardData?.healthScore || 0) > 80 ? 'bg-green-500' :
+                (dashboardData?.healthScore || 0) > 60 ? 'bg-yellow-500' : 'bg-red-500'
+              }`}></div>
+              <span className="text-sm text-gray-300">
+                Health: {dashboardData?.healthScore || '--'}%
+              </span>
+            </div>
+            
+            {/* Alerts indicator */}
+            <button className="relative p-2 hover:bg-gray-700 rounded-lg">
+              <Bell className="w-5 h-5 text-gray-400" />
+              {alerts.filter(a => a.status === 'new').length > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                  {alerts.filter(a => a.status === 'new').length}
+                </span>
+              )}
             </button>
-
-            {/* Toggle Chat */}
-            <button
+            
+            {/* Refresh */}
+            <button 
+              onClick={() => {
+                loadDashboardData();
+                loadNetworks();
+                loadAccessPoints();
+                loadClients();
+                loadAlerts();
+              }}
+              className="p-2 hover:bg-gray-700 rounded-lg"
+            >
+              <RefreshCw className={`w-5 h-5 text-gray-400 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+            
+            {/* Chat toggle */}
+            <button 
               onClick={() => setChatOpen(!chatOpen)}
-              className={`p-2 rounded-lg transition-colors ${
-                chatOpen ? 'bg-red-500/20 text-red-400' : 'hover:bg-slate-800'
-              }`}
+              className={`p-2 rounded-lg ${chatOpen ? 'bg-cyan-500/20 text-cyan-400' : 'hover:bg-gray-700 text-gray-400'}`}
             >
               <MessageSquare className="w-5 h-5" />
             </button>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="flex pt-16">
-        {/* Sidebar */}
-        <aside 
-          className={`fixed left-0 top-16 bottom-0 bg-slate-900/50 backdrop-blur border-r border-red-500/20 transition-all duration-300 ${
-            sidebarOpen ? 'w-64' : 'w-16'
-          }`}
-        >
-          <nav className="p-4 space-y-2">
-            {NAV_ITEMS.map((item) => {
-              const Icon = {
-                'search': Search,
-                'analyze': Activity,
-                'visualize': TrendingUp,
-                'history': Clock,
-                'alerts': AlertTriangle,
-                'reports': FileText,
-                'settings': Settings,
-              }[item.id] || Activity;
+        {/* Content + Chat */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Main content */}
+          <main className={`flex-1 overflow-auto p-6 ${chatOpen ? 'mr-80' : ''}`}>
+            {renderContent()}
+          </main>
 
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id as Tab)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                    activeTab === item.id
-                      ? 'bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 text-white'
-                      : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  {sidebarOpen && <span>{item.label}</span>}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Quick Stats */}
-          {sidebarOpen && (
-            <div className="absolute bottom-4 left-4 right-4">
-              <div className="p-4 bg-gradient-to-br from-red-500/10 to-pink-500/10 rounded-xl border border-red-500/30">
-                <h4 className="text-sm font-bold text-white mb-3">Quick Stats</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Analyzed Today</span>
-                    <span className="text-white font-bold">{transactions.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">High Risk</span>
-                    <span className="text-red-400 font-bold">
-                      {Object.values(fraudScores).filter(s => s.risk_level === 'high' || s.risk_level === 'critical').length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Active Alerts</span>
-                    <span className="text-yellow-400 font-bold">{alerts.filter(a => a.active).length}</span>
-                  </div>
+          {/* Chat Panel */}
+          {chatOpen && (
+            <div className="w-80 bg-gray-800 border-l border-gray-700 flex flex-col fixed right-0 top-16 bottom-0">
+              {/* Chat Header */}
+              <div className="p-4 border-b border-gray-700 flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-medium">WirelessWatch AI</h3>
+                  <p className="text-xs text-gray-500">Security Assistant</p>
                 </div>
               </div>
-            </div>
-          )}
-        </aside>
 
-        {/* Main Content */}
-        <main 
-          className={`flex-1 p-6 transition-all duration-300 ${
-            sidebarOpen ? 'ml-64' : 'ml-16'
-          } ${chatOpen ? 'mr-96' : ''}`}
-        >
-          <div className="max-w-4xl mx-auto">
-            {/* Page Header */}
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold">
-                {NAV_ITEMS.find(n => n.id === activeTab)?.label || 'FraudGuard'}
-              </h2>
-              <p className="text-gray-400 mt-1">
-                {activeTab === 'analyze' && 'Analyze transactions for potential fraud'}
-                {activeTab === 'visualize' && 'Visualize risk patterns and trends'}
-                {activeTab === 'history' && 'View and manage transaction history'}
-                {activeTab === 'alerts' && 'Configure and manage fraud alerts'}
-                {activeTab === 'reports' && 'Generate and export reports'}
-              </p>
-            </div>
-
-            {/* Tab Content */}
-            {renderTabContent()}
-          </div>
-        </main>
-
-        {/* Chat Panel */}
-        {chatOpen && (
-          <aside className="fixed right-0 top-16 bottom-0 w-96 bg-slate-900/50 backdrop-blur border-l border-red-500/20 flex flex-col">
-            {/* Chat Header */}
-            <div className="p-4 border-b border-red-500/20">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold">AI Assistant</h3>
-                    <p className="text-xs text-green-400 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-                      Online
-                    </p>
-                  </div>
-                </div>
-                <select 
-                  value={settings.selectedProvider}
-                  onChange={(e) => setSettings({ ...settings, selectedProvider: e.target.value as any })}
-                  className="bg-slate-800 border border-red-500/30 rounded-lg px-2 py-1 text-sm"
-                >
-                  {Object.entries(PROVIDER_CONFIG).map(([key, config]) => (
-                    <option key={key} value={key}>{config.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => (
-                <div 
-                  key={message.id}
-                  className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
-                >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    message.role === 'user' 
-                      ? 'bg-cyan-500/20' 
-                      : 'bg-gradient-to-br from-red-500 to-pink-500'
-                  }`}>
-                    {message.role === 'user' ? (
-                      <User className="w-4 h-4 text-cyan-400" />
-                    ) : (
-                      <Bot className="w-4 h-4 text-white" />
-                    )}
-                  </div>
-                  <div className={`max-w-[80%] p-3 rounded-xl ${
-                    message.role === 'user'
-                      ? 'bg-cyan-500/20 border border-cyan-500/30'
-                      : 'bg-slate-800/50 border border-red-500/30'
-                  }`}>
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    <p className="text-[10px] text-gray-500 mt-1">
-                      {message.timestamp.toLocaleTimeString()}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              
-              {isTyping && (
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="bg-slate-800/50 border border-red-500/30 p-3 rounded-xl">
-                    <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex gap-3 ${message.sender === 'YOU' ? 'flex-row-reverse' : ''}`}
+                  >
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      message.sender === 'YOU' 
+                        ? 'bg-blue-600' 
+                        : 'bg-gradient-to-br from-cyan-500 to-blue-600'
+                    }`}>
+                      {message.sender === 'YOU' ? (
+                        <User className="w-4 h-4 text-white" />
+                      ) : (
+                        <Bot className="w-4 h-4 text-white" />
+                      )}
+                    </div>
+                    <div className={`max-w-[80%] rounded-lg p-3 ${
+                      message.sender === 'YOU'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-700 text-gray-100'
+                    }`}>
+                      <p className="text-sm whitespace-pre-line">{message.text}</p>
                     </div>
                   </div>
-                </div>
-              )}
-              
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <div className="p-4 border-t border-red-500/20">
-              <div className="flex items-center gap-2 bg-slate-800/50 border border-red-500/30 rounded-xl p-2">
-                <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
-                  <Paperclip className="w-4 h-4 text-gray-400" />
-                </button>
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Ask about fraud detection..."
-                  className="flex-1 bg-transparent outline-none text-sm"
-                />
-                <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
-                  <Mic className="w-4 h-4 text-gray-400" />
-                </button>
-                <button 
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim()}
-                  className="p-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg transition-all hover:opacity-90 disabled:opacity-50"
-                >
-                  <Send className="w-4 h-4 text-white" />
-                </button>
+                ))}
+                {isTyping && (
+                  <div className="flex gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="bg-gray-700 rounded-lg p-3">
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
               </div>
-              <p className="text-[10px] text-gray-500 text-center mt-2">
-                Powered by {PROVIDER_CONFIG[settings.selectedProvider]?.name || 'AI'}
-              </p>
+
+              {/* Input */}
+              <form onSubmit={handleSubmit} className="p-4 border-t border-gray-700">
+                <div className="flex items-center gap-2 bg-gray-700 rounded-lg p-2">
+                  <button type="button" className="p-1.5 text-gray-400 hover:text-white">
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Ask about wireless security..."
+                    className="flex-1 bg-transparent text-sm outline-none placeholder-gray-500"
+                  />
+                  <button type="button" className="p-1.5 text-gray-400 hover:text-white">
+                    <Mic className="w-4 h-4" />
+                  </button>
+                  <button 
+                    type="submit"
+                    className="p-1.5 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+              </form>
             </div>
-          </aside>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

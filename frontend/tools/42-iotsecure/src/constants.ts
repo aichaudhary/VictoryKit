@@ -34,88 +34,209 @@ export const PROVIDER_CONFIG = [
 ];
 
 export const DEFAULT_SETTINGS: SettingsState = {
-  customPrompt: `You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models.
+  customPrompt: `You are IoTSecure AI, an expert in IoT device security with deep knowledge of network security, vulnerability assessment, firmware analysis, and threat detection.
 
 CAPABILITIES:
-- Analyze transactions for fraud indicators and calculate risk scores (0-100)
-- Detect suspicious patterns in transaction data
-- Provide actionable recommendations for risk mitigation
-- Generate detailed fraud reports
-- Create alerts for high-risk transactions
+- Scan and discover IoT devices on the network
+- Analyze vulnerabilities and provide risk scores
+- Monitor device behavior and detect anomalies
+- Manage network segmentation and firewall rules
+- Analyze firmware for security issues
+- Generate security reports and compliance assessments
 
 AVAILABLE FUNCTIONS:
-- analyze_transaction: Analyze a transaction for fraud indicators
-- get_fraud_score: Get the fraud risk score for a transaction
-- open_risk_visualization: Open charts and graphs for analysis
-- get_transaction_history: Fetch transaction history with filters
-- create_alert: Create fraud monitoring alerts
-- export_report: Generate and export fraud reports
+- discover_devices: Scan network for IoT devices
+- scan_vulnerabilities: Run vulnerability scan on devices
+- analyze_device: Get detailed security analysis of a device
+- get_device_inventory: List all discovered devices
+- check_firmware: Analyze firmware for vulnerabilities
+- create_baseline: Create behavioral baseline for device
+- detect_anomalies: Check for behavioral anomalies
+- create_segment: Create network segmentation
+- add_firewall_rule: Add firewall rules
+- create_alert: Create security alerts
+- export_report: Generate security reports
 
-Always be thorough in your analysis and explain findings in clear, non-technical language.`,
-  agentName: "FraudGuard AI",
+Always provide actionable security recommendations and explain findings clearly.`,
+  agentName: "IoTSecure AI",
   temperature: 0.7,
   maxTokens: 4096,
   provider: 'gemini',
   model: "gemini-2.5-flash-preview",
-  activeTool: 'fraud_analysis',
+  activeTool: 'device_inventory',
   workspaceMode: 'CHAT',
-  portalUrl: 'https://www.google.com/search?igu=1',
+  portalUrl: 'https://www.shodan.io',
   canvas: {
-    content: "// FraudGuard Workspace\n\nReady for fraud analysis.",
+    content: "// IoTSecure Workspace\n\nReady for IoT security analysis.",
     type: 'text',
-    title: 'FraudGuard_Canvas'
+    title: 'IoTSecure_Canvas'
   }
 };
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Fraud Analysis', icon: '🛡️', tool: 'fraud_analysis', description: 'Analyze transactions for fraud' },
-  { label: 'Risk Dashboard', icon: '📊', tool: 'risk_visualization', description: 'View risk charts and graphs' },
-  { label: 'Transaction History', icon: '📜', tool: 'transaction_history', description: 'Browse past transactions' },
-  { label: 'Alerts', icon: '🔔', tool: 'alerts', description: 'Manage fraud alerts' },
-  { label: 'Reports', icon: '📄', tool: 'reports', description: 'Generate fraud reports' },
-  { label: 'Web Portal', icon: '🌐', tool: 'browser', description: 'Open web browser' },
-  { label: 'Canvas', icon: '🖌️', tool: 'canvas', description: 'Collaborative workspace' },
-  { label: 'Web Search', icon: '🔍', tool: 'web_search', description: 'Search the web' }
+  { label: 'Device Inventory', icon: '📱', tool: 'device_inventory', description: 'View all IoT devices' },
+  { label: 'Vulnerability Scan', icon: '🔍', tool: 'vulnerability_scan', description: 'Scan for vulnerabilities' },
+  { label: 'Network Topology', icon: '🌐', tool: 'network_topology', description: 'View network segments' },
+  { label: 'Alerts', icon: '🚨', tool: 'alerts', description: 'Security alerts' },
+  { label: 'Firmware', icon: '💾', tool: 'firmware_analysis', description: 'Analyze firmware' },
+  { label: 'Baselines', icon: '📈', tool: 'baselines', description: 'Behavioral baselines' },
+  { label: 'Web Portal', icon: '🔗', tool: 'browser', description: 'Open web browser' },
+  { label: 'Canvas', icon: '🖌️', tool: 'canvas', description: 'Collaborative workspace' }
 ];
 
-export const FRAUD_PRESETS: Record<string, { prompt: string; temp: number }> = {
-  thorough: { 
-    prompt: "Perform extremely detailed fraud analysis. Check every indicator, cross-reference patterns, and provide comprehensive risk assessment.", 
+export const IOT_PRESETS: Record<string, { prompt: string; temp: number }> = {
+  discovery: { 
+    prompt: "Focus on device discovery. Scan the network, identify all IoT devices, and classify them by type and manufacturer.", 
     temp: 0.3 
   },
-  quick: { 
-    prompt: "Perform quick fraud screening. Focus on major red flags and provide a rapid risk assessment.", 
+  vulnerability: { 
+    prompt: "Perform thorough vulnerability assessment. Check for CVEs, misconfigurations, and security weaknesses.", 
+    temp: 0.4 
+  },
+  monitoring: { 
+    prompt: "Set up continuous monitoring. Create baselines, configure alerts, and detect anomalies in device behavior.", 
     temp: 0.5 
   },
-  educational: { 
-    prompt: "Explain fraud analysis in educational terms. Help the user understand fraud patterns and detection methods.", 
-    temp: 0.7 
-  },
-  investigative: { 
-    prompt: "Take an investigative approach. Look for hidden patterns, connections, and potential fraud networks.", 
+  compliance: { 
+    prompt: "Check compliance with security frameworks. Assess PCI-DSS, HIPAA, GDPR, and ISO 27001 requirements.", 
     temp: 0.4 
+  },
+  forensics: { 
+    prompt: "Investigate security incidents. Analyze logs, trace attack vectors, and gather evidence.", 
+    temp: 0.3 
   }
+};
+
+export const DEVICE_TYPE_ICONS: Record<string, string> = {
+  camera: '📷',
+  thermostat: '🌡️',
+  sensor: '📡',
+  controller: '🎛️',
+  gateway: '🚪',
+  router: '📶',
+  switch: '🔌',
+  access_point: '📻',
+  smart_lock: '🔐',
+  smart_plug: '🔋',
+  hvac: '❄️',
+  lighting: '💡',
+  medical_device: '🏥',
+  industrial_plc: '🏭',
+  scada: '⚙️',
+  building_automation: '🏢',
+  environmental_sensor: '🌿',
+  wearable: '⌚',
+  vehicle: '🚗',
+  smart_meter: '📊',
+  security_system: '🔒',
+  voice_assistant: '🗣️',
+  unknown: '❓'
 };
 
 export const RISK_COLORS = {
   low: '#00ff88',
   medium: '#ffaa00',
-  high: '#ff0055'
+  high: '#ff6600',
+  critical: '#ff0055',
+  info: '#00aaff'
 };
 
+export const SEVERITY_COLORS = {
+  info: '#3498db',
+  low: '#00ff88',
+  medium: '#f1c40f',
+  high: '#e67e22',
+  critical: '#e74c3c'
+};
+
+export const STATUS_COLORS = {
+  online: '#00ff88',
+  offline: '#95a5a6',
+  degraded: '#f1c40f',
+  maintenance: '#3498db',
+  quarantined: '#e74c3c',
+  decommissioned: '#7f8c8d'
+};
+
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4041/api/v1';
+
 export const API_ENDPOINTS = {
-  fraudguard: {
-    analyze: '/api/fraudguard/analyze',
-    score: '/api/fraudguard/score',
-    transactions: '/api/fraudguard/transactions',
-    analytics: '/api/fraudguard/analytics',
-    alerts: '/api/fraudguard/alerts',
-    reports: '/api/fraudguard/reports'
+  devices: {
+    list: '/devices',
+    stats: '/devices/stats',
+    highRisk: '/devices/high-risk',
+    offline: '/devices/offline',
+    byId: (id: string) => `/devices/${id}`,
+    quarantine: (id: string) => `/devices/${id}/quarantine`,
+    scan: (id: string) => `/devices/${id}/scan`
   },
-  ml: {
-    predict: '/api/ml/predict',
-    score: '/api/ml/score',
-    train: '/api/ml/train'
+  vulnerabilities: {
+    list: '/vulnerabilities',
+    stats: '/vulnerabilities/stats',
+    critical: '/vulnerabilities/critical',
+    byId: (id: string) => `/vulnerabilities/${id}`,
+    searchNvd: '/vulnerabilities/search-nvd',
+    byCve: (cveId: string) => `/vulnerabilities/cve/${cveId}`
+  },
+  scans: {
+    list: '/scans',
+    stats: '/scans/stats',
+    recent: '/scans/recent',
+    running: '/scans/running',
+    byId: (id: string) => `/scans/${id}`,
+    quick: '/scans/quick',
+    discovery: '/scans/discovery',
+    vulnerability: '/scans/vulnerability'
+  },
+  alerts: {
+    list: '/alerts',
+    stats: '/alerts/stats',
+    active: '/alerts/active',
+    critical: '/alerts/critical',
+    recent: '/alerts/recent',
+    byId: (id: string) => `/alerts/${id}`,
+    acknowledge: (id: string) => `/alerts/${id}/acknowledge`,
+    resolve: (id: string) => `/alerts/${id}/resolve`
+  },
+  segments: {
+    list: '/segments',
+    stats: '/segments/stats',
+    topology: '/segments/topology',
+    byId: (id: string) => `/segments/${id}`,
+    firewall: (id: string) => `/segments/${id}/firewall-rules`
+  },
+  firmware: {
+    list: '/firmware',
+    stats: '/firmware/stats',
+    vulnerable: '/firmware/vulnerable',
+    outdated: '/firmware/outdated',
+    byId: (id: string) => `/firmware/${id}`,
+    analyze: (id: string) => `/firmware/${id}/analyze`,
+    virustotal: (id: string) => `/firmware/${id}/virustotal`
+  },
+  baselines: {
+    list: '/baselines',
+    stats: '/baselines/stats',
+    anomalies: '/baselines/anomalies',
+    byDevice: (deviceId: string) => `/baselines/device/${deviceId}`,
+    byId: (id: string) => `/baselines/${id}`,
+    analyze: (id: string) => `/baselines/${id}/analyze`
+  },
+  dashboard: {
+    overview: '/dashboard/overview',
+    riskScore: '/dashboard/risk-score',
+    trends: '/dashboard/trends',
+    activity: '/dashboard/activity',
+    networkMap: '/dashboard/network-map',
+    topRisks: '/dashboard/top-risks',
+    compliance: '/dashboard/compliance'
+  },
+  integrations: {
+    status: '/integrations/status',
+    shodan: '/integrations/shodan',
+    virustotal: '/integrations/virustotal',
+    greynoise: '/integrations/greynoise',
+    ai: '/integrations/ai/analyze'
   },
   ai: {
     chat: '/api/ai/chat',

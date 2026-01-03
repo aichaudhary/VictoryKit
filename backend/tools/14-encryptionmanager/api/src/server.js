@@ -22,7 +22,7 @@ const mongoose = require("mongoose");
 const http = require("http");
 
 const routes = require("./routes");
-const { errorHandler } = require("./middleware/errorHandler");
+const { errorHandler } = require("./middleware");
 const websocketService = require("./services/websocketService");
 
 const app = express();

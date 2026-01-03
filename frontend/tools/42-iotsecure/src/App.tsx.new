@@ -1,0 +1,530 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Shield, Menu, ChevronLeft, Bell, Settings as SettingsIcon,
+  Send, Bot, User, Sparkles, Wifi, AlertTriangle,
+  RefreshCw
+} from 'lucide-react';
+
+// IoT Security Components
+import { 
+  DeviceInventory, 
+  IoTAlertsPanel, 
+  VulnerabilityPanel, 
+  DashboardCard,
+  NetworkTopology,
+  ScanManager
+} from './components';
+
+// Types and constants
+import { 
+  Device, Alert, Vulnerability, Scan, DashboardOverview,
+  Message, SettingsState, Tab
+} from './types';
+import { NAV_ITEMS, DEFAULT_SETTINGS, API_ENDPOINTS } from './constants';
+
+// Services
+import { iotSecureAPI } from './services/iotSecureAPI';
+import { iotSecureTools, executeIoTSecureTool } from './services/iotsecure-tools';
+
+const App: React.FC = () => {
+  // UI State
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [chatOpen, setChatOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS);
+  
+  // Data state
+  const [overview, setOverview] = useState<DashboardOverview | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [notifications, setNotifications] = useState<number>(0);
+  
+  // Chat state
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      role: 'assistant',
+      content: "Welcome to IoTSecure! 🛡️ I'm your AI-powered IoT security assistant. I can help you:\n\n• 📡 Discover and inventory IoT devices\n• 🔓 Scan for vulnerabilities\n• 🌐 Visualize network topology\n• 🚨 Manage security alerts\n• 📊 Analyze device behavior\n\nHow can I help secure your IoT environment today?",
+      timestamp: new Date(),
+    }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load initial data
+  useEffect(() => {
+    fetchOverview();
+    fetchNotifications();
+    
+    // Poll for updates
+    const interval = setInterval(() => {
+      fetchOverview();
+      fetchNotifications();
+    }, 60000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Scroll chat to bottom
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  const fetchOverview = async () => {
+    try {
+      const response = await iotSecureAPI.dashboard.getOverview();
+      setOverview(response.data);
+    } catch (err) {
+      console.error('Failed to fetch overview:', err);
+    }
+  };
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await iotSecureAPI.alerts.getActive();
+      setNotifications(response.data?.length || 0);
+    } catch (err) {
+      // Fallback
+      setNotifications(3);
+    }
+  };
+
+  // Handle navigation
+  const handleNavigate = (section: string) => {
+    const tabMap: Record<string, Tab> = {
+      'devices': 'devices',
+      'vulnerabilities': 'vulnerabilities',
+      'alerts': 'alerts',
+      'topology': 'topology',
+      'scan': 'scans',
+      'scans': 'scans',
+      'firmware': 'firmware',
+      'baselines': 'baselines'
+    };
+    setActiveTab(tabMap[section] || 'dashboard');
+  };
+
+  // Handle chat message with AI
+  const handleSendMessage = async () => {
+    if (!inputValue.trim()) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: inputValue,
+      timestamp: new Date(),
+    };
+    
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue('');
+    setIsTyping(true);
+
+    try {
+      // Process with AI (simulated for now)
+      const response = await processUserQuery(inputValue);
+      
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: response,
+        timestamp: new Date(),
+      };
+      
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: "I apologize, but I encountered an error. Please try again.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  // Process user query with tool detection
+  const processUserQuery = async (query: string): Promise<string> => {
+    const lowerQuery = query.toLowerCase();
+    
+    // Device-related queries
+    if (lowerQuery.includes('discover') || lowerQuery.includes('find devices') || lowerQuery.includes('scan network')) {
+      try {
+        const result = await executeIoTSecureTool('discover_devices', { quick: true });
+        return `🔍 Starting device discovery scan...\n\nI've initiated a network scan to discover IoT devices. You can track progress in the Scan Manager. The scan will detect devices across your network segments and identify their types, manufacturers, and potential security issues.`;
+      } catch (err) {
+        return "I'll start a discovery scan. Navigate to the Scan Manager tab to monitor progress.";
+      }
+    }
+    
+    if (lowerQuery.includes('device') && (lowerQuery.includes('list') || lowerQuery.includes('show') || lowerQuery.includes('inventory'))) {
+      try {
+        const result = await executeIoTSecureTool('get_device_inventory', { limit: 10 });
+        const devices = result.data || [];
+        if (devices.length > 0) {
+          return `📡 Found ${devices.length} devices in your inventory:\n\n${devices.slice(0, 5).map((d: Device) => 
+            `• ${d.name} (${d.type}) - ${d.status} - Risk: ${d.riskScore?.level || 'N/A'}`
+          ).join('\n')}\n\n${devices.length > 5 ? `...and ${devices.length - 5} more. ` : ''}Check the Device Inventory tab for full details.`;
+        }
+        return "No devices found in your inventory yet. Would you like me to start a discovery scan?";
+      } catch (err) {
+        return "Navigate to the Device Inventory tab to view all discovered devices and their security status.";
+      }
+    }
+    
+    // Vulnerability-related queries
+    if (lowerQuery.includes('vulnerab') || lowerQuery.includes('cve') || lowerQuery.includes('security issue')) {
+      try {
+        const result = await executeIoTSecureTool('get_vulnerabilities', { limit: 10 });
+        const vulns = result.data || [];
+        if (vulns.length > 0) {
+          const critical = vulns.filter((v: Vulnerability) => v.severity === 'critical').length;
+          const high = vulns.filter((v: Vulnerability) => v.severity === 'high').length;
+          return `🔓 Found ${vulns.length} vulnerabilities:\n\n• 🔴 Critical: ${critical}\n• 🟠 High: ${high}\n• 🟡 Medium: ${vulns.length - critical - high}\n\nTop issues:\n${vulns.slice(0, 3).map((v: Vulnerability) => 
+            `• ${v.cveId || 'Unknown'}: ${v.title} (${v.severity})`
+          ).join('\n')}\n\nCheck the Vulnerabilities tab for details and remediation steps.`;
+        }
+        return "No vulnerabilities detected. Run a vulnerability scan to check your devices for security issues.";
+      } catch (err) {
+        return "Navigate to the Vulnerabilities tab to view detected security issues and their remediation status.";
+      }
+    }
+    
+    // Alert-related queries
+    if (lowerQuery.includes('alert') || lowerQuery.includes('warning') || lowerQuery.includes('notification')) {
+      try {
+        const result = await executeIoTSecureTool('get_alerts', { status: 'new', limit: 5 });
+        const alerts = result.data || [];
+        if (alerts.length > 0) {
+          return `🚨 You have ${alerts.length} active alerts:\n\n${alerts.slice(0, 3).map((a: Alert) => 
+            `• [${a.severity.toUpperCase()}] ${a.title}`
+          ).join('\n')}\n\nWould you like me to acknowledge these or provide more details?`;
+        }
+        return "✅ No active alerts at the moment. Your IoT environment is looking secure!";
+      } catch (err) {
+        return "Check the Alerts tab to view and manage security alerts for your IoT devices.";
+      }
+    }
+    
+    // Network/Topology queries
+    if (lowerQuery.includes('network') || lowerQuery.includes('topology') || lowerQuery.includes('map')) {
+      return "🌐 Navigate to the Network Topology tab to visualize your IoT network structure. You'll see:\n\n• Device connections and relationships\n• Network segments and isolation\n• Risk levels for each device\n• Traffic flow patterns\n\nYou can also create network segments and firewall rules from there.";
+    }
+    
+    // Scan queries
+    if (lowerQuery.includes('scan')) {
+      return "🔍 I can help you run different types of scans:\n\n• **Discovery Scan**: Find new devices on your network\n• **Vulnerability Scan**: Check devices for security issues\n• **Compliance Scan**: Verify against security frameworks\n• **Quick Scan**: Fast assessment of known devices\n\nWould you like me to start a specific scan, or navigate to the Scan Manager?";
+    }
+    
+    // Dashboard/Overview queries
+    if (lowerQuery.includes('overview') || lowerQuery.includes('status') || lowerQuery.includes('dashboard') || lowerQuery.includes('summary')) {
+      try {
+        const result = await executeIoTSecureTool('get_dashboard_overview', {});
+        const data = result.data;
+        if (data) {
+          return `📊 **Security Overview:**\n\n• 🛡️ Risk Score: ${data.overallRiskScore}/100\n• 📡 Total Devices: ${data.totalDevices} (${data.devicesOnline} online)\n• 🔓 Vulnerabilities: ${data.totalVulnerabilities} (${data.criticalVulnerabilities} critical)\n• 🚨 Active Alerts: ${data.activeAlerts}\n• 🔍 Scans Running: ${data.scansRunning}\n\nWould you like me to drill down into any specific area?`;
+        }
+      } catch (err) {
+        // Fallback
+      }
+      return "Check the Dashboard for a complete overview of your IoT security posture, including risk scores, device counts, and recent activity.";
+    }
+    
+    // Quarantine queries
+    if (lowerQuery.includes('quarantine') || lowerQuery.includes('isolate') || lowerQuery.includes('block')) {
+      return "🔒 I can help you quarantine suspicious devices. To quarantine a device:\n\n1. Identify the device by name or IP\n2. Tell me which device to quarantine\n3. Provide a reason for the action\n\nFor example: \"Quarantine the lobby camera due to suspicious activity\"\n\nOr navigate to the Device Inventory and use the quarantine button.";
+    }
+    
+    // Help/General queries
+    return `I'm here to help secure your IoT environment! Here's what I can do:\n\n**📡 Device Management**\n• Discover and inventory devices\n• View device details and risk scores\n• Quarantine suspicious devices\n\n**🔓 Security Analysis**\n• Scan for vulnerabilities\n• Search CVE databases\n• Analyze firmware\n\n**🌐 Network Security**\n• Visualize network topology\n• Create network segments\n• Manage firewall rules\n\n**🚨 Alert Management**\n• View and acknowledge alerts\n• Create alert rules\n• Export security reports\n\nWhat would you like to do?`;
+  };
+
+  // Render main content based on active tab
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return (
+          <div className="space-y-6">
+            <DashboardCard onNavigate={handleNavigate} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <IoTAlertsPanel maxItems={5} />
+              <VulnerabilityPanel />
+            </div>
+          </div>
+        );
+      case 'devices':
+        return <DeviceInventory onScanRequest={() => setActiveTab('scans')} />;
+      case 'vulnerabilities':
+        return <VulnerabilityPanel />;
+      case 'topology':
+        return <NetworkTopology />;
+      case 'alerts':
+        return <IoTAlertsPanel maxItems={50} />;
+      case 'firmware':
+        return (
+          <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-8 text-center">
+            <span className="text-6xl mb-4 block">📦</span>
+            <h2 className="text-2xl font-semibold text-white mb-2">Firmware Analysis</h2>
+            <p className="text-slate-400">Upload and analyze device firmware for vulnerabilities</p>
+            <button className="mt-6 px-6 py-3 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors">
+              Upload Firmware
+            </button>
+          </div>
+        );
+      case 'baselines':
+        return (
+          <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-8 text-center">
+            <span className="text-6xl mb-4 block">📊</span>
+            <h2 className="text-2xl font-semibold text-white mb-2">Behavioral Baselines</h2>
+            <p className="text-slate-400">Monitor device behavior and detect anomalies</p>
+            <button className="mt-6 px-6 py-3 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition-colors">
+              Create Baseline
+            </button>
+          </div>
+        );
+      case 'scans':
+        return <ScanManager />;
+      case 'webportal':
+        return (
+          <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 overflow-hidden h-[calc(100vh-200px)]">
+            <iframe
+              src="https://iotsecure.maula.ai"
+              className="w-full h-full border-0"
+              title="IoTSecure Web Portal"
+            />
+          </div>
+        );
+      case 'canvas':
+        return (
+          <div className="bg-slate-800/50 rounded-xl border border-slate-700/50 p-8 text-center">
+            <span className="text-6xl mb-4 block">🎨</span>
+            <h2 className="text-2xl font-semibold text-white mb-2">IoT Canvas</h2>
+            <p className="text-slate-400">Interactive visual workspace for IoT security analysis</p>
+          </div>
+        );
+      default:
+        return <DashboardCard onNavigate={handleNavigate} />;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-slate-900/80 backdrop-blur-lg border-b border-cyan-500/30">
+        <div className="flex items-center justify-between h-full px-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+            
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
+                <Wifi className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="font-bold text-lg">IoTSecure</h1>
+                <p className="text-xs text-cyan-400">IoT Device Security</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {/* Quick Stats */}
+            <div className="hidden md:flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-2 px-3 py-1 bg-slate-800/50 rounded-lg">
+                <Wifi className="w-4 h-4 text-green-400" />
+                <span>{overview?.devicesOnline || 0} Online</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1 bg-slate-800/50 rounded-lg">
+                <AlertTriangle className="w-4 h-4 text-orange-400" />
+                <span>{overview?.criticalVulnerabilities || 0} Critical</span>
+              </div>
+            </div>
+
+            {/* Notifications */}
+            <button className="relative p-2 hover:bg-slate-800 rounded-lg transition-colors">
+              <Bell className="w-5 h-5" />
+              {notifications > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center text-xs bg-red-500 rounded-full px-1">
+                  {notifications}
+                </span>
+              )}
+            </button>
+
+            {/* Refresh */}
+            <button 
+              onClick={fetchOverview}
+              className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+
+            {/* Settings */}
+            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
+              <SettingsIcon className="w-5 h-5" />
+            </button>
+
+            {/* Chat Toggle */}
+            <button
+              onClick={() => setChatOpen(!chatOpen)}
+              className={`p-2 rounded-lg transition-colors ${chatOpen ? 'bg-cyan-500 text-white' : 'hover:bg-slate-800'}`}
+            >
+              <Bot className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Layout */}
+      <div className="flex pt-16 h-screen">
+        {/* Sidebar */}
+        <aside className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-slate-900/50 border-r border-slate-700/50 transition-all duration-300 z-40 ${
+          sidebarOpen ? 'w-64' : 'w-16'
+        }`}>
+          <nav className="p-3 space-y-1">
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id as Tab)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                  activeTab === item.id
+                    ? 'bg-cyan-500/20 text-cyan-400 border-l-2 border-cyan-400'
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                <span className="text-xl">{item.icon}</span>
+                {sidebarOpen && <span className="text-sm">{item.label}</span>}
+              </button>
+            ))}
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-16'} ${chatOpen ? 'mr-96' : ''}`}>
+          <div className="p-6 max-w-7xl mx-auto">
+            {/* Breadcrumb */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-white capitalize flex items-center gap-2">
+                {NAV_ITEMS.find(n => n.id === activeTab)?.icon}
+                {NAV_ITEMS.find(n => n.id === activeTab)?.label || 'Dashboard'}
+              </h2>
+            </div>
+
+            {/* Tab Content */}
+            {renderContent()}
+          </div>
+        </main>
+
+        {/* AI Chat Panel */}
+        {chatOpen && (
+          <aside className="fixed right-0 top-16 w-96 h-[calc(100vh-4rem)] bg-slate-900/80 backdrop-blur-lg border-l border-cyan-500/30 flex flex-col">
+            {/* Chat Header */}
+            <div className="p-4 border-b border-slate-700/50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">IoT Security AI</h3>
+                    <p className="text-xs text-cyan-400">Online • Ready to help</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                      message.role === 'user'
+                        ? 'bg-cyan-500 text-white rounded-br-md'
+                        : 'bg-slate-800 text-slate-100 rounded-bl-md'
+                    }`}
+                  >
+                    <div className="whitespace-pre-wrap text-sm">{message.content}</div>
+                    <div className={`text-xs mt-1 ${message.role === 'user' ? 'text-cyan-200' : 'text-slate-500'}`}>
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </div>
+                </div>
+              ))}
+              
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="bg-slate-800 rounded-2xl px-4 py-3 rounded-bl-md">
+                    <div className="flex gap-1">
+                      <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                      <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                      <span className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input */}
+            <div className="p-4 border-t border-slate-700/50">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+                  placeholder="Ask about IoT security..."
+                  className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-colors"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!inputValue.trim() || isTyping}
+                  className="p-3 bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={() => setInputValue('Show device inventory')}
+                  className="px-2 py-1 text-xs bg-slate-800 text-slate-400 rounded-lg hover:bg-slate-700 transition-colors"
+                >
+                  📡 Devices
+                </button>
+                <button
+                  onClick={() => setInputValue('Run a discovery scan')}
+                  className="px-2 py-1 text-xs bg-slate-800 text-slate-400 rounded-lg hover:bg-slate-700 transition-colors"
+                >
+                  🔍 Scan
+                </button>
+                <button
+                  onClick={() => setInputValue('Show vulnerabilities')}
+                  className="px-2 py-1 text-xs bg-slate-800 text-slate-400 rounded-lg hover:bg-slate-700 transition-colors"
+                >
+                  🔓 Vulns
+                </button>
+                <button
+                  onClick={() => setInputValue('Security overview')}
+                  className="px-2 py-1 text-xs bg-slate-800 text-slate-400 rounded-lg hover:bg-slate-700 transition-colors"
+                >
+                  📊 Status
+                </button>
+              </div>
+            </div>
+          </aside>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default App;

@@ -1,323 +1,182 @@
+/**
+ * Scan Model - Network and Security Scan Operations
+ * Tracks device discovery and vulnerability scans
+ */
+
 const mongoose = require('mongoose');
 
 const scanSchema = new mongoose.Schema({
-  // Scan Identification
   scanId: {
     type: String,
     required: true,
     unique: true,
     index: true
   },
-  
-  // Scan Type
+  name: { type: String, required: true },
   type: {
     type: String,
-    enum: [
-      'discovery',        // Find new devices
-      'vulnerability',    // CVE/Security scan
-      'firmware',         // Firmware analysis
-      'port',             // Port scanning
-      'service',          // Service detection
-      'compliance',       // Compliance check
-      'behavioral',       // Behavior baseline
-      'full'              // All of the above
-    ],
-    required: true,
-    index: true
+    enum: ['discovery', 'vulnerability', 'firmware', 'compliance', 'full', 'quick'],
+    required: true
   },
   
   // Status
   status: {
     type: String,
-    enum: ['pending', 'queued', 'running', 'paused', 'completed', 'failed', 'cancelled'],
+    enum: ['pending', 'running', 'completed', 'failed', 'cancelled', 'paused'],
     default: 'pending',
     index: true
   },
+  progress: { type: Number, min: 0, max: 100, default: 0 },
   
   // Target Configuration
-  target: {
-    type: {
-      type: String,
-      enum: ['ip', 'ip_range', 'subnet', 'device', 'device_group', 'network_segment', 'all'],
-      required: true
-    },
-    value: String,
-    ipStart: String,
-    ipEnd: String,
-    subnet: String,
-    deviceIds: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Device'
-    }],
-    excludeIps: [String],
-    excludeDevices: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Device'
-    }]
+  targets: {
+    type: { type: String, enum: ['network', 'devices', 'segment', 'all'] },
+    networks: [String],
+    devices: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Device' }],
+    segments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Segment' }],
+    excludeIPs: [String]
   },
   
   // Scan Configuration
   config: {
-    // Port scan settings
-    portRange: {
-      start: { type: Number, default: 1 },
-      end: { type: Number, default: 65535 }
-    },
-    specificPorts: [Number],
-    commonPortsOnly: { type: Boolean, default: true },
-    
-    // Speed/Aggressiveness
-    scanSpeed: {
-      type: String,
-      enum: ['slow', 'normal', 'fast', 'aggressive'],
-      default: 'normal'
-    },
-    timeout: { type: Number, default: 5000 },
-    retries: { type: Number, default: 2 },
-    concurrent: { type: Number, default: 50 },
-    
-    // Feature toggles
-    serviceDetection: { type: Boolean, default: true },
-    osDetection: { type: Boolean, default: true },
-    bannerGrabbing: { type: Boolean, default: true },
-    vulnerabilityCheck: { type: Boolean, default: true },
-    credentialCheck: { type: Boolean, default: false },
-    
-    // External APIs
-    useShodan: { type: Boolean, default: false },
-    useCensys: { type: Boolean, default: false },
-    useNvd: { type: Boolean, default: true },
-    useVirusTotal: { type: Boolean, default: false }
-  },
-  
-  // Scheduling
-  schedule: {
-    type: {
-      type: String,
-      enum: ['once', 'hourly', 'daily', 'weekly', 'monthly', 'custom']
-    },
-    cronExpression: String,
-    nextRun: Date,
-    lastRun: Date,
-    enabled: { type: Boolean, default: true }
+    portRange: { type: String, default: '1-1024' },
+    scanSpeed: { type: String, enum: ['slow', 'normal', 'fast', 'aggressive'], default: 'normal' },
+    deepScan: { type: Boolean, default: false },
+    checkVulnerabilities: { type: Boolean, default: true },
+    checkFirmware: { type: Boolean, default: false },
+    checkCredentials: { type: Boolean, default: true },
+    maxConcurrency: { type: Number, default: 10 }
   },
   
   // Timing
+  scheduledAt: Date,
   startedAt: Date,
   completedAt: Date,
-  pausedAt: Date,
-  estimatedDuration: Number,
-  actualDuration: Number,
-  
-  // Progress
-  progress: {
-    percentage: { type: Number, default: 0, min: 0, max: 100 },
-    currentPhase: String,
-    currentTarget: String,
-    targetsTotal: { type: Number, default: 0 },
-    targetsScanned: { type: Number, default: 0 },
-    portsScanned: { type: Number, default: 0 }
-  },
+  duration: Number, // in seconds
   
   // Results Summary
   results: {
-    devicesFound: { type: Number, default: 0 },
-    newDevices: { type: Number, default: 0 },
-    devicesOnline: { type: Number, default: 0 },
-    devicesOffline: { type: Number, default: 0 },
-    openPorts: { type: Number, default: 0 },
-    servicesDetected: { type: Number, default: 0 },
+    devicesScanned: { type: Number, default: 0 },
+    devicesDiscovered: { type: Number, default: 0 },
     vulnerabilitiesFound: { type: Number, default: 0 },
     criticalVulns: { type: Number, default: 0 },
     highVulns: { type: Number, default: 0 },
     mediumVulns: { type: Number, default: 0 },
     lowVulns: { type: Number, default: 0 },
-    defaultCredentials: { type: Number, default: 0 },
-    weakPasswords: { type: Number, default: 0 }
+    portsFound: { type: Number, default: 0 },
+    servicesFound: { type: Number, default: 0 },
+    defaultCredentials: { type: Number, default: 0 }
   },
   
-  // Discovered Devices (for discovery scans)
-  discoveredDevices: [{
+  // Detailed Findings
+  findings: [{
+    deviceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Device' },
     ipAddress: String,
-    macAddress: String,
-    hostname: String,
-    type: String,
-    manufacturer: String,
-    isNew: Boolean,
-    deviceRef: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Device'
-    }
+    type: { type: String, enum: ['vulnerability', 'service', 'credential', 'anomaly', 'firmware'] },
+    severity: { type: String, enum: ['critical', 'high', 'medium', 'low', 'info'] },
+    title: String,
+    description: String,
+    details: mongoose.Schema.Types.Mixed
   }],
   
-  // Vulnerabilities Found
-  vulnerabilitiesDetected: [{
-    cveId: String,
-    severity: String,
-    cvssScore: Number,
-    deviceId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Device'
-    },
-    vulnerabilityRef: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Vulnerability'
-    }
-  }],
-  
-  // Errors/Warnings
+  // Errors
   errors: [{
-    timestamp: Date,
     target: String,
-    code: String,
-    message: String,
-    fatal: Boolean
-  }],
-  warnings: [{
-    timestamp: Date,
-    target: String,
-    message: String
+    error: String,
+    timestamp: Date
   }],
   
-  // Initiator
-  initiatedBy: {
-    type: String,
-    enum: ['user', 'schedule', 'api', 'system', 'alert_trigger'],
-    default: 'user'
-  },
-  userId: String,
-  userName: String,
-  
-  // Raw Data (optional, for detailed analysis)
-  rawOutput: {
+  // Schedule (for recurring scans)
+  schedule: {
     enabled: { type: Boolean, default: false },
-    path: String,
-    size: Number
+    cronExpression: String,
+    nextRun: Date,
+    lastRun: Date
   },
   
   // Notifications
   notifications: {
-    onComplete: Boolean,
-    onCriticalVuln: Boolean,
-    onNewDevice: Boolean,
-    channels: [{
-      type: { type: String, enum: ['email', 'slack', 'webhook', 'sms'] },
-      destination: String
-    }]
+    onComplete: { type: Boolean, default: true },
+    onCritical: { type: Boolean, default: true },
+    channels: [{ type: String, enum: ['email', 'slack', 'webhook', 'sms'] }],
+    recipients: [String]
   },
   
   // Metadata
-  metadata: {
-    type: mongoose.Schema.Types.Mixed,
-    default: {}
-  },
-  
-  // Tags
-  tags: [String]
-}, {
-  timestamps: true
-});
+  tags: [String],
+  notes: String,
+  createdBy: String
+}, { timestamps: true });
 
 // Indexes
-scanSchema.index({ status: 1, startedAt: -1 });
+scanSchema.index({ status: 1, createdAt: -1 });
 scanSchema.index({ type: 1, status: 1 });
-scanSchema.index({ 'schedule.nextRun': 1, 'schedule.enabled': 1 });
-scanSchema.index({ userId: 1, createdAt: -1 });
+scanSchema.index({ 'schedule.nextRun': 1 });
 
-// Virtual for scan duration
-scanSchema.virtual('duration').get(function() {
-  if (this.startedAt && this.completedAt) {
-    return this.completedAt - this.startedAt;
-  }
-  if (this.startedAt) {
-    return Date.now() - this.startedAt;
-  }
-  return 0;
-});
-
-// Virtual for is running
-scanSchema.virtual('isRunning').get(function() {
-  return this.status === 'running';
-});
-
-// Pre-save to generate scanId
-scanSchema.pre('save', function(next) {
-  if (!this.scanId) {
-    this.scanId = `scan_${this.type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }
-  next();
-});
-
-// Static method to get active scans
-scanSchema.statics.getActive = function() {
-  return this.find({
-    status: { $in: ['running', 'pending', 'queued'] }
-  }).sort({ startedAt: -1 });
+// Static methods
+scanSchema.statics.getStats = async function() {
+  const [total, byStatus, byType, avgDuration] = await Promise.all([
+    this.countDocuments(),
+    this.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
+    this.aggregate([{ $group: { _id: '$type', count: { $sum: 1 } } }]),
+    this.aggregate([
+      { $match: { status: 'completed', duration: { $exists: true } } },
+      { $group: { _id: null, avg: { $avg: '$duration' } } }
+    ])
+  ]);
+  return { 
+    total, 
+    byStatus: byStatus.reduce((acc, s) => ({ ...acc, [s._id]: s.count }), {}),
+    byType: byType.reduce((acc, t) => ({ ...acc, [t._id]: t.count }), {}),
+    avgDuration: avgDuration[0]?.avg || 0
+  };
 };
 
-// Static method to get scheduled scans
-scanSchema.statics.getScheduled = function() {
-  return this.find({
-    'schedule.enabled': true,
-    'schedule.nextRun': { $exists: true }
-  }).sort({ 'schedule.nextRun': 1 });
-};
-
-// Static method to get recent completed
 scanSchema.statics.getRecent = function(limit = 10) {
-  return this.find({
-    status: 'completed'
-  })
-  .sort({ completedAt: -1 })
-  .limit(limit);
+  return this.find()
+    .sort({ createdAt: -1 })
+    .limit(limit)
+    .select('scanId name type status progress results startedAt completedAt');
 };
 
-// Instance method to start scan
+scanSchema.statics.getRunning = function() {
+  return this.find({ status: 'running' }).sort({ startedAt: -1 });
+};
+
+scanSchema.statics.getScheduled = function() {
+  return this.find({ 'schedule.enabled': true, 'schedule.nextRun': { $exists: true } })
+    .sort({ 'schedule.nextRun': 1 });
+};
+
+// Instance methods
 scanSchema.methods.start = async function() {
   this.status = 'running';
   this.startedAt = new Date();
-  this.progress.percentage = 0;
-  this.progress.currentPhase = 'initializing';
+  this.progress = 0;
   return this.save();
 };
 
-// Instance method to update progress
-scanSchema.methods.updateProgress = async function(percentage, phase, currentTarget) {
-  this.progress.percentage = percentage;
-  this.progress.currentPhase = phase;
-  this.progress.currentTarget = currentTarget;
-  return this.save();
-};
-
-// Instance method to complete scan
 scanSchema.methods.complete = async function(results) {
   this.status = 'completed';
   this.completedAt = new Date();
-  this.progress.percentage = 100;
-  this.actualDuration = this.completedAt - this.startedAt;
-  if (results) {
-    Object.assign(this.results, results);
-  }
+  this.progress = 100;
+  this.duration = Math.floor((this.completedAt - this.startedAt) / 1000);
+  if (results) this.results = { ...this.results, ...results };
   return this.save();
 };
 
-// Instance method to fail scan
 scanSchema.methods.fail = async function(error) {
   this.status = 'failed';
   this.completedAt = new Date();
-  this.errors.push({
-    timestamp: new Date(),
-    message: error.message || error,
-    fatal: true
-  });
+  this.errors.push({ target: 'scan', error: error.message || error, timestamp: new Date() });
   return this.save();
 };
 
-// Instance method to cancel scan
-scanSchema.methods.cancel = async function(reason) {
-  this.status = 'cancelled';
-  this.completedAt = new Date();
-  this.metadata.cancelReason = reason;
+scanSchema.methods.updateProgress = async function(progress, findings = []) {
+  this.progress = progress;
+  if (findings.length > 0) {
+    this.findings.push(...findings);
+  }
   return this.save();
 };
 

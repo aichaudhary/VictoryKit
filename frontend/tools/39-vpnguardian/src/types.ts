@@ -485,3 +485,37 @@ export interface Tab {
   status: 'loading' | 'active' | 'complete' | 'error';
   aiGenerated: boolean;
 }
+
+// VPN Constants (exported from constants.ts for component imports)
+export const VPN_PROVIDERS = [
+  { id: 'openvpn', name: 'OpenVPN', color: '#FF6B35', icon: '🔒' },
+  { id: 'wireguard', name: 'WireGuard', color: '#4ECDC4', icon: '⚡' },
+  { id: 'cisco', name: 'Cisco AnyConnect', color: '#1E3A8A', icon: '🌐' },
+  { id: 'paloalto', name: 'Palo Alto GlobalProtect', color: '#DC2626', icon: '🛡️' },
+  { id: 'fortinet', name: 'Fortinet FortiClient', color: '#059669', icon: '🏰' },
+  { id: 'checkpoint', name: 'Check Point Endpoint Security', color: '#7C3AED', icon: '✅' },
+  { id: 'juniper', name: 'Juniper Pulse Secure', color: '#EA580C', icon: '🌿' },
+  { id: 'microsoft', name: 'Microsoft Always On VPN', color: '#2563EB', icon: '🪟' },
+  { id: 'aws', name: 'AWS Client VPN', color: '#FF9900', icon: '☁️' },
+  { id: 'azure', name: 'Azure Point-to-Site VPN', color: '#0078D4', icon: '☁️' },
+  { id: 'gcp', name: 'Google Cloud VPN', color: '#4285F4', icon: '☁️' },
+  { id: 'cloudflare', name: 'Cloudflare WARP', color: '#F59E0B', icon: '⚡' },
+  { id: 'nordvpn', name: 'NordVPN', color: '#4F46E5', icon: '🛡️' },
+  { id: 'expressvpn', name: 'ExpressVPN', color: '#10B981', icon: '🚀' },
+  { id: 'other', name: 'Other', color: '#6B7280', icon: '🔧' }
+];
+
+export const CONNECTION_STATUSES = [
+  { id: 'connected', label: 'Connected', color: '#10B981', icon: '🟢' },
+  { id: 'connecting', label: 'Connecting', color: '#F59E0B', icon: '🟡' },
+  { id: 'disconnected', label: 'Disconnected', color: '#6B7280', icon: '⚪' },
+  { id: 'failed', label: 'Failed', color: '#EF4444', icon: '🔴' },
+  { id: 'suspended', label: 'Suspended', color: '#F97316', icon: '🟠' }
+];
+
+export const THREAT_LEVELS = [
+  { id: 'low', label: 'Low', color: '#10B981', bgColor: '#D1FAE5' },
+  { id: 'medium', label: 'Medium', color: '#F59E0B', bgColor: '#FEF3C7' },
+  { id: 'high', label: 'High', color: '#F97316', bgColor: '#FED7AA' },
+  { id: 'critical', label: 'Critical', color: '#EF4444', bgColor: '#FECACA' }
+];
