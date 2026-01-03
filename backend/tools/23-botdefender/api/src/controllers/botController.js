@@ -229,6 +229,95 @@ const botController = {
       res.status(500).json({ success: false, error: error.message });
     }
   },
+
+  // Get live traffic data
+  async getLiveTraffic(req, res) {
+    try {
+      const { window = 60 } = req.query; // seconds
+      const since = new Date(Date.now() - window * 1000);
+      
+      const [recent, stats] = await Promise.all([
+        Bot.find({ updatedAt: { $gte: since } })
+          .sort({ updatedAt: -1 })
+          .limit(100)
+          .select("botId classification detection action identification.ipAddress updatedAt"),
+        Bot.aggregate([
+          { $match: { updatedAt: { $gte: since } } },
+          {
+            $group: {
+              _id: null,
+              total: { $sum: 1 },
+              bots: { $sum: { $cond: [{ $eq: ["$classification.type", "bad"] }, 1, 0] } },
+              humans: { $sum: { $cond: [{ $eq: ["$classification.type", "good"] }, 1, 0] } },
+              unknown: { $sum: { $cond: [{ $eq: ["$classification.type", "unknown"] }, 1, 0] } },
+              blocked: { $sum: { $cond: [{ $eq: ["$action.current", "block"] }, 1, 0] } },
+              challenged: { $sum: { $cond: [{ $eq: ["$action.current", "challenge"] }, 1, 0] } },
+              avgScore: { $avg: "$detection.score" }
+            }
+          }
+        ])
+      ]);
+      
+      res.json({
+        success: true,
+        data: {
+          window,
+          timestamp: new Date().toISOString(),
+          traffic: recent,
+          stats: stats[0] || { total: 0, bots: 0, humans: 0, unknown: 0, blocked: 0, challenged: 0, avgScore: 0 }
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Bulk action on multiple bots
+  async bulkAction(req, res) {
+    try {
+      const { botIds, action, reason } = req.body;
+      
+      if (!botIds || !Array.isArray(botIds) || botIds.length === 0) {
+        return res.status(400).json({ success: false, error: "Bot IDs array is required" });
+      }
+      
+      if (!["block", "allow", "challenge", "monitor"].includes(action)) {
+        return res.status(400).json({ success: false, error: "Invalid action" });
+      }
+      
+      const updateData = {
+        "action.current": action,
+        status: action === "block" ? "blocked" : action === "allow" ? "allowed" : "active"
+      };
+      
+      if (action === "allow") {
+        updateData["classification.type"] = "good";
+      }
+      
+      const result = await Bot.updateMany(
+        { $or: [{ _id: { $in: botIds } }, { botId: { $in: botIds } }] },
+        {
+          $set: updateData,
+          $push: {
+            "action.history": {
+              action,
+              reason: reason || `Bulk ${action}`,
+              timestamp: new Date(),
+              performedBy: req.user?.id || "system"
+            }
+          }
+        }
+      );
+      
+      res.json({
+        success: true,
+        message: `${result.modifiedCount} bots updated`,
+        modifiedCount: result.modifiedCount
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
 };
 
 module.exports = botController;

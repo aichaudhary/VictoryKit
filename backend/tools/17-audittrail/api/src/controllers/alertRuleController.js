@@ -97,6 +97,29 @@ exports.delete = async (req, res) => {
   }
 };
 
+exports.toggle = async (req, res) => {
+  try {
+    const rule = await AlertRule.findById(req.params.id);
+    if (!rule) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Alert rule not found" });
+    }
+    
+    rule.enabled = !rule.enabled;
+    rule.isActive = rule.enabled; // For compatibility
+    await rule.save();
+    
+    res.json({ 
+      success: true, 
+      data: rule,
+      message: `Rule ${rule.enabled ? 'enabled' : 'disabled'}`
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
 exports.getTriggeredAlerts = async (req, res) => {
   try {
     const { startDate, endDate, limit = 100 } = req.query;

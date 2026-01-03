@@ -170,6 +170,59 @@ const challengeController = {
       res.status(500).json({ success: false, error: error.message });
     }
   },
+
+  // Get challenge configuration
+  async getConfig(req, res) {
+    try {
+      // Mock configuration - in production, this would come from database
+      const config = {
+        recaptcha: {
+          enabled: true,
+          siteKey: process.env.RECAPTCHA_SITE_KEY || '',
+          secretKey: process.env.RECAPTCHA_SECRET_KEY || '',
+          scoreThreshold: parseFloat(process.env.RECAPTCHA_SCORE_THRESHOLD) || 0.5,
+        },
+        hcaptcha: {
+          enabled: false,
+          siteKey: process.env.HCAPTCHA_SITE_KEY || '',
+          secretKey: process.env.HCAPTCHA_SECRET_KEY || '',
+        },
+        turnstile: {
+          enabled: false,
+          siteKey: process.env.TURNSTILE_SITE_KEY || '',
+          secretKey: process.env.TURNSTILE_SECRET_KEY || '',
+        },
+        proofOfWork: {
+          enabled: true,
+          difficulty: 4,
+          timeout: 30000,
+        },
+        fallback: {
+          onFail: 'block',
+          maxAttempts: 3,
+        },
+      };
+
+      res.json({ success: true, data: config });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Update challenge configuration
+  async updateConfig(req, res) {
+    try {
+      // In production, save to database
+      // For now, just return success
+      res.json({
+        success: true,
+        message: 'Challenge configuration updated',
+        data: req.body
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
 };
 
 // Helper functions

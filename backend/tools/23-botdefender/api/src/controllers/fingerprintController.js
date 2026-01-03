@@ -175,6 +175,116 @@ const fingerprintController = {
       res.status(500).json({ success: false, error: error.message });
     }
   },
+
+  // Compare two fingerprints
+  async compare(req, res) {
+    try {
+      const { id1, id2 } = req.params;
+
+      const [fp1, fp2] = await Promise.all([
+        Fingerprint.findOne({ $or: [{ _id: id1 }, { fingerprintId: id1 }] }),
+        Fingerprint.findOne({ $or: [{ _id: id2 }, { fingerprintId: id2 }] }),
+      ]);
+
+      if (!fp1 || !fp2) {
+        return res
+          .status(404)
+          .json({ success: false, error: "One or both fingerprints not found" });
+      }
+
+      // Simple similarity calculation based on common properties
+      const similarity = calculateFingerprintSimilarity(fp1, fp2);
+
+      res.json({
+        success: true,
+        data: {
+          fingerprint1: fp1,
+          fingerprint2: fp2,
+          similarity,
+          isSimilar: similarity > 0.8,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Get fingerprint clusters
+  async getClusters(req, res) {
+    try {
+      // Group fingerprints by similar characteristics
+      const clusters = await Fingerprint.aggregate([
+        {
+          $group: {
+            _id: {
+              userAgent: "$browser.userAgent",
+              screen: "$screen.resolution",
+              timezone: "$location.timezone",
+            },
+            fingerprints: { $push: "$$ROOT" },
+            count: { $sum: 1 },
+            firstSeen: { $min: "$firstSeen" },
+            lastSeen: { $max: "$lastSeen" },
+          },
+        },
+        {
+          $match: {
+            count: { $gt: 1 }, // Only clusters with multiple fingerprints
+          },
+        },
+        {
+          $sort: { count: -1 },
+        },
+        {
+          $limit: 50,
+        },
+      ]);
+
+      res.json({ success: true, data: clusters });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
 };
 
 module.exports = fingerprintController;
+
+// Helper function to calculate fingerprint similarity
+function calculateFingerprintSimilarity(fp1, fp2) {
+  let score = 0;
+  let total = 0;
+
+  // Compare browser properties
+  if (fp1.browser?.userAgent && fp2.browser?.userAgent) {
+    total++;
+    if (fp1.browser.userAgent === fp2.browser.userAgent) score++;
+  }
+
+  // Compare screen resolution
+  if (fp1.screen?.resolution && fp2.screen?.resolution) {
+    total++;
+    if (fp1.screen.resolution === fp2.screen.resolution) score++;
+  }
+
+  // Compare timezone
+  if (fp1.location?.timezone && fp2.location?.timezone) {
+    total++;
+    if (fp1.location.timezone === fp2.location.timezone) score++;
+  }
+
+  // Compare language
+  if (fp1.browser?.language && fp2.browser?.language) {
+    total++;
+    if (fp1.browser.language === fp2.browser.language) score++;
+  }
+
+  // Compare plugins count
+  if (fp1.plugins && fp2.plugins) {
+    total++;
+    const diff = Math.abs(fp1.plugins.length - fp2.plugins.length);
+    if (diff === 0) score += 1;
+    else if (diff <= 2) score += 0.5;
+  }
+
+  return total > 0 ? score / total : 0;
+}

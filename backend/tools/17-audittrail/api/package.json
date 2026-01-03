@@ -1,11 +1,12 @@
 {
   "name": "audittrail-api",
-  "version": "1.0.0",
-  "description": "AuditTrail - Comprehensive Audit Logging API",
+  "version": "2.0.0",
+  "description": "AuditTrail - Comprehensive Compliance Audit Logging API with Real-time Streaming",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Tests pending\" && exit 0"
   },
   "dependencies": {
     "axios": "^1.6.5",
@@ -15,7 +16,8 @@
     "helmet": "^7.1.0",
     "mongoose": "^8.0.4",
     "morgan": "^1.10.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "ws": "^8.14.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

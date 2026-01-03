@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Shield, Menu, ChevronLeft, Bell, Settings as SettingsIcon,
   Send, Bot, User, Sparkles, Wifi, AlertTriangle,
-  RefreshCw, Activity, Server, Lock, Globe, Cpu,
-  Radio, Zap, Eye, Database
+  RefreshCw, Activity, Lock, Globe, Cpu, Database, Eye
 } from 'lucide-react';
 
 // IoT Security Components
@@ -17,33 +16,36 @@ import {
 } from './components';
 
 // Types and constants
-import { 
-  Device, Alert, Vulnerability, Scan, DashboardOverview,
-  Message, SettingsState, Tab
-} from './types';
-import { NAV_ITEMS, DEFAULT_SETTINGS, API_ENDPOINTS, PROVIDER_CONFIG } from './constants';
+import { DashboardOverview } from './types';
+import { NAV_ITEMS } from './constants';
 
 // Services
 import { iotSecureAPI } from './services/iotSecureAPI';
+
+// Tab type for navigation
+type Tab = 'dashboard' | 'devices' | 'vulnerabilities' | 'alerts' | 'topology' | 'scans';
+
+// Chat message interface (local type for chat UI)
+interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
 
 const App: React.FC = () => {
   // UI State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
-  const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS);
   
   // Data state
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
-  const [devices, setDevices] = useState<Device[]>([]);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [vulnerabilities, setVulnerabilities] = useState<Vulnerability[]>([]);
-  const [scans, setScans] = useState<Scan[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [notifications, setNotifications] = useState<number>(0);
   
   // Chat state
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
       role: 'assistant',
@@ -69,46 +71,61 @@ const App: React.FC = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch dashboard overview
+      setIsLoading(true);
+      // Fetch dashboard overview for sidebar stats
       const overviewRes = await iotSecureAPI.dashboard.getOverview();
-      if (overviewRes.data) setOverview(overviewRes.data);
-      
-      // Fetch devices
-      const devicesRes = await iotSecureAPI.devices.list({ limit: 100 });
-      if (devicesRes.data) setDevices(devicesRes.data.devices || []);
-      
-      // Fetch active alerts
-      const alertsRes = await iotSecureAPI.alerts.getActive();
-      if (alertsRes.data) {
-        setAlerts(alertsRes.data);
-        setNotifications(alertsRes.data.length);
+      if (overviewRes.data) {
+        setOverview(overviewRes.data);
+        setNotifications(overviewRes.data.alerts?.byStatus?.new || 0);
       }
-      
-      // Fetch vulnerabilities
-      const vulnRes = await iotSecureAPI.vulnerabilities.list({ limit: 50 });
-      if (vulnRes.data) setVulnerabilities(vulnRes.data.vulnerabilities || []);
-      
     } catch (err) {
       console.error('Failed to fetch dashboard data:', err);
-      // Set demo data on error
+      // Demo data structure matching DashboardOverview type
       setOverview({
-        totalDevices: 47,
-        onlineDevices: 42,
-        offlineDevices: 5,
-        criticalVulnerabilities: 3,
-        highVulnerabilities: 8,
-        mediumVulnerabilities: 15,
-        activeAlerts: 5,
-        securityScore: 72,
-        devicesByType: {
-          camera: 12,
-          sensor: 18,
-          controller: 8,
-          gateway: 4,
-          smart_device: 5
+        riskScore: 72,
+        devices: {
+          total: 47,
+          byStatus: { online: 42, offline: 5, degraded: 0, maintenance: 0, quarantined: 0, decommissioned: 0 },
+          byType: { camera: 12, sensor: 18, controller: 8, gateway: 4, thermostat: 3, router: 2, unknown: 0, switch: 0, access_point: 0, smart_lock: 0, smart_plug: 0, hvac: 0, lighting: 0, medical_device: 0, industrial_plc: 0, scada: 0, building_automation: 0, environmental_sensor: 0, wearable: 0, vehicle: 0, smart_meter: 0, security_system: 0, voice_assistant: 0 },
+          byRiskLevel: { low: 20, medium: 15, high: 8, critical: 4 },
+          byCriticality: { low: 10, medium: 20, high: 12, critical: 5 }
         },
-        recentScans: []
+        vulnerabilities: {
+          total: 26,
+          bySeverity: { critical: 3, high: 8, medium: 10, low: 5, info: 0 },
+          byStatus: { open: 18, in_progress: 5, mitigated: 3, resolved: 0, accepted: 0, false_positive: 0 },
+          exploitable: 5
+        },
+        alerts: {
+          total: 5,
+          bySeverity: { critical: 1, high: 2, medium: 2, low: 0, info: 0 },
+          byStatus: { new: 3, acknowledged: 2, investigating: 0, resolved: 0, false_positive: 0, escalated: 0 },
+          byType: {} as Record<string, number>
+        },
+        scans: {
+          total: 10,
+          byStatus: { pending: 0, running: 1, completed: 8, failed: 1, cancelled: 0, scheduled: 0 },
+          byType: { discovery: 4, vulnerability: 3, firmware: 2, compliance: 1, full: 0, quick: 0 },
+          averageDuration: 300
+        },
+        segments: {
+          total: 4,
+          byType: {} as Record<string, number>,
+          bySecurityLevel: {} as Record<string, number>,
+          active: 4
+        },
+        firmware: {
+          total: 47,
+          analyzed: 40,
+          vulnerable: 8,
+          outdated: 12,
+          malicious: 0
+        },
+        lastUpdated: new Date().toISOString()
       });
+      setNotifications(3);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -121,16 +138,17 @@ const App: React.FC = () => {
     }
     
     if (lowerQuery.includes('device') && (lowerQuery.includes('list') || lowerQuery.includes('show') || lowerQuery.includes('inventory'))) {
-      const deviceCount = devices.length || overview?.totalDevices || 0;
-      return `📡 **Device Inventory Summary**\n\nTotal Devices: ${deviceCount}\n• Online: ${overview?.onlineDevices || 0}\n• Offline: ${overview?.offlineDevices || 0}\n\nNavigate to the **Devices** tab for detailed inventory.`;
+      const deviceCount = overview?.devices?.total || 0;
+      return `📡 **Device Inventory Summary**\n\nTotal Devices: ${deviceCount}\n• Online: ${overview?.devices?.byStatus?.online || 0}\n• Offline: ${overview?.devices?.byStatus?.offline || 0}\n\nNavigate to the **Devices** tab for detailed inventory.`;
     }
     
     if (lowerQuery.includes('vulnerab') || lowerQuery.includes('cve') || lowerQuery.includes('security issue')) {
-      return `🔓 **Vulnerability Overview**\n\n• Critical: ${overview?.criticalVulnerabilities || 0}\n• High: ${overview?.highVulnerabilities || 0}\n• Medium: ${overview?.mediumVulnerabilities || 0}\n\nCheck the **Vulnerabilities** tab for details and remediation steps.`;
+      return `🔓 **Vulnerability Overview**\n\n• Critical: ${overview?.vulnerabilities?.bySeverity?.critical || 0}\n• High: ${overview?.vulnerabilities?.bySeverity?.high || 0}\n• Medium: ${overview?.vulnerabilities?.bySeverity?.medium || 0}\n\nCheck the **Vulnerabilities** tab for details and remediation steps.`;
     }
     
     if (lowerQuery.includes('alert') || lowerQuery.includes('warning') || lowerQuery.includes('notification')) {
-      return \`🚨 **Active Alerts: \${overview?.activeAlerts || 0}**\n\nCheck the **Alerts** tab to view and manage security alerts for your IoT devices.\`;
+      const alertCount = overview?.alerts?.total || 0;
+      return `🚨 **Active Alerts: ${alertCount}**\n\nCheck the **Alerts** tab to view and manage security alerts for your IoT devices.`;
     }
     
     if (lowerQuery.includes('network') || lowerQuery.includes('topology') || lowerQuery.includes('map')) {
@@ -138,9 +156,9 @@ const App: React.FC = () => {
     }
     
     if (lowerQuery.includes('security score') || lowerQuery.includes('score') || lowerQuery.includes('rating')) {
-      const score = overview?.securityScore || 0;
+      const score = overview?.riskScore || 0;
       const status = score >= 80 ? 'Good' : score >= 60 ? 'Fair' : 'Needs Improvement';
-      return \`📊 **Security Score: \${score}/100** (\${status})\n\nFactors affecting your score:\n• Unpatched vulnerabilities\n• Default credentials\n• Outdated firmware\n• Network segmentation\n\nView detailed recommendations in the Dashboard.\`;
+      return `📊 **Security Score: ${score}/100** (${status})\n\nFactors affecting your score:\n• Unpatched vulnerabilities\n• Default credentials\n• Outdated firmware\n• Network segmentation\n\nView detailed recommendations in the Dashboard.`;
     }
     
     if (lowerQuery.includes('help') || lowerQuery.includes('what can you do')) {
@@ -154,7 +172,7 @@ const App: React.FC = () => {
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
-    const userMessage: Message = {
+    const userMessage: ChatMessage = {
       id: Date.now().toString(),
       role: 'user',
       content: inputValue,
@@ -168,7 +186,7 @@ const App: React.FC = () => {
     try {
       const response = await processUserQuery(inputValue);
       
-      const assistantMessage: Message = {
+      const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: response,
@@ -177,7 +195,7 @@ const App: React.FC = () => {
       
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      const errorMessage: Message = {
+      const errorMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: "I apologize, but I encountered an error. Please try again.",
@@ -193,23 +211,17 @@ const App: React.FC = () => {
   const handleStartScan = async (type: string) => {
     setIsLoading(true);
     try {
-      await iotSecureAPI.scans.start({ type, targets: ['*'] });
+      // Use startDiscovery or startVulnerability based on type
+      if (type === 'discovery') {
+        await iotSecureAPI.scans.startDiscovery(['*']);
+      } else {
+        await iotSecureAPI.scans.startVulnerability(['*']);
+      }
       fetchDashboardData();
     } catch (err) {
       console.error('Failed to start scan:', err);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Handle alert acknowledgment
-  const handleAcknowledgeAlert = async (alertId: string) => {
-    try {
-      await iotSecureAPI.alerts.acknowledge(alertId);
-      setAlerts(prev => prev.filter(a => a.id !== alertId));
-      setNotifications(prev => Math.max(0, prev - 1));
-    } catch (err) {
-      console.error('Failed to acknowledge alert:', err);
     }
   };
 
@@ -219,52 +231,8 @@ const App: React.FC = () => {
       case 'dashboard':
         return (
           <div className="space-y-6">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <DashboardCard
-                title="Total Devices"
-                value={overview?.totalDevices || 0}
-                icon={<Cpu className="w-5 h-5" />}
-                trend={{ value: overview?.onlineDevices || 0, label: 'online' }}
-                color="cyan"
-              />
-              <DashboardCard
-                title="Vulnerabilities"
-                value={(overview?.criticalVulnerabilities || 0) + (overview?.highVulnerabilities || 0)}
-                icon={<AlertTriangle className="w-5 h-5" />}
-                trend={{ value: overview?.criticalVulnerabilities || 0, label: 'critical' }}
-                color="red"
-              />
-              <DashboardCard
-                title="Active Alerts"
-                value={overview?.activeAlerts || 0}
-                icon={<Bell className="w-5 h-5" />}
-                color="yellow"
-              />
-              <DashboardCard
-                title="Security Score"
-                value={overview?.securityScore || 0}
-                icon={<Shield className="w-5 h-5" />}
-                suffix="/100"
-                color="green"
-              />
-            </div>
-
-            {/* Device Types */}
-            <div className="bg-slate-800/50 rounded-xl border border-cyan-500/30 p-6">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Radio className="w-5 h-5 text-cyan-400" />
-                Device Distribution
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                {Object.entries(overview?.devicesByType || {}).map(([type, count]) => (
-                  <div key={type} className="bg-slate-900/50 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-cyan-400">{count}</div>
-                    <div className="text-sm text-gray-400 capitalize">{type.replace('_', ' ')}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* Main Dashboard Card - fetches its own data */}
+            <DashboardCard onNavigate={(section) => setActiveTab(section as Tab)} />
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -309,43 +277,37 @@ const App: React.FC = () => {
       case 'devices':
         return (
           <DeviceInventory 
-            devices={devices}
-            onRefresh={fetchDashboardData}
-            onScanDevice={(deviceId) => handleStartScan(\`device:\${deviceId}\`)}
+            onDeviceSelect={(device) => console.log('Selected device:', device)}
+            onScanRequest={() => handleStartScan('discovery')}
           />
         );
 
       case 'vulnerabilities':
         return (
           <VulnerabilityPanel 
-            vulnerabilities={vulnerabilities}
-            onRefresh={fetchDashboardData}
+            onVulnSelect={(vuln) => console.log('Selected vulnerability:', vuln)}
           />
         );
 
       case 'alerts':
         return (
           <IoTAlertsPanel 
-            alerts={alerts}
-            onAcknowledge={handleAcknowledgeAlert}
-            onRefresh={fetchDashboardData}
+            maxItems={20}
+            onAlertClick={(alert) => console.log('Clicked alert:', alert)}
           />
         );
 
       case 'topology':
         return (
           <NetworkTopology 
-            devices={devices}
-            onSelectDevice={(device) => console.log('Selected device:', device)}
+            onNodeSelect={(node) => console.log('Selected node:', node)}
           />
         );
 
       case 'scans':
         return (
           <ScanManager 
-            scans={scans}
-            onStartScan={handleStartScan}
-            onRefresh={fetchDashboardData}
+            onScanComplete={(scan) => console.log('Scan complete:', scan)}
           />
         );
 
@@ -400,7 +362,7 @@ const App: React.FC = () => {
               onClick={fetchDashboardData}
               className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
             >
-              <RefreshCw className={\`w-5 h-5 \${isLoading ? 'animate-spin' : ''}\`} />
+              <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin' : ''}`} />
             </button>
 
             {/* Notifications */}
@@ -421,9 +383,9 @@ const App: React.FC = () => {
             {/* Toggle Chat */}
             <button
               onClick={() => setChatOpen(!chatOpen)}
-              className={\`p-2 rounded-lg transition-colors \${
+              className={`p-2 rounded-lg transition-colors ${
                 chatOpen ? 'bg-cyan-500/20 text-cyan-400' : 'hover:bg-slate-800'
-              }\`}
+              }`}
             >
               <Sparkles className="w-5 h-5" />
             </button>
@@ -434,23 +396,33 @@ const App: React.FC = () => {
       <div className="flex pt-16">
         {/* Sidebar */}
         <aside 
-          className={\`fixed left-0 top-16 bottom-0 bg-slate-900/50 backdrop-blur border-r border-cyan-500/20 transition-all duration-300 \${
+          className={`fixed left-0 top-16 bottom-0 bg-slate-900/50 backdrop-blur border-r border-cyan-500/20 transition-all duration-300 ${
             sidebarOpen ? 'w-64' : 'w-16'
-          }\`}
+          }`}
         >
           <nav className="p-4 space-y-2">
-            {NAV_ITEMS.map((item) => {
-              const Icon = getNavIcon(item.id);
+            {NAV_ITEMS.slice(0, 6).map((item) => {
+              // Map nav items to our tab types
+              const tabMap: Record<string, Tab> = {
+                'device_inventory': 'devices',
+                'vulnerability_scan': 'vulnerabilities',
+                'network_topology': 'topology',
+                'alerts': 'alerts',
+                'firmware_analysis': 'scans',
+                'baselines': 'dashboard'
+              };
+              const tabId = tabMap[item.tool] || 'dashboard';
+              const Icon = getNavIcon(item.tool);
 
               return (
                 <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id as Tab)}
-                  className={\`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all \${
-                    activeTab === item.id
+                  key={item.tool}
+                  onClick={() => setActiveTab(tabId)}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                    activeTab === tabId
                       ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-white'
                       : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                  }\`}
+                  }`}
                 >
                   <Icon className="w-5 h-5 flex-shrink-0" />
                   {sidebarOpen && <span>{item.label}</span>}
@@ -467,15 +439,15 @@ const App: React.FC = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-400">Total Devices</span>
-                    <span className="text-white font-bold">{overview.totalDevices}</span>
+                    <span className="text-white font-bold">{overview.devices?.total || 0}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Online</span>
-                    <span className="text-green-400 font-bold">{overview.onlineDevices}</span>
+                    <span className="text-green-400 font-bold">{overview.devices?.byStatus?.online || 0}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-400">Alerts</span>
-                    <span className="text-yellow-400 font-bold">{overview.activeAlerts}</span>
+                    <span className="text-yellow-400 font-bold">{overview.alerts?.total || 0}</span>
                   </div>
                 </div>
               </div>
@@ -485,15 +457,20 @@ const App: React.FC = () => {
 
         {/* Main Content */}
         <main 
-          className={\`flex-1 p-6 transition-all duration-300 \${
+          className={`flex-1 p-6 transition-all duration-300 ${
             sidebarOpen ? 'ml-64' : 'ml-16'
-          } \${chatOpen ? 'mr-96' : ''}\`}
+          } ${chatOpen ? 'mr-96' : ''}`}
         >
           <div className="max-w-6xl mx-auto">
             {/* Page Header */}
             <div className="mb-6">
               <h2 className="text-2xl font-bold">
-                {NAV_ITEMS.find(n => n.id === activeTab)?.label || 'Dashboard'}
+                {activeTab === 'dashboard' ? 'Dashboard' :
+                 activeTab === 'devices' ? 'Device Inventory' :
+                 activeTab === 'vulnerabilities' ? 'Vulnerability Scan' :
+                 activeTab === 'alerts' ? 'Security Alerts' :
+                 activeTab === 'topology' ? 'Network Topology' :
+                 activeTab === 'scans' ? 'Scan Manager' : 'Dashboard'}
               </h2>
               <p className="text-gray-400 mt-1">
                 {activeTab === 'dashboard' && 'Overview of your IoT security posture'}
@@ -534,24 +511,24 @@ const App: React.FC = () => {
               {messages.map((message) => (
                 <div 
                   key={message.id}
-                  className={\`flex gap-3 \${message.role === 'user' ? 'flex-row-reverse' : ''}\`}
+                  className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
                 >
-                  <div className={\`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 \${
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
                     message.role === 'user' 
                       ? 'bg-cyan-500/20' 
                       : 'bg-gradient-to-br from-cyan-500 to-blue-600'
-                  }\`}>
+                  }`}>
                     {message.role === 'user' ? (
                       <User className="w-4 h-4 text-cyan-400" />
                     ) : (
                       <Bot className="w-4 h-4 text-white" />
                     )}
                   </div>
-                  <div className={\`max-w-[80%] p-3 rounded-xl \${
+                  <div className={`max-w-[80%] p-3 rounded-xl ${
                     message.role === 'user'
                       ? 'bg-cyan-500/20 border border-cyan-500/30'
                       : 'bg-slate-800/50 border border-cyan-500/30'
-                  }\`}>
+                  }`}>
                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                     <p className="text-[10px] text-gray-500 mt-1">
                       {message.timestamp.toLocaleTimeString()}

@@ -198,55 +198,139 @@ export const DATA_CATEGORIES = {
   CORPORATE: ['confidential', 'trade_secret', 'internal_only', 'restricted'],
 } as const;
 
-export interface Alert {
+// DLP Alert Configuration
+export interface DLPAlert {
   id: string;
-  alert_type: 'high_risk_transaction' | 'suspicious_pattern' | 'velocity_breach' | 'unusual_location';
+  alertType: 'policy_violation' | 'data_exfiltration' | 'unauthorized_access' | 'compliance_breach';
   threshold: number;
-  notification_channels: ('email' | 'webhook' | 'sms' | 'slack')[];
+  notificationChannels: ('email' | 'webhook' | 'sms' | 'slack' | 'teams')[];
   active: boolean;
-  created_at: string;
-  triggered_count: number;
+  createdAt: string;
+  triggeredCount: number;
+  policyId?: string;
 }
 
-export interface AnalyticsData {
-  total_transactions: number;
-  flagged_transactions: number;
-  average_fraud_score: number;
-  high_risk_percentage: number;
-  transactions_by_day: { date: string; count: number; flagged: number }[];
-  risk_distribution: { level: string; count: number }[];
-  top_fraud_indicators: { indicator: string; count: number }[];
+// DLP Analytics Data
+export interface DLPAnalytics {
+  totalScans: number;
+  violationCount: number;
+  averageRiskScore: number;
+  highRiskPercentage: number;
+  scansByDay: { date: string; count: number; violations: number }[];
+  riskDistribution: { level: string; count: number }[];
+  topDataTypes: { dataType: string; count: number }[];
+  topSources: { source: string; count: number }[];
 }
 
-export interface Tab {
+// Tab interface for multi-tab workspace
+export interface WorkspaceTab {
   id: string;
-  type: 'chat' | 'web' | 'code' | 'chart' | 'transaction' | 'report';
+  type: 'chat' | 'scan' | 'policy' | 'incident' | 'report' | 'integration';
   title: string;
   content: any;
   status: 'loading' | 'active' | 'complete' | 'error';
   aiGenerated: boolean;
 }
 
-// Transaction type for FraudGuard compatibility
-export interface Transaction {
+// Sensitive Data Match for real-time scanning
+export interface SensitiveDataMatch {
   id: string;
-  amount: number;
-  currency: string;
-  user_email: string;
-  merchant_name: string;
-  merchant_category: string;
-  card_last_four: string;
-  timestamp: string;
-  ip_address: string;
-  location_city: string;
-  fraud_score?: number;
-  status?: 'pending' | 'approved' | 'declined' | 'flagged';
+  pattern: string;
+  dataType: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  matchedText: string;
+  redactedText: string;
+  lineNumber?: number;
+  columnStart?: number;
+  columnEnd?: number;
+  context?: string;
 }
 
-// Fraud Score type
-export interface FraudScore {
-  score: number;
-  risk_level: 'low' | 'medium' | 'high' | 'critical';
-  indicators: string[];
-  recommendation: string;
+// Real-time monitoring event
+export interface MonitoringEvent {
+  id: string;
+  eventType: 'file_access' | 'data_transfer' | 'copy_paste' | 'print' | 'usb_transfer' | 'cloud_upload';
+  source: string;
+  destination?: string;
+  user: string;
+  endpoint: string;
+  dataTypes: string[];
+  action: 'allowed' | 'blocked' | 'alerted';
+  timestamp: string;
+  riskScore: number;
+}
+
+// Compliance Framework
+export interface ComplianceFramework {
+  id: string;
+  name: string;
+  description: string;
+  version: string;
+  requirements: ComplianceRequirement[];
+  status: 'compliant' | 'non_compliant' | 'partial';
+  lastAudit?: string;
+  nextAudit?: string;
+}
+
+export interface ComplianceRequirement {
+  id: string;
+  code: string;
+  name: string;
+  description: string;
+  status: 'met' | 'not_met' | 'partial' | 'not_applicable';
+  evidence?: string[];
+  dueDate?: string;
+}
+
+// Remediation Action
+export interface RemediationAction {
+  id: string;
+  incidentId: string;
+  actionType: 'quarantine' | 'encrypt' | 'delete' | 'notify' | 'block_user' | 'revoke_access';
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  automatedBy?: string;
+  manualBy?: string;
+  timestamp: string;
+  details: Record<string, any>;
+}
+
+// Data Flow Map
+export interface DataFlow {
+  id: string;
+  source: DataEndpoint;
+  destination: DataEndpoint;
+  dataTypes: string[];
+  volume: number;
+  frequency: 'realtime' | 'daily' | 'weekly' | 'monthly';
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  encrypted: boolean;
+  compliant: boolean;
+}
+
+export interface DataEndpoint {
+  type: 'internal' | 'external' | 'cloud' | 'endpoint' | 'partner';
+  name: string;
+  location?: string;
+  classification?: string;
+}
+
+// AI Analysis Result
+export interface AIAnalysisResult {
+  id: string;
+  scanId: string;
+  analysisType: 'pattern_detection' | 'anomaly_detection' | 'risk_assessment' | 'classification';
+  confidence: number;
+  findings: AIFinding[];
+  recommendations: string[];
+  timestamp: string;
+  modelVersion: string;
+}
+
+export interface AIFinding {
+  category: string;
+  description: string;
+  confidence: number;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  context: string;
+  suggestedAction: string;
 }

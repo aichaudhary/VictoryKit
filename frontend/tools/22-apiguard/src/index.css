@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-api-dark text-white antialiased;
+  }
+}
+
+@layer components {
+  .api-card {
+    @apply bg-api-card border border-api-border rounded-xl p-6 shadow-lg;
+  }
+
+  .api-btn-primary {
+    @apply flex items-center gap-2 px-4 py-2 bg-api-primary hover:bg-api-secondary text-white font-medium rounded-lg transition-all duration-200 shadow-lg shadow-api-primary/25;
+  }
+
+  .api-btn-secondary {
+    @apply flex items-center gap-2 px-4 py-2 bg-api-dark hover:bg-api-border text-white font-medium rounded-lg border border-api-border transition-all duration-200;
+  }
+
+  .api-btn-danger {
+    @apply flex items-center gap-2 px-4 py-2 bg-severity-critical/20 hover:bg-severity-critical/30 text-severity-critical font-medium rounded-lg border border-severity-critical/30 transition-all duration-200;
+  }
+
+  .api-input {
+    @apply w-full px-4 py-2.5 bg-api-dark border border-api-border rounded-lg text-white placeholder-api-muted focus:outline-none focus:ring-2 focus:ring-api-primary focus:border-transparent transition-all duration-200;
+  }
+
+  .api-select {
+    @apply w-full px-4 py-2.5 bg-api-dark border border-api-border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-api-primary focus:border-transparent transition-all duration-200 cursor-pointer;
+  }
+
+  .api-checkbox {
+    @apply w-5 h-5 rounded border-api-border bg-api-dark text-api-primary focus:ring-api-primary focus:ring-offset-0 focus:ring-2 cursor-pointer;
+  }
+
+  .api-label {
+    @apply block text-sm font-medium text-api-muted mb-2;
+  }
+
+  .api-badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full;
+  }
+
+  .api-table {
+    @apply w-full text-left;
+  }
+
+  .api-table th {
+    @apply px-4 py-3 text-xs font-medium text-api-muted uppercase tracking-wider border-b border-api-border;
+  }
+
+  .api-table td {
+    @apply px-4 py-3 border-b border-api-border/50;
+  }
+
+  .api-table tr:hover td {
+    @apply bg-api-dark/50;
+  }
+
+  .grade-a-plus {
+    @apply text-score-a-plus bg-score-a-plus/10 border-score-a-plus/30;
+  }
+
+  .grade-a {
+    @apply text-score-a bg-score-a/10 border-score-a/30;
+  }
+
+  .grade-b {
+    @apply text-score-b bg-score-b/10 border-score-b/30;
+  }
+
+  .grade-c {
+    @apply text-score-c bg-score-c/10 border-score-c/30;
+  }
+
+  .grade-d {
+    @apply text-score-d bg-score-d/10 border-score-d/30;
+  }
+
+  .grade-f {
+    @apply text-score-f bg-score-f/10 border-score-f/30;
+  }
+
+  .severity-critical {
+    @apply text-severity-critical bg-severity-critical/10 border-severity-critical/30;
+  }
+
+  .severity-high {
+    @apply text-severity-high bg-severity-high/10 border-severity-high/30;
+  }
+
+  .severity-medium {
+    @apply text-severity-medium bg-severity-medium/10 border-severity-medium/30;
+  }
+
+  .severity-low {
+    @apply text-severity-low bg-severity-low/10 border-severity-low/30;
+  }
+
+  .severity-info {
+    @apply text-severity-info bg-severity-info/10 border-severity-info/30;
+  }
+
+  .status-active {
+    @apply text-status-active bg-status-active/10;
+  }
+
+  .status-deprecated {
+    @apply text-status-deprecated bg-status-deprecated/10;
+  }
+
+  .status-development {
+    @apply text-status-development bg-status-development/10;
+  }
+
+  .status-retired {
+    @apply text-status-retired bg-status-retired/10;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-api-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-api-border rounded-full hover:bg-api-muted;
+}
+
+/* Monaco Editor theme overrides */
+.monaco-editor {
+  border-radius: 0.5rem;
+}
+
+/* Method badges */
+.method-get {
+  @apply text-green-400 bg-green-400/10 border-green-400/30;
+}
+
+.method-post {
+  @apply text-blue-400 bg-blue-400/10 border-blue-400/30;
+}
+
+.method-put {
+  @apply text-yellow-400 bg-yellow-400/10 border-yellow-400/30;
+}
+
+.method-patch {
+  @apply text-orange-400 bg-orange-400/10 border-orange-400/30;
+}
+
+.method-delete {
+  @apply text-red-400 bg-red-400/10 border-red-400/30;
+}
+
+.method-head {
+  @apply text-purple-400 bg-purple-400/10 border-purple-400/30;
+}
+
+.method-options {
+  @apply text-gray-400 bg-gray-400/10 border-gray-400/30;
+}

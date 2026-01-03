@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #e2e8f0;
+  background-color: #0F172A;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1E293B;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
+}
+
+/* Bot status indicators */
+.bot-status-good {
+  @apply bg-green-500/20 text-green-400 border-green-500/30;
+}
+
+.bot-status-bad {
+  @apply bg-red-500/20 text-red-400 border-red-500/30;
+}
+
+.bot-status-unknown {
+  @apply bg-yellow-500/20 text-yellow-400 border-yellow-500/30;
+}
+
+/* Action badges */
+.action-block {
+  @apply bg-red-500/20 text-red-400;
+}
+
+.action-allow {
+  @apply bg-green-500/20 text-green-400;
+}
+
+.action-challenge {
+  @apply bg-yellow-500/20 text-yellow-400;
+}
+
+.action-monitor {
+  @apply bg-blue-500/20 text-blue-400;
+}
+
+/* Card styles */
+.card {
+  @apply bg-slate-800/50 rounded-xl border border-slate-700/50 backdrop-blur-sm;
+}
+
+.card-hover {
+  @apply hover:border-slate-600 transition-all duration-200;
+}
+
+/* Stat card animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px 5px rgba(255, 107, 53, 0.3);
+  }
+}
+
+.stat-highlight {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Live indicator */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.live-indicator {
+  animation: blink 1s infinite;
+}
+
+/* Traffic flow animation */
+@keyframes flow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.traffic-flow {
+  animation: flow 2s linear infinite;
+}

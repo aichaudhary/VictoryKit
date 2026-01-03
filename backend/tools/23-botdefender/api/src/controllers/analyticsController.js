@@ -227,6 +227,219 @@ const analyticsController = {
       res.status(500).json({ success: false, error: error.message });
     }
   },
+
+  // Get trends over time
+  async getTrends(req, res) {
+    try {
+      const { days = 7 } = req.query;
+      const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+      const trends = await Bot.aggregate([
+        { $match: { createdAt: { $gte: since } } },
+        {
+          $group: {
+            _id: {
+              date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+              type: "$classification.type"
+            },
+            count: { $sum: 1 },
+            avgScore: { $avg: "$detection.score" }
+          }
+        },
+        { $sort: { "_id.date": 1 } }
+      ]);
+
+      res.json({
+        success: true,
+        data: {
+          period: `${days} days`,
+          trends
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Get geographic distribution
+  async getGeographic(req, res) {
+    try {
+      const geographic = await Bot.aggregate([
+        { $match: { "identification.geo.country": { $exists: true } } },
+        {
+          $group: {
+            _id: "$identification.geo.country",
+            total: { $sum: 1 },
+            bots: { $sum: { $cond: [{ $eq: ["$classification.type", "bad"] }, 1, 0] } },
+            avgScore: { $avg: "$detection.score" }
+          }
+        },
+        { $sort: { total: -1 } },
+        { $limit: 20 }
+      ]);
+
+      res.json({
+        success: true,
+        data: geographic
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Get real-time stats
+  async getRealtime(req, res) {
+    try {
+      const window = 60; // 1 minute
+      const since = new Date(Date.now() - window * 1000);
+
+      const [recent, perSecond] = await Promise.all([
+        Bot.countDocuments({ updatedAt: { $gte: since } }),
+        Bot.aggregate([
+          { $match: { updatedAt: { $gte: since } } },
+          {
+            $group: {
+              _id: { $second: "$updatedAt" },
+              count: { $sum: 1 }
+            }
+          },
+          { $sort: { _id: 1 } }
+        ])
+      ]);
+
+      res.json({
+        success: true,
+        data: {
+          windowSeconds: window,
+          totalInWindow: recent,
+          requestsPerSecond: recent / window,
+          perSecond,
+          timestamp: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Get threat summary
+  async getThreats(req, res) {
+    try {
+      const threats = await Bot.aggregate([
+        { $match: { "classification.type": "bad", "detection.score": { $gte: 70 } } },
+        {
+          $group: {
+            _id: "$classification.category",
+            count: { $sum: 1 },
+            avgScore: { $avg: "$detection.score" },
+            topIPs: { $push: "$identification.ipAddress" }
+          }
+        },
+        { $sort: { count: -1 } }
+      ]);
+
+      // Get unique IPs per category
+      threats.forEach(t => {
+        t.uniqueIPs = [...new Set(t.topIPs)].length;
+        t.topIPs = [...new Set(t.topIPs)].slice(0, 5);
+      });
+
+      res.json({
+        success: true,
+        data: threats
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Get settings (mock)
+  async getSettings(req, res) {
+    try {
+      res.json({
+        success: true,
+        settings: {
+          detectionEnabled: true,
+          autoBlock: true,
+          autoBlockThreshold: 80,
+          challengeThreshold: 50,
+          monitorThreshold: 20,
+          whitelistEnabled: true,
+          notificationsEnabled: true,
+          webhookUrl: "",
+          slackWebhook: ""
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Update settings (mock)
+  async updateSettings(req, res) {
+    try {
+      res.json({
+        success: true,
+        message: "Settings updated successfully",
+        settings: req.body
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Get integration status
+  async getIntegrations(req, res) {
+    try {
+      const integrations = {
+        recaptcha: {
+          enabled: !!process.env.RECAPTCHA_SECRET_KEY,
+          configured: !!process.env.RECAPTCHA_SITE_KEY
+        },
+        hcaptcha: {
+          enabled: !!process.env.HCAPTCHA_SECRET_KEY,
+          configured: !!process.env.HCAPTCHA_SITE_KEY
+        },
+        turnstile: {
+          enabled: !!process.env.TURNSTILE_SECRET_KEY,
+          configured: !!process.env.TURNSTILE_SITE_KEY
+        },
+        ipQualityScore: {
+          enabled: !!process.env.IPQUALITYSCORE_API_KEY
+        },
+        abuseIPDB: {
+          enabled: !!process.env.ABUSEIPDB_API_KEY
+        },
+        greyNoise: {
+          enabled: !!process.env.GREYNOISE_API_KEY
+        },
+        mlEngine: {
+          enabled: true,
+          url: process.env.ML_ENGINE_URL || "http://localhost:8023"
+        }
+      };
+
+      res.json({
+        success: true,
+        integrations
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Update integrations (mock)
+  async updateIntegrations(req, res) {
+    try {
+      res.json({
+        success: true,
+        message: "Integration settings updated",
+        integrations: req.body
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  }
 };
 
 module.exports = analyticsController;

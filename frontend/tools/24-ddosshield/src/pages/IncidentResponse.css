@@ -1,0 +1,658 @@
+.incident-response {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.response-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.response-header h1 {
+  color: #fff;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  color: #888;
+}
+
+.stats span {
+  padding: 5px 10px;
+  background: #1a1a1a;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.response-content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 30px;
+}
+
+.incidents-panel {
+  background: #1a1a1a;
+  border-radius: 12px;
+  border: 1px solid #333;
+  padding: 20px;
+}
+
+.incidents-panel h2 {
+  color: #fff;
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+}
+
+.incidents-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.incident-item {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.incident-item:hover {
+  border-color: #00d4aa;
+  transform: translateY(-2px);
+}
+
+.incident-item.selected {
+  border-color: #00d4aa;
+  box-shadow: 0 0 20px rgba(0, 212, 170, 0.3);
+}
+
+.incident-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.incident-title h3 {
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+
+.incident-meta {
+  display: flex;
+  gap: 8px;
+}
+
+.severity-badge,
+.status-badge {
+  color: white;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.incident-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-select {
+  padding: 4px 8px;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.status-select:focus {
+  outline: none;
+  border-color: #00d4aa;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+.incident-summary p {
+  color: #ccc;
+  margin: 0 0 10px 0;
+  font-size: 0.9rem;
+}
+
+.incident-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail .label {
+  color: #888;
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+}
+
+.detail .value {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.no-incidents {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}
+
+.no-incidents h3 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.incident-details-panel {
+  background: #1a1a1a;
+  border-radius: 12px;
+  border: 1px solid #333;
+  padding: 20px;
+  height: fit-content;
+}
+
+.incident-details-panel h2 {
+  color: #fff;
+  margin: 0 0 20px 0;
+  font-size: 1.3rem;
+}
+
+.incident-full-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-section {
+  padding: 15px;
+  background: #2a2a2a;
+  border-radius: 8px;
+}
+
+.detail-section h3 {
+  color: #fff;
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-item .label {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+.detail-item .value {
+  color: #fff;
+  font-weight: bold;
+}
+
+.detail-item .value.severity,
+.detail-item .value.status {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.description {
+  color: #ccc;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.related-attacks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.related-attack {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #1a1a1a;
+  border-radius: 6px;
+}
+
+.related-attack.missing {
+  color: #ff6b6b;
+  font-style: italic;
+}
+
+.attack-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.attack-type {
+  color: #ff4757;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.attack-target {
+  color: #00d4aa;
+  font-size: 0.9rem;
+}
+
+.attack-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+  font-size: 0.8rem;
+  color: #ccc;
+}
+
+.no-related {
+  color: #888;
+  margin: 0;
+  font-style: italic;
+}
+
+.response-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.response-action {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px;
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.action-number {
+  color: #00d4aa;
+  font-weight: bold;
+  min-width: 20px;
+}
+
+.action-text {
+  color: #fff;
+  flex: 1;
+}
+
+.no-actions {
+  color: #888;
+  margin: 0;
+  font-style: italic;
+}
+
+.notes p {
+  color: #ccc;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.no-notes {
+  color: #888;
+  margin: 0;
+  font-style: italic;
+}
+
+.incident-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.incident-form {
+  background: #1a1a1a;
+  border-radius: 12px;
+  border: 1px solid #333;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.form-header h2 {
+  color: #fff;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: #333;
+  color: #fff;
+}
+
+.form-content {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  color: #fff;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #00d4aa;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.attacks-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selected-attacks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.attack-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #00d4aa;
+  color: #000;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.attack-tag button {
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0;
+  margin-left: 5px;
+}
+
+.actions-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.action-templates h4 {
+  color: #fff;
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+}
+
+.template-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.template-btn {
+  padding: 8px 12px;
+  background: #3742fa;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.template-btn:hover {
+  background: #2f3542;
+  border-color: #00d4aa;
+}
+
+.custom-action {
+  display: flex;
+  gap: 10px;
+}
+
+.custom-action input {
+  flex: 1;
+}
+
+.selected-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.action-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+.action-item span {
+  color: #fff;
+  flex: 1;
+}
+
+.action-item button {
+  background: none;
+  border: none;
+  color: #ff4757;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0 5px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #00d4aa;
+  color: #000;
+}
+
+.btn-primary:hover {
+  background: #00b894;
+}
+
+.btn-secondary {
+  background: #3742fa;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #2f3542;
+}
+
+.btn-danger {
+  background: #ff4757;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #ff3742;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #888;
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .response-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .response-header {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .incident-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .incident-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .template-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .custom-action {
+    flex-direction: column;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .incident-form {
+    width: 95%;
+    margin: 10px;
+  }
+}
