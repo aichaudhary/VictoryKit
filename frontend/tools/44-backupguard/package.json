@@ -1,8 +1,9 @@
 {
-  "name": "RedTeamSim",
+  "name": "backupguard",
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "description": "BackupGuard - Enterprise Backup Security & Integrity Monitoring",
   "scripts": {
     "dev": "vite --port 3044",
     "build": "tsc && vite build",

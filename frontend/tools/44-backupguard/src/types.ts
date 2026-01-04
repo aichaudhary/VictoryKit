@@ -1,129 +1,162 @@
-export type Sender = 'YOU' | 'AGENT' | 'SYSTEM';
+// BackupGuard Types
 
-export interface Message {
-  id: string;
-  sender: Sender;
-  text: string;
-  timestamp: string;
-  isImage?: boolean;
-  groundingUrls?: string[];
-  functionCall?: FunctionCallResult;
-}
-
-export interface FunctionCallResult {
+export interface Backup {
+  _id: string;
+  backupId: string;
   name: string;
-  args: Record<string, any>;
-  result?: any;
+  type: 'full' | 'incremental' | 'differential' | 'synthetic' | 'mirror' | 'snapshot';
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled' | 'paused' | 'verifying';
+  source: {
+    type: 'database' | 'file_system' | 'application' | 'vm' | 'container' | 'cloud' | 'saas';
+    path: string;
+    hostname: string;
+  };
+  target?: StorageLocation;
+  schedule?: {
+    enabled: boolean;
+    type: 'once' | 'hourly' | 'daily' | 'weekly' | 'monthly';
+    cronExpression?: string;
+    nextRun?: Date;
+  };
+  execution?: {
+    startTime?: Date;
+    endTime?: Date;
+    duration?: number;
+    bytesProcessed?: number;
+    bytesTransferred?: number;
+    filesProcessed?: number;
+    errors?: number;
+    progress?: number;
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface ChatSession {
-  id: string;
+export interface StorageLocation {
+  _id: string;
   name: string;
-  active: boolean;
-  messages: Message[];
-  settings: SettingsState;
+  type: 's3' | 'azure_blob' | 'gcs' | 'nfs' | 'smb' | 'sftp' | 'local' | 'tape';
+  status: 'active' | 'inactive' | 'maintenance' | 'error' | 'full';
+  endpoint?: string;
+  region?: string;
+  capacity?: {
+    totalBytes: number;
+    usedBytes: number;
+    availableBytes: number;
+  };
+  connectivity?: {
+    isConnected: boolean;
+    lastCheck: Date;
+    latencyMs?: number;
+  };
+  createdAt: Date;
 }
 
-export type NeuralTool = 
-  | 'none' 
-  | 'fraud_analysis'
-  | 'risk_visualization'
-  | 'transaction_history'
-  | 'alerts'
-  | 'reports'
-  | 'web_search'
-  | 'canvas'
-  | 'browser';
-
-export type WorkspaceMode = 'CHAT' | 'PORTAL' | 'CANVAS' | 'FRAUD_DASHBOARD';
-
-export interface CanvasState {
-  content: string;
-  type: 'text' | 'code' | 'html' | 'video' | 'image' | 'chart';
-  language?: string;
-  title: string;
+export interface IntegrityCheck {
+  _id: string;
+  backup: string | Backup;
+  backupId: string;
+  type: 'checksum' | 'restore_test' | 'metadata' | 'encryption' | 'corruption_scan';
+  status: 'pending' | 'running' | 'passed' | 'failed' | 'partial' | 'skipped';
+  result?: {
+    isValid: boolean;
+    errorCount: number;
+    warningCount: number;
+    details?: string[];
+  };
+  createdAt: Date;
+  completedAt?: Date;
 }
 
-export interface SettingsState {
-  customPrompt: string;
-  agentName: string;
-  temperature: number;
-  maxTokens: number;
-  provider: string;
-  model: string;
-  activeTool: NeuralTool;
-  workspaceMode: WorkspaceMode;
-  portalUrl: string;
-  canvas: CanvasState;
-}
-
-export interface NavItem {
-  label: string;
-  icon: string;
-  tool: NeuralTool;
-  description: string;
-}
-
-// FraudGuard Specific Types
-export interface Transaction {
-  id: string;
-  transaction_id: string;
-  amount: number;
-  currency: string;
-  user_ip?: string;
-  device_fingerprint?: string;
-  email?: string;
-  card_last4?: string;
-  merchant_id?: string;
-  timestamp: string;
-  status: 'pending' | 'approved' | 'declined' | 'flagged';
-  fraud_score?: number;
-  risk_level?: 'low' | 'medium' | 'high';
-}
-
-export interface FraudScore {
-  transaction_id: string;
-  score: number;
-  risk_level: 'low' | 'medium' | 'high';
-  confidence: number;
-  indicators: FraudIndicator[];
-  recommendation: string;
-  ml_model_version: string;
-  analyzed_at: string;
-}
-
-export interface FraudIndicator {
-  type: string;
-  severity: 'low' | 'medium' | 'high';
-  description: string;
-  weight: number;
+export interface RetentionPolicy {
+  _id: string;
+  name: string;
+  description?: string;
+  status: 'active' | 'inactive' | 'testing';
+  priority: number;
+  retention: {
+    daily: { count: number; enabled: boolean };
+    weekly: { count: number; enabled: boolean; dayOfWeek?: number };
+    monthly: { count: number; enabled: boolean; dayOfMonth?: number };
+    yearly: { count: number; enabled: boolean; monthOfYear?: number };
+  };
+  compliance?: {
+    framework?: string;
+    minimumRetention?: number;
+    legalHold?: boolean;
+  };
+  createdAt: Date;
 }
 
 export interface Alert {
-  id: string;
-  alert_type: 'high_risk_transaction' | 'suspicious_pattern' | 'velocity_breach' | 'unusual_location';
-  threshold: number;
-  notification_channels: ('email' | 'webhook' | 'sms' | 'slack')[];
-  active: boolean;
-  created_at: string;
-  triggered_count: number;
-}
-
-export interface AnalyticsData {
-  total_transactions: number;
-  flagged_transactions: number;
-  average_fraud_score: number;
-  high_risk_percentage: number;
-  transactions_by_day: { date: string; count: number; flagged: number }[];
-  risk_distribution: { level: string; count: number }[];
-  top_fraud_indicators: { indicator: string; count: number }[];
-}
-
-export interface Tab {
-  id: string;
-  type: 'chat' | 'web' | 'code' | 'chart' | 'transaction' | 'report';
+  _id: string;
+  alertId: string;
+  type: 'backup_failure' | 'storage_full' | 'integrity_failed' | 'ransomware_detected' | 'policy_violation' | 'unauthorized_access' | 'connection_lost' | 'schedule_missed';
+  severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
+  status: 'new' | 'acknowledged' | 'resolved' | 'dismissed';
   title: string;
-  content: any;
-  status: 'loading' | 'active' | 'complete' | 'error';
-  aiGenerated: boolean;
+  message: string;
+  backup?: string | Backup;
+  storageLocation?: string | StorageLocation;
+  read: boolean;
+  createdAt: Date;
+  acknowledgedAt?: Date;
+  resolvedAt?: Date;
+}
+
+export interface AccessLog {
+  _id: string;
+  action: string;
+  result: 'success' | 'failure' | 'partial' | 'blocked';
+  user?: {
+    userId: string;
+    email?: string;
+    name?: string;
+  };
+  resource?: {
+    type: string;
+    id: string;
+    name?: string;
+  };
+  timestamp: Date;
+  riskScore?: number;
+  suspicious?: boolean;
+}
+
+export interface DashboardStats {
+  overview: {
+    totalBackups: number;
+    completedBackups: number;
+    failedBackups: number;
+    runningBackups: number;
+    successRate: number;
+    totalStorageUsed: number;
+    pendingAlerts: number;
+    criticalAlerts: number;
+  };
+  storageLocations: StorageLocation[];
+  recentBackups: Backup[];
+  timestamp: Date;
+}
+
+export type Tab = 'dashboard' | 'backups' | 'storage' | 'policies' | 'alerts' | 'logs' | 'settings';
+
+export type WorkspaceMode = 'monitoring' | 'configuration' | 'analysis';
+
+export interface Message {
+  id: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp: Date;
+  provider?: string;
+}
+
+export interface SettingsState {
+  autoBackup: boolean;
+  integrityCheckInterval: number;
+  alertThreshold: number;
+  retentionDefault: number;
+  encryptionEnabled: boolean;
+  compressionEnabled: boolean;
+  selectedProvider: string;
 }
