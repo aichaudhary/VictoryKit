@@ -10,7 +10,8 @@
 			"version": "latest",
 			"enableNonRootDocker": "true",
 			"moby": "true"
-		}
+		},
+		"ghcr.io/davzucky/devcontainers-features-wolfi/bash:1": {}
 	},
 	"customizations": {
 		"vscode": {
