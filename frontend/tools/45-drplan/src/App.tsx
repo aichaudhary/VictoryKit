@@ -1,43 +1,56 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Shield, Menu, X, MessageSquare, ChevronLeft, ChevronRight, 
-  Search, Settings, Bell, TrendingUp, Activity, FileText,
-  AlertTriangle, CheckCircle, Clock, Send, Sparkles, Mic, 
-  Paperclip, MoreHorizontal, User, Bot
+  Search, Settings, Bell, LayoutDashboard, FileText, Server,
+  Building2, BookOpen, FlaskConical, Users, AlertTriangle,
+  BarChart3, Send, Sparkles, Bot, User
 } from 'lucide-react';
 
 // Components
-import TransactionForm from './components/TransactionForm';
-import FraudScoreCard from './components/FraudScoreCard';
-import RiskVisualization from './components/RiskVisualization';
-import TransactionHistory from './components/TransactionHistory';
-import AlertsPanel from './components/AlertsPanel';
-import ExportReport from './components/ExportReport';
+import Dashboard from './components/Dashboard';
+import PlansList from './components/PlansList';
+import SystemsManager from './components/SystemsManager';
+import SitesManager from './components/SitesManager';
+import RunbooksManager from './components/RunbooksManager';
+import TestsManager from './components/TestsManager';
+import IncidentsPanel from './components/IncidentsPanel';
 
 // Types and constants
 import { 
-  Transaction, FraudScore, Alert, Tab, SettingsState, 
-  Message, WorkspaceMode 
+  Tab, Message, SettingsState, DashboardStats,
+  RecoveryPlan, CriticalSystem, RecoverySite, 
+  Runbook, DRTest, EmergencyContact, DRIncident
 } from './types';
-import { NAV_ITEMS, DEFAULT_SETTINGS, PROVIDER_CONFIG } from './constants';
+import { NAV_ITEMS, DEFAULT_SETTINGS } from './constants';
 
 // Services
-import { fraudguardAPI } from './services/fraudguardAPI';
-import { executeTool, getToolDefinitions } from './services/fraudguard-tools';
+import { drplanAPI } from './services/drplanAPI';
+
+const iconMap: Record<string, React.FC<any>> = {
+  LayoutDashboard, FileText, Server, Building2, BookOpen,
+  FlaskConical, Users, AlertTriangle, BarChart3, Settings,
+};
 
 const App: React.FC = () => {
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState<Tab>('analyze');
-  const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>('fraud-detection');
+  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS);
   
   // Data state
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [fraudScores, setFraudScores] = useState<Record<string, FraudScore>>({});
-  const [currentScore, setCurrentScore] = useState<FraudScore | null>(null);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [stats, setStats] = useState<DashboardStats>({
+    totalPlans: 5, activePlans: 3, totalSystems: 24, criticalSystems: 8,
+    systemsAtRisk: 2, upcomingTests: 3, overdueTests: 1, activeIncidents: 0,
+    avgRTO: 120, avgRPO: 30, overallReadiness: 87,
+  });
+  const [plans, setPlans] = useState<RecoveryPlan[]>([]);
+  const [systems, setSystems] = useState<CriticalSystem[]>([]);
+  const [sites, setSites] = useState<RecoverySite[]>([]);
+  const [runbooks, setRunbooks] = useState<Runbook[]>([]);
+  const [tests, setTests] = useState<DRTest[]>([]);
+  const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+  const [incidents, setIncidents] = useState<DRIncident[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
   // Chat state
@@ -45,52 +58,117 @@ const App: React.FC = () => {
     {
       id: '1',
       role: 'assistant',
-      content: "Welcome to FraudGuard! I'm your AI-powered fraud detection assistant. I can help you analyze transactions, detect suspicious patterns, and manage fraud alerts. How can I assist you today?",
+      content: "Welcome to DRPlan! I'm your Disaster Recovery AI assistant. I can help you manage recovery plans, monitor systems, schedule DR tests, and respond to incidents. What would you like to do?",
       timestamp: new Date(),
-      provider: settings.selectedProvider,
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle transaction analysis
-  const handleAnalyzeTransaction = async (transaction: Transaction) => {
-    setIsLoading(true);
-    try {
-      const score = await fraudguardAPI.transactions.analyze(transaction);
-      setCurrentScore(score);
-      setFraudScores((prev) => ({ ...prev, [transaction.transaction_id]: score }));
-      setTransactions((prev) => [transaction, ...prev]);
-      
-      // Add assistant message about analysis
-      const riskColor = score.risk_level === 'critical' ? 'red' : 
-                       score.risk_level === 'high' ? 'orange' : 
-                       score.risk_level === 'medium' ? 'yellow' : 'green';
-      
-      setMessages((prev) => [...prev, {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: `Transaction analyzed. Risk Score: ${score.score}/100 (${score.risk_level.toUpperCase()}). ${score.indicators.length} risk indicators detected.`,
-        timestamp: new Date(),
-        provider: settings.selectedProvider,
-      }]);
-    } catch (error) {
-      console.error('Analysis failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Load mock data
+  useEffect(() => {
+    // Mock plans
+    setPlans([
+      {
+        _id: '1', name: 'Enterprise DR Plan', description: 'Main disaster recovery plan for all critical systems',
+        version: '2.1', status: 'active', priority: 'critical', scope: ['production', 'staging'],
+        objectives: { rto: 60, rpo: 15, mtpd: 480 }, owner: 'John Smith',
+        approvers: ['CTO', 'CISO'], systems: ['sys1', 'sys2', 'sys3'], sites: ['site1', 'site2'],
+        runbooks: ['rb1', 'rb2'], lastTestedAt: new Date('2024-12-15'), nextTestDate: new Date('2025-03-15'),
+        createdAt: new Date('2024-01-10'), updatedAt: new Date('2024-12-20'),
+      },
+      {
+        _id: '2', name: 'Database Recovery Plan', description: 'Recovery procedures for database infrastructure',
+        version: '1.3', status: 'active', priority: 'high', scope: ['databases'],
+        objectives: { rto: 30, rpo: 5, mtpd: 240 }, owner: 'Jane Doe',
+        approvers: ['DBA Lead'], systems: ['db1', 'db2'], sites: ['site1'],
+        runbooks: ['rb3'], createdAt: new Date('2024-03-15'), updatedAt: new Date('2024-11-10'),
+      },
+    ]);
 
-  // Handle chat message
+    // Mock systems
+    setSystems([
+      {
+        _id: 'sys1', name: 'Production API Gateway', description: 'Main API gateway for all services',
+        tier: 1, category: 'infrastructure', status: 'operational', rto: 15, rpo: 5,
+        dependencies: ['sys2', 'sys3'], owner: 'Platform Team', primarySite: 'site1',
+        recoverySite: 'site2', recoveryProcedure: 'rb1', healthScore: 98, createdAt: new Date(),
+      },
+      {
+        _id: 'sys2', name: 'Primary Database Cluster', description: 'PostgreSQL primary cluster',
+        tier: 1, category: 'database', status: 'operational', rto: 30, rpo: 5,
+        dependencies: [], owner: 'DBA Team', primarySite: 'site1',
+        recoverySite: 'site2', recoveryProcedure: 'rb2', healthScore: 95, createdAt: new Date(),
+      },
+      {
+        _id: 'sys3', name: 'Authentication Service', description: 'OAuth2/OIDC authentication',
+        tier: 1, category: 'security', status: 'degraded', rto: 20, rpo: 10,
+        dependencies: ['sys2'], owner: 'Security Team', primarySite: 'site1',
+        recoverySite: 'site2', recoveryProcedure: 'rb3', healthScore: 72, createdAt: new Date(),
+      },
+    ]);
+
+    // Mock sites
+    setSites([
+      {
+        _id: 'site1', name: 'US-East Primary', type: 'primary',
+        location: { address: '123 Data Center Dr', city: 'Ashburn', country: 'USA' },
+        status: 'active', capacity: { servers: 500, storage: '2 PB', bandwidth: '100 Gbps' },
+        failoverTime: 0, contacts: ['ops@company.com'], systems: ['sys1', 'sys2', 'sys3'],
+        createdAt: new Date(),
+      },
+      {
+        _id: 'site2', name: 'US-West Hot Site', type: 'hot',
+        location: { address: '456 Recovery Blvd', city: 'Phoenix', country: 'USA' },
+        status: 'standby', capacity: { servers: 300, storage: '1 PB', bandwidth: '50 Gbps' },
+        failoverTime: 15, lastFailoverTest: new Date('2024-11-20'), contacts: ['dr@company.com'],
+        systems: [], createdAt: new Date(),
+      },
+    ]);
+
+    // Mock runbooks
+    setRunbooks([
+      {
+        _id: 'rb1', name: 'API Gateway Failover', description: 'Failover procedure for API Gateway',
+        type: 'failover', system: 'sys1', status: 'approved', estimatedTime: 15,
+        prerequisites: ['VPN access', 'Admin credentials'], owner: 'Platform Lead',
+        executionCount: 12, lastExecuted: new Date('2024-12-01'),
+        steps: [
+          { order: 1, title: 'Verify DR site status', description: 'Check DR site connectivity', responsible: 'NOC', estimatedTime: 2, isAutomated: true, command: 'ping dr-gateway.company.com', verificationSteps: [], rollbackSteps: [] },
+          { order: 2, title: 'Update DNS records', description: 'Point traffic to DR site', responsible: 'Platform Team', estimatedTime: 5, isAutomated: true, command: 'aws route53 change-resource-record-sets --hosted-zone-id Z123 --change-batch file://failover.json', verificationSteps: [], rollbackSteps: [] },
+          { order: 3, title: 'Verify traffic routing', description: 'Confirm requests reaching DR', responsible: 'NOC', estimatedTime: 5, isAutomated: false, verificationSteps: [], rollbackSteps: [] },
+        ],
+        createdAt: new Date(), updatedAt: new Date(),
+      },
+    ]);
+
+    // Mock tests
+    setTests([
+      {
+        _id: 't1', name: 'Q1 2025 Full DR Test', type: 'simulation', status: 'scheduled',
+        plan: '1', scheduledDate: new Date('2025-01-15'), participants: ['John', 'Jane', 'Bob'],
+        systems: ['sys1', 'sys2'], objectives: ['Verify RTO < 60min', 'Verify RPO < 15min'],
+        createdAt: new Date(),
+      },
+      {
+        _id: 't2', name: 'Database Failover Test', type: 'parallel', status: 'completed',
+        plan: '2', scheduledDate: new Date('2024-12-10'), startedAt: new Date('2024-12-10T10:00:00'),
+        completedAt: new Date('2024-12-10T11:30:00'), participants: ['DBA Team'],
+        systems: ['sys2'], objectives: ['Test replication', 'Verify data integrity'],
+        results: { rtoAchieved: 25, rpoAchieved: 3, successRate: 95, issues: ['Minor lag during switchover'], recommendations: ['Increase replication bandwidth'] },
+        createdAt: new Date(),
+      },
+    ]);
+  }, []);
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
-
+    
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
@@ -98,419 +176,193 @@ const App: React.FC = () => {
       timestamp: new Date(),
     };
     
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
-
-    // Simulate AI response (would connect to real AI service)
-    setTimeout(async () => {
-      // Check for tool-related keywords
-      let response = '';
-      
-      if (inputValue.toLowerCase().includes('analyze') && inputValue.toLowerCase().includes('transaction')) {
-        response = "I can help you analyze a transaction. Please use the Transaction Form on the left to enter the transaction details, or provide me with the transaction data and I'll analyze it for you.";
-      } else if (inputValue.toLowerCase().includes('alert')) {
-        response = "You can manage fraud alerts from the Alerts panel. Would you like me to create a new alert rule? Just tell me the alert type, threshold score, and notification channels you'd like to use.";
-      } else if (inputValue.toLowerCase().includes('report') || inputValue.toLowerCase().includes('export')) {
-        response = "I can help you export reports. Go to the Export section to generate PDF or CSV reports with your fraud analysis data. You can filter by date range and risk levels.";
-      } else if (inputValue.toLowerCase().includes('score') || inputValue.toLowerCase().includes('risk')) {
-        response = `Based on my analysis, the current risk assessment shows ${transactions.length} transactions processed with an average risk score. Would you like me to break down the risk factors or show you the visualization?`;
-      } else {
-        response = "I'm here to help with fraud detection and analysis. I can:\n\n• Analyze transactions for fraud risk\n• Show risk visualizations and patterns\n• Create and manage fraud alerts\n• Export detailed reports\n\nWhat would you like to do?";
-      }
-
-      const assistantMessage: Message = {
+    
+    setTimeout(() => {
+      const response: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: response,
+        content: `I understand you're asking about "${inputValue}". As your DR assistant, I can help you with recovery plans, system monitoring, runbook execution, and incident response. What specific action would you like to take?`,
         timestamp: new Date(),
-        provider: settings.selectedProvider,
       };
-      
-      setMessages((prev) => [...prev, assistantMessage]);
+      setMessages(prev => [...prev, response]);
       setIsTyping(false);
-    }, 1500);
+    }, 1000);
   };
 
-  // Handle alert operations
-  const handleCreateAlert = async (alert: Omit<Alert, 'id' | 'created_at' | 'triggered_count'>) => {
-    try {
-      const newAlert = await fraudguardAPI.alerts.create(alert);
-      setAlerts((prev) => [...prev, newAlert]);
-    } catch (error) {
-      // For demo, create locally
-      const localAlert: Alert = {
-        ...alert,
-        id: `alert_${Date.now()}`,
-        created_at: new Date().toISOString(),
-        triggered_count: 0,
-      };
-      setAlerts((prev) => [...prev, localAlert]);
-    }
-  };
-
-  const handleDeleteAlert = (id: string) => {
-    setAlerts((prev) => prev.filter((a) => a.id !== id));
-  };
-
-  const handleToggleAlert = (id: string, active: boolean) => {
-    setAlerts((prev) => prev.map((a) => a.id === id ? { ...a, active } : a));
-  };
-
-  // Handle report export
-  const handleExport = async (format: 'pdf' | 'csv', options: any) => {
-    // Simulate export
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log('Exporting:', format, options);
-  };
-
-  // Render tab content
-  const renderTabContent = () => {
+  const renderContent = () => {
     switch (activeTab) {
-      case 'analyze':
-        return (
-          <div className="space-y-6">
-            <TransactionForm onSubmit={handleAnalyzeTransaction} isLoading={isLoading} />
-            {currentScore && (
-              <FraudScoreCard 
-                score={currentScore} 
-                onApprove={() => console.log('Approved')}
-                onDecline={() => console.log('Declined')}
-                onReview={() => console.log('Review')}
-              />
-            )}
-          </div>
-        );
-      case 'visualize':
-        return (
-          <RiskVisualization 
-            data={[
-              { label: 'Card Mismatch', value: 35, color: '#EF4444' },
-              { label: 'High Velocity', value: 25, color: '#F97316' },
-              { label: 'New Device', value: 20, color: '#EAB308' },
-              { label: 'Location Risk', value: 15, color: '#22C55E' },
-              { label: 'Amount Flag', value: 5, color: '#3B82F6' },
-            ]}
-            chartType="risk_breakdown"
-          />
-        );
-      case 'history':
-        return (
-          <TransactionHistory 
-            transactions={transactions}
-            fraudScores={fraudScores}
-            onSelectTransaction={(t) => {
-              const score = fraudScores[t.transaction_id];
-              if (score) setCurrentScore(score);
-              setActiveTab('analyze');
-            }}
-          />
-        );
-      case 'alerts':
-        return (
-          <AlertsPanel 
-            alerts={alerts}
-            onCreateAlert={handleCreateAlert}
-            onDeleteAlert={handleDeleteAlert}
-            onToggleAlert={handleToggleAlert}
-          />
-        );
-      case 'reports':
-        return (
-          <ExportReport 
-            transactions={transactions}
-            fraudScores={fraudScores}
-            onExport={handleExport}
-          />
-        );
+      case 'dashboard':
+        return <Dashboard stats={stats} recentPlans={plans} criticalSystems={systems} onNavigate={setActiveTab} />;
+      case 'plans':
+        return <PlansList plans={plans} onActivate={(id) => console.log('Activate', id)} onArchive={(id) => console.log('Archive', id)} onClone={(id) => console.log('Clone', id)} onDelete={(id) => console.log('Delete', id)} onExport={(id) => console.log('Export', id)} />;
+      case 'systems':
+        return <SystemsManager systems={systems} onFailover={(id) => console.log('Failover', id)} onFailback={(id) => console.log('Failback', id)} onDelete={(id) => console.log('Delete', id)} />;
+      case 'sites':
+        return <SitesManager sites={sites} onTestConnectivity={(id) => console.log('Test', id)} onDelete={(id) => console.log('Delete', id)} />;
+      case 'runbooks':
+        return <RunbooksManager runbooks={runbooks} onExecute={(id) => console.log('Execute', id)} onValidate={(id) => console.log('Validate', id)} onDelete={(id) => console.log('Delete', id)} />;
+      case 'tests':
+        return <TestsManager tests={tests} onStart={(id) => console.log('Start', id)} onComplete={(id) => console.log('Complete', id)} onCancel={(id) => console.log('Cancel', id)} onDelete={(id) => console.log('Delete', id)} />;
+      case 'incidents':
+        return <IncidentsPanel incidents={incidents} onResolve={(id) => console.log('Resolve', id)} onAddUpdate={(id, update) => console.log('Update', id, update)} />;
       default:
-        return null;
+        return <div className="text-white text-center py-12">Section coming soon...</div>;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-slate-900/80 backdrop-blur-lg border-b border-red-500/30">
-        <div className="flex items-center justify-between h-full px-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
-            >
-              {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
+    <div className="flex h-screen bg-slate-900">
+      {/* Sidebar */}
+      <aside className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col`}>
+        {/* Logo */}
+        <div className="p-4 border-b border-slate-700">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
+              <Shield className="w-6 h-6 text-white" />
+            </div>
+            {sidebarOpen && (
               <div>
-                <h1 className="font-bold text-lg">FraudGuard</h1>
-                <p className="text-xs text-red-400">AI Fraud Detection</p>
+                <h1 className="text-lg font-bold text-white">DRPlan</h1>
+                <p className="text-xs text-slate-400">Disaster Recovery</p>
               </div>
-            </div>
+            )}
           </div>
+        </div>
 
+        {/* Navigation */}
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          {NAV_ITEMS.map((item) => {
+            const Icon = iconMap[item.icon] || LayoutDashboard;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id as Tab)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition ${
+                  activeTab === item.id
+                    ? 'bg-orange-600 text-white'
+                    : 'text-slate-400 hover:bg-slate-700 hover:text-white'
+                }`}
+              >
+                <Icon className="w-5 h-5 flex-shrink-0" />
+                {sidebarOpen && <span className="text-sm">{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Toggle */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-4 border-t border-slate-700 text-slate-400 hover:text-white"
+        >
+          {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+        </button>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="h-16 bg-slate-800 border-b border-slate-700 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
-            {/* Workspace Mode Selector */}
-            <div className="flex items-center gap-2 bg-slate-800 rounded-lg p-1">
-              <button
-                onClick={() => setWorkspaceMode('fraud-detection')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'fraud-detection' 
-                    ? 'bg-red-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Detection
-              </button>
-              <button
-                onClick={() => setWorkspaceMode('analytics')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'analytics' 
-                    ? 'bg-cyan-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Analytics
-              </button>
-              <button
-                onClick={() => setWorkspaceMode('monitoring')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'monitoring' 
-                    ? 'bg-yellow-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Monitoring
-              </button>
+            <h2 className="text-lg font-semibold text-white capitalize">{activeTab.replace('_', ' ')}</h2>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-64 pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-sm text-white placeholder-slate-400 focus:outline-none focus:border-orange-500"
+              />
             </div>
-
-            {/* Notifications */}
-            <button className="relative p-2 hover:bg-slate-800 rounded-lg transition-colors">
+            <button className="p-2 text-slate-400 hover:text-white relative">
               <Bell className="w-5 h-5" />
-              {alerts.filter(a => a.active).length > 0 && (
+              {stats.activeIncidents > 0 && (
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
               )}
             </button>
-
-            {/* Settings */}
-            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
-              <Settings className="w-5 h-5" />
-            </button>
-
-            {/* Toggle Chat */}
             <button
               onClick={() => setChatOpen(!chatOpen)}
-              className={`p-2 rounded-lg transition-colors ${
-                chatOpen ? 'bg-red-500/20 text-red-400' : 'hover:bg-slate-800'
-              }`}
+              className={`p-2 rounded-lg transition ${chatOpen ? 'bg-orange-600 text-white' : 'text-slate-400 hover:text-white'}`}
             >
               <MessageSquare className="w-5 h-5" />
             </button>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="flex pt-16">
-        {/* Sidebar */}
-        <aside 
-          className={`fixed left-0 top-16 bottom-0 bg-slate-900/50 backdrop-blur border-r border-red-500/20 transition-all duration-300 ${
-            sidebarOpen ? 'w-64' : 'w-16'
-          }`}
-        >
-          <nav className="p-4 space-y-2">
-            {NAV_ITEMS.map((item) => {
-              const Icon = {
-                'search': Search,
-                'analyze': Activity,
-                'visualize': TrendingUp,
-                'history': Clock,
-                'alerts': AlertTriangle,
-                'reports': FileText,
-                'settings': Settings,
-              }[item.id] || Activity;
+        {/* Content Area */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Main Content */}
+          <main className="flex-1 overflow-y-auto p-6">
+            {renderContent()}
+          </main>
 
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id as Tab)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                    activeTab === item.id
-                      ? 'bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 text-white'
-                      : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  {sidebarOpen && <span>{item.label}</span>}
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Quick Stats */}
-          {sidebarOpen && (
-            <div className="absolute bottom-4 left-4 right-4">
-              <div className="p-4 bg-gradient-to-br from-red-500/10 to-pink-500/10 rounded-xl border border-red-500/30">
-                <h4 className="text-sm font-bold text-white mb-3">Quick Stats</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Analyzed Today</span>
-                    <span className="text-white font-bold">{transactions.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">High Risk</span>
-                    <span className="text-red-400 font-bold">
-                      {Object.values(fraudScores).filter(s => s.risk_level === 'high' || s.risk_level === 'critical').length}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Active Alerts</span>
-                    <span className="text-yellow-400 font-bold">{alerts.filter(a => a.active).length}</span>
-                  </div>
+          {/* Chat Panel */}
+          {chatOpen && (
+            <aside className="w-96 bg-slate-800 border-l border-slate-700 flex flex-col">
+              <div className="p-4 border-b border-slate-700">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-orange-400" />
+                  <h3 className="font-semibold text-white">DR Assistant</h3>
                 </div>
               </div>
-            </div>
-          )}
-        </aside>
-
-        {/* Main Content */}
-        <main 
-          className={`flex-1 p-6 transition-all duration-300 ${
-            sidebarOpen ? 'ml-64' : 'ml-16'
-          } ${chatOpen ? 'mr-96' : ''}`}
-        >
-          <div className="max-w-4xl mx-auto">
-            {/* Page Header */}
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold">
-                {NAV_ITEMS.find(n => n.id === activeTab)?.label || 'FraudGuard'}
-              </h2>
-              <p className="text-gray-400 mt-1">
-                {activeTab === 'analyze' && 'Analyze transactions for potential fraud'}
-                {activeTab === 'visualize' && 'Visualize risk patterns and trends'}
-                {activeTab === 'history' && 'View and manage transaction history'}
-                {activeTab === 'alerts' && 'Configure and manage fraud alerts'}
-                {activeTab === 'reports' && 'Generate and export reports'}
-              </p>
-            </div>
-
-            {/* Tab Content */}
-            {renderTabContent()}
-          </div>
-        </main>
-
-        {/* Chat Panel */}
-        {chatOpen && (
-          <aside className="fixed right-0 top-16 bottom-0 w-96 bg-slate-900/50 backdrop-blur border-l border-red-500/20 flex flex-col">
-            {/* Chat Header */}
-            <div className="p-4 border-b border-red-500/20">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold">AI Assistant</h3>
-                    <p className="text-xs text-green-400 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-                      Online
-                    </p>
-                  </div>
-                </div>
-                <select 
-                  value={settings.selectedProvider}
-                  onChange={(e) => setSettings({ ...settings, selectedProvider: e.target.value as any })}
-                  className="bg-slate-800 border border-red-500/30 rounded-lg px-2 py-1 text-sm"
-                >
-                  {Object.entries(PROVIDER_CONFIG).map(([key, config]) => (
-                    <option key={key} value={key}>{config.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => (
-                <div 
-                  key={message.id}
-                  className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
-                >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    message.role === 'user' 
-                      ? 'bg-cyan-500/20' 
-                      : 'bg-gradient-to-br from-red-500 to-pink-500'
-                  }`}>
-                    {message.role === 'user' ? (
-                      <User className="w-4 h-4 text-cyan-400" />
-                    ) : (
-                      <Bot className="w-4 h-4 text-white" />
-                    )}
-                  </div>
-                  <div className={`max-w-[80%] p-3 rounded-xl ${
-                    message.role === 'user'
-                      ? 'bg-cyan-500/20 border border-cyan-500/30'
-                      : 'bg-slate-800/50 border border-red-500/30'
-                  }`}>
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    <p className="text-[10px] text-gray-500 mt-1">
-                      {message.timestamp.toLocaleTimeString()}
-                    </p>
-                  </div>
-                </div>
-              ))}
               
-              {isTyping && (
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="bg-slate-800/50 border border-red-500/30 p-3 rounded-xl">
-                    <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {messages.map((message) => (
+                  <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      message.role === 'user' ? 'bg-orange-600' : 'bg-slate-700'
+                    }`}>
+                      {message.role === 'user' ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-orange-400" />}
+                    </div>
+                    <div className={`max-w-[80%] p-3 rounded-xl ${
+                      message.role === 'user' ? 'bg-orange-600 text-white' : 'bg-slate-700 text-slate-200'
+                    }`}>
+                      <p className="text-sm">{message.content}</p>
                     </div>
                   </div>
-                </div>
-              )}
-              
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <div className="p-4 border-t border-red-500/20">
-              <div className="flex items-center gap-2 bg-slate-800/50 border border-red-500/30 rounded-xl p-2">
-                <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
-                  <Paperclip className="w-4 h-4 text-gray-400" />
-                </button>
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Ask about fraud detection..."
-                  className="flex-1 bg-transparent outline-none text-sm"
-                />
-                <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
-                  <Mic className="w-4 h-4 text-gray-400" />
-                </button>
-                <button 
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim()}
-                  className="p-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg transition-all hover:opacity-90 disabled:opacity-50"
-                >
-                  <Send className="w-4 h-4 text-white" />
-                </button>
+                ))}
+                {isTyping && (
+                  <div className="flex gap-3">
+                    <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center">
+                      <Bot className="w-4 h-4 text-orange-400" />
+                    </div>
+                    <div className="bg-slate-700 rounded-xl p-3">
+                      <div className="flex gap-1">
+                        <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" />
+                        <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                        <span className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
               </div>
-              <p className="text-[10px] text-gray-500 text-center mt-2">
-                Powered by {PROVIDER_CONFIG[settings.selectedProvider]?.name || 'AI'}
-              </p>
-            </div>
-          </aside>
-        )}
+
+              <div className="p-4 border-t border-slate-700">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="Ask about DR plans, systems..."
+                    className="flex-1 px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-sm text-white placeholder-slate-400 focus:outline-none focus:border-orange-500"
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    className="p-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition"
+                  >
+                    <Send className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </aside>
+          )}
+        </div>
       </div>
     </div>
   );

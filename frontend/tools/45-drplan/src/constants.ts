@@ -1,124 +1,109 @@
-import { SettingsState, NavItem } from './types';
+// DRPlan Constants
 
-export const PROVIDER_CONFIG = [
-  {
-    id: 'gemini',
-    name: 'Google Gemini',
-    models: ['gemini-2.5-flash-preview', 'gemini-2.5-pro-preview', 'gemini-2.0-flash']
-  },
-  {
-    id: 'openai',
-    name: 'OpenAI',
-    models: ['gpt-4o', 'gpt-4-turbo', 'gpt-4o-mini']
-  },
-  {
-    id: 'anthropic',
-    name: 'Anthropic Claude',
-    models: ['claude-sonnet-4-20250514', 'claude-3-5-sonnet-20241022', 'claude-3-haiku-20240307']
-  },
-  {
-    id: 'xai',
-    name: 'xAI Grok',
-    models: ['grok-2', 'grok-2-mini']
-  },
-  {
-    id: 'mistral',
-    name: 'Mistral AI',
-    models: ['mistral-large-latest', 'mistral-medium', 'mistral-small']
-  },
-  {
-    id: 'meta',
-    name: 'Meta Llama',
-    models: ['llama-3.1-405b', 'llama-3.1-70b', 'llama-3.1-8b']
-  }
+export const API_BASE_URL = 'https://dplan.maula.ai/api';
+
+export const NAV_ITEMS = [
+  { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+  { id: 'plans', label: 'Recovery Plans', icon: 'FileText' },
+  { id: 'systems', label: 'Critical Systems', icon: 'Server' },
+  { id: 'sites', label: 'Recovery Sites', icon: 'Building2' },
+  { id: 'runbooks', label: 'Runbooks', icon: 'BookOpen' },
+  { id: 'tests', label: 'DR Tests', icon: 'FlaskConical' },
+  { id: 'contacts', label: 'Contacts', icon: 'Users' },
+  { id: 'incidents', label: 'Incidents', icon: 'AlertTriangle' },
+  { id: 'reports', label: 'Reports', icon: 'BarChart3' },
+  { id: 'settings', label: 'Settings', icon: 'Settings' },
 ];
 
+export const DEFAULT_SETTINGS = {
+  notifications: true,
+  autoBackup: true,
+  testReminders: true,
+  theme: 'dark' as const,
+};
+
+export const PLAN_STATUS_COLORS = {
+  draft: 'bg-gray-500',
+  active: 'bg-green-500',
+  archived: 'bg-slate-500',
+  under_review: 'bg-yellow-500',
+};
+
+export const SYSTEM_STATUS_COLORS = {
+  operational: 'bg-green-500',
+  degraded: 'bg-yellow-500',
+  failed: 'bg-red-500',
+  recovering: 'bg-blue-500',
+};
+
+export const SITE_TYPE_COLORS = {
+  primary: 'bg-blue-500',
+  hot: 'bg-green-500',
+  warm: 'bg-yellow-500',
+  cold: 'bg-slate-500',
+  cloud: 'bg-purple-500',
+};
+
+export const SEVERITY_COLORS = {
+  critical: 'bg-red-500 text-white',
+  major: 'bg-orange-500 text-white',
+  minor: 'bg-yellow-500 text-black',
+  warning: 'bg-blue-500 text-white',
+};
+
+export const TIER_LABELS = {
+  1: 'Mission Critical',
+  2: 'Business Critical',
+  3: 'Business Operational',
+  4: 'Administrative',
+};
+
+export const TEST_TYPE_LABELS = {
+  tabletop: 'Tabletop Exercise',
+  walkthrough: 'Walkthrough',
+  simulation: 'Simulation',
+  parallel: 'Parallel Processing',
+  full_interruption: 'Full Interruption',
+};
+
+export const formatMinutes = (minutes: number): string => {
+  if (minutes < 60) return `${minutes}m`;
+  if (minutes < 1440) return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+  return `${Math.floor(minutes / 1440)}d ${Math.floor((minutes % 1440) / 60)}h`;
+};
+
+export const formatDate = (date: Date | string): string => {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+export const formatDateTime = (date: Date | string): string => {
+  return new Date(date).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+export const getReadinessColor = (score: number): string => {
+  if (score >= 90) return 'text-green-400';
+  if (score >= 70) return 'text-yellow-400';
+  if (score >= 50) return 'text-orange-400';
+  return 'text-red-400';
+};
+
+// Default Settings
 export const DEFAULT_SETTINGS: SettingsState = {
-  customPrompt: `You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models.
-
-CAPABILITIES:
-- Analyze transactions for fraud indicators and calculate risk scores (0-100)
-- Detect suspicious patterns in transaction data
-- Provide actionable recommendations for risk mitigation
-- Generate detailed fraud reports
-- Create alerts for high-risk transactions
-
-AVAILABLE FUNCTIONS:
-- analyze_transaction: Analyze a transaction for fraud indicators
-- get_fraud_score: Get the fraud risk score for a transaction
-- open_risk_visualization: Open charts and graphs for analysis
-- get_transaction_history: Fetch transaction history with filters
-- create_alert: Create fraud monitoring alerts
-- export_report: Generate and export fraud reports
-
-Always be thorough in your analysis and explain findings in clear, non-technical language.`,
-  agentName: "FraudGuard AI",
-  temperature: 0.7,
-  maxTokens: 4096,
-  provider: 'gemini',
-  model: "gemini-2.5-flash-preview",
-  activeTool: 'fraud_analysis',
-  workspaceMode: 'CHAT',
-  portalUrl: 'https://www.google.com/search?igu=1',
-  canvas: {
-    content: "// FraudGuard Workspace\n\nReady for fraud analysis.",
-    type: 'text',
-    title: 'FraudGuard_Canvas'
-  }
+  notifications: true,
+  emailAlerts: true,
+  autoRefresh: true,
+  refreshInterval: 30,
+  theme: 'dark',
 };
 
-export const NAV_ITEMS: NavItem[] = [
-  { label: 'Fraud Analysis', icon: '🛡️', tool: 'fraud_analysis', description: 'Analyze transactions for fraud' },
-  { label: 'Risk Dashboard', icon: '📊', tool: 'risk_visualization', description: 'View risk charts and graphs' },
-  { label: 'Transaction History', icon: '📜', tool: 'transaction_history', description: 'Browse past transactions' },
-  { label: 'Alerts', icon: '🔔', tool: 'alerts', description: 'Manage fraud alerts' },
-  { label: 'Reports', icon: '📄', tool: 'reports', description: 'Generate fraud reports' },
-  { label: 'Web Portal', icon: '🌐', tool: 'browser', description: 'Open web browser' },
-  { label: 'Canvas', icon: '🖌️', tool: 'canvas', description: 'Collaborative workspace' },
-  { label: 'Web Search', icon: '🔍', tool: 'web_search', description: 'Search the web' }
-];
-
-export const FRAUD_PRESETS: Record<string, { prompt: string; temp: number }> = {
-  thorough: { 
-    prompt: "Perform extremely detailed fraud analysis. Check every indicator, cross-reference patterns, and provide comprehensive risk assessment.", 
-    temp: 0.3 
-  },
-  quick: { 
-    prompt: "Perform quick fraud screening. Focus on major red flags and provide a rapid risk assessment.", 
-    temp: 0.5 
-  },
-  educational: { 
-    prompt: "Explain fraud analysis in educational terms. Help the user understand fraud patterns and detection methods.", 
-    temp: 0.7 
-  },
-  investigative: { 
-    prompt: "Take an investigative approach. Look for hidden patterns, connections, and potential fraud networks.", 
-    temp: 0.4 
-  }
-};
-
-export const RISK_COLORS = {
-  low: '#00ff88',
-  medium: '#ffaa00',
-  high: '#ff0055'
-};
-
-export const API_ENDPOINTS = {
-  fraudguard: {
-    analyze: '/api/fraudguard/analyze',
-    score: '/api/fraudguard/score',
-    transactions: '/api/fraudguard/transactions',
-    analytics: '/api/fraudguard/analytics',
-    alerts: '/api/fraudguard/alerts',
-    reports: '/api/fraudguard/reports'
-  },
-  ml: {
-    predict: '/api/ml/predict',
-    score: '/api/ml/score',
-    train: '/api/ml/train'
-  },
-  ai: {
-    chat: '/api/ai/chat',
-    ws: '/ws/ai'
-  }
-};
+import { SettingsState } from './types';
