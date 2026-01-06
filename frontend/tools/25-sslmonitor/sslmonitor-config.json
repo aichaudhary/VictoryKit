@@ -1,0 +1,137 @@
+{
+  "tool": {
+    "id": "25-sslmonitor",
+    "name": "SSLMonitor",
+    "description": "Enterprise SSL/TLS Certificate Monitoring Platform",
+    "version": "1.0.0",
+    "domain": "sslmonitor.maula.ai",
+    "theme": {
+      "primary": "#10B981",
+      "secondary": "#059669",
+      "accent": "#34D399"
+    }
+  },
+  "ports": {
+    "frontend": 3025,
+    "api": 4025,
+    "ai": 6025,
+    "ml": 8025
+  },
+  "api": {
+    "baseUrl": "http://localhost:4025/api/v1",
+    "endpoints": {
+      "certificates": "/certificates",
+      "domains": "/domains",
+      "alerts": "/alerts",
+      "analytics": "/analytics",
+      "compliance": "/compliance",
+      "scans": "/scans",
+      "system": "/system"
+    }
+  },
+  "ai": {
+    "provider": "multi",
+    "models": ["gemini-2.0-flash-exp", "claude-sonnet-4-20250514", "gpt-4o", "grok-3-latest"],
+    "functions": [
+      {
+        "name": "scan_certificate",
+        "description": "Scan a domain for SSL/TLS certificate information and security analysis",
+        "parameters": {
+          "domain": { "type": "string", "description": "Domain name to scan (e.g., example.com)", "required": true },
+          "port": { "type": "number", "description": "Port number (default: 443)", "default": 443 },
+          "include_chain": { "type": "boolean", "description": "Include certificate chain analysis", "default": true }
+        }
+      },
+      {
+        "name": "get_expiring_certificates",
+        "description": "Get list of certificates expiring within specified days",
+        "parameters": {
+          "days": { "type": "number", "description": "Number of days to look ahead (default: 30)", "default": 30 },
+          "severity": { "type": "string", "description": "Filter by severity: all, critical, warning", "default": "all" }
+        }
+      },
+      {
+        "name": "analyze_certificate_chain",
+        "description": "Analyze SSL/TLS certificate chain for security issues",
+        "parameters": {
+          "certificate_id": { "type": "string", "description": "Certificate ID to analyze", "required": true },
+          "deep_analysis": { "type": "boolean", "description": "Perform deep security analysis", "default": false }
+        }
+      },
+      {
+        "name": "check_ssl_vulnerabilities",
+        "description": "Check domain for SSL/TLS vulnerabilities (POODLE, BEAST, Heartbleed, etc.)",
+        "parameters": {
+          "domain": { "type": "string", "description": "Domain to check", "required": true },
+          "vulnerability_types": { "type": "array", "description": "Specific vulnerabilities to check", "default": ["all"] }
+        }
+      },
+      {
+        "name": "generate_compliance_report",
+        "description": "Generate SSL/TLS compliance report for regulatory standards",
+        "parameters": {
+          "standard": { "type": "string", "description": "Compliance standard: PCI_DSS, HIPAA, GDPR, NIST", "required": true },
+          "domain_ids": { "type": "array", "description": "Domain IDs to include", "default": [] },
+          "format": { "type": "string", "description": "Report format: pdf, json, html", "default": "pdf" }
+        }
+      },
+      {
+        "name": "add_domain_monitoring",
+        "description": "Add a domain for SSL/TLS certificate monitoring",
+        "parameters": {
+          "domain": { "type": "string", "description": "Domain name to monitor", "required": true },
+          "scan_frequency": { "type": "string", "description": "Scan frequency: hourly, daily, weekly", "default": "daily" },
+          "alert_days_before": { "type": "number", "description": "Days before expiry to alert", "default": 30 }
+        }
+      },
+      {
+        "name": "get_certificate_analytics",
+        "description": "Get analytics and statistics about monitored certificates",
+        "parameters": {
+          "period": { "type": "string", "description": "Time period: 7d, 30d, 90d, 1y", "default": "30d" },
+          "metrics": { "type": "array", "description": "Metrics to include", "default": ["all"] }
+        }
+      },
+      {
+        "name": "configure_alerts",
+        "description": "Configure certificate expiry and security alerts",
+        "parameters": {
+          "alert_type": { "type": "string", "description": "Alert type: expiry, vulnerability, grade_change", "required": true },
+          "threshold_days": { "type": "number", "description": "Days threshold for expiry alerts", "default": 30 },
+          "notification_channels": { "type": "array", "description": "Notification channels: email, slack, webhook", "default": ["email"] }
+        }
+      },
+      {
+        "name": "bulk_scan_domains",
+        "description": "Scan multiple domains for SSL/TLS certificates",
+        "parameters": {
+          "domains": { "type": "array", "description": "List of domain names to scan", "required": true },
+          "parallel": { "type": "boolean", "description": "Scan in parallel", "default": true }
+        }
+      },
+      {
+        "name": "open_dashboard",
+        "description": "Open SSLMonitor dashboard with specified view",
+        "parameters": {
+          "view": { "type": "string", "description": "Dashboard view: overview, certificates, domains, alerts, analytics", "default": "overview" }
+        }
+      }
+    ]
+  },
+  "database": {
+    "name": "sslmonitor_db",
+    "collections": ["certificates", "domains", "alerts", "scan_results", "compliance_reports"]
+  },
+  "features": [
+    "Real-time certificate monitoring",
+    "Automatic expiry alerts",
+    "Certificate chain analysis",
+    "SSL/TLS vulnerability scanning",
+    "Compliance reporting (PCI-DSS, HIPAA, GDPR)",
+    "Multi-domain management",
+    "Security grade scoring",
+    "API integration",
+    "Webhook notifications",
+    "AI-powered analysis"
+  ]
+}
