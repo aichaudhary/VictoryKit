@@ -1,0 +1,303 @@
+{
+  "toolName": "RiskScoreAI",
+  "tagline": "AI-Powered Enterprise Risk Assessment Engine",
+  "subdomain": "riskscoreai.maula.ai",
+  "aiPath": "/maula-ai",
+  "port": 3029,
+  "apiPort": 4029,
+  "mlPort": 8029,
+  "aiPort": 6029,
+  "databaseName": "riskscoreai_db",
+  
+  "systemPrompt": "You are RiskScoreAI, an elite risk assessment and quantification expert with deep knowledge of cybersecurity risk frameworks (NIST, ISO 27001, FAIR), threat modeling, vulnerability analysis, asset valuation, business impact assessment, and machine learning-based risk prediction. You help organizations quantify and prioritize security risks through AI-powered scoring algorithms. You can calculate risk scores for assets (servers, endpoints, applications), users (based on behavior and access), threats (by severity and exploitability), vulnerabilities (CVSS with business context), and vendors (supply chain risk). You provide risk heatmaps, trend analysis, predictive risk forecasting, and custom scoring models. You understand that risk = Threat × Vulnerability × Impact, and you can break down complex security postures into actionable numerical scores (0-100 scale). Always explain your risk calculations clearly, highlight critical risk factors, suggest remediation priorities, and balance technical accuracy with business understanding.",
+  
+  "functions": [
+    {
+      "name": "calculate_asset_risk",
+      "description": "Calculate comprehensive risk score for an asset (server, endpoint, application, database)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "asset_id": { "type": "string", "description": "Asset identifier" },
+          "asset_type": {
+            "type": "string",
+            "enum": ["server", "endpoint", "application", "database", "network_device", "cloud_resource"],
+            "description": "Type of asset"
+          },
+          "asset_data": {
+            "type": "object",
+            "properties": {
+              "criticality": { "type": "string", "enum": ["low", "medium", "high", "critical"], "description": "Business criticality" },
+              "data_classification": { "type": "string", "enum": ["public", "internal", "confidential", "restricted"], "description": "Data sensitivity" },
+              "vulnerabilities": { "type": "array", "description": "List of known vulnerabilities", "items": { "type": "object" } },
+              "threats": { "type": "array", "description": "Active threats targeting asset", "items": { "type": "object" } },
+              "controls": { "type": "array", "description": "Security controls in place", "items": { "type": "string" } },
+              "last_patched": { "type": "string", "description": "Last patch date" },
+              "exposure": { "type": "string", "enum": ["internal", "dmz", "internet_facing"], "description": "Network exposure" }
+            }
+          },
+          "include_predictions": { "type": "boolean", "description": "Include AI risk predictions" },
+          "risk_model": { "type": "string", "enum": ["nist", "iso27001", "fair", "custom"], "description": "Risk calculation framework" }
+        },
+        "required": ["asset_id", "asset_type", "asset_data"]
+      }
+    },
+    {
+      "name": "calculate_user_risk",
+      "description": "Calculate user risk profile based on behavior, access, and violations",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "user_id": { "type": "string", "description": "User identifier" },
+          "user_data": {
+            "type": "object",
+            "properties": {
+              "role": { "type": "string", "description": "Job role/title" },
+              "privileged_access": { "type": "boolean", "description": "Has admin/privileged access" },
+              "access_level": { "type": "string", "enum": ["basic", "elevated", "administrative", "super_admin"] },
+              "recent_activities": { "type": "array", "description": "Recent suspicious activities", "items": { "type": "object" } },
+              "policy_violations": { "type": "array", "description": "Security policy violations", "items": { "type": "object" } },
+              "failed_logins": { "type": "number", "description": "Failed login attempts (last 30 days)" },
+              "data_access": { "type": "array", "description": "Sensitive data accessed", "items": { "type": "string" } },
+              "geographic_anomalies": { "type": "boolean", "description": "Unusual login locations detected" }
+            }
+          },
+          "time_period": { "type": "string", "enum": ["last_7_days", "last_30_days", "last_90_days"], "description": "Analysis period" }
+        },
+        "required": ["user_id", "user_data"]
+      }
+    },
+    {
+      "name": "assess_threat_risk",
+      "description": "Calculate risk score for a detected threat or security event",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "threat_id": { "type": "string", "description": "Threat identifier" },
+          "threat_data": {
+            "type": "object",
+            "properties": {
+              "threat_type": { "type": "string", "description": "Type of threat (malware, phishing, etc.)" },
+              "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+              "exploitability": { "type": "string", "enum": ["low", "medium", "high"], "description": "Ease of exploitation" },
+              "affected_assets": { "type": "array", "description": "Assets at risk", "items": { "type": "string" } },
+              "attack_vector": { "type": "string", "description": "How threat can be delivered" },
+              "mitre_tactics": { "type": "array", "description": "MITRE ATT&CK tactics", "items": { "type": "string" } },
+              "threat_intelligence": { "type": "object", "description": "External threat intel data" },
+              "active": { "type": "boolean", "description": "Currently active threat" }
+            }
+          },
+          "context": { "type": "object", "description": "Environmental context factors" }
+        },
+        "required": ["threat_id", "threat_data"]
+      }
+    },
+    {
+      "name": "score_vulnerability",
+      "description": "Calculate vulnerability risk score with business context (CVSS + impact)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "cve_id": { "type": "string", "description": "CVE identifier (e.g., CVE-2024-1234)" },
+          "cvss_score": { "type": "number", "description": "CVSS base score (0-10)" },
+          "cvss_vector": { "type": "string", "description": "CVSS vector string" },
+          "affected_assets": { "type": "array", "description": "Assets with this vulnerability", "items": { "type": "string" } },
+          "exploit_available": { "type": "boolean", "description": "Public exploit exists" },
+          "actively_exploited": { "type": "boolean", "description": "Known active exploitation" },
+          "patch_available": { "type": "boolean", "description": "Patch/fix available" },
+          "business_impact": {
+            "type": "object",
+            "properties": {
+              "revenue_impact": { "type": "string", "enum": ["none", "low", "medium", "high"] },
+              "data_exposure": { "type": "string", "enum": ["none", "minimal", "moderate", "severe"] },
+              "service_disruption": { "type": "string", "enum": ["none", "minor", "significant", "critical"] }
+            }
+          }
+        },
+        "required": ["cve_id", "cvss_score"]
+      }
+    },
+    {
+      "name": "calculate_vendor_risk",
+      "description": "Assess third-party/vendor security risk (supply chain)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "vendor_name": { "type": "string", "description": "Vendor/supplier name" },
+          "vendor_data": {
+            "type": "object",
+            "properties": {
+              "access_level": { "type": "string", "enum": ["none", "limited", "moderate", "extensive"], "description": "Access to your systems/data" },
+              "data_shared": { "type": "array", "description": "Types of data shared with vendor", "items": { "type": "string" } },
+              "security_certifications": { "type": "array", "description": "ISO, SOC2, etc.", "items": { "type": "string" } },
+              "recent_breaches": { "type": "number", "description": "Known breaches in last 3 years" },
+              "compliance_status": { "type": "object", "description": "Compliance posture" },
+              "contract_value": { "type": "number", "description": "Annual contract value (USD)" },
+              "dependency_level": { "type": "string", "enum": ["low", "medium", "high", "critical"], "description": "Business dependency" },
+              "security_questionnaire": { "type": "object", "description": "Security assessment responses" }
+            }
+          },
+          "assessment_type": { "type": "string", "enum": ["initial", "annual_review", "incident_triggered"], "description": "Assessment reason" }
+        },
+        "required": ["vendor_name", "vendor_data"]
+      }
+    },
+    {
+      "name": "generate_risk_heatmap",
+      "description": "Generate risk heatmap visualization data for organization/department",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "enum": ["organization", "department", "location", "asset_type"],
+            "description": "Heatmap scope"
+          },
+          "scope_id": { "type": "string", "description": "Specific scope identifier (dept ID, location, etc.)" },
+          "risk_categories": {
+            "type": "array",
+            "enum": ["assets", "users", "threats", "vulnerabilities", "vendors", "compliance"],
+            "description": "Risk categories to include"
+          },
+          "time_period": { "type": "string", "enum": ["current", "last_7_days", "last_30_days", "last_quarter"], "description": "Time period" },
+          "grouping": { "type": "string", "enum": ["by_severity", "by_category", "by_department", "by_asset_type"], "description": "How to group data" }
+        },
+        "required": ["scope"]
+      }
+    },
+    {
+      "name": "predict_risk_trajectory",
+      "description": "Use ML to predict future risk scores and trends",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entity_type": { "type": "string", "enum": ["asset", "user", "department", "organization"], "description": "Entity to predict" },
+          "entity_id": { "type": "string", "description": "Entity identifier" },
+          "prediction_horizon": { "type": "string", "enum": ["7_days", "30_days", "90_days", "1_year"], "description": "Forecast period" },
+          "include_scenarios": { "type": "boolean", "description": "Include what-if scenarios" },
+          "confidence_threshold": { "type": "number", "minimum": 0, "maximum": 1, "description": "Minimum confidence level (0-1)" }
+        },
+        "required": ["entity_type", "entity_id", "prediction_horizon"]
+      }
+    },
+    {
+      "name": "aggregate_risk_score",
+      "description": "Roll up multiple risk scores into organization/department-wide score",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "aggregation_level": {
+            "type": "string",
+            "enum": ["department", "business_unit", "location", "organization"],
+            "description": "Aggregation scope"
+          },
+          "aggregation_id": { "type": "string", "description": "Scope identifier" },
+          "risk_components": {
+            "type": "array",
+            "enum": ["asset_risk", "user_risk", "threat_risk", "vulnerability_risk", "vendor_risk", "compliance_risk"],
+            "description": "Components to aggregate"
+          },
+          "weighting": {
+            "type": "object",
+            "description": "Custom weights for each component (0-1)",
+            "properties": {
+              "asset_risk": { "type": "number" },
+              "user_risk": { "type": "number" },
+              "threat_risk": { "type": "number" },
+              "vulnerability_risk": { "type": "number" }
+            }
+          },
+          "include_breakdown": { "type": "boolean", "description": "Include detailed breakdown" }
+        },
+        "required": ["aggregation_level"]
+      }
+    },
+    {
+      "name": "analyze_risk_trends",
+      "description": "Analyze historical risk score trends and identify patterns",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "entity_type": { "type": "string", "enum": ["asset", "user", "department", "organization"], "description": "Entity type" },
+          "entity_id": { "type": "string", "description": "Entity identifier" },
+          "time_period": { "type": "string", "enum": ["last_30_days", "last_90_days", "last_6_months", "last_year"], "description": "Analysis period" },
+          "metrics": {
+            "type": "array",
+            "enum": ["average_risk", "peak_risk", "risk_volatility", "improvement_rate", "risk_events"],
+            "description": "Metrics to analyze"
+          },
+          "detect_anomalies": { "type": "boolean", "description": "Detect unusual risk changes" },
+          "compare_to_baseline": { "type": "boolean", "description": "Compare to organizational baseline" }
+        },
+        "required": ["entity_type", "time_period"]
+      }
+    },
+    {
+      "name": "create_custom_risk_model",
+      "description": "Build custom risk scoring model with specific factors and weights",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "model_name": { "type": "string", "description": "Custom model name" },
+          "target_entity": { "type": "string", "enum": ["asset", "user", "threat", "vulnerability", "vendor"], "description": "What this model scores" },
+          "risk_factors": {
+            "type": "array",
+            "description": "Risk factors to include",
+            "items": {
+              "type": "object",
+              "properties": {
+                "factor_name": { "type": "string" },
+                "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+                "data_source": { "type": "string" },
+                "calculation_method": { "type": "string" }
+              }
+            }
+          },
+          "score_range": {
+            "type": "object",
+            "properties": {
+              "min": { "type": "number" },
+              "max": { "type": "number" }
+            }
+          },
+          "thresholds": {
+            "type": "object",
+            "properties": {
+              "low": { "type": "number" },
+              "medium": { "type": "number" },
+              "high": { "type": "number" },
+              "critical": { "type": "number" }
+            }
+          }
+        },
+        "required": ["model_name", "target_entity", "risk_factors"]
+      }
+    }
+  ],
+  
+  "colorTheme": {
+    "primary": "#dc2626",
+    "secondary": "#f59e0b",
+    "accent": "#10b981",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "danger": "#dc2626",
+    "info": "#3b82f6",
+    "background": "#0a0e27",
+    "surface": "#1a1f3a",
+    "text": "#ffffff",
+    "textSecondary": "#94a3b8"
+  },
+  
+  "navigationItems": [
+    { "label": "Dashboard", "path": "/dashboard", "icon": "LayoutDashboard" },
+    { "label": "Asset Risk", "path": "/assets", "icon": "Server" },
+    { "label": "User Risk", "path": "/users", "icon": "Users" },
+    { "label": "Threat Risk", "path": "/threats", "icon": "Shield" },
+    { "label": "Vulnerabilities", "path": "/vulnerabilities", "icon": "Bug" },
+    { "label": "Vendor Risk", "path": "/vendors", "icon": "Building" },
+    { "label": "Risk Heatmap", "path": "/heatmap", "icon": "Map" },
+    { "label": "Predictions", "path": "/predictions", "icon": "TrendingUp" },
+    { "label": "Custom Models", "path": "/models", "icon": "Settings" }
+  ]
+}

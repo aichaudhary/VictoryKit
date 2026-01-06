@@ -1,0 +1,479 @@
+{
+  "toolName": "PCI DSS Check",
+  "tagline": "Comprehensive Payment Card Industry Compliance Validation",
+  "subdomain": "pcidsschk.maula.ai",
+  "port": 3049,
+  "apiPort": 4049,
+  "mlPort": 8049,
+  "aiPort": 6049,
+  "databaseName": "pcidsscheck_db",
+  
+  "systemPrompt": "You are PCI DSS Check AI, an expert in Payment Card Industry Data Security Standard (PCI DSS) compliance with deep knowledge of all 12 requirements, 78 sub-requirements, cardholder data environment (CDE) protection, network security, access control, vulnerability management, encryption standards, and compliance frameworks (SAQ, AOC, ROC). You help organizations validate compliance, identify security gaps, assess cardholder data flows, generate compliance reports, provide remediation guidance, and prepare for QSA audits. You can autonomously perform multi-step compliance assessments, open multiple tabs for requirement analysis, scan network configurations, analyze security policies, and provide actionable recommendations for achieving and maintaining PCI DSS compliance. Always explain security concepts clearly and provide specific, implementable remediation steps aligned with PCI DSS v4.0 standards.",
+  
+  "pciDssVersion": "4.0",
+  "requirements": [
+    {
+      "id": "req1",
+      "number": "1",
+      "title": "Install and Maintain Network Security Controls",
+      "description": "Implement firewalls and network segmentation to protect cardholder data",
+      "subRequirements": [
+        "1.1 - Processes and mechanisms for installing and maintaining network security controls",
+        "1.2 - Network security controls (NSCs) are configured and maintained",
+        "1.3 - Network access to and from the CDE is restricted",
+        "1.4 - Network connections between trusted and untrusted networks are controlled",
+        "1.5 - Risks to the CDE from computing devices are mitigated"
+      ]
+    },
+    {
+      "id": "req2",
+      "number": "2",
+      "title": "Apply Secure Configurations to All System Components",
+      "description": "Remove default passwords and implement secure configuration standards",
+      "subRequirements": [
+        "2.1 - Processes and mechanisms for applying secure configurations",
+        "2.2 - System components are configured and managed securely",
+        "2.3 - Wireless environments are configured and managed securely"
+      ]
+    },
+    {
+      "id": "req3",
+      "number": "3",
+      "title": "Protect Stored Cardholder Data",
+      "description": "Minimize data storage and protect stored cardholder data with encryption",
+      "subRequirements": [
+        "3.1 - Processes and mechanisms for protecting stored account data",
+        "3.2 - Storage of account data is kept to a minimum",
+        "3.3 - Sensitive authentication data (SAD) is not stored after authorization",
+        "3.4 - Access to displays of full PAN and ability to copy PAN is restricted",
+        "3.5 - Primary account number (PAN) is secured wherever it is stored",
+        "3.6 - Cryptographic keys used to protect stored account data are secured",
+        "3.7 - Where cryptography is used to protect stored account data, key management processes are defined and implemented"
+      ]
+    },
+    {
+      "id": "req4",
+      "number": "4",
+      "title": "Protect Cardholder Data with Strong Cryptography During Transmission",
+      "description": "Encrypt transmission of cardholder data across open, public networks",
+      "subRequirements": [
+        "4.1 - Processes and mechanisms for protecting cardholder data with strong cryptography",
+        "4.2 - PAN is protected with strong cryptography whenever transmitted over open, public networks"
+      ]
+    },
+    {
+      "id": "req5",
+      "number": "5",
+      "title": "Protect All Systems and Networks from Malicious Software",
+      "description": "Deploy and maintain anti-malware solutions",
+      "subRequirements": [
+        "5.1 - Processes and mechanisms for protecting systems and networks from malicious software",
+        "5.2 - Malicious software (malware) is prevented or detected and addressed",
+        "5.3 - Anti-malware mechanisms and processes are active, maintained, and monitored",
+        "5.4 - Anti-phishing mechanisms protect users against phishing attacks"
+      ]
+    },
+    {
+      "id": "req6",
+      "number": "6",
+      "title": "Develop and Maintain Secure Systems and Software",
+      "description": "Identify security vulnerabilities and protect systems with patches and updates",
+      "subRequirements": [
+        "6.1 - Processes and mechanisms for developing and maintaining secure systems",
+        "6.2 - Bespoke and custom software are developed securely",
+        "6.3 - Security vulnerabilities are identified and addressed",
+        "6.4 - Public-facing web applications are protected against attacks",
+        "6.5 - Changes to all system components are managed securely"
+      ]
+    },
+    {
+      "id": "req7",
+      "number": "7",
+      "title": "Restrict Access to System Components and Cardholder Data by Business Need to Know",
+      "description": "Limit access based on job responsibilities and least privilege principle",
+      "subRequirements": [
+        "7.1 - Processes and mechanisms for restricting access",
+        "7.2 - Access to system components and data is appropriately defined and assigned",
+        "7.3 - Access to system components and data is managed via an access control system"
+      ]
+    },
+    {
+      "id": "req8",
+      "number": "8",
+      "title": "Identify Users and Authenticate Access to System Components",
+      "description": "Assign unique IDs and authenticate all users before granting access",
+      "subRequirements": [
+        "8.1 - Processes and mechanisms for identifying and authenticating users",
+        "8.2 - User identification and related accounts are strictly managed",
+        "8.3 - Strong authentication is established and managed",
+        "8.4 - Multi-factor authentication (MFA) is implemented",
+        "8.5 - MFA systems are configured to prevent misuse",
+        "8.6 - Use of application and system accounts and associated authentication factors is strictly managed"
+      ]
+    },
+    {
+      "id": "req9",
+      "number": "9",
+      "title": "Restrict Physical Access to Cardholder Data",
+      "description": "Control physical access to systems that store, process, or transmit cardholder data",
+      "subRequirements": [
+        "9.1 - Processes and mechanisms for restricting physical access",
+        "9.2 - Physical access controls manage entry into facilities and systems",
+        "9.3 - Physical access for personnel and visitors is authorized and managed",
+        "9.4 - Media with cardholder data is securely stored, accessed, distributed, and destroyed",
+        "9.5 - Point of interaction (POI) devices are protected from tampering and unauthorized substitution"
+      ]
+    },
+    {
+      "id": "req10",
+      "number": "10",
+      "title": "Log and Monitor All Access to System Components and Cardholder Data",
+      "description": "Track and monitor all access to network resources and cardholder data",
+      "subRequirements": [
+        "10.1 - Processes and mechanisms for logging and monitoring access",
+        "10.2 - Audit logs are implemented to support detection of anomalies and suspicious activity",
+        "10.3 - Audit logs are protected from destruction and unauthorized modifications",
+        "10.4 - Audit logs are reviewed to identify anomalies or suspicious activity",
+        "10.5 - Audit log history is retained and available for analysis",
+        "10.6 - Time-synchronization mechanisms support consistent time settings across systems",
+        "10.7 - Failures of critical security control systems are detected, reported, and responded to"
+      ]
+    },
+    {
+      "id": "req11",
+      "number": "11",
+      "title": "Test Security of Systems and Networks Regularly",
+      "description": "Regularly test security systems, processes, and custom software",
+      "subRequirements": [
+        "11.1 - Processes and mechanisms for regularly testing security",
+        "11.2 - Wireless access points are identified and monitored",
+        "11.3 - External and internal vulnerabilities are regularly identified, prioritized, and addressed",
+        "11.4 - External and internal penetration testing is regularly performed",
+        "11.5 - Network intrusions and unexpected file changes are detected and responded to",
+        "11.6 - Unauthorized changes on payment pages are detected and responded to"
+      ]
+    },
+    {
+      "id": "req12",
+      "number": "12",
+      "title": "Support Information Security with Organizational Policies and Programs",
+      "description": "Maintain information security policies and programs",
+      "subRequirements": [
+        "12.1 - Overall information security policy is established and published",
+        "12.2 - Acceptable use policies for end-user technologies are defined and implemented",
+        "12.3 - Risks to the cardholder data environment are formally identified, evaluated, and managed",
+        "12.4 - PCI DSS compliance is managed",
+        "12.5 - PCI DSS scope is documented and validated",
+        "12.6 - Security awareness education is an ongoing activity",
+        "12.7 - Personnel are screened to reduce risks from insider threats",
+        "12.8 - Risk to information assets associated with third-party service providers (TPSPs) is managed",
+        "12.9 - Third-party service providers (TPSPs) support their customers' PCI DSS compliance",
+        "12.10 - Suspected and confirmed security incidents are responded to immediately"
+      ]
+    }
+  ],
+  
+  "functions": [
+    {
+      "name": "start_compliance_scan",
+      "description": "Initiate a comprehensive PCI DSS compliance scan across all 12 requirements",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scan_type": {
+            "type": "string",
+            "enum": ["full_assessment", "quick_scan", "specific_requirement", "pre_audit_check", "gap_analysis"],
+            "description": "Type of compliance scan to perform"
+          },
+          "requirements": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["req1", "req2", "req3", "req4", "req5", "req6", "req7", "req8", "req9", "req10", "req11", "req12"] },
+            "description": "Specific requirements to scan (optional, defaults to all)"
+          },
+          "scope": {
+            "type": "object",
+            "properties": {
+              "networks": { "type": "array", "items": { "type": "string" } },
+              "systems": { "type": "array", "items": { "type": "string" } },
+              "applications": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "merchant_level": {
+            "type": "string",
+            "enum": ["level1", "level2", "level3", "level4"],
+            "description": "Merchant level based on annual transaction volume"
+          }
+        },
+        "required": ["scan_type"]
+      }
+    },
+    {
+      "name": "analyze_requirement",
+      "description": "Deep dive analysis of a specific PCI DSS requirement with all sub-requirements",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "enum": ["req1", "req2", "req3", "req4", "req5", "req6", "req7", "req8", "req9", "req10", "req11", "req12"],
+            "description": "PCI DSS requirement to analyze"
+          },
+          "include_subrequirements": { "type": "boolean", "default": true },
+          "check_compensating_controls": { "type": "boolean", "default": false }
+        },
+        "required": ["requirement_id"]
+      }
+    },
+    {
+      "name": "detect_cardholder_data",
+      "description": "Scan systems and networks to identify stored cardholder data and classify storage locations",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scan_paths": { "type": "array", "items": { "type": "string" } },
+          "include_databases": { "type": "boolean", "default": true },
+          "include_file_systems": { "type": "boolean", "default": true },
+          "include_logs": { "type": "boolean", "default": true },
+          "pattern_types": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["pan", "cvv", "track_data", "pin", "expiry_date"] }
+          }
+        }
+      }
+    },
+    {
+      "name": "assess_network_segmentation",
+      "description": "Evaluate network segmentation and identify CDE boundaries",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "network_diagram": { "type": "string", "description": "Network topology data or file path" },
+          "check_firewall_rules": { "type": "boolean", "default": true },
+          "validate_vlans": { "type": "boolean", "default": true },
+          "test_connectivity": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    {
+      "name": "vulnerability_scan",
+      "description": "Perform ASV-compliant vulnerability scanning on external and internal systems",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scan_type": { "type": "string", "enum": ["external", "internal", "both"] },
+          "targets": { "type": "array", "items": { "type": "string" } },
+          "severity_threshold": { "type": "string", "enum": ["critical", "high", "medium", "low", "info"], "default": "medium" },
+          "asv_mode": { "type": "boolean", "default": false, "description": "Scan using ASV methodology" }
+        },
+        "required": ["scan_type", "targets"]
+      }
+    },
+    {
+      "name": "penetration_test",
+      "description": "Execute penetration testing against CDE systems and applications",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_type": { "type": "string", "enum": ["external", "internal", "web_app", "segmentation"] },
+          "methodology": { "type": "string", "enum": ["owasp", "ptes", "osstmm", "custom"] },
+          "targets": { "type": "array", "items": { "type": "string" } },
+          "intensity": { "type": "string", "enum": ["passive", "active", "aggressive"] }
+        },
+        "required": ["test_type", "targets"]
+      }
+    },
+    {
+      "name": "check_encryption",
+      "description": "Validate encryption implementation for data at rest and in transit",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "check_type": { "type": "string", "enum": ["storage", "transmission", "both"] },
+          "assets": { "type": "array", "items": { "type": "string" } },
+          "validate_tls": { "type": "boolean", "default": true },
+          "check_key_management": { "type": "boolean", "default": true },
+          "cipher_strength_minimum": { "type": "string", "default": "AES-256" }
+        }
+      }
+    },
+    {
+      "name": "review_access_controls",
+      "description": "Audit user access permissions and authentication mechanisms",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "check_rbac": { "type": "boolean", "default": true },
+          "verify_mfa": { "type": "boolean", "default": true },
+          "audit_privileged_accounts": { "type": "boolean", "default": true },
+          "check_password_policies": { "type": "boolean", "default": true },
+          "review_inactive_accounts": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    {
+      "name": "analyze_audit_logs",
+      "description": "Review and analyze system audit logs for compliance and security events",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "log_sources": { "type": "array", "items": { "type": "string" } },
+          "time_range": { "type": "object", "properties": { "start": { "type": "string" }, "end": { "type": "string" } } },
+          "event_types": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["access", "authentication", "authorization", "changes", "failures"] }
+          },
+          "detect_anomalies": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    {
+      "name": "generate_remediation_plan",
+      "description": "Create prioritized remediation plan for identified compliance gaps",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "findings": { "type": "array", "items": { "type": "string" } },
+          "prioritization_method": { "type": "string", "enum": ["risk_based", "requirement_based", "effort_based", "deadline_based"] },
+          "target_date": { "type": "string", "description": "Target compliance date" },
+          "include_compensating_controls": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    {
+      "name": "generate_compliance_report",
+      "description": "Generate official PCI DSS compliance reports (SAQ, AOC, ROC)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "report_type": {
+            "type": "string",
+            "enum": ["SAQ-A", "SAQ-A-EP", "SAQ-B", "SAQ-B-IP", "SAQ-C", "SAQ-C-VT", "SAQ-D-Merchant", "SAQ-D-SP", "AOC", "ROC", "Executive_Summary"],
+            "description": "Type of PCI DSS report"
+          },
+          "assessment_date": { "type": "string" },
+          "include_evidence": { "type": "boolean", "default": true },
+          "include_screenshots": { "type": "boolean", "default": true },
+          "format": { "type": "string", "enum": ["pdf", "docx", "html"], "default": "pdf" }
+        },
+        "required": ["report_type"]
+      }
+    },
+    {
+      "name": "open_requirement_dashboard",
+      "description": "Open detailed dashboard for a specific PCI DSS requirement with visualizations",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "requirement_id": { "type": "string", "enum": ["req1", "req2", "req3", "req4", "req5", "req6", "req7", "req8", "req9", "req10", "req11", "req12"] },
+          "view_type": { "type": "string", "enum": ["overview", "detailed", "evidence", "gaps"] }
+        },
+        "required": ["requirement_id"]
+      }
+    },
+    {
+      "name": "track_compliance_history",
+      "description": "View historical compliance scores and track improvements over time",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "time_period": { "type": "string", "enum": ["7days", "30days", "90days", "1year", "all"] },
+          "requirements": { "type": "array", "items": { "type": "string" } },
+          "include_trends": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    {
+      "name": "configure_compliance_alerts",
+      "description": "Set up automated alerts for compliance status changes and new findings",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "alert_types": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["new_finding", "compliance_drop", "critical_gap", "scan_complete", "deadline_approaching"] }
+          },
+          "severity_threshold": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+          "notification_channels": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["email", "slack", "webhook", "sms", "dashboard"] }
+          },
+          "recipients": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    {
+      "name": "export_evidence_package",
+      "description": "Export comprehensive evidence package for QSA audit",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "requirements": { "type": "array", "items": { "type": "string" } },
+          "include_screenshots": { "type": "boolean", "default": true },
+          "include_scan_results": { "type": "boolean", "default": true },
+          "include_policies": { "type": "boolean", "default": true },
+          "include_interviews": { "type": "boolean", "default": false },
+          "format": { "type": "string", "enum": ["zip", "pdf_bundle"], "default": "zip" }
+        }
+      }
+    }
+  ],
+  
+  "colorTheme": {
+    "primary": "#1e40af",
+    "secondary": "#3b82f6",
+    "accent": "#60a5fa",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "danger": "#ef4444",
+    "critical": "#dc2626",
+    "background": "#0f172a",
+    "surface": "#1e293b",
+    "surface_secondary": "#334155",
+    "text": "#f1f5f9",
+    "text_secondary": "#cbd5e1"
+  },
+  
+  "navigationItems": [
+    { "label": "Dashboard", "path": "/dashboard", "icon": "LayoutDashboard" },
+    { "label": "Requirements", "path": "/requirements", "icon": "CheckSquare" },
+    { "label": "Scanning", "path": "/scan", "icon": "Search" },
+    { "label": "Findings", "path": "/findings", "icon": "AlertTriangle" },
+    { "label": "Remediation", "path": "/remediation", "icon": "Wrench" },
+    { "label": "Evidence", "path": "/evidence", "icon": "FolderOpen" },
+    { "label": "Reports", "path": "/reports", "icon": "FileText" },
+    { "label": "Network Map", "path": "/network", "icon": "Network" },
+    { "label": "Audit Trail", "path": "/audit", "icon": "History" },
+    { "label": "Settings", "path": "/settings", "icon": "Settings" }
+  ],
+  
+  "merchantLevels": {
+    "level1": {
+      "label": "Level 1",
+      "description": "Over 6 million transactions annually",
+      "requirements": ["Annual ROC by QSA", "Quarterly ASV scans", "Annual penetration testing"]
+    },
+    "level2": {
+      "label": "Level 2",
+      "description": "1-6 million transactions annually",
+      "requirements": ["Annual SAQ", "Quarterly ASV scans", "Annual penetration testing"]
+    },
+    "level3": {
+      "label": "Level 3",
+      "description": "20,000-1 million e-commerce transactions annually",
+      "requirements": ["Annual SAQ", "Quarterly ASV scans"]
+    },
+    "level4": {
+      "label": "Level 4",
+      "description": "Less than 20,000 e-commerce transactions annually",
+      "requirements": ["Annual SAQ", "Quarterly ASV scans (may be recommended)"]
+    }
+  },
+  
+  "integrations": {
+    "vulnerability_scanners": ["Nessus", "Qualys", "Rapid7", "OpenVAS"],
+    "siem_systems": ["Splunk", "ELK Stack", "QRadar", "LogRhythm"],
+    "firewalls": ["Palo Alto", "Fortinet", "Cisco ASA", "pfSense"],
+    "iam_systems": ["Okta", "Azure AD", "Auth0", "Ping Identity"],
+    "ticketing": ["Jira", "ServiceNow", "Asana", "Linear"]
+  }
+}
