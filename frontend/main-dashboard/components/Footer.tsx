@@ -1,95 +1,105 @@
-import Link from 'next/link';
-import { Twitter, Github, Linkedin, Mail } from 'lucide-react';
 
-export default function Footer() {
+import React from 'react';
+import { Shield, Twitter, Github, Linkedin, Mail } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { useScroll } from '../context/ScrollContext';
+
+const Footer: React.FC = () => {
+  const { setView } = useAuth();
+  const { setCurrentSection } = useScroll();
+
+  // Helper to scroll to specific tool indices on the landing page
+  const navigateToTool = (index: number) => {
+    const heroHeight = window.innerHeight;
+    const sectionHeight = window.innerHeight * 1.2; // Matches 120vh section height
+    
+    window.scrollTo({
+      top: heroHeight + (index * sectionHeight),
+      behavior: 'smooth'
+    });
+    setCurrentSection(index);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setCurrentSection(-1);
+  };
+
   return (
-    <footer className="bg-black border-t border-white/10 pt-20 pb-10 relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none" />
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          <div>
-            <Link href="/" className="text-2xl font-bold tracking-tighter text-white flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-lg">F</span>
-              </div>
-              FYZO
-            </Link>
-            <p className="text-gray-400 mb-6 max-w-xs">
-              The ultimate security toolkit for modern enterprises. 50+ AI-powered tools to protect your digital assets.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/10 hover:text-white transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/10 hover:text-white transition-colors">
-                <Github className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white/10 hover:text-white transition-colors">
-                <Linkedin className="w-5 h-5" />
-              </a>
+    <footer className="relative bg-[#05001a] border-t border-white/5 py-24 px-6 md:px-24 z-50">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+        
+        <div className="col-span-1 md:col-span-1 space-y-6">
+          <div 
+            className="flex items-center gap-3 cursor-pointer group" 
+            onClick={scrollToTop}
+          >
+            <div className="bg-purple-600 p-2 rounded-lg group-hover:scale-110 transition-transform">
+              <Shield className="text-white w-6 h-6" />
             </div>
+            <span className="text-2xl font-bold tracking-tight text-white uppercase">Maula<span className="text-purple-500">.ai</span></span>
           </div>
-
-          <div>
-            <h3 className="text-white font-bold mb-6">Product</h3>
-            <ul className="space-y-4">
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Features</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Integrations</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Pricing</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Changelog</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Docs</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-white font-bold mb-6">Company</h3>
-            <ul className="space-y-4">
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Careers</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Blog</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white transition-colors">Partners</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-white font-bold mb-6">Contact</h3>
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3 text-gray-400">
-                <Mail className="w-5 h-5" />
-                <span>support@maula.ai</span>
-              </li>
-            </ul>
-            <div className="mt-8 p-6 bg-white/5 rounded-xl border border-white/10">
-              <h4 className="text-white font-bold mb-2">Subscribe to newsletter</h4>
-              <p className="text-sm text-gray-400 mb-4">Get the latest security updates.</p>
-              <div className="flex gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Email address" 
-                  className="bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white text-sm w-full focus:outline-none focus:border-blue-500"
-                />
-                <button className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors">
-                  Join
-                </button>
-              </div>
-            </div>
+          <p className="text-gray-500 leading-relaxed text-sm">
+            The world's first autonomous AI security network. Decentralized protection for the modern enterprise.
+          </p>
+          <div className="flex items-center gap-4 text-gray-400">
+            <Twitter className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+            <Github className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+            <Linkedin className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
+            <Mail className="w-5 h-5 cursor-pointer hover:text-white transition-colors" />
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} FYZO Inc. All rights reserved.
-          </p>
-          <div className="flex gap-6">
-            <Link href="#" className="text-gray-500 hover:text-white text-sm transition-colors">Privacy Policy</Link>
-            <Link href="#" className="text-gray-500 hover:text-white text-sm transition-colors">Terms of Service</Link>
-            <Link href="#" className="text-gray-500 hover:text-white text-sm transition-colors">Cookie Policy</Link>
+        <div>
+          <h4 className="font-bold text-white mb-6 uppercase text-sm tracking-widest">Platform</h4>
+          <ul className="space-y-4 text-gray-500 text-sm">
+            <li onClick={() => navigateToTool(0)} className="hover:text-purple-400 cursor-pointer transition-colors">Defense Modules</li>
+            <li onClick={() => navigateToTool(15)} className="hover:text-purple-400 cursor-pointer transition-colors">AI Infrastructure</li>
+            <li onClick={() => navigateToTool(16)} className="hover:text-purple-400 cursor-pointer transition-colors">API Integration</li>
+            <li onClick={() => navigateToTool(49)} className="hover:text-purple-400 cursor-pointer transition-colors">Global Shield</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-bold text-white mb-6 uppercase text-sm tracking-widest">Company</h4>
+          <ul className="space-y-4 text-gray-500 text-sm">
+            <li onClick={() => setView('solutions')} className="hover:text-purple-400 cursor-pointer transition-colors">About Us</li>
+            <li onClick={() => setView('solutions')} className="hover:text-purple-400 cursor-pointer transition-colors">Careers</li>
+            <li onClick={() => setView('docs')} className="hover:text-purple-400 cursor-pointer transition-colors">Press Kit</li>
+            <li onClick={() => setView('pricing')} className="hover:text-purple-400 cursor-pointer transition-colors">Contact</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-bold text-white mb-6 uppercase text-sm tracking-widest">Subscribe</h4>
+          <p className="text-gray-500 text-sm mb-4">Get the latest threat intelligence reports.</p>
+          <div className="flex gap-2">
+            <input 
+              type="email" 
+              placeholder="Email address" 
+              className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm w-full focus:outline-none focus:border-purple-500 text-white" 
+            />
+            <button 
+              onClick={() => setView('signup')}
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-purple-700 transition-colors"
+            >
+              Join
+            </button>
           </div>
+        </div>
+
+      </div>
+      
+      <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600 text-[10px] uppercase font-bold tracking-widest">
+        <div>© 2026 MAULA.AI. ALL RIGHTS RESERVED.</div>
+        <div className="flex gap-8">
+          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('docs')}>PRIVACY POLICY</span>
+          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('docs')}>TERMS OF SERVICE</span>
+          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('docs')}>SECURITY DISCLOSURE</span>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

@@ -7,17 +7,17 @@ export default defineConfig({
   plugins: [react()],
   
   server: {
-    port: 3001,
+    port: 3028,
     host: true,
     cors: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:4001',
+        target: 'http://localhost:4028',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/ws': {
-        target: 'ws://localhost:6001',
+        target: 'ws://localhost:6028',
         ws: true,
         changeOrigin: true,
       },
@@ -25,7 +25,7 @@ export default defineConfig({
   },
 
   preview: {
-    port: 3001,
+    port: 3028,
     host: true,
   },
 
@@ -53,10 +53,10 @@ export default defineConfig({
   },
 
   define: {
-    'import.meta.env.VITE_APP_NAME': JSON.stringify('FraudGuard'),
-    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:4001'),
-    'import.meta.env.VITE_WS_URL': JSON.stringify('ws://localhost:6001'),
-    'import.meta.env.VITE_ML_URL': JSON.stringify('http://localhost:8001'),
+    'import.meta.env.VITE_APP_NAME': JSON.stringify('SOAR Engine'),
+    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:4028'),
+    'import.meta.env.VITE_WS_URL': JSON.stringify('ws://localhost:6028'),
+    'import.meta.env.VITE_ML_URL': JSON.stringify('http://localhost:8028'),
   },
 
   optimizeDeps: {

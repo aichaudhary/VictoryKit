@@ -1,0 +1,153 @@
+{
+  "toolName": "BlueTeamAI",
+  "tagline": "AI-Powered Blue Team Operations Center",
+  "subdomain": "blueteam.maula.ai",
+  "port": 3026,
+  "apiPort": 4026,
+  "mlPort": 8026,
+  "aiPort": 6026,
+  "databaseName": "blueteamai_db",
+  
+  "description": "BlueTeamAI is your AI-powered defensive security operations center. It provides real-time threat monitoring, incident investigation, threat hunting, and automated response playbooks to protect your organization 24/7.",
+  
+  "systemPrompt": "You are BlueTeamAI, an expert AI assistant for defensive cybersecurity operations (Blue Team). You help security analysts with threat monitoring, incident investigation, threat hunting, log analysis, and security event correlation. You can analyze security alerts, investigate suspicious activities, run threat hunting queries, create incident timelines, and recommend response actions. You provide detailed technical analysis while explaining findings in actionable terms. Always prioritize accurate threat assessment and minimize false positives.",
+  
+  "features": [
+    "Real-time Security Monitoring",
+    "Incident Investigation & Timeline",
+    "Threat Hunting Queries",
+    "Alert Triage & Prioritization",
+    "Playbook Automation",
+    "IOC Analysis & Correlation",
+    "MITRE ATT&CK Mapping",
+    "Team Collaboration"
+  ],
+  
+  "functions": [
+    {
+      "name": "analyze_alert",
+      "description": "Analyze a security alert and determine its severity and required actions",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "alert_id": { "type": "string", "description": "Unique alert identifier" },
+          "source": { "type": "string", "description": "Alert source (SIEM, EDR, Firewall, etc.)" },
+          "alert_type": { "type": "string", "description": "Type of alert (malware, intrusion, policy violation, etc.)" },
+          "raw_data": { "type": "string", "description": "Raw alert data or log entry" }
+        },
+        "required": ["alert_id", "alert_type"]
+      }
+    },
+    {
+      "name": "investigate_incident",
+      "description": "Start or continue an incident investigation with timeline analysis",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "incident_id": { "type": "string", "description": "Incident case ID" },
+          "entities": { "type": "array", "items": { "type": "string" }, "description": "IPs, hostnames, users, or hashes to investigate" },
+          "time_range": { "type": "string", "description": "Time range for investigation (e.g., 'last 24h', 'last 7d')" }
+        },
+        "required": ["incident_id"]
+      }
+    },
+    {
+      "name": "run_threat_hunt",
+      "description": "Execute a threat hunting query across security data",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "hunt_name": { "type": "string", "description": "Name/description of the hunt" },
+          "query_type": { "type": "string", "enum": ["ioc_search", "behavior_pattern", "anomaly_detection", "mitre_technique"], "description": "Type of hunt" },
+          "indicators": { "type": "array", "items": { "type": "string" }, "description": "IOCs or patterns to hunt for" },
+          "data_sources": { "type": "array", "items": { "type": "string" }, "description": "Data sources to query (logs, EDR, network, etc.)" }
+        },
+        "required": ["hunt_name", "query_type"]
+      }
+    },
+    {
+      "name": "get_mitre_mapping",
+      "description": "Map observed techniques to MITRE ATT&CK framework",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "technique_description": { "type": "string", "description": "Description of observed attacker technique" },
+          "artifacts": { "type": "array", "items": { "type": "string" }, "description": "Related artifacts or IOCs" }
+        },
+        "required": ["technique_description"]
+      }
+    },
+    {
+      "name": "create_timeline",
+      "description": "Generate an incident timeline from security events",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "incident_id": { "type": "string", "description": "Incident to create timeline for" },
+          "events": { "type": "array", "items": { "type": "object" }, "description": "Security events to include" }
+        },
+        "required": ["incident_id"]
+      }
+    },
+    {
+      "name": "execute_playbook",
+      "description": "Execute an automated response playbook",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "playbook_name": { "type": "string", "description": "Name of the playbook to execute" },
+          "target_entities": { "type": "array", "items": { "type": "string" }, "description": "Entities to apply playbook actions to" },
+          "auto_approve": { "type": "boolean", "description": "Whether to auto-approve actions or require manual approval" }
+        },
+        "required": ["playbook_name"]
+      }
+    },
+    {
+      "name": "correlate_iocs",
+      "description": "Correlate IOCs across multiple data sources and threat intelligence",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "iocs": { "type": "array", "items": { "type": "string" }, "description": "IOCs to correlate (IPs, domains, hashes, etc.)" },
+          "include_threat_intel": { "type": "boolean", "description": "Include external threat intelligence lookup" }
+        },
+        "required": ["iocs"]
+      }
+    },
+    {
+      "name": "generate_report",
+      "description": "Generate an incident or threat hunting report",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "report_type": { "type": "string", "enum": ["incident", "threat_hunt", "daily_summary", "executive"], "description": "Type of report" },
+          "incident_id": { "type": "string", "description": "Incident ID if applicable" },
+          "format": { "type": "string", "enum": ["pdf", "html", "markdown"], "description": "Output format" }
+        },
+        "required": ["report_type"]
+      }
+    }
+  ],
+  
+  "dashboardWidgets": [
+    { "id": "active_incidents", "name": "Active Incidents", "type": "counter" },
+    { "id": "alert_queue", "name": "Alert Queue", "type": "list" },
+    { "id": "threat_map", "name": "Threat Map", "type": "map" },
+    { "id": "mitre_coverage", "name": "MITRE ATT&CK Coverage", "type": "heatmap" },
+    { "id": "timeline", "name": "Event Timeline", "type": "timeline" },
+    { "id": "team_activity", "name": "Team Activity", "type": "feed" }
+  ],
+  
+  "integrations": [
+    "Splunk",
+    "Microsoft Sentinel",
+    "CrowdStrike Falcon",
+    "SentinelOne",
+    "Palo Alto Cortex",
+    "Carbon Black",
+    "Elastic Security",
+    "MISP",
+    "TheHive",
+    "VirusTotal"
+  ]
+}

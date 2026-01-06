@@ -1,8 +1,9 @@
 {
-  "name": "AssetDiscovery",
+  "name": "soar-engine",
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "description": "SOAR Engine - Security Orchestration, Automation, and Response Platform",
   "scripts": {
     "dev": "vite --port 3028",
     "build": "tsc && vite build",
