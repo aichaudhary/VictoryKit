@@ -1,132 +1,293 @@
 {
-  "name": "SOAR Engine",
-  "version": "1.0.0",
-  "description": "Security Orchestration, Automation and Response platform for automated incident handling",
-  "toolNumber": 28,
-  "subdomain": "soarengine",
-  "domain": "soarengine.maula.ai",
-  "ports": {
-    "frontend": 3028,
-    "backend": 4028,
-    "websocket": 6028
-  },
-  "theme": {
-    "primary": "#8B5CF6",
-    "secondary": "#A855F7",
-    "accent": "#C084FC",
-    "gradient": "from-purple-600 to-violet-500"
-  },
-  "features": [
-    "playbook-builder",
-    "case-management",
-    "automation-engine",
-    "integration-hub",
-    "threat-intel-enrichment",
-    "real-time-orchestration",
-    "metrics-dashboard",
-    "ai-recommendations"
-  ],
-  "integrations": [
+  "toolName": "SOAREngine",
+  "tagline": "Security Orchestration, Automation & Response Platform",
+  "subdomain": "soarengine.maula.ai",
+  "aiPath": "/maula-ai",
+  "port": 3028,
+  "apiPort": 4028,
+  "mlPort": 8028,
+  "aiPort": 6028,
+  "databaseName": "soarengine_db",
+  
+  "systemPrompt": "You are SOAREngine AI, an elite security orchestration and automation expert with deep knowledge of incident response playbooks, workflow automation, security tool integration, threat remediation, case management, and SOAR platforms. You help security teams automate 90% of repetitive tasks, orchestrate complex multi-tool workflows, execute incident response playbooks, integrate with 100+ security tools (SIEM, EDR, firewall, ticketing), track incident cases from detection to resolution, and provide AI-powered response recommendations. You can autonomously execute multi-step automation workflows, coordinate responses across multiple security tools, suggest optimal playbook actions based on threat intelligence, and accelerate incident response from hours to seconds. Always balance automation efficiency with security best practices and explain complex orchestration logic in clear, actionable terms for SOC analysts.",
+  
+  "functions": [
     {
-      "id": "siem",
-      "name": "SIEM Integration",
-      "types": ["splunk", "elastic", "qradar", "sentinel", "sumo"]
+      "name": "create_playbook",
+      "description": "Create a new automation playbook with multiple steps and conditions",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "Playbook name" },
+          "description": { "type": "string", "description": "Playbook description" },
+          "trigger": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string", "enum": ["manual", "scheduled", "event_based", "api_trigger"], "description": "Trigger type" },
+              "conditions": { "type": "array", "description": "Trigger conditions", "items": { "type": "object" } }
+            }
+          },
+          "steps": {
+            "type": "array",
+            "description": "Workflow steps",
+            "items": {
+              "type": "object",
+              "properties": {
+                "action": { "type": "string", "description": "Action to perform" },
+                "tool": { "type": "string", "description": "Security tool to use" },
+                "parameters": { "type": "object", "description": "Action parameters" },
+                "condition": { "type": "string", "description": "Execution condition" }
+              }
+            }
+          },
+          "category": {
+            "type": "string",
+            "enum": ["phishing_response", "malware_containment", "ddos_mitigation", "data_breach", "insider_threat", "vulnerability_remediation", "compliance", "custom"],
+            "description": "Playbook category"
+          }
+        },
+        "required": ["name", "steps"]
+      }
     },
     {
-      "id": "edr",
-      "name": "EDR Integration",
-      "types": ["crowdstrike", "carbon-black", "sentinelone", "defender"]
+      "name": "execute_playbook",
+      "description": "Execute an automation playbook with real-time progress tracking",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "playbook_id": { "type": "string", "description": "Playbook identifier" },
+          "incident_id": { "type": "string", "description": "Associated incident ID" },
+          "input_data": { "type": "object", "description": "Input parameters for playbook" },
+          "execution_mode": {
+            "type": "string",
+            "enum": ["automatic", "semi_automatic", "manual_approval"],
+            "description": "Execution mode"
+          },
+          "notify_on_complete": { "type": "boolean", "description": "Send completion notification" },
+          "rollback_on_error": { "type": "boolean", "description": "Auto-rollback if step fails" }
+        },
+        "required": ["playbook_id"]
+      }
     },
     {
-      "id": "firewall",
-      "name": "Firewall Integration",
-      "types": ["palo-alto", "fortinet", "checkpoint", "cisco"]
+      "name": "create_case",
+      "description": "Create a new security case for incident tracking",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "description": "Case title" },
+          "description": { "type": "string", "description": "Case description" },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Case severity"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["malware", "phishing", "ddos", "data_breach", "unauthorized_access", "policy_violation", "vulnerability"],
+            "description": "Case category"
+          },
+          "assigned_to": { "type": "string", "description": "Analyst ID" },
+          "related_events": {
+            "type": "array",
+            "description": "Related security events",
+            "items": { "type": "string" }
+          },
+          "auto_execute_playbook": { "type": "boolean", "description": "Automatically execute response playbook" },
+          "sla_hours": { "type": "number", "description": "SLA response time in hours" }
+        },
+        "required": ["title", "severity", "category"]
+      }
     },
     {
-      "id": "email",
-      "name": "Email Security",
-      "types": ["proofpoint", "mimecast", "office365", "google"]
+      "name": "integrate_tool",
+      "description": "Integrate a security tool with SOAR platform",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tool_name": { "type": "string", "description": "Security tool name" },
+          "tool_type": {
+            "type": "string",
+            "enum": ["siem", "edr", "firewall", "ids_ips", "email_gateway", "threat_intel", "ticketing", "chat", "cloud_security", "vulnerability_scanner"],
+            "description": "Tool category"
+          },
+          "connection_type": {
+            "type": "string",
+            "enum": ["api", "webhook", "syslog", "file_import", "database"],
+            "description": "Connection method"
+          },
+          "credentials": { "type": "object", "description": "Authentication credentials" },
+          "available_actions": {
+            "type": "array",
+            "description": "Actions that can be automated",
+            "items": { "type": "string" }
+          },
+          "test_connection": { "type": "boolean", "description": "Test connection after setup" }
+        },
+        "required": ["tool_name", "tool_type", "connection_type"]
+      }
     },
     {
-      "id": "ticketing",
-      "name": "Ticketing Systems",
-      "types": ["servicenow", "jira", "zendesk", "freshdesk"]
+      "name": "query_playbook_library",
+      "description": "Search pre-built playbook library for specific scenarios",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "search_query": { "type": "string", "description": "Search terms" },
+          "category": {
+            "type": "string",
+            "enum": ["all", "phishing", "malware", "ddos", "data_breach", "insider_threat", "vulnerability", "compliance"],
+            "description": "Playbook category filter"
+          },
+          "complexity": {
+            "type": "string",
+            "enum": ["simple", "moderate", "advanced", "expert"],
+            "description": "Playbook complexity level"
+          },
+          "required_integrations": {
+            "type": "array",
+            "description": "Required security tools",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["search_query"]
+      }
     },
     {
-      "id": "threat-intel",
-      "name": "Threat Intelligence",
-      "types": ["virustotal", "alienvault", "misp", "threatconnect"]
+      "name": "get_automation_metrics",
+      "description": "Get automation performance metrics and ROI statistics",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "time_period": {
+            "type": "string",
+            "enum": ["today", "last_7_days", "last_30_days", "last_quarter", "last_year"],
+            "description": "Metrics time period"
+          },
+          "metric_type": {
+            "type": "array",
+            "enum": ["time_saved", "incidents_automated", "playbook_executions", "integration_usage", "error_rate", "sla_compliance"],
+            "description": "Metric types to retrieve"
+          },
+          "breakdown_by": {
+            "type": "string",
+            "enum": ["playbook", "category", "analyst", "tool", "severity"],
+            "description": "Breakdown dimension"
+          }
+        },
+        "required": ["time_period"]
+      }
+    },
+    {
+      "name": "ai_recommend_response",
+      "description": "Get AI-powered response recommendations for a security incident",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "incident_data": { "type": "object", "description": "Incident details" },
+          "threat_type": { "type": "string", "description": "Type of threat detected" },
+          "affected_assets": {
+            "type": "array",
+            "description": "Affected systems/users",
+            "items": { "type": "string" }
+          },
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "context": { "type": "object", "description": "Additional context" },
+          "suggest_playbook": { "type": "boolean", "description": "Suggest matching playbook" },
+          "suggest_integrations": { "type": "boolean", "description": "Suggest tool integrations" }
+        },
+        "required": ["incident_data", "threat_type"]
+      }
+    },
+    {
+      "name": "visualize_workflow",
+      "description": "Generate visual workflow diagram for a playbook",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "playbook_id": { "type": "string", "description": "Playbook to visualize" },
+          "view_type": {
+            "type": "string",
+            "enum": ["flowchart", "timeline", "dependency_graph", "swimlane"],
+            "description": "Visualization type"
+          },
+          "include_stats": { "type": "boolean", "description": "Include execution statistics" },
+          "highlight_errors": { "type": "boolean", "description": "Highlight steps with errors" }
+        },
+        "required": ["playbook_id"]
+      }
+    },
+    {
+      "name": "bulk_action",
+      "description": "Execute bulk actions across multiple security tools",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": ["block_ip", "quarantine_endpoint", "disable_account", "update_firewall_rule", "send_alert", "create_ticket"],
+            "description": "Bulk action to perform"
+          },
+          "targets": {
+            "type": "array",
+            "description": "List of targets (IPs, endpoints, accounts)",
+            "items": { "type": "string" }
+          },
+          "tools": {
+            "type": "array",
+            "description": "Security tools to execute action on",
+            "items": { "type": "string" }
+          },
+          "reason": { "type": "string", "description": "Justification for action" },
+          "dry_run": { "type": "boolean", "description": "Test mode without actual execution" }
+        },
+        "required": ["action", "targets"]
+      }
+    },
+    {
+      "name": "schedule_automation",
+      "description": "Schedule periodic automation tasks",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "playbook_id": { "type": "string", "description": "Playbook to schedule" },
+          "schedule_type": {
+            "type": "string",
+            "enum": ["once", "daily", "weekly", "monthly", "cron"],
+            "description": "Schedule frequency"
+          },
+          "schedule_config": { "type": "object", "description": "Schedule configuration" },
+          "start_time": { "type": "string", "description": "Start timestamp" },
+          "end_time": { "type": "string", "description": "End timestamp (optional)" },
+          "enabled": { "type": "boolean", "description": "Schedule enabled" }
+        },
+        "required": ["playbook_id", "schedule_type"]
+      }
     }
   ],
-  "playbookCategories": [
-    "phishing-response",
-    "malware-containment",
-    "account-compromise",
-    "data-exfiltration",
-    "ransomware-response",
-    "insider-threat",
-    "ddos-mitigation",
-    "vulnerability-response"
-  ],
-  "ai": {
-    "provider": "multi",
-    "supportedProviders": ["gemini", "openai", "anthropic", "xai", "mistral", "meta"],
-    "functions": [
-      {
-        "name": "create_playbook",
-        "description": "Generate automated response playbook from natural language"
-      },
-      {
-        "name": "recommend_actions",
-        "description": "AI-powered recommendations for incident response"
-      },
-      {
-        "name": "enrich_ioc",
-        "description": "Automatic IOC enrichment from multiple threat intel sources"
-      },
-      {
-        "name": "correlate_events",
-        "description": "Find related security events across data sources"
-      },
-      {
-        "name": "automate_response",
-        "description": "Execute automated response actions"
-      },
-      {
-        "name": "generate_report",
-        "description": "Create incident and compliance reports"
-      },
-      {
-        "name": "optimize_workflow",
-        "description": "Suggest workflow optimizations based on metrics"
-      },
-      {
-        "name": "predict_impact",
-        "description": "Predict incident impact and severity"
-      }
-    ]
+  
+  "colorTheme": {
+    "primary": "#8b5cf6",
+    "secondary": "#06b6d4",
+    "accent": "#f59e0b",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "danger": "#ef4444",
+    "info": "#06b6d4",
+    "background": "#0a0e27",
+    "surface": "#1a1f3a",
+    "text": "#ffffff",
+    "textSecondary": "#94a3b8"
   },
-  "metrics": {
-    "tracked": [
-      "mean_time_to_detect",
-      "mean_time_to_respond",
-      "mean_time_to_contain",
-      "automation_rate",
-      "playbook_success_rate",
-      "case_closure_rate",
-      "analyst_efficiency"
-    ]
-  },
-  "database": {
-    "type": "mongodb",
-    "collections": [
-      "cases",
-      "playbooks",
-      "automations",
-      "integrations",
-      "enrichments",
-      "metrics",
-      "audit_logs"
-    ]
-  }
+  
+  "navigationItems": [
+    { "label": "Dashboard", "path": "/dashboard", "icon": "LayoutDashboard" },
+    { "label": "Playbooks", "path": "/playbooks", "icon": "PlayCircle" },
+    { "label": "Cases", "path": "/cases", "icon": "Briefcase" },
+    { "label": "Workflows", "path": "/workflows", "icon": "GitBranch" },
+    { "label": "Integrations", "path": "/integrations", "icon": "Plug" },
+    { "label": "Automation Library", "path": "/library", "icon": "Library" },
+    { "label": "Metrics", "path": "/metrics", "icon": "TrendingUp" },
+    { "label": "Settings", "path": "/settings", "icon": "Settings" }
+  ]
 }

@@ -1,53 +1,100 @@
 """
 DataLossPrevention ML Engine
-Advanced ML-based content classification and PII detection
+AI-powered data classification, PII detection, anomaly detection, and content analysis
+Port: 8041
 """
 
-import os
-from flask import Flask, request, jsonify
-from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+from typing import List, Dict, Optional, Tuple, Any
+import numpy as np
+from datetime import datetime
+import hashlib
+import re
+import json
+import pickle
+from sklearn.ensemble import RandomForestClassifier, IsolationForest
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 import logging
+from collections import Counter
+import asyncio
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-load_dotenv()
+app = FastAPI(title="DataLossPrevention ML Engine", version="2.0.0")
 
-app = Flask(__name__)
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Lazy load models for better startup time
-analyzer = None
-anonymizer = None
+# ============================================================================
+# DATA MODELS
+# ============================================================================
 
-def get_presidio_analyzer():
-    """Lazy load Presidio analyzer"""
-    global analyzer
-    if analyzer is None:
-        try:
-            from presidio_analyzer import AnalyzerEngine
-            analyzer = AnalyzerEngine()
-            logger.info("Presidio Analyzer loaded successfully")
-        except Exception as e:
-            logger.warning(f"Presidio Analyzer not available: {e}")
-            analyzer = "unavailable"
-    return analyzer if analyzer != "unavailable" else None
+class ClassificationRequest(BaseModel):
+    content: str
+    metadata: Optional[Dict[str, Any]] = None
+    file_path: Optional[str] = None
 
-def get_presidio_anonymizer():
-    """Lazy load Presidio anonymizer"""
-    global anonymizer
-    if anonymizer is None:
-        try:
-            from presidio_anonymizer import AnonymizerEngine
-            anonymizer = AnonymizerEngine()
-            logger.info("Presidio Anonymizer loaded successfully")
-        except Exception as e:
-            logger.warning(f"Presidio Anonymizer not available: {e}")
-            anonymizer = "unavailable"
-    return anonymizer if anonymizer != "unavailable" else None
+class ClassificationResponse(BaseModel):
+    classification: str
+    confidence: float
+    data_types: List[Dict[str, Any]]
+    risk_score: int
+    recommendations: List[str]
 
+class PIIDetectionRequest(BaseModel):
+    content: str
+    detect_types: Optional[List[str]] = None
 
-@app.route('/health', methods=['GET'])
+class PIIDetectionResponse(BaseModel):
+    pii_found: bool
+    detections: List[Dict[str, Any]]
+    total_instances: int
+    confidence: float
+
+class AnomalyDetectionRequest(BaseModel):
+    user_id: str
+    activity: Dict[str, Any]
+
+class AnomalyDetectionResponse(BaseModel):
+    is_anomaly: bool
+    anomaly_score: float
+    risk_level: str
+    anomalies_detected: List[Dict[str, str]]
+
+class ContentSimilarityRequest(BaseModel):
+    content1: str
+    content2: str
+
+class ContentSimilarityResponse(BaseModel):
+    similarity_score: float
+    is_duplicate: bool
+    is_derivative: bool
+
+class PolicyMatchRequest(BaseModel):
+    content: str
+    policy_patterns: List[str]
+
+class PolicyMatchResponse(BaseModel):
+    matched: bool
+    matched_patterns: List[str]
+    confidence: float
+
+# ============================================================================
+# ML MODELS & UTILITIES
+# ============================================================================
+
+@app.get("/")
 def health():
     """Health check endpoint"""
     return jsonify({
