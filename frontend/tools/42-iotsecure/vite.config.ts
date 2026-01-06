@@ -53,10 +53,10 @@ export default defineConfig({
   },
 
   define: {
-    'import.meta.env.VITE_APP_NAME': JSON.stringify('FraudGuard'),
-    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:4001'),
-    'import.meta.env.VITE_WS_URL': JSON.stringify('ws://localhost:6001'),
-    'import.meta.env.VITE_ML_URL': JSON.stringify('http://localhost:8001'),
+    'import.meta.env.VITE_APP_NAME': JSON.stringify('IoTSecure'),
+    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:4042'),
+    'import.meta.env.VITE_WS_URL': JSON.stringify('ws://localhost:4042'),
+    'import.meta.env.VITE_ML_URL': JSON.stringify('http://localhost:8042'),
   },
 
   optimizeDeps: {

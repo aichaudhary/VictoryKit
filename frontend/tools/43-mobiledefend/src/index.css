@@ -2,18 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* FraudGuard Custom Styles */
+/* MobileDefend Custom Styles */
 :root {
-  --fg-primary: #EF4444;
-  --fg-secondary: #EC4899;
-  --fg-accent: #06B6D4;
-  --fg-bg-dark: #0F172A;
-  --fg-bg-darker: #020617;
+  --mobile-primary: #9333EA;
+  --mobile-secondary: #EC4899;
+  --mobile-accent: #3B82F6;
+  --mobile-bg-dark: #0F172A;
+  --mobile-bg-darker: #020617;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(239, 68, 68, 0.3) transparent;
+  scrollbar-color: rgba(147, 51, 234, 0.3) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -26,12 +26,12 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(239, 68, 68, 0.3);
+  background: rgba(147, 51, 234, 0.3);
   border-radius: 3px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(239, 68, 68, 0.5);
+  background: rgba(147, 51, 234, 0.5);
 }
 
 body {
@@ -42,29 +42,29 @@ body {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--fg-primary) 0%, var(--fg-secondary) 100%);
+  background: linear-gradient(135deg, var(--mobile-primary) 0%, var(--mobile-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 /* Glow effects */
-.glow-red {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3),
-              0 0 40px rgba(239, 68, 68, 0.2),
-              0 0 60px rgba(239, 68, 68, 0.1);
+.glow-purple {
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.3),
+              0 0 40px rgba(147, 51, 234, 0.2),
+              0 0 60px rgba(147, 51, 234, 0.1);
 }
 
-.glow-cyan {
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3),
-              0 0 40px rgba(6, 182, 212, 0.2),
-              0 0 60px rgba(6, 182, 212, 0.1);
+.glow-pink {
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3),
+              0 0 40px rgba(236, 72, 153, 0.2),
+              0 0 60px rgba(236, 72, 153, 0.1);
 }
 
 /* Animated border */
 @keyframes border-glow {
-  0%, 100% { border-color: rgba(239, 68, 68, 0.3); }
-  50% { border-color: rgba(239, 68, 68, 0.6); }
+  0%, 100% { border-color: rgba(147, 51, 234, 0.3); }
+  50% { border-color: rgba(147, 51, 234, 0.6); }
 }
 
 .animated-border {

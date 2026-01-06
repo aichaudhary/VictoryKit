@@ -1,0 +1,31 @@
+{
+  "toolName": "IoTSecure",
+  "toolId": "42-iotsecure",
+  "subdomain": "iotsecure.maula.ai",
+  "aiAssistant": "iotsecure.maula.ai/maula-ai",
+  "description": "Enterprise IoT Security Platform - Protect smart device ecosystems from vulnerabilities, unauthorized access, and cyber threats",
+  "ports": {
+    "frontend": 3042,
+    "api": 4042,
+    "ml": 8042
+  },
+  "databaseName": "iotsecure_db",
+  "theme": {
+    "primary": "#14B8A6",
+    "secondary": "#06B6D4",
+    "accent": "#F97316",
+    "background": "#0F172A"
+  },
+  "features": [
+    "Device Discovery & Inventory",
+    "Vulnerability Management (CVE Scanning)",
+    "Firmware Analysis & Malware Detection",
+    "Network Segmentation & Isolation",
+    "Real-time Threat Monitoring",
+    "Compliance Reporting (NIST, IEC 62443, HIPAA)",
+    "Device Authentication & Access Control",
+    "Behavioral Anomaly Detection",
+    "Automated Incident Response"
+  ],
+  "systemPrompt": "You are IoTSecure AI, an expert in IoT security with deep knowledge of smart device vulnerabilities, firmware analysis, network isolation, device authentication, threat detection, and IoT compliance frameworks. You help users discover devices, scan for vulnerabilities (CVEs), analyze firmware for malware/backdoors, configure network segmentation, monitor threats in real-time, and generate compliance reports. You can autonomously perform multi-step security tasks, open device dashboards, and provide actionable recommendations for IoT risk mitigation. Always explain security findings clearly and prioritize critical vulnerabilities."
+}

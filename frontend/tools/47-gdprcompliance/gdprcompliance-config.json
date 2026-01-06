@@ -1,0 +1,383 @@
+{
+  "toolName": "GDPR Compliance",
+  "tagline": "EU Data Protection & Privacy Management Platform",
+  "subdomain": "gdprcompliance.maula.ai",
+  "port": 3047,
+  "apiPort": 4047,
+  "mlPort": 8047,
+  "wsPort": 6047,
+  "databaseName": "gdprcompliance_db",
+  
+  "systemPrompt": "You are GDPR Compliance AI, an expert in European Union data protection law, GDPR (General Data Protection Regulation), privacy management, consent frameworks, data subject rights, breach notification procedures, and DPO responsibilities. You have comprehensive knowledge of all 99 GDPR articles, European Data Protection Board (EDPB) guidelines, supervisory authority requirements across all EU member states, adequacy decisions, Standard Contractual Clauses (SCCs), and cross-border data transfer mechanisms. You help organizations manage consent records, process Data Subject Access Requests (DSARs) within 30-day deadlines, handle breach notifications within 72-hour windows, conduct Data Protection Impact Assessments (DPIAs), maintain Article 30 processing records, track lawful basis for processing, manage processor agreements, implement data retention schedules, and ensure overall GDPR compliance. You can autonomously perform multi-step compliance tasks, generate supervisory authority reports, calculate compliance scores, and provide remediation guidance. Always prioritize data subject rights, explain requirements in clear language, and emphasize the importance of privacy by design and default.",
+
+  "gdprPrinciples": [
+    {
+      "name": "Lawfulness, fairness and transparency",
+      "article": "Article 5(1)(a)",
+      "description": "Processing must be lawful, fair and transparent to the data subject"
+    },
+    {
+      "name": "Purpose limitation",
+      "article": "Article 5(1)(b)",
+      "description": "Data must be collected for specified, explicit and legitimate purposes"
+    },
+    {
+      "name": "Data minimisation",
+      "article": "Article 5(1)(c)",
+      "description": "Data must be adequate, relevant and limited to what is necessary"
+    },
+    {
+      "name": "Accuracy",
+      "article": "Article 5(1)(d)",
+      "description": "Personal data must be accurate and kept up to date"
+    },
+    {
+      "name": "Storage limitation",
+      "article": "Article 5(1)(e)",
+      "description": "Data must be kept only as long as necessary"
+    },
+    {
+      "name": "Integrity and confidentiality",
+      "article": "Article 5(1)(f)",
+      "description": "Data must be processed securely with appropriate protection"
+    },
+    {
+      "name": "Accountability",
+      "article": "Article 5(2)",
+      "description": "Controller must demonstrate compliance with all principles"
+    }
+  ],
+
+  "dataSubjectRights": [
+    {
+      "name": "Right of Access",
+      "article": "Article 15",
+      "sla": "30 days",
+      "description": "Right to obtain confirmation of processing and access to personal data",
+      "deliverables": ["Copy of data", "Processing purposes", "Recipients", "Retention period"]
+    },
+    {
+      "name": "Right to Rectification",
+      "article": "Article 16",
+      "sla": "30 days",
+      "description": "Right to have inaccurate personal data corrected",
+      "deliverables": ["Data correction", "Notification to recipients"]
+    },
+    {
+      "name": "Right to Erasure",
+      "article": "Article 17",
+      "sla": "30 days",
+      "description": "Right to be forgotten - deletion of personal data",
+      "deliverables": ["Data deletion", "Notification to processors", "Third-party notification"]
+    },
+    {
+      "name": "Right to Restriction",
+      "article": "Article 18",
+      "sla": "30 days",
+      "description": "Right to restrict processing of personal data",
+      "deliverables": ["Processing restriction", "Notification before lifting restriction"]
+    },
+    {
+      "name": "Right to Data Portability",
+      "article": "Article 20",
+      "sla": "30 days",
+      "description": "Right to receive data in machine-readable format",
+      "deliverables": ["Structured data export", "Common format (JSON, CSV, XML)"]
+    },
+    {
+      "name": "Right to Object",
+      "article": "Article 21",
+      "sla": "Immediate",
+      "description": "Right to object to processing, especially for direct marketing",
+      "deliverables": ["Stop processing", "Immediate for marketing"]
+    },
+    {
+      "name": "Rights related to automated decision-making",
+      "article": "Article 22",
+      "sla": "30 days",
+      "description": "Right not to be subject to automated decisions with legal effects",
+      "deliverables": ["Human review", "Explanation of logic", "Opt-out mechanism"]
+    }
+  ],
+
+  "lawfulBasis": [
+    {
+      "name": "Consent",
+      "article": "Article 6(1)(a)",
+      "requirements": ["Clear affirmative action", "Freely given", "Specific", "Informed", "Unambiguous", "Withdrawable"],
+      "evidence": "Consent records with timestamp, IP address, consent text"
+    },
+    {
+      "name": "Contract",
+      "article": "Article 6(1)(b)",
+      "requirements": ["Processing necessary for contract performance", "Pre-contractual steps"],
+      "evidence": "Contract documentation, service terms"
+    },
+    {
+      "name": "Legal Obligation",
+      "article": "Article 6(1)(c)",
+      "requirements": ["Required by EU or Member State law"],
+      "evidence": "Legal reference, compliance documentation"
+    },
+    {
+      "name": "Vital Interests",
+      "article": "Article 6(1)(d)",
+      "requirements": ["Protection of life or physical integrity"],
+      "evidence": "Emergency documentation, medical records"
+    },
+    {
+      "name": "Public Task",
+      "article": "Article 6(1)(e)",
+      "requirements": ["Task in the public interest", "Exercise of official authority"],
+      "evidence": "Legal mandate, public authority documentation"
+    },
+    {
+      "name": "Legitimate Interests",
+      "article": "Article 6(1)(f)",
+      "requirements": ["Balancing test", "Not overridden by data subject rights"],
+      "evidence": "Legitimate Interest Assessment (LIA)"
+    }
+  ],
+
+  "breachNotificationTimeline": {
+    "supervisoryAuthority": {
+      "deadline": "72 hours",
+      "article": "Article 33",
+      "requirements": ["Nature of breach", "Affected data subjects", "Likely consequences", "Mitigation measures", "DPO contact"],
+      "exceptions": "Not required if breach unlikely to result in risk to rights and freedoms"
+    },
+    "dataSubjects": {
+      "deadline": "Without undue delay",
+      "article": "Article 34",
+      "requirements": ["Clear and plain language", "Nature of breach", "DPO contact", "Likely consequences", "Mitigation measures"],
+      "exceptions": "Not required if: appropriate technical measures applied, subsequent measures taken, or would involve disproportionate effort"
+    }
+  },
+
+  "processingActivityFields": [
+    "Name and contact details of controller",
+    "Purposes of processing",
+    "Categories of data subjects",
+    "Categories of personal data",
+    "Categories of recipients",
+    "Third country transfers",
+    "Retention periods",
+    "Security measures description"
+  ],
+
+  "dpiaRequirements": {
+    "article": "Article 35",
+    "mandatory": [
+      "Systematic and extensive evaluation or automated decision-making with legal effects",
+      "Large scale processing of special category data",
+      "Systematic monitoring of publicly accessible areas on large scale"
+    ],
+    "assessment": [
+      "Description of processing operations and purposes",
+      "Assessment of necessity and proportionality",
+      "Assessment of risks to data subject rights",
+      "Measures to address risks and demonstrate compliance"
+    ]
+  },
+
+  "specialCategoryData": {
+    "article": "Article 9",
+    "types": [
+      "Racial or ethnic origin",
+      "Political opinions",
+      "Religious or philosophical beliefs",
+      "Trade union membership",
+      "Genetic data",
+      "Biometric data for unique identification",
+      "Health data",
+      "Sex life or sexual orientation"
+    ],
+    "processing": "Generally prohibited unless specific conditions apply"
+  },
+
+  "dataTransferMechanisms": [
+    {
+      "name": "Adequacy Decision",
+      "article": "Article 45",
+      "description": "European Commission decision that third country ensures adequate protection",
+      "countries": ["Andorra", "Argentina", "Canada (commercial)", "Faroe Islands", "Guernsey", "Israel", "Isle of Man", "Japan", "Jersey", "New Zealand", "South Korea", "Switzerland", "UK", "Uruguay", "USA (EU-US Data Privacy Framework)"]
+    },
+    {
+      "name": "Standard Contractual Clauses (SCCs)",
+      "article": "Article 46(2)(c)",
+      "description": "European Commission approved standard data protection clauses",
+      "version": "2021 SCCs"
+    },
+    {
+      "name": "Binding Corporate Rules (BCRs)",
+      "article": "Article 47",
+      "description": "Approved by supervisory authority for intra-group transfers"
+    },
+    {
+      "name": "Derogations",
+      "article": "Article 49",
+      "description": "Specific situations allowing transfers (consent, contract, legal claims, public interest, vital interests)"
+    }
+  ],
+
+  "supervisoryAuthorities": [
+    "CNIL (France)",
+    "ICO (UK post-Brexit)",
+    "BfDI (Germany)",
+    "Garante (Italy)",
+    "AEPD (Spain)",
+    "APD (Belgium)",
+    "NAIH (Hungary)",
+    "UODO (Poland)",
+    "Other EU member state DPAs"
+  ],
+
+  "functions": [
+    {
+      "name": "assess_consent_validity",
+      "description": "Analyze consent records for GDPR compliance - freely given, specific, informed, unambiguous",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "consent_id": { "type": "string" },
+          "consent_text": { "type": "string" },
+          "collection_method": { "type": "string" },
+          "timestamp": { "type": "string" },
+          "withdrawal_mechanism": { "type": "boolean" }
+        }
+      }
+    },
+    {
+      "name": "process_dsar",
+      "description": "Handle Data Subject Access Request with 30-day deadline tracking",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "request_type": { "enum": ["access", "rectification", "erasure", "restriction", "portability", "objection"] },
+          "data_subject_id": { "type": "string" },
+          "request_date": { "type": "string" },
+          "identity_verified": { "type": "boolean" }
+        }
+      }
+    },
+    {
+      "name": "breach_notification_timer",
+      "description": "Track 72-hour breach notification deadline to supervisory authority",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "breach_id": { "type": "string" },
+          "discovery_time": { "type": "string" },
+          "severity": { "enum": ["high", "medium", "low"] },
+          "affected_count": { "type": "number" }
+        }
+      }
+    },
+    {
+      "name": "conduct_dpia",
+      "description": "Automated Data Protection Impact Assessment for high-risk processing",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "processing_description": { "type": "string" },
+          "data_categories": { "type": "array" },
+          "special_category_data": { "type": "boolean" },
+          "automated_decision_making": { "type": "boolean" },
+          "large_scale": { "type": "boolean" }
+        }
+      }
+    },
+    {
+      "name": "validate_lawful_basis",
+      "description": "Verify appropriate lawful basis for processing activities",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "processing_purpose": { "type": "string" },
+          "proposed_basis": { "enum": ["consent", "contract", "legal_obligation", "vital_interests", "public_task", "legitimate_interests"] },
+          "data_sensitivity": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "generate_article30_record",
+      "description": "Create compliant Article 30 processing activity record",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "activity_name": { "type": "string" },
+          "controller_details": { "type": "object" },
+          "purposes": { "type": "array" },
+          "data_categories": { "type": "array" },
+          "recipients": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "assess_transfer_mechanism",
+      "description": "Evaluate appropriate mechanism for international data transfers",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "destination_country": { "type": "string" },
+          "data_volume": { "type": "string" },
+          "data_sensitivity": { "type": "string" },
+          "recipient_type": { "enum": ["processor", "controller", "joint_controller"] }
+        }
+      }
+    },
+    {
+      "name": "validate_processor_agreement",
+      "description": "Check Article 28 processor agreement compliance",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "processor_name": { "type": "string" },
+          "agreement_clauses": { "type": "array" },
+          "security_measures": { "type": "array" },
+          "sub_processor_authorization": { "type": "boolean" }
+        }
+      }
+    },
+    {
+      "name": "calculate_compliance_score",
+      "description": "Overall GDPR compliance assessment across all requirements",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "assessment_scope": { "type": "string" },
+          "include_categories": { "type": "array" }
+        }
+      }
+    },
+    {
+      "name": "generate_supervisory_report",
+      "description": "Create report for supervisory authority or audit",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "report_type": { "enum": ["breach_notification", "annual_report", "audit_response", "investigation"] },
+          "authority": { "type": "string" },
+          "period": { "type": "object" }
+        }
+      }
+    }
+  ],
+
+  "complianceChecklist": [
+    "Lawful basis identified for all processing",
+    "Consent mechanisms compliant (freely given, specific, informed, unambiguous)",
+    "Privacy notices clear and accessible",
+    "Article 30 records maintained",
+    "DSAR procedure established (30-day deadline)",
+    "Breach notification procedure (72-hour deadline)",
+    "DPIA process for high-risk processing",
+    "DPO appointed if required",
+    "Processor agreements in place (Article 28)",
+    "Data transfer mechanisms documented",
+    "Data retention schedules defined",
+    "Security measures appropriate",
+    "Staff training completed",
+    "Regular compliance audits"
+  ]
+}

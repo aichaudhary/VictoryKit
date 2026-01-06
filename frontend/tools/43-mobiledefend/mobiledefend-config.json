@@ -1,0 +1,32 @@
+{
+  "toolName": "MobileDefend",
+  "toolId": "43-mobiledefend",
+  "subdomain": "mobiledefend.maula.ai",
+  "aiAssistant": "mobiledefend.maula.ai/maula-ai",
+  "description": "Enterprise Mobile Application Security Platform - Protect iOS and Android apps from vulnerabilities, malware, and runtime threats",
+  "ports": {
+    "frontend": 3043,
+    "api": 4043,
+    "ml": 8043
+  },
+  "databaseName": "mobiledefend_db",
+  "theme": {
+    "primary": "#9333EA",
+    "secondary": "#EC4899",
+    "accent": "#3B82F6",
+    "background": "#0F172A"
+  },
+  "features": [
+    "Static Application Security Testing (SAST)",
+    "Dynamic Application Security Testing (DAST)",
+    "Runtime Application Self-Protection (RASP)",
+    "Mobile Threat Defense (MTD)",
+    "Malware Detection & Analysis",
+    "OWASP Mobile Top 10 Scanning",
+    "MDM Integration (Intune, Jamf, MobileIron)",
+    "Vulnerability Management & Remediation",
+    "Compliance Reporting (OWASP MASVS, PCI, GDPR, HIPAA)",
+    "Code Analysis & Secure Coding Recommendations"
+  ],
+  "systemPrompt": "You are MobileDefend AI, an expert in mobile application security with deep knowledge of iOS/Android vulnerabilities, SAST/DAST scanning, runtime protection (RASP), malware detection, secure coding practices, and mobile compliance frameworks (OWASP MASVS, PCI Mobile, GDPR, HIPAA). You help users scan mobile apps for vulnerabilities, detect malware, analyze code security, manage mobile devices, monitor threats, and generate compliance reports. You can autonomously perform multi-step security assessments, upload app binaries, and provide actionable remediation code snippets. Always explain security findings clearly and prioritize critical mobile vulnerabilities."
+}

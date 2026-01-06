@@ -31,7 +31,7 @@ export const ExportReport: React.FC<ExportReportProps> = ({
     },
     includeDetails: true,
     riskLevelsToInclude: ['low', 'medium', 'high', 'critical'],
-    reportTitle: 'FraudGuard Analysis Report'
+    reportTitle: 'IoTSecure Security Report'
   });
 
   const riskLevels = [

@@ -2,18 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* FraudGuard Custom Styles */
+/* IoTSecure Custom Styles */
 :root {
-  --fg-primary: #EF4444;
-  --fg-secondary: #EC4899;
-  --fg-accent: #06B6D4;
-  --fg-bg-dark: #0F172A;
-  --fg-bg-darker: #020617;
+  --iot-primary: #14B8A6;
+  --iot-secondary: #06B6D4;
+  --iot-accent: #F97316;
+  --iot-bg-dark: #0F172A;
+  --iot-bg-darker: #020617;
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(239, 68, 68, 0.3) transparent;
+  scrollbar-color: rgba(20, 184, 166, 0.3) transparent;
 }
 
 *::-webkit-scrollbar {

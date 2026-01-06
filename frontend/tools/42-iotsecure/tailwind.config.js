@@ -7,10 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        fraudguard: {
-          primary: '#EF4444',
-          secondary: '#EC4899',
-          accent: '#06B6D4',
+        iotsecure: {
+          primary: '#14B8A6',
+          secondary: '#06B6D4',
+          accent: '#F97316',
           dark: '#0F172A',
           darker: '#020617',
         },
@@ -42,11 +42,11 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'fraud-gradient': 'linear-gradient(135deg, #EF4444 0%, #EC4899 100%)',
+        'iot-gradient': 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
         'accent-gradient': 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%)',
       },
       boxShadow: {
-        'glow-red': '0 0 20px rgba(239, 68, 68, 0.3), 0 0 40px rgba(239, 68, 68, 0.2)',
+        'glow-teal': '0 0 20px rgba(20, 184, 166, 0.3), 0 0 40px rgba(20, 184, 166, 0.2)',
         'glow-cyan': '0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(6, 182, 212, 0.2)',
         'glow-green': '0 0 20px rgba(34, 197, 94, 0.3), 0 0 40px rgba(34, 197, 94, 0.2)',
       },
