@@ -11,6 +11,10 @@ import SignUp from './components/Auth/SignUp';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import ResetPassword from './components/Auth/ResetPassword';
 import Dashboard from './components/Dashboard/Dashboard';
+import Products from './components/Pages/Products';
+import Solutions from './components/Pages/Solutions';
+import Docs from './components/Pages/Docs';
+import Pricing from './components/Pages/Pricing';
 import { ScrollProvider, useScroll } from './context/ScrollContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { tools } from './data/tools';
@@ -49,6 +53,10 @@ const MainContent: React.FC = () => {
   if (view === 'forgot') return <ForgotPassword />;
   if (view === 'reset') return <ResetPassword />;
   if (view === 'dashboard') return <Dashboard />;
+  if (view === 'products') return <Products />;
+  if (view === 'solutions') return <Solutions />;
+  if (view === 'docs') return <Docs />;
+  if (view === 'pricing') return <Pricing />;
 
   // Default: Landing/Home Page
   return (

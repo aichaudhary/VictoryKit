@@ -63,10 +63,10 @@ const Footer: React.FC = () => {
         <div>
           <h4 className="font-bold text-white mb-6 uppercase text-sm tracking-widest">Company</h4>
           <ul className="space-y-4 text-gray-500 text-sm">
-            <li onClick={() => setView('signup')} className="hover:text-purple-400 cursor-pointer transition-colors">About Us</li>
-            <li onClick={() => setView('signup')} className="hover:text-purple-400 cursor-pointer transition-colors">Careers</li>
-            <li onClick={() => setView('login')} className="hover:text-purple-400 cursor-pointer transition-colors">Press Kit</li>
-            <li onClick={() => setView('login')} className="hover:text-purple-400 cursor-pointer transition-colors">Contact</li>
+            <li onClick={() => setView('solutions')} className="hover:text-purple-400 cursor-pointer transition-colors">About Us</li>
+            <li onClick={() => setView('solutions')} className="hover:text-purple-400 cursor-pointer transition-colors">Careers</li>
+            <li onClick={() => setView('docs')} className="hover:text-purple-400 cursor-pointer transition-colors">Press Kit</li>
+            <li onClick={() => setView('pricing')} className="hover:text-purple-400 cursor-pointer transition-colors">Contact</li>
           </ul>
         </div>
 
@@ -93,9 +93,9 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-600 text-[10px] uppercase font-bold tracking-widest">
         <div>© 2026 MAULA.AI. ALL RIGHTS RESERVED.</div>
         <div className="flex gap-8">
-          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('login')}>PRIVACY POLICY</span>
-          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('login')}>TERMS OF SERVICE</span>
-          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('login')}>SECURITY DISCLOSURE</span>
+          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('docs')}>PRIVACY POLICY</span>
+          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('docs')}>TERMS OF SERVICE</span>
+          <span className="hover:text-white cursor-pointer transition-colors" onClick={() => setView('docs')}>SECURITY DISCLOSURE</span>
         </div>
       </div>
     </footer>

@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState } from 'react';
 
-type AuthView = 'landing' | 'login' | 'signup' | 'forgot' | 'reset' | 'dashboard';
+type AuthView = 'landing' | 'login' | 'signup' | 'forgot' | 'reset' | 'dashboard' | 'products' | 'solutions' | 'docs' | 'pricing';
 
 interface AuthContextType {
   view: AuthView;

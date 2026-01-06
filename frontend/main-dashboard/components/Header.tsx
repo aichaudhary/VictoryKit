@@ -8,7 +8,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full z-[100] glass px-6 md:px-12 py-4 flex items-center justify-between transition-all duration-300">
-      <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+      <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('landing')}>
         <div className="bg-purple-600 p-2 rounded-lg">
           <Shield className="text-white w-6 h-6" />
         </div>
@@ -16,10 +16,10 @@ const Header: React.FC = () => {
       </div>
 
       <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-        <a href="#" className="hover:text-white transition-colors">Products</a>
-        <a href="#" className="hover:text-white transition-colors">Solutions</a>
-        <a href="#" className="hover:text-white transition-colors">Docs</a>
-        <a href="#" className="hover:text-white transition-colors">Pricing</a>
+        <span onClick={() => setView('products')} className="hover:text-white cursor-pointer transition-colors">Products</span>
+        <span onClick={() => setView('solutions')} className="hover:text-white cursor-pointer transition-colors">Solutions</span>
+        <span onClick={() => setView('docs')} className="hover:text-white cursor-pointer transition-colors">Docs</span>
+        <span onClick={() => setView('pricing')} className="hover:text-white cursor-pointer transition-colors">Pricing</span>
       </nav>
 
       <div className="flex items-center gap-4">
