@@ -1,0 +1,454 @@
+{
+  "toolName": "PrivacyShield",
+  "version": "1.0.0",
+  "domain": "privacyshield.maula.ai",
+  "description": "Comprehensive data privacy protection platform with PII detection, cookie consent management, privacy policy automation, and multi-framework compliance (GDPR, CCPA, PIPEDA)",
+  
+  "privacyFrameworks": [
+    {
+      "id": "gdpr",
+      "name": "GDPR",
+      "fullName": "General Data Protection Regulation",
+      "jurisdiction": "European Union",
+      "effectiveDate": "2018-05-25",
+      "keyPrinciples": ["lawfulness", "fairness", "transparency", "purpose_limitation", "data_minimization", "accuracy", "storage_limitation", "integrity_confidentiality"],
+      "penaltyTier": "Up to €20M or 4% of global revenue",
+      "requirements": {
+        "consent": "Explicit, freely given, specific, informed, unambiguous",
+        "dataSubjectRights": ["access", "rectification", "erasure", "restriction", "portability", "objection"],
+        "dpo": "Required for certain entities",
+        "breachNotification": "72 hours to supervisory authority",
+        "dataTransfer": "Adequacy decision, SCCs, BCRs, or derogations"
+      }
+    },
+    {
+      "id": "ccpa",
+      "name": "CCPA",
+      "fullName": "California Consumer Privacy Act",
+      "jurisdiction": "California, USA",
+      "effectiveDate": "2020-01-01",
+      "keyPrinciples": ["transparency", "consumer_rights", "opt_out", "non_discrimination"],
+      "penaltyTier": "Up to $7,500 per intentional violation",
+      "requirements": {
+        "notice": "At or before data collection",
+        "consumerRights": ["know", "delete", "opt_out_of_sale", "non_discrimination"],
+        "doNotSell": "Opt-out mechanism required",
+        "privacyPolicy": "Must disclose categories and purposes",
+        "verifiableRequest": "Identity verification for data requests"
+      }
+    },
+    {
+      "id": "pipeda",
+      "name": "PIPEDA",
+      "fullName": "Personal Information Protection and Electronic Documents Act",
+      "jurisdiction": "Canada",
+      "effectiveDate": "2001-01-01",
+      "keyPrinciples": ["accountability", "consent", "limiting_collection", "limiting_use", "accuracy", "safeguards", "openness", "individual_access", "challenging_compliance"],
+      "penaltyTier": "Fines up to CAD $100,000",
+      "requirements": {
+        "consent": "Meaningful consent for collection, use, disclosure",
+        "purpose": "Identify purposes before or at collection",
+        "retention": "Retain only as long as necessary",
+        "safeguards": "Appropriate security measures",
+        "transparency": "Make privacy policies available"
+      }
+    },
+    {
+      "id": "lgpd",
+      "name": "LGPD",
+      "fullName": "Lei Geral de Proteção de Dados",
+      "jurisdiction": "Brazil",
+      "effectiveDate": "2020-09-18",
+      "keyPrinciples": ["purpose", "necessity", "transparency", "security", "accountability"],
+      "penaltyTier": "Up to 2% of revenue (max R$50M per violation)",
+      "requirements": {
+        "legalBasis": "10 lawful bases for processing",
+        "dataSubjectRights": "Access, rectification, erasure, portability",
+        "dpo": "Required for all entities",
+        "breachNotification": "Reasonable timeframe to authority",
+        "dataTransfer": "Adequacy or appropriate safeguards"
+      }
+    }
+  ],
+
+  "piiCategories": [
+    {
+      "id": "identifiers",
+      "name": "Direct Identifiers",
+      "sensitivity": "high",
+      "examples": ["full_name", "email", "phone_number", "ssn", "passport", "drivers_license", "national_id"],
+      "regex": {
+        "email": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b",
+        "phone": "\\b(?:\\+\\d{1,3})?[-. (]?\\d{3}[-. )]?\\d{3}[-. ]?\\d{4}\\b",
+        "ssn": "\\b\\d{3}-\\d{2}-\\d{4}\\b"
+      },
+      "gdprCategory": "identification_data",
+      "ccpaCategory": "identifiers"
+    },
+    {
+      "id": "financial",
+      "name": "Financial Information",
+      "sensitivity": "critical",
+      "examples": ["credit_card", "bank_account", "routing_number", "iban", "swift_code", "cryptocurrency_wallet"],
+      "regex": {
+        "credit_card": "\\b(?:\\d{4}[-\\s]?){3}\\d{4}\\b",
+        "bank_account": "\\b\\d{8,17}\\b"
+      },
+      "gdprCategory": "financial_data",
+      "ccpaCategory": "financial_information"
+    },
+    {
+      "id": "health",
+      "name": "Health & Medical Data",
+      "sensitivity": "critical",
+      "examples": ["medical_record", "diagnosis", "prescription", "insurance", "health_condition", "biometric_health"],
+      "gdprCategory": "special_category",
+      "ccpaCategory": "health_information",
+      "hipaaProtected": true
+    },
+    {
+      "id": "biometric",
+      "name": "Biometric Data",
+      "sensitivity": "critical",
+      "examples": ["fingerprint", "facial_recognition", "iris_scan", "voice_pattern", "dna", "retina"],
+      "gdprCategory": "special_category",
+      "ccpaCategory": "biometric_information"
+    },
+    {
+      "id": "location",
+      "name": "Geolocation Data",
+      "sensitivity": "medium",
+      "examples": ["gps_coordinates", "ip_address", "zip_code", "city", "address", "geofence"],
+      "regex": {
+        "ip_v4": "\\b(?:[0-9]{1,3}\\.){3}[0-9]{1,3}\\b",
+        "coordinates": "[-+]?\\d{1,2}\\.\\d+,\\s*[-+]?\\d{1,3}\\.\\d+"
+      },
+      "gdprCategory": "location_data",
+      "ccpaCategory": "geolocation_data"
+    },
+    {
+      "id": "online_identifiers",
+      "name": "Online Identifiers",
+      "sensitivity": "medium",
+      "examples": ["cookie_id", "device_id", "ip_address", "mac_address", "user_agent", "session_id", "advertising_id"],
+      "gdprCategory": "online_identifiers",
+      "ccpaCategory": "internet_or_network_activity"
+    },
+    {
+      "id": "demographic",
+      "name": "Demographic Information",
+      "sensitivity": "low",
+      "examples": ["age", "gender", "race", "ethnicity", "nationality", "language", "education", "employment"],
+      "gdprCategory": "demographic_data",
+      "ccpaCategory": "characteristics_of_protected_classifications"
+    },
+    {
+      "id": "behavioral",
+      "name": "Behavioral & Usage Data",
+      "sensitivity": "medium",
+      "examples": ["browsing_history", "search_history", "purchase_history", "app_usage", "website_interactions", "preferences"],
+      "gdprCategory": "behavioral_data",
+      "ccpaCategory": "commercial_information"
+    }
+  ],
+
+  "cookieCategories": [
+    {
+      "id": "strictly_necessary",
+      "name": "Strictly Necessary",
+      "description": "Essential for website functionality",
+      "consentRequired": false,
+      "examples": ["session_cookies", "load_balancing", "csrf_protection", "authentication"],
+      "lifespan": "session_or_short_term",
+      "gdprExemption": "Article 6(1)(f) - Legitimate interest"
+    },
+    {
+      "id": "functional",
+      "name": "Functional",
+      "description": "Remember user preferences and settings",
+      "consentRequired": true,
+      "examples": ["language_preference", "timezone", "accessibility_settings", "volume_controls"],
+      "lifespan": "1_year",
+      "gdprBasis": "Consent (Article 6(1)(a))"
+    },
+    {
+      "id": "analytics",
+      "name": "Analytics & Performance",
+      "description": "Understand how visitors use the website",
+      "consentRequired": true,
+      "examples": ["google_analytics", "heatmaps", "scroll_tracking", "bounce_rate"],
+      "lifespan": "2_years",
+      "gdprBasis": "Consent (Article 6(1)(a))",
+      "dataSharing": "Third-party analytics providers"
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing & Advertising",
+      "description": "Display personalized ads and measure campaign effectiveness",
+      "consentRequired": true,
+      "examples": ["facebook_pixel", "google_ads", "retargeting", "conversion_tracking"],
+      "lifespan": "1_year",
+      "gdprBasis": "Consent (Article 6(1)(a))",
+      "ccpaOptOut": true,
+      "dataSharing": "Ad networks, social media platforms"
+    },
+    {
+      "id": "social_media",
+      "name": "Social Media",
+      "description": "Enable social sharing and embedded content",
+      "consentRequired": true,
+      "examples": ["social_share_buttons", "embedded_videos", "social_login", "social_feeds"],
+      "lifespan": "6_months",
+      "gdprBasis": "Consent (Article 6(1)(a))",
+      "dataSharing": "Social media platforms"
+    }
+  ],
+
+  "consentMechanisms": [
+    {
+      "id": "opt_in",
+      "name": "Opt-In (Explicit Consent)",
+      "description": "User must actively agree before processing",
+      "requiredFor": ["GDPR", "ePrivacy Directive"],
+      "implementation": "Unchecked checkbox, clear action required",
+      "validity": "Must be freely given, specific, informed, unambiguous"
+    },
+    {
+      "id": "opt_out",
+      "name": "Opt-Out",
+      "description": "User can object after data collection",
+      "requiredFor": ["CCPA (Do Not Sell)", "CAN-SPAM"],
+      "implementation": "Provide clear mechanism to withdraw consent",
+      "validity": "Easy as giving consent"
+    },
+    {
+      "id": "implied_consent",
+      "name": "Implied Consent",
+      "description": "Consent inferred from user actions",
+      "requiredFor": ["PIPEDA (limited cases)"],
+      "implementation": "Continued use of service implies agreement",
+      "validity": "Only for non-sensitive data, clear notice required"
+    },
+    {
+      "id": "granular_consent",
+      "name": "Granular Consent",
+      "description": "Separate consent for each purpose",
+      "requiredFor": ["GDPR best practice"],
+      "implementation": "Individual toggles per purpose/category",
+      "validity": "Specific, not bundled"
+    }
+  ],
+
+  "privacyRights": [
+    {
+      "id": "right_to_know",
+      "name": "Right to Know / Access",
+      "frameworks": ["GDPR (Article 15)", "CCPA", "PIPEDA", "LGPD"],
+      "description": "Request what personal data is collected and how it's used",
+      "responseTime": "30 days (GDPR), 45 days (CCPA)",
+      "format": "Structured, machine-readable (GDPR), reasonable format (CCPA)",
+      "freeOfCharge": true,
+      "identityVerification": "required"
+    },
+    {
+      "id": "right_to_rectification",
+      "name": "Right to Rectification",
+      "frameworks": ["GDPR (Article 16)", "LGPD"],
+      "description": "Correct inaccurate or incomplete personal data",
+      "responseTime": "30 days",
+      "freeOfCharge": true
+    },
+    {
+      "id": "right_to_erasure",
+      "name": "Right to Erasure (Right to be Forgotten)",
+      "frameworks": ["GDPR (Article 17)", "CCPA (Right to Delete)", "LGPD"],
+      "description": "Request deletion of personal data",
+      "responseTime": "30 days (GDPR), 45 days (CCPA)",
+      "exceptions": ["Legal obligation", "Legal claims", "Freedom of expression", "Archiving purposes"],
+      "freeOfCharge": true
+    },
+    {
+      "id": "right_to_portability",
+      "name": "Right to Data Portability",
+      "frameworks": ["GDPR (Article 20)", "LGPD"],
+      "description": "Receive personal data in structured, machine-readable format",
+      "responseTime": "30 days",
+      "format": "JSON, CSV, XML",
+      "scope": "Data provided by user (not derived data)",
+      "freeOfCharge": true
+    },
+    {
+      "id": "right_to_object",
+      "name": "Right to Object",
+      "frameworks": ["GDPR (Article 21)"],
+      "description": "Object to processing based on legitimate interests or direct marketing",
+      "responseTime": "Immediate for direct marketing",
+      "grounds": "Legitimate interests processing, profiling, direct marketing",
+      "effect": "Must stop processing unless compelling legitimate grounds"
+    },
+    {
+      "id": "right_to_restrict",
+      "name": "Right to Restriction",
+      "frameworks": ["GDPR (Article 18)", "LGPD"],
+      "description": "Request limitation of processing",
+      "responseTime": "30 days",
+      "grounds": ["Accuracy contested", "Unlawful processing", "Legal claims", "Objection pending"]
+    },
+    {
+      "id": "right_to_opt_out",
+      "name": "Right to Opt-Out of Sale",
+      "frameworks": ["CCPA"],
+      "description": "Opt-out of sale or sharing of personal information",
+      "responseTime": "15 business days",
+      "mechanism": "Clear and conspicuous 'Do Not Sell My Personal Information' link",
+      "noDiscrimination": "Cannot deny service or charge different prices"
+    }
+  ],
+
+  "dataMapping": {
+    "purposes": ["marketing", "analytics", "personalization", "fraud_prevention", "legal_compliance", "service_delivery", "product_improvement", "customer_support"],
+    "legalBases": ["consent", "contract", "legal_obligation", "vital_interests", "public_task", "legitimate_interests"],
+    "storageLocations": ["internal_database", "cloud_storage", "third_party_processor", "backup_system", "cdn", "local_device"],
+    "retentionPeriods": ["session", "30_days", "1_year", "3_years", "7_years", "indefinite"],
+    "dataFlowTypes": ["collection", "processing", "storage", "transfer", "deletion", "anonymization"]
+  },
+
+  "thirdPartyTrackers": {
+    "categories": ["analytics", "advertising", "social_media", "payment", "communication", "cdn", "tag_management"],
+    "commonTrackers": [
+      {"name": "Google Analytics", "category": "analytics", "privacyPolicy": "https://policies.google.com/privacy"},
+      {"name": "Facebook Pixel", "category": "advertising", "privacyPolicy": "https://www.facebook.com/privacy/policy"},
+      {"name": "Google Ads", "category": "advertising", "privacyPolicy": "https://policies.google.com/technologies/ads"},
+      {"name": "Hotjar", "category": "analytics", "privacyPolicy": "https://www.hotjar.com/legal/policies/privacy"},
+      {"name": "Stripe", "category": "payment", "privacyPolicy": "https://stripe.com/privacy"}
+    ]
+  },
+
+  "complianceChecks": [
+    "privacy_policy_published",
+    "cookie_consent_banner",
+    "dsar_request_mechanism",
+    "data_mapping_complete",
+    "third_party_agreements",
+    "retention_schedules_defined",
+    "security_measures_implemented",
+    "breach_response_plan",
+    "dpo_designated",
+    "privacy_by_design",
+    "legitimate_interest_assessment",
+    "data_transfer_safeguards"
+  ],
+
+  "aiFunctions": [
+    {
+      "id": "detect_pii",
+      "name": "PII Detection & Classification",
+      "description": "Scan text, files, databases for PII using NLP and regex patterns",
+      "input": "Text, documents, database schemas",
+      "output": "Detected PII categories, locations, confidence scores"
+    },
+    {
+      "id": "generate_privacy_policy",
+      "name": "Privacy Policy Generator",
+      "description": "Auto-generate privacy policies based on data practices and jurisdiction",
+      "input": "Data collection practices, jurisdictions, purposes",
+      "output": "Compliant privacy policy (HTML, PDF)"
+    },
+    {
+      "id": "cookie_scanner",
+      "name": "Cookie & Tracker Scanner",
+      "description": "Scan website for cookies and third-party trackers",
+      "input": "Website URL",
+      "output": "Cookie inventory, categories, lifespans, purposes"
+    },
+    {
+      "id": "consent_optimizer",
+      "name": "Consent Flow Optimizer",
+      "description": "Analyze consent mechanisms for GDPR compliance",
+      "input": "Consent implementation details",
+      "output": "Compliance score, improvement recommendations"
+    },
+    {
+      "id": "data_flow_mapper",
+      "name": "Data Flow Mapping",
+      "description": "Automatically map data flows across systems",
+      "input": "System architecture, API endpoints, database queries",
+      "output": "Visual data flow diagram, Article 30 records"
+    },
+    {
+      "id": "privacy_impact_assessment",
+      "name": "Privacy Impact Assessment (PIA)",
+      "description": "Conduct automated privacy impact assessments",
+      "input": "Processing activity details, data types, purposes",
+      "output": "PIA report, risk scores, mitigation recommendations"
+    },
+    {
+      "id": "compliance_scanner",
+      "name": "Multi-Framework Compliance Scanner",
+      "description": "Scan for GDPR, CCPA, PIPEDA, LGPD compliance gaps",
+      "input": "Current privacy practices, jurisdiction",
+      "output": "Compliance scorecard, gap analysis, remediation plan"
+    },
+    {
+      "id": "anonymization_recommender",
+      "name": "Data Anonymization Recommender",
+      "description": "Recommend anonymization techniques for datasets",
+      "input": "Dataset with PII",
+      "output": "Anonymization strategy, pseudonymization techniques, re-identification risk"
+    },
+    {
+      "id": "retention_optimizer",
+      "name": "Retention Schedule Optimizer",
+      "description": "Suggest optimal data retention periods based on legal requirements",
+      "input": "Data types, purposes, jurisdictions",
+      "output": "Retention schedule, deletion triggers, legal justifications"
+    },
+    {
+      "id": "dsar_automation",
+      "name": "DSAR Request Automation",
+      "description": "Automate data subject access request fulfillment",
+      "input": "DSAR request, user identifier",
+      "output": "Aggregated user data, export formats (JSON, CSV, PDF)"
+    }
+  ],
+
+  "features": {
+    "realTimePIIScanning": true,
+    "cookieConsentManager": true,
+    "privacyPolicyGenerator": true,
+    "dataFlowVisualization": true,
+    "multiFrameworkCompliance": true,
+    "automatedDSARFulfillment": true,
+    "thirdPartyTrackerInventory": true,
+    "consentAnalytics": true,
+    "privacyDashboard": true,
+    "breachNotification": false,
+    "dataAnonymization": true,
+    "retentionAutomation": true
+  },
+
+  "integrations": {
+    "gdprCompliance": {
+      "toolId": 47,
+      "sharedFeatures": ["DSAR", "consent_management", "data_mapping"],
+      "apiEndpoint": "http://localhost:4047/api/v1/gdprcompliance"
+    },
+    "hipaaGuard": {
+      "toolId": 48,
+      "sharedFeatures": ["PHI_detection", "access_logs"],
+      "apiEndpoint": "http://localhost:4048/api/v1/hipaaguard"
+    }
+  },
+
+  "ports": {
+    "frontend": 3046,
+    "backend": 4046,
+    "websocket": 6046,
+    "mlEngine": 8046
+  },
+
+  "database": {
+    "name": "privacyshield_db",
+    "collections": ["pii_records", "privacy_policies", "cookie_consents", "data_mappings", "privacy_assessments", "privacy_rights", "third_party_trackers", "compliance_reports"]
+  }
+}
