@@ -58,7 +58,6 @@ const findingSchema = new mongoose.Schema({
   }]
 }, { timestamps: true });
 
-// Indexes
 findingSchema.index({ findingId: 1 });
 findingSchema.index({ scanId: 1 });
 findingSchema.index({ requirement: 1 });

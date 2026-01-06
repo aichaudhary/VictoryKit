@@ -1,0 +1,372 @@
+{
+  "tool_name": "PolicyEngine",
+  "tool_number": 30,
+  "description": "AI-Powered Security Policy Management & Enforcement",
+  "category": "AI Security Operations",
+  "version": "1.0.0",
+  "ports": {
+    "frontend": 3030,
+    "api": 4030,
+    "ml": 8030,
+    "ai_assistant": 6030
+  },
+  "color_theme": {
+    "primary": "#7c3aed",
+    "secondary": "#a78bfa",
+    "accent": "#c4b5fd",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "danger": "#ef4444"
+  },
+  "ai_enabled": true,
+  "ai_system_prompt": "You are an expert AI security policy analyst specializing in enterprise security policy management, governance, and compliance. You have deep knowledge of:\n\n- Security policy frameworks (NIST, ISO 27001, CIS Controls)\n- Governance, Risk, and Compliance (GRC) standards\n- Policy lifecycle management (creation, review, approval, enforcement)\n- Regulatory compliance (GDPR, HIPAA, SOX, PCI-DSS)\n- Policy-as-Code and automated policy enforcement\n- Access control policies (RBAC, ABAC, Zero Trust)\n- Security baseline standards and hardening guides\n- Policy conflict detection and resolution\n- Continuous compliance monitoring\n- Policy exception management\n\nYour primary capabilities include:\n1. Creating comprehensive security policies from templates or custom requirements\n2. Analyzing existing policies for gaps, conflicts, and compliance\n3. Mapping policies to regulatory frameworks and controls\n4. Generating policy documentation and attestations\n5. Monitoring policy compliance and detecting violations\n6. Managing policy exceptions and approvals\n7. Creating policy-as-code for automated enforcement\n8. Providing policy recommendations based on industry best practices\n\nWhen working with policies, always:\n- Reference specific framework requirements (NIST 800-53, ISO 27001, etc.)\n- Provide clear, actionable policy statements\n- Include enforcement mechanisms and monitoring procedures\n- Consider policy hierarchy and inheritance\n- Address exceptions and approval workflows\n- Ensure policies are measurable and auditable\n\nBe precise, compliance-focused, and provide enterprise-grade policy guidance.",
+  "ai_functions": [
+    {
+      "name": "create_policy",
+      "description": "Create a new security policy from template or custom requirements with AI-generated content",
+      "parameters": {
+        "policy_name": {
+          "type": "string",
+          "description": "Name of the policy to create",
+          "required": true
+        },
+        "policy_category": {
+          "type": "string",
+          "description": "Category: access_control, data_protection, network_security, incident_response, etc.",
+          "required": true
+        },
+        "policy_framework": {
+          "type": "string",
+          "description": "Base framework: NIST, ISO27001, CIS, custom",
+          "required": false
+        },
+        "scope": {
+          "type": "string",
+          "description": "Policy scope: organization, department, system, application",
+          "required": true
+        },
+        "requirements": {
+          "type": "array",
+          "description": "Specific requirements or controls to address",
+          "required": false
+        },
+        "compliance_mandates": {
+          "type": "array",
+          "description": "Compliance requirements: GDPR, HIPAA, PCI-DSS, SOX",
+          "required": false
+        }
+      },
+      "required": ["policy_name", "policy_category", "scope"]
+    },
+    {
+      "name": "analyze_policy",
+      "description": "Analyze security policy for gaps, conflicts, compliance issues, and effectiveness",
+      "parameters": {
+        "policy_id": {
+          "type": "string",
+          "description": "Policy ID to analyze",
+          "required": true
+        },
+        "analysis_type": {
+          "type": "string",
+          "description": "Type: gap_analysis, compliance_check, conflict_detection, effectiveness_review",
+          "required": true
+        },
+        "framework_comparison": {
+          "type": "array",
+          "description": "Frameworks to compare against: NIST, ISO27001, CIS",
+          "required": false
+        },
+        "include_recommendations": {
+          "type": "boolean",
+          "description": "Include AI recommendations for improvements",
+          "required": false
+        }
+      },
+      "required": ["policy_id", "analysis_type"]
+    },
+    {
+      "name": "map_policy_to_controls",
+      "description": "Map security policy to specific controls and regulatory requirements",
+      "parameters": {
+        "policy_id": {
+          "type": "string",
+          "description": "Policy ID to map",
+          "required": true
+        },
+        "target_frameworks": {
+          "type": "array",
+          "description": "Target frameworks: NIST-800-53, ISO27001, CIS-Controls, PCI-DSS",
+          "required": true
+        },
+        "include_evidence": {
+          "type": "boolean",
+          "description": "Include evidence requirements for each control",
+          "required": false
+        }
+      },
+      "required": ["policy_id", "target_frameworks"]
+    },
+    {
+      "name": "check_policy_compliance",
+      "description": "Check current compliance status against policy requirements and detect violations",
+      "parameters": {
+        "policy_id": {
+          "type": "string",
+          "description": "Policy ID to check compliance",
+          "required": true
+        },
+        "scope": {
+          "type": "string",
+          "description": "Scope: organization, department, system_id",
+          "required": true
+        },
+        "time_period": {
+          "type": "string",
+          "description": "Time period: last_24h, last_7d, last_30d, last_90d",
+          "required": false
+        },
+        "include_violations": {
+          "type": "boolean",
+          "description": "Include detailed violation data",
+          "required": false
+        }
+      },
+      "required": ["policy_id", "scope"]
+    },
+    {
+      "name": "generate_policy_documentation",
+      "description": "Generate comprehensive policy documentation including procedures, guidelines, and attestations",
+      "parameters": {
+        "policy_id": {
+          "type": "string",
+          "description": "Policy ID to document",
+          "required": true
+        },
+        "document_type": {
+          "type": "string",
+          "description": "Type: full_policy, executive_summary, procedures, guidelines, attestation",
+          "required": true
+        },
+        "format": {
+          "type": "string",
+          "description": "Output format: markdown, pdf, docx, html",
+          "required": false
+        },
+        "include_appendix": {
+          "type": "boolean",
+          "description": "Include appendix with references and definitions",
+          "required": false
+        }
+      },
+      "required": ["policy_id", "document_type"]
+    },
+    {
+      "name": "manage_policy_exception",
+      "description": "Create, review, or approve policy exceptions with risk assessment",
+      "parameters": {
+        "action": {
+          "type": "string",
+          "description": "Action: create, review, approve, reject, revoke",
+          "required": true
+        },
+        "policy_id": {
+          "type": "string",
+          "description": "Policy ID for exception",
+          "required": true
+        },
+        "exception_reason": {
+          "type": "string",
+          "description": "Business justification for exception",
+          "required": true
+        },
+        "duration": {
+          "type": "string",
+          "description": "Exception duration: 30d, 90d, 180d, permanent",
+          "required": false
+        },
+        "compensating_controls": {
+          "type": "array",
+          "description": "Alternative controls to mitigate risk",
+          "required": false
+        }
+      },
+      "required": ["action", "policy_id", "exception_reason"]
+    },
+    {
+      "name": "create_policy_as_code",
+      "description": "Generate policy-as-code for automated enforcement (OPA, Sentinel, AWS SCP)",
+      "parameters": {
+        "policy_id": {
+          "type": "string",
+          "description": "Policy ID to convert to code",
+          "required": true
+        },
+        "target_platform": {
+          "type": "string",
+          "description": "Platform: OPA, HashiCorp-Sentinel, AWS-SCP, Azure-Policy, GCP-OrgPolicy",
+          "required": true
+        },
+        "include_tests": {
+          "type": "boolean",
+          "description": "Generate test cases for policy code",
+          "required": false
+        }
+      },
+      "required": ["policy_id", "target_platform"]
+    },
+    {
+      "name": "compare_policies",
+      "description": "Compare multiple policies to identify overlaps, conflicts, and gaps",
+      "parameters": {
+        "policy_ids": {
+          "type": "array",
+          "description": "List of policy IDs to compare",
+          "required": true
+        },
+        "comparison_type": {
+          "type": "string",
+          "description": "Type: overlap_detection, conflict_analysis, gap_identification",
+          "required": true
+        },
+        "generate_unified": {
+          "type": "boolean",
+          "description": "Generate unified policy recommendation",
+          "required": false
+        }
+      },
+      "required": ["policy_ids", "comparison_type"]
+    },
+    {
+      "name": "assess_policy_effectiveness",
+      "description": "Assess policy effectiveness using compliance metrics, violation trends, and enforcement data",
+      "parameters": {
+        "policy_id": {
+          "type": "string",
+          "description": "Policy ID to assess",
+          "required": true
+        },
+        "assessment_period": {
+          "type": "string",
+          "description": "Period: last_30d, last_90d, last_180d, last_year",
+          "required": true
+        },
+        "metrics": {
+          "type": "array",
+          "description": "Metrics: compliance_rate, violation_count, exception_rate, enforcement_success",
+          "required": false
+        }
+      },
+      "required": ["policy_id", "assessment_period"]
+    },
+    {
+      "name": "recommend_policy_updates",
+      "description": "AI-powered recommendations for policy updates based on threats, compliance changes, and industry trends",
+      "parameters": {
+        "policy_id": {
+          "type": "string",
+          "description": "Policy ID to review",
+          "required": true
+        },
+        "context": {
+          "type": "object",
+          "description": "Context: recent_incidents, new_regulations, technology_changes",
+          "required": false
+        },
+        "recommendation_type": {
+          "type": "string",
+          "description": "Type: security_enhancement, compliance_update, operational_improvement",
+          "required": false
+        }
+      },
+      "required": ["policy_id"]
+    }
+  ],
+  "navigation": [
+    {
+      "name": "Dashboard",
+      "path": "/",
+      "icon": "dashboard"
+    },
+    {
+      "name": "Policy Library",
+      "path": "/policies",
+      "icon": "library_books"
+    },
+    {
+      "name": "Create Policy",
+      "path": "/policies/create",
+      "icon": "add_circle"
+    },
+    {
+      "name": "Compliance Monitor",
+      "path": "/compliance",
+      "icon": "verified"
+    },
+    {
+      "name": "Policy Analysis",
+      "path": "/analysis",
+      "icon": "analytics"
+    },
+    {
+      "name": "Exceptions",
+      "path": "/exceptions",
+      "icon": "rule"
+    },
+    {
+      "name": "Policy as Code",
+      "path": "/policy-code",
+      "icon": "code"
+    },
+    {
+      "name": "Framework Mapping",
+      "path": "/framework-mapping",
+      "icon": "account_tree"
+    },
+    {
+      "name": "Reports",
+      "path": "/reports",
+      "icon": "assessment"
+    },
+    {
+      "name": "Settings",
+      "path": "/settings",
+      "icon": "settings"
+    }
+  ],
+  "database": {
+    "name": "policyengine_db",
+    "collections": [
+      "policies",
+      "policy_versions",
+      "compliance_checks",
+      "policy_exceptions",
+      "policy_violations",
+      "framework_mappings",
+      "policy_approvals"
+    ]
+  },
+  "features": {
+    "policy_templates": true,
+    "version_control": true,
+    "approval_workflows": true,
+    "automated_enforcement": true,
+    "compliance_mapping": true,
+    "exception_management": true,
+    "policy_as_code": true,
+    "ai_recommendations": true,
+    "real_time_monitoring": true,
+    "audit_trail": true
+  },
+  "supported_frameworks": [
+    "NIST-800-53",
+    "ISO-27001",
+    "CIS-Controls",
+    "PCI-DSS",
+    "HIPAA",
+    "GDPR",
+    "SOX",
+    "COBIT",
+    "SOC2"
+  ]
+}

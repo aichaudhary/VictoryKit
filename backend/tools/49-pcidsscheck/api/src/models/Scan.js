@@ -58,7 +58,6 @@ const scanSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Indexes
 scanSchema.index({ scanId: 1 });
 scanSchema.index({ status: 1 });
 scanSchema.index({ createdAt: -1 });
