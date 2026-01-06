@@ -1,0 +1,158 @@
+{
+  "toolName": "BugBountyAI",
+  "tagline": "AI-Powered Bug Bounty Platform",
+  "subdomain": "bugbounty.maula.ai",
+  "port": 3050,
+  "apiPort": 4050,
+  "mlPort": 8050,
+  "aiPort": 6050,
+  "databaseName": "bugbountyai_db",
+  
+  "systemPrompt": "You are BugBountyAI, an expert in vulnerability management, security research, and bug bounty program operations. You have deep knowledge of OWASP Top 10, CWE classifications, CVE database, CVSS scoring methodology, vulnerability triage, remediation workflows, and security researcher community best practices. You help security teams analyze vulnerability submissions for validity and severity, detect duplicate submissions using pattern recognition, calculate fair rewards based on impact and quality, manage researcher relationships, track vulnerabilities through remediation lifecycle, and generate program analytics. You can autonomously perform multi-step vulnerability analysis tasks, open multiple tabs for visualization, and coordinate disclosure timelines. Always be thorough in analysis, fair in reward calculations, and clear in communication. Explain security concepts in accessible language while maintaining technical accuracy.",
+  
+  "functions": [
+    {
+      "name": "analyze_submission",
+      "description": "Analyze a vulnerability submission using AI to determine validity, severity, CVSS score, and classification",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "submission_id": { "type": "string", "description": "Unique submission ID" },
+          "title": { "type": "string", "description": "Vulnerability title" },
+          "description": { "type": "string", "description": "Detailed vulnerability description" },
+          "proof_of_concept": { "type": "string", "description": "PoC code, steps to reproduce, or exploit details" },
+          "vulnerability_type": { "type": "string", "description": "Type of vulnerability (XSS, SQLi, RCE, etc.)" },
+          "assets_affected": { "type": "array", "items": { "type": "string" }, "description": "List of affected URLs, IPs, or assets" },
+          "researcher_id": { "type": "string", "description": "Researcher who submitted" }
+        },
+        "required": ["submission_id", "title", "description"]
+      }
+    },
+    {
+      "name": "check_duplicates",
+      "description": "Check if submission is a duplicate of existing vulnerability using ML-powered similarity detection",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "submission_id": { "type": "string", "description": "Submission ID to check for duplicates" },
+          "similarity_threshold": { "type": "number", "description": "Similarity threshold (0.0-1.0), default 0.85" },
+          "search_scope": { "type": "string", "enum": ["all", "open", "resolved", "last_30_days"], "description": "Scope of duplicate search" }
+        },
+        "required": ["submission_id"]
+      }
+    },
+    {
+      "name": "calculate_reward",
+      "description": "AI-powered reward calculation based on severity, impact, asset criticality, and submission quality",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "submission_id": { "type": "string", "description": "Submission ID" },
+          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low", "informational"], "description": "Vulnerability severity" },
+          "cvss_score": { "type": "number", "description": "CVSS v3.1 score (0.0-10.0)" },
+          "asset_criticality": { "type": "string", "enum": ["critical", "high", "medium", "low"], "description": "Criticality of affected asset" },
+          "quality_score": { "type": "number", "description": "Submission quality (0-100)" },
+          "bounty_range": { "type": "object", "properties": { "min": { "type": "number" }, "max": { "type": "number" } }, "description": "Custom bounty range for this severity" }
+        },
+        "required": ["submission_id", "severity"]
+      }
+    },
+    {
+      "name": "get_researcher_profile",
+      "description": "Fetch comprehensive researcher profile including reputation, submission history, statistics, and earnings",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "researcher_id": { "type": "string", "description": "Researcher ID or email address" },
+          "include_submissions": { "type": "boolean", "description": "Include full submission history" },
+          "include_stats": { "type": "boolean", "description": "Include detailed statistics and metrics" },
+          "date_range": { "type": "string", "enum": ["7d", "30d", "90d", "1y", "all"], "description": "Time range for statistics" }
+        },
+        "required": ["researcher_id"]
+      }
+    },
+    {
+      "name": "open_vulnerability_dashboard",
+      "description": "Open interactive visualization dashboard with charts, graphs, and analytics for vulnerabilities",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "view_type": { "type": "string", "enum": ["overview", "trends", "researchers", "timeline", "severity_heatmap", "asset_coverage"], "description": "Type of dashboard view" },
+          "date_range": { "type": "string", "enum": ["7d", "30d", "90d", "1y", "all"], "description": "Date range for analytics" },
+          "filters": { "type": "object", "properties": { "status": { "type": "array" }, "severity": { "type": "array" }, "researcher": { "type": "string" }, "asset": { "type": "string" } }, "description": "Dashboard filters" }
+        },
+        "required": ["view_type"]
+      }
+    },
+    {
+      "name": "export_program_report",
+      "description": "Generate and export comprehensive bug bounty program report with metrics, submissions, and financials",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "format": { "type": "string", "enum": ["pdf", "csv", "json", "excel", "html"], "description": "Export format" },
+          "report_type": { "type": "string", "enum": ["summary", "detailed", "financial", "researcher_stats", "compliance"], "description": "Type of report" },
+          "date_from": { "type": "string", "description": "Start date (ISO format)" },
+          "date_to": { "type": "string", "description": "End date (ISO format)" },
+          "include_payouts": { "type": "boolean", "description": "Include payout information" },
+          "include_metrics": { "type": "boolean", "description": "Include program metrics and KPIs" },
+          "include_charts": { "type": "boolean", "description": "Include visualization charts" }
+        },
+        "required": ["format", "report_type"]
+      }
+    }
+  ],
+  
+  "colorTheme": {
+    "primary": "#d97706",
+    "secondary": "#92400e",
+    "accent": "#fbbf24",
+    "success": "#10b981",
+    "warning": "#f59e0b",
+    "danger": "#dc2626",
+    "background": "#0a0e27",
+    "surface": "#1a1f3a",
+    "text": "#ffffff",
+    "border": "#374151",
+    "muted": "#6b7280"
+  },
+  
+  "navigationItems": [
+    { "label": "Submissions", "path": "/submissions", "icon": "Bug" },
+    { "label": "Triage Board", "path": "/triage", "icon": "KanbanSquare" },
+    { "label": "Researchers", "path": "/researchers", "icon": "Users" },
+    { "label": "Rewards", "path": "/rewards", "icon": "DollarSign" },
+    { "label": "Analytics", "path": "/analytics", "icon": "BarChart3" },
+    { "label": "Program Settings", "path": "/settings", "icon": "Settings" }
+  ],
+  
+  "integrations": {
+    "ticketing": ["jira", "github", "gitlab", "linear"],
+    "communication": ["slack", "teams", "discord", "email"],
+    "payments": ["stripe", "paypal", "cryptocurrency", "wire_transfer"],
+    "siem": ["splunk", "elastic", "datadog"],
+    "threat_intel": ["virustotal", "shodan", "censys"]
+  },
+  
+  "features": {
+    "submission_management": true,
+    "ai_triage": true,
+    "duplicate_detection": true,
+    "cvss_calculator": true,
+    "reward_automation": true,
+    "researcher_leaderboard": true,
+    "sla_tracking": true,
+    "disclosure_coordination": true,
+    "program_analytics": true,
+    "custom_workflows": true
+  },
+  
+  "metadata": {
+    "version": "1.0.0",
+    "category": "Bug Bounty & Vulnerability Management",
+    "tags": ["bug-bounty", "vulnerability-management", "security-research", "responsible-disclosure", "ai-triage"],
+    "description": "AI-powered bug bounty platform for managing vulnerability submissions, automating triage, and rewarding security researchers.",
+    "documentation_url": "https://docs.maula.ai/tools/bugbountyai",
+    "api_documentation_url": "https://api.maula.ai/v1/bugbountyai/docs"
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "toolName": "SIEMCommander",
+  "tagline": "AI-Powered Security Information & Event Management",
+  "subdomain": "siemcommander.maula.ai",
+  "aiPath": "/maula-ai",
+  "port": 3027,
+  "apiPort": 4027,
+  "mlPort": 8027,
+  "aiPort": 6027,
+  "databaseName": "siemcommander_db",
+  
+  "systemPrompt": "You are SIEMCommander AI, an elite Security Operations Center (SOC) expert with deep knowledge of security information and event management, threat detection, incident response, log correlation, threat intelligence, compliance reporting, and SOAR automation. You help security analysts aggregate logs from 100+ sources, detect advanced persistent threats (APTs), correlate events in real-time, create and manage security incidents, execute automated playbooks, query events using SPL/KQL, and generate compliance reports for SOC 2, ISO 27001, PCI-DSS, and HIPAA. You can autonomously perform multi-step threat hunting operations, open multiple dashboards for visualization, and provide actionable incident response recommendations. Always explain security concepts clearly while maintaining technical precision for professional SOC analysts.",
+  
+  "functions": [
+    {
+      "name": "ingest_security_events",
+      "description": "Ingest and normalize security events from multiple sources (firewalls, IDS/IPS, endpoints, cloud, applications)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "source_type": { 
+            "type": "string", 
+            "enum": ["firewall", "ids", "ips", "endpoint", "cloud", "application", "network", "database"],
+            "description": "Type of security event source" 
+          },
+          "events": { 
+            "type": "array", 
+            "description": "Array of raw security log events",
+            "items": { "type": "object" }
+          },
+          "auto_correlate": { "type": "boolean", "description": "Automatically correlate events with existing threats" },
+          "normalize": { "type": "boolean", "description": "Normalize events to common schema" }
+        },
+        "required": ["source_type", "events"]
+      }
+    },
+    {
+      "name": "detect_threats",
+      "description": "Run ML-powered threat detection and anomaly analysis on ingested events",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "time_window": { 
+            "type": "string", 
+            "enum": ["1h", "6h", "24h", "7d", "30d"],
+            "description": "Time window for threat detection" 
+          },
+          "severity_threshold": { 
+            "type": "string", 
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Minimum severity level to detect" 
+          },
+          "use_threat_intel": { "type": "boolean", "description": "Use external threat intelligence feeds" },
+          "detection_rules": { 
+            "type": "array", 
+            "description": "Custom detection rule IDs to apply",
+            "items": { "type": "string" }
+          },
+          "ml_models": {
+            "type": "array",
+            "enum": ["anomaly_detection", "behavior_analysis", "apt_detection", "insider_threat"],
+            "description": "ML models to use for detection"
+          }
+        },
+        "required": ["time_window"]
+      }
+    },
+    {
+      "name": "create_incident",
+      "description": "Create and assign a security incident with automatic playbook execution",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "description": "Incident title" },
+          "description": { "type": "string", "description": "Detailed incident description" },
+          "severity": { 
+            "type": "string", 
+            "enum": ["low", "medium", "high", "critical"],
+            "description": "Incident severity level" 
+          },
+          "category": {
+            "type": "string",
+            "enum": ["malware", "phishing", "ddos", "data_breach", "insider_threat", "apt", "ransomware", "unauthorized_access"],
+            "description": "Incident category"
+          },
+          "assign_to": { "type": "string", "description": "Analyst user ID or team" },
+          "playbook_id": { "type": "string", "description": "Automated response playbook ID" },
+          "auto_execute": { "type": "boolean", "description": "Automatically execute playbook" },
+          "affected_assets": {
+            "type": "array",
+            "description": "List of affected systems/users",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["title", "severity", "category"]
+      }
+    },
+    {
+      "name": "execute_playbook",
+      "description": "Execute automated incident response playbook (SOAR)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "playbook_id": { "type": "string", "description": "Playbook identifier" },
+          "incident_id": { "type": "string", "description": "Associated incident ID" },
+          "dry_run": { "type": "boolean", "description": "Test mode without actual execution" },
+          "parameters": { 
+            "type": "object", 
+            "description": "Custom parameters for playbook execution" 
+          },
+          "notify_on_complete": { "type": "boolean", "description": "Send notification when complete" }
+        },
+        "required": ["playbook_id"]
+      }
+    },
+    {
+      "name": "query_events",
+      "description": "Search and filter security events using advanced query language (SPL/KQL syntax)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "description": "SPL or KQL query string" },
+          "time_range": { 
+            "type": "object",
+            "properties": {
+              "start": { "type": "string", "description": "Start timestamp (ISO format)" },
+              "end": { "type": "string", "description": "End timestamp (ISO format)" }
+            }
+          },
+          "limit": { "type": "number", "description": "Maximum results to return", "default": 1000 },
+          "sort_by": { "type": "string", "description": "Field to sort results by" },
+          "export_format": { 
+            "type": "string", 
+            "enum": ["json", "csv", "siem_native"],
+            "description": "Export format for results" 
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "correlate_events",
+      "description": "Correlate multiple events to identify attack patterns and threat chains",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "event_ids": { 
+            "type": "array", 
+            "description": "Array of event IDs to correlate",
+            "items": { "type": "string" }
+          },
+          "correlation_rules": {
+            "type": "array",
+            "description": "Correlation rule IDs to apply",
+            "items": { "type": "string" }
+          },
+          "time_window": { "type": "string", "description": "Maximum time gap between events" },
+          "min_confidence": { "type": "number", "description": "Minimum confidence score (0-100)" }
+        },
+        "required": ["event_ids"]
+      }
+    },
+    {
+      "name": "threat_hunt",
+      "description": "Proactive threat hunting across all ingested data",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "hunt_hypothesis": { "type": "string", "description": "Threat hunting hypothesis" },
+          "iocs": {
+            "type": "array",
+            "description": "Indicators of Compromise to hunt for",
+            "items": { "type": "string" }
+          },
+          "scope": {
+            "type": "array",
+            "enum": ["network", "endpoints", "cloud", "applications", "users"],
+            "description": "Hunting scope"
+          },
+          "time_range": { "type": "string", "description": "Historical time range to search" }
+        },
+        "required": ["hunt_hypothesis"]
+      }
+    },
+    {
+      "name": "generate_compliance_report",
+      "description": "Generate compliance or forensic security report",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "report_type": { 
+            "type": "string", 
+            "enum": ["compliance", "forensic", "executive", "incident", "audit_trail", "threat_summary"],
+            "description": "Type of report to generate" 
+          },
+          "compliance_framework": {
+            "type": "string",
+            "enum": ["soc2", "iso27001", "pci_dss", "hipaa", "gdpr", "nist"],
+            "description": "Compliance framework (if applicable)"
+          },
+          "format": { 
+            "type": "string", 
+            "enum": ["pdf", "html", "csv", "json"],
+            "description": "Report output format" 
+          },
+          "time_period": { 
+            "type": "string", 
+            "description": "Time period for report (e.g., 'last_30_days', 'Q1_2026')" 
+          },
+          "include_charts": { "type": "boolean", "description": "Include visualizations" },
+          "include_raw_data": { "type": "boolean", "description": "Attach raw event data" }
+        },
+        "required": ["report_type", "format"]
+      }
+    },
+    {
+      "name": "update_threat_intel",
+      "description": "Update threat intelligence feeds and IOC databases",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "feed_sources": {
+            "type": "array",
+            "enum": ["misp", "otx", "abuse_ch", "virustotal", "custom"],
+            "description": "Threat intelligence feed sources"
+          },
+          "ioc_types": {
+            "type": "array",
+            "enum": ["ip", "domain", "url", "hash", "email", "cve"],
+            "description": "Types of IOCs to update"
+          },
+          "auto_apply": { "type": "boolean", "description": "Automatically apply to detection rules" }
+        },
+        "required": ["feed_sources"]
+      }
+    },
+    {
+      "name": "open_soc_dashboard",
+      "description": "Open real-time SOC monitoring dashboard with specific visualization",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "dashboard_type": { 
+            "type": "string", 
+            "enum": ["threat_overview", "incident_timeline", "event_heatmap", "compliance_status", "analyst_workload", "threat_intel"],
+            "description": "Type of dashboard to display" 
+          },
+          "time_range": { "type": "string", "description": "Time range for dashboard data" },
+          "auto_refresh": { "type": "boolean", "description": "Enable auto-refresh" }
+        },
+        "required": ["dashboard_type"]
+      }
+    }
+  ],
+  
+  "colorTheme": {
+    "primary": "#00ff88",
+    "secondary": "#00d4ff",
+    "accent": "#ff0055",
+    "success": "#00ff88",
+    "warning": "#ffaa00",
+    "danger": "#ff0055",
+    "info": "#00d4ff",
+    "background": "#0a0e27",
+    "surface": "#1a1f3a",
+    "text": "#ffffff",
+    "textSecondary": "#94a3b8"
+  },
+  
+  "navigationItems": [
+    { "label": "SOC Dashboard", "path": "/dashboard", "icon": "LayoutDashboard" },
+    { "label": "Events", "path": "/events", "icon": "Activity" },
+    { "label": "Incidents", "path": "/incidents", "icon": "AlertTriangle" },
+    { "label": "Threat Hunt", "path": "/hunt", "icon": "Target" },
+    { "label": "Playbooks", "path": "/playbooks", "icon": "PlayCircle" },
+    { "label": "Threat Intel", "path": "/threat-intel", "icon": "Shield" },
+    { "label": "Compliance", "path": "/compliance", "icon": "FileCheck" },
+    { "label": "Reports", "path": "/reports", "icon": "FileText" },
+    { "label": "Settings", "path": "/settings", "icon": "Settings" }
+  ]
+}
