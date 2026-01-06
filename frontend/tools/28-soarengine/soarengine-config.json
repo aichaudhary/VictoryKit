@@ -1,0 +1,132 @@
+{
+  "name": "SOAR Engine",
+  "version": "1.0.0",
+  "description": "Security Orchestration, Automation and Response platform for automated incident handling",
+  "toolNumber": 28,
+  "subdomain": "soarengine",
+  "domain": "soarengine.maula.ai",
+  "ports": {
+    "frontend": 3028,
+    "backend": 4028,
+    "websocket": 6028
+  },
+  "theme": {
+    "primary": "#8B5CF6",
+    "secondary": "#A855F7",
+    "accent": "#C084FC",
+    "gradient": "from-purple-600 to-violet-500"
+  },
+  "features": [
+    "playbook-builder",
+    "case-management",
+    "automation-engine",
+    "integration-hub",
+    "threat-intel-enrichment",
+    "real-time-orchestration",
+    "metrics-dashboard",
+    "ai-recommendations"
+  ],
+  "integrations": [
+    {
+      "id": "siem",
+      "name": "SIEM Integration",
+      "types": ["splunk", "elastic", "qradar", "sentinel", "sumo"]
+    },
+    {
+      "id": "edr",
+      "name": "EDR Integration",
+      "types": ["crowdstrike", "carbon-black", "sentinelone", "defender"]
+    },
+    {
+      "id": "firewall",
+      "name": "Firewall Integration",
+      "types": ["palo-alto", "fortinet", "checkpoint", "cisco"]
+    },
+    {
+      "id": "email",
+      "name": "Email Security",
+      "types": ["proofpoint", "mimecast", "office365", "google"]
+    },
+    {
+      "id": "ticketing",
+      "name": "Ticketing Systems",
+      "types": ["servicenow", "jira", "zendesk", "freshdesk"]
+    },
+    {
+      "id": "threat-intel",
+      "name": "Threat Intelligence",
+      "types": ["virustotal", "alienvault", "misp", "threatconnect"]
+    }
+  ],
+  "playbookCategories": [
+    "phishing-response",
+    "malware-containment",
+    "account-compromise",
+    "data-exfiltration",
+    "ransomware-response",
+    "insider-threat",
+    "ddos-mitigation",
+    "vulnerability-response"
+  ],
+  "ai": {
+    "provider": "multi",
+    "supportedProviders": ["gemini", "openai", "anthropic", "xai", "mistral", "meta"],
+    "functions": [
+      {
+        "name": "create_playbook",
+        "description": "Generate automated response playbook from natural language"
+      },
+      {
+        "name": "recommend_actions",
+        "description": "AI-powered recommendations for incident response"
+      },
+      {
+        "name": "enrich_ioc",
+        "description": "Automatic IOC enrichment from multiple threat intel sources"
+      },
+      {
+        "name": "correlate_events",
+        "description": "Find related security events across data sources"
+      },
+      {
+        "name": "automate_response",
+        "description": "Execute automated response actions"
+      },
+      {
+        "name": "generate_report",
+        "description": "Create incident and compliance reports"
+      },
+      {
+        "name": "optimize_workflow",
+        "description": "Suggest workflow optimizations based on metrics"
+      },
+      {
+        "name": "predict_impact",
+        "description": "Predict incident impact and severity"
+      }
+    ]
+  },
+  "metrics": {
+    "tracked": [
+      "mean_time_to_detect",
+      "mean_time_to_respond",
+      "mean_time_to_contain",
+      "automation_rate",
+      "playbook_success_rate",
+      "case_closure_rate",
+      "analyst_efficiency"
+    ]
+  },
+  "database": {
+    "type": "mongodb",
+    "collections": [
+      "cases",
+      "playbooks",
+      "automations",
+      "integrations",
+      "enrichments",
+      "metrics",
+      "audit_logs"
+    ]
+  }
+}
