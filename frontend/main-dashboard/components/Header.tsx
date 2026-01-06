@@ -1,86 +1,43 @@
-'use client';
 
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { Menu, X, ChevronRight } from 'lucide-react';
+import React from 'react';
+import { Shield, ChevronRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
-export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+const Header: React.FC = () => {
+  const { setView } = useAuth();
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/10 py-4' : 'bg-transparent py-6'
-      }`}
-    >
-      <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold tracking-tighter text-white flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-lg">F</span>
-          </div>
-          FYZO
-        </Link>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
-          <Link href="#features" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
-            Features
-          </Link>
-          <Link href="#tools" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
-            Tools
-          </Link>
-          <Link href="#pricing" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
-            Pricing
-          </Link>
-          <Link href="#about" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
-            About
-          </Link>
-        </nav>
-
-        <div className="hidden md:flex items-center gap-4">
-          <Link href="/login" className="text-sm font-medium text-white hover:text-blue-400 transition-colors">
-            Log in
-          </Link>
-          <Link 
-            href="/get-started" 
-            className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full hover:bg-blue-50 transition-colors flex items-center gap-2"
-          >
-            Get Started <ChevronRight className="w-4 h-4" />
-          </Link>
+    <header className="fixed top-0 left-0 w-full z-[100] glass px-6 md:px-12 py-4 flex items-center justify-between transition-all duration-300">
+      <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <div className="bg-purple-600 p-2 rounded-lg">
+          <Shield className="text-white w-6 h-6" />
         </div>
-
-        {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden text-white"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X /> : <Menu />}
-        </button>
+        <span className="text-xl font-bold tracking-tight text-white uppercase">Maula<span className="text-purple-500">.ai</span></span>
       </div>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-b border-white/10 p-6 md:hidden flex flex-col gap-4">
-          <Link href="#features" className="text-lg font-medium text-gray-300 hover:text-white">Features</Link>
-          <Link href="#tools" className="text-lg font-medium text-gray-300 hover:text-white">Tools</Link>
-          <Link href="#pricing" className="text-lg font-medium text-gray-300 hover:text-white">Pricing</Link>
-          <Link href="#about" className="text-lg font-medium text-gray-300 hover:text-white">About</Link>
-          <hr className="border-white/10 my-2" />
-          <Link href="/login" className="text-lg font-medium text-white">Log in</Link>
-          <Link href="/get-started" className="px-5 py-3 bg-white text-black text-center font-bold rounded-lg">
-            Get Started
-          </Link>
-        </div>
-      )}
+      <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+        <a href="#" className="hover:text-white transition-colors">Products</a>
+        <a href="#" className="hover:text-white transition-colors">Solutions</a>
+        <a href="#" className="hover:text-white transition-colors">Docs</a>
+        <a href="#" className="hover:text-white transition-colors">Pricing</a>
+      </nav>
+
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={() => setView('login')}
+          className="hidden sm:block text-sm font-medium text-white hover:text-purple-400 transition-colors"
+        >
+          Log in
+        </button>
+        <button 
+          onClick={() => setView('signup')}
+          className="bg-white text-black text-sm font-bold px-5 py-2 rounded-full flex items-center gap-2 hover:bg-purple-50 transition-all"
+        >
+          Get Started <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
     </header>
   );
-}
+};
+
+export default Header;
