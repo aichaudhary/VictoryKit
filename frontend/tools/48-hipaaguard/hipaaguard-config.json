@@ -1,0 +1,113 @@
+{
+  "toolName": "HIPAAGuard",
+  "tagline": "Healthcare Compliance & PHI Protection",
+  "subdomain": "hipaaguard.maula.ai",
+  "neuralLinkPath": "/maula-ai",
+  "port": 3048,
+  "apiPort": 4048,
+  "mlPort": 8048,
+  "aiPort": 6048,
+  "databaseName": "hipaaguard_db",
+  
+  "systemPrompt": "You are HIPAAGuard AI, an expert in HIPAA compliance, PHI (Protected Health Information) security, healthcare data privacy, and medical records protection. You help healthcare organizations assess compliance with HIPAA Privacy Rule, Security Rule, and Breach Notification Rule. You can perform risk assessments, identify PHI vulnerabilities, evaluate access controls, analyze audit logs, generate compliance reports, and provide remediation guidance. You understand ePHI encryption requirements, BAA (Business Associate Agreements), minimum necessary standard, and breach notification procedures. Always provide clear, actionable guidance aligned with HHS OCR requirements.",
+  
+  "hipaaRules": [
+    {
+      "id": "privacy_rule",
+      "name": "Privacy Rule",
+      "description": "Protects PHI and establishes national standards for health information privacy"
+    },
+    {
+      "id": "security_rule",
+      "name": "Security Rule",
+      "description": "Establishes safeguards for electronic PHI (ePHI)"
+    },
+    {
+      "id": "breach_notification",
+      "name": "Breach Notification Rule",
+      "description": "Requires notification of breaches affecting 500+ individuals"
+    },
+    {
+      "id": "enforcement",
+      "name": "Enforcement Rule",
+      "description": "Establishes penalties and enforcement procedures"
+    }
+  ],
+  
+  "safeguards": [
+    "Administrative Safeguards",
+    "Physical Safeguards",
+    "Technical Safeguards"
+  ],
+  
+  "functions": [
+    {
+      "name": "hipaa_risk_assessment",
+      "description": "Perform comprehensive HIPAA risk assessment across all safeguards"
+    },
+    {
+      "name": "phi_discovery_scan",
+      "description": "Scan systems to identify and classify PHI/ePHI storage locations"
+    },
+    {
+      "name": "access_control_audit",
+      "description": "Audit user access to PHI and verify minimum necessary compliance"
+    },
+    {
+      "name": "encryption_validation",
+      "description": "Validate ePHI encryption at rest and in transit"
+    },
+    {
+      "name": "audit_log_analysis",
+      "description": "Analyze access logs for unauthorized PHI access attempts"
+    },
+    {
+      "name": "breach_assessment",
+      "description": "Assess potential breach severity and notification requirements"
+    },
+    {
+      "name": "baa_management",
+      "description": "Manage Business Associate Agreements and vendor compliance"
+    },
+    {
+      "name": "generate_compliance_report",
+      "description": "Generate HIPAA compliance reports for OCR audits"
+    },
+    {
+      "name": "training_tracker",
+      "description": "Track HIPAA training completion and security awareness"
+    },
+    {
+      "name": "incident_response",
+      "description": "Manage security incidents and breach notification workflow"
+    }
+  ],
+  
+  "colorTheme": {
+    "primary": "#059669",
+    "secondary": "#10b981",
+    "accent": "#34d399",
+    "success": "#22c55e",
+    "warning": "#f59e0b",
+    "danger": "#ef4444",
+    "critical": "#dc2626",
+    "background": "#0f172a",
+    "surface": "#1e293b",
+    "surface_secondary": "#334155",
+    "text": "#f1f5f9",
+    "text_secondary": "#cbd5e1"
+  },
+  
+  "navigationItems": [
+    { "label": "Dashboard", "path": "/dashboard", "icon": "LayoutDashboard" },
+    { "label": "Risk Assessment", "path": "/risk", "icon": "Shield" },
+    { "label": "PHI Discovery", "path": "/phi-discovery", "icon": "Search" },
+    { "label": "Access Controls", "path": "/access", "icon": "Lock" },
+    { "label": "Audit Logs", "path": "/audit", "icon": "FileText" },
+    { "label": "Breaches", "path": "/breaches", "icon": "AlertTriangle" },
+    { "label": "BAA Management", "path": "/baa", "icon": "FileSignature" },
+    { "label": "Training", "path": "/training", "icon": "GraduationCap" },
+    { "label": "Reports", "path": "/reports", "icon": "BarChart" },
+    { "label": "Settings", "path": "/settings", "icon": "Settings" }
+  ]
+}
