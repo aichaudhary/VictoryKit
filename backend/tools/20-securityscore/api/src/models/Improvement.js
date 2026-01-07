@@ -1,64 +1,189 @@
 const mongoose = require('mongoose');
 
 /**
- * Improvement Model
- * 
- * Manages security improvement recommendations, action items,
- * and remediation plans to enhance security posture scores.
+ * Improvement Model - Security improvement recommendations and action items
  */
 
 const improvementSchema = new mongoose.Schema({
-  // Basic Information
-  improvementId: {
-    type: String,
-    unique: true,
-    index: true
-  },
-  title: {
-    type: String,
-    required: [true, 'Improvement title is required'],
-    trim: true,
-    maxlength: [200, 'Title cannot exceed 200 characters']
-  },
-  description: {
-    type: String,
-    maxlength: [2000, 'Description cannot exceed 2000 characters']
-  },
-
-  // Classification
+  improvementId: { type: String, unique: true, index: true },
+  title: { type: String, required: true, trim: true, maxlength: 200 },
+  description: { type: String, maxlength: 2000 },
+  
   category: {
     type: String,
-    enum: ['network', 'endpoint', 'identity', 'data', 'application', 'cloud', 'compliance', 'process', 'policy'],
+    enum: ['network', 'endpoint', 'identity', 'data', 'application', 'cloud', 'compliance'],
     required: true,
     index: true
   },
-  subCategory: String,
-
-  // Type and Timeline
+  
   type: {
     type: String,
-    enum: ['quick_win', 'short_term', 'medium_term', 'long_term', 'strategic', 'continuous'],
-    default: 'short_term',
+    enum: ['quick_win', 'short_term', 'medium_term', 'long_term', 'strategic'],
+    default: 'short_term'
+  },
+  
+  priority: {
+    type: String,
+    enum: ['critical', 'high', 'medium', 'low'],
+    default: 'medium',
     index: true
   },
-  timeline: {
-    estimatedDuration: Number, // in days
-    startDate: Date,
-    targetDate: Date,
-    completedDate: Date,
-    milestones: [{
-      name: String,
-      description: String,
-      dueDate: Date,
-      completedDate: Date,
-      status: {
-        type: String,
-        enum: ['pending', 'in_progress', 'completed', 'delayed']
-      }
-    }]
+  
+  status: {
+    type: String,
+    enum: ['identified', 'planned', 'approved', 'in_progress', 'completed', 'deferred', 'rejected'],
+    default: 'identified',
+    index: true
+  },
+  
+  impact: {
+    scoreIncrease: { type: Number, min: 0, max: 100 },
+    categoryImpacts: mongoose.Schema.Types.Mixed,
+    affectedMetrics: [{ metricId: { type: mongoose.Schema.Types.ObjectId, ref: 'ScoreMetric' }, expectedImprovement: Number }],
+    riskReduction: String,
+    complianceImprovement: [{ framework: String, improvement: Number }],
+    businessImpact: { type: String, enum: ['critical', 'high', 'medium', 'low'] }
+  },
+  
+  effort: {
+    level: { type: String, enum: ['minimal', 'low', 'medium', 'high', 'very_high'] },
+    estimatedHours: Number,
+    actualHours: Number,
+    complexity: { type: String, enum: ['simple', 'moderate', 'complex', 'very_complex'] },
+    skillsRequired: [String]
+  },
+  
+  cost: {
+    estimated: { total: Number, labor: Number, tools: Number, licenses: Number, currency: { type: String, default: 'USD' } },
+    actual: { total: Number, currency: { type: String, default: 'USD' } },
+    roi: { value: Number, period: String }
   },
 
-  // Priority and Status
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports = mongoose.model('Improvement', improvementSchema);};  ]);    { $group: { _id: '$status', count: { $sum: 1 }, totalImpact: { $sum: '$impact.scoreIncrease' } } }  return await this.aggregate([improvementSchema.statics.getStatistics = async function() {};    .sort({ 'timeline.targetDate': 1 }).exec();  return this.find({ 'timeline.targetDate': { $lt: new Date() }, status: { $nin: ['completed', 'rejected'] } })improvementSchema.statics.findOverdue = function() {};    .sort({ priority: 1 }).exec();  return this.find({ priority: { $in: ['critical', 'high'] }, status: { $in: ['identified', 'planned', 'in_progress'] } })improvementSchema.statics.findHighPriority = function() {};  }    this.status = 'approved';    this.approval.finalStatus = 'approved';  if (allApproved) {  const allApproved = this.approval.approvers.every(a => a.status === 'approved');  }    approver.comments = comments;    approver.date = new Date();    approver.status = 'approved';  if (approver) {  const approver = this.approval.approvers.find(a => a.email === approverEmail);improvementSchema.methods.approve = function(approverEmail, comments) {};  }    this.timeline.completedDate = new Date();    this.status = 'completed';  if (percentage === 100) {  this.progress.updates.push({ date: new Date(), percentage, description, updatedBy });  this.progress.lastUpdate = new Date();  this.progress.percentage = Math.min(100, Math.max(0, percentage));improvementSchema.methods.updateProgress = function(percentage, description, updatedBy) {// Methods});  next();  }    this.improvementId = 'IMP-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 5).toUpperCase();  if (!this.improvementId) {improvementSchema.pre('save', function(next) {improvementSchema.index({ category: 1, priority: 1, status: 1 });improvementSchema.index({ improvementId: 1 });// Indexes and Hooks});  collection: 'improvements'  timestamps: true,}, {  }    customFields: mongoose.Schema.Types.Mixed    tags: [String],    version: { type: Number, default: 1 },    lastModifiedBy: { name: String, email: String },    createdBy: { name: String, email: String, userId: String },  metadata: {    },    confidence: Number    system: String,    type: { type: String, enum: ['automated_analysis', 'manual_review', 'assessment', 'best_practice', 'ai_recommendation'] },  source: {    },    approvedDate: Date    finalStatus: { type: String, enum: ['pending', 'approved', 'rejected'] },    approvers: [{ name: String, email: String, status: String, date: Date, comments: String }],    required: { type: Boolean, default: false },  approval: {    },    validatedDate: Date    validatedBy: String,    validated: Boolean,    results: [{ date: Date, result: String, notes: String }],    method: String,    required: { type: Boolean, default: true },  validation: {    },    findings: [{ findingId: String, severity: String, title: String }]    assessments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assessment' }],    controls: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Control' }],    metrics: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ScoreMetric' }],    securityScore: { type: mongoose.Schema.Types.ObjectId, ref: 'SecurityScore' },  relatedEntities: {    },    milestones: [{ name: String, dueDate: Date, completedDate: Date, status: String }]    completedDate: Date,    targetDate: Date,    startDate: Date,    estimatedDuration: Number,  timeline: {    },    blockers: [{ description: String, severity: String, resolved: Boolean }]    updates: [{ date: Date, percentage: Number, description: String, updatedBy: String }],    lastUpdate: Date,    percentage: { type: Number, min: 0, max: 100, default: 0 },  progress: {    },    team: [{ userId: String, name: String, role: String }]    assignee: { userId: String, name: String, email: String },    owner: { userId: String, name: String, email: String },  assignment: {    },    risks: [{ description: String, severity: String, mitigation: String }]    dependencies: [{ improvementId: { type: mongoose.Schema.Types.ObjectId, ref: 'Improvement' }, type: String }],    requirements: [{ type: String, description: String, met: Boolean }],    steps: [{ order: Number, title: String, description: String, status: String, assignee: String, completedDate: Date }],  implementation: {    // Priority and Status
   priority: {
     type: String,
     enum: ['critical', 'high', 'medium', 'low'],
