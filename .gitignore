@@ -17,32 +17,80 @@ node_modules/
 # 🔐 SENSITIVE FILES - NEVER COMMIT!
 # ===============================
 
-# Environment files
+# Environment files (CRITICAL - contains secrets!)
 .env
+.env.local
+.env.development
+.env.production
+.env.staging
 .env.*
 !.env.example
+!.env.*.example
 **/.env
+**/.env.local
+**/.env.development
+**/.env.production
 **/.env.*
 !**/.env.example
+!**/.env.*.example
 
-# Private keys and certificates
+# Private keys and certificates (SSH, SSL, etc.)
 *.pem
 *.key
 *.crt
 *.p12
 *.pfx
-victorykit.pem
 *.cer
 *.der
+*.jks
+*.keystore
+victorykit.pem
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
 
-# AWS credentials
+# AWS credentials and config
 credentials
 .aws/
+aws-credentials*
+**/aws-credentials*
+
+# Google/GCP credentials
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!tsconfig.*.json
+!vite.config.json
+!tailwind.config.json
+!postcss.config.json
+!.eslintrc.json
+!commitlint.config.json
+!ecosystem.config.json
+service-account*.json
+gcp-credentials*.json
 
 # Secrets folders
 secrets/
 credentials/
 private/
+.secrets/
+config/secrets/
+
+# API keys and tokens
+.api-keys
+api-keys.txt
+tokens.txt
+*-api-key*
+*-secret-key*
+
+# Database dumps and backups
+*.sql
+*.dump
+*.backup
+mongodb-backup/
+db-backup/
 
 # ===============================
 
