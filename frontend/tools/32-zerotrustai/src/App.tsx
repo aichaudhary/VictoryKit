@@ -5,10 +5,12 @@ import {
   Key, Fingerprint, Globe, Cloud, Database, Settings,
   MessageSquare, Send, RefreshCw, FileText, Zap
 } from 'lucide-react';
-import { 
-  ZeroTrustDashboard, IdentityVerification, AccessPolicies,
-  DeviceTrust, MicroSegmentation, ZeroTrustSettings
-} from './components';
+import ZeroTrustDashboard from './components/ZeroTrustDashboard';
+import IdentityVerification from './components/IdentityVerification';
+import AccessPolicies from './components/AccessPolicies';
+import DeviceTrust from './components/DeviceTrust';
+import MicroSegmentation from './components/MicroSegmentation';
+import ZeroTrustSettings from './components/ZeroTrustSettings';
 
 interface TrustSession {
   id: string;
