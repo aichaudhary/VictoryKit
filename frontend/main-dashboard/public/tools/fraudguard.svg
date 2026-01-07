@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title>FraudGuard — AI-Powered Fraud Detection</title>
+  <desc>Hero banner for FraudGuard tool with red/orange cyber theme.</desc>
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0404"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="rgba(239,68,68,0.35)"/>
+      <stop offset="60%" stop-color="rgba(239,68,68,0.12)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="800" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="800" fill="url(#glow)"/>
+
+  <!-- Subtle grid -->
+  <g opacity="0.08" stroke="#ffffff" stroke-width="1">
+    <path d="M0 120 H1200"/>
+    <path d="M0 240 H1200"/>
+    <path d="M0 360 H1200"/>
+    <path d="M0 480 H1200"/>
+    <path d="M0 600 H1200"/>
+    <path d="M0 720 H1200"/>
+    <path d="M200 0 V800"/>
+    <path d="M400 0 V800"/>
+    <path d="M600 0 V800"/>
+    <path d="M800 0 V800"/>
+    <path d="M1000 0 V800"/>
+  </g>
+
+  <!-- Accent shield mark -->
+  <g transform="translate(940, 180)" opacity="0.9">
+    <path d="M0 0 L120 40 L120 160 L60 200 L0 160 Z" fill="url(#accent)"/>
+    <path d="M30 60 L60 90 L90 60" fill="none" stroke="#111" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Title and subtitle -->
+  <g font-family="system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif" fill="#ffffff">
+    <text x="80" y="340" font-size="96" font-weight="900" letter-spacing="-2">
+      Fraud<tspan fill="url(#accent)">Guard</tspan>
+    </text>
+    <text x="84" y="394" font-size="22" fill="rgba(255,255,255,0.6)" font-weight="600">
+      AI-Powered Fraud Detection — Real-time, <tspan fill="#ef4444">99.9%</tspan> accuracy
+    </text>
+  </g>
+
+  <!-- Bottom accent line -->
+  <rect x="80" y="620" width="1040" height="4" fill="url(#accent)" opacity="0.6"/>
+
+  <!-- Decorative pulses -->
+  <g opacity="0.24" fill="#ef4444">
+    <circle cx="260" cy="520" r="3"/>
+    <circle cx="420" cy="560" r="2"/>
+    <circle cx="780" cy="540" r="3"/>
+    <circle cx="1040" cy="500" r="2"/>
+  </g>
+</svg>

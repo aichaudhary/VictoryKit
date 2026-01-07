@@ -71,7 +71,7 @@ export const tools: SecurityTool[] = [
     description: "Stop fraud before it starts. AI-powered fraud detection that analyzes patterns in real-time, identifying suspicious activities with 99.9% accuracy.",
     category: "Threat Detection",
     stats: { threatsBlocked: "10M+", uptime: "<50ms Resp", accuracy: "99.9%" },
-    imageUrl: "/images/tools/fraudguard.jpg",
+    imageUrl: "/tools/fraudguard.svg",
     url: "https://fraudguard.maula.ai",
     theme: categoryThemes['Threat Detection']
   },

@@ -1,315 +1,546 @@
 const mongoose = require('mongoose');
 
-/**
- * RiskAssessment Model - Main risk assessment entity
- * Comprehensive risk assessment with quantitative and qualitative analysis
- */
 const riskAssessmentSchema = new mongoose.Schema({
   assessmentId: {
     type: String,
     required: true,
     unique: true,
-    default: () => 'RA-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase()
+    index: true
   },
   
-  // Assessment metadata
-  title: { type: String, required: true, trim: true },
-  description: { type: String, trim: true },
+  // Basic Information
+  title: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  description: String,
+  
+  // Assessment Type & Scope
   type: {
     type: String,
-    enum: ['enterprise', 'department', 'system', 'application', 'project', 'vendor', 'third_party', 'regulatory'],
-    required: true
-  },
-  scope: {
-    type: String,
-    enum: ['organization_wide', 'department', 'business_unit', 'system', 'application', 'process', 'asset', 'vendor'],
+    enum: [
+      'quantitative',          // Numerical risk calculation
+      'qualitative',           // Descriptive risk assessment
+      'semi_quantitative',     // Mix of both
+      'enterprise',            // Organization-wide
+      'project',               // Project-specific
+      'system',                // System/application
+      'vendor',                // Third-party risk
+      'cyber',                 // Cybersecurity focused
+      'operational',           // Operations risk
+      'strategic'              // Strategic risk
+    ],
     required: true
   },
   
-  // Assessment details
   methodology: {
-    type: String,
-    enum: ['qualitative', 'quantitative', 'semi_quantitative', 'hybrid'],
-    default: 'semi_quantitative'
-  },
-  approach: {
-    type: String,
-    enum: ['top_down', 'bottom_up', 'hybrid'],
-    default: 'hybrid'
-  },
-  framework: {
-    type: String,
-    enum: ['NIST_SP_800_30', 'ISO_31000', 'COSO', 'OCTAVE', 'FAIR', 'Custom'],
-    default: 'NIST_SP_800_30'
+    framework: {
+      type: String,
+      enum: [
+        'NIST-RMF',            // NIST Risk Management Framework
+        'ISO-31000',           // ISO 31000
+        'FAIR',                // Factor Analysis of Information Risk
+        'OCTAVE',              // Operationally Critical Threat Asset and Vulnerability Evaluation
+        'COSO-ERM',            // Enterprise Risk Management
+        'COBIT',               // Control Objectives for IT
+        'STRIDE',              // Threat modeling
+        'DREAD',               // Risk rating
+        'CVSS',                // Common Vulnerability Scoring
+        'Custom'
+      ],
+      required: true
+    },
+    version: String,
+    approach: {
+      type: String,
+      enum: ['top_down', 'bottom_up', 'hybrid', 'scenario_based', 'asset_based', 'threat_based']
+    },
+    calculationMethod: {
+      type: String,
+      enum: ['likelihood_impact', 'annualized_loss_expectancy', 'monte_carlo', 'bayesian', 'custom']
+    }
   },
   
-  // Assessment schedule
+  // Scope Definition
+  scope: {
+    type: {
+      type: String,
+      enum: ['organization', 'business_unit', 'department', 'system', 'application', 'process', 'project', 'asset_group', 'vendor']
+    },
+    entityId: String,
+    entityName: String,
+    description: String,
+    boundaries: String,
+    inclusions: [String],
+    exclusions: [String],
+    constraints: [String],
+    assumptions: [String]
+  },
+  
+  // Schedule
   schedule: {
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-    actualStartDate: { type: Date },
-    actualEndDate: { type: Date },
+    startDate: Date,
+    endDate: Date,
+    actualStartDate: Date,
+    actualEndDate: Date,
+    duration: Number,                    // Days
     frequency: {
       type: String,
-      enum: ['one_time', 'quarterly', 'semi_annual', 'annual', 'continuous'],
-      default: 'annual'
+      enum: ['one_time', 'monthly', 'quarterly', 'semi_annual', 'annual', 'continuous', 'ad_hoc']
     },
-    nextScheduledDate: { type: Date }
+    nextScheduledDate: Date
   },
   
-  // Assessment status
+  // Status & Progress
   status: {
     type: String,
-    enum: ['planned', 'in_progress', 'review', 'approved', 'completed', 'cancelled'],
-    default: 'planned'
+    enum: ['draft', 'planned', 'in_progress', 'review', 'approved', 'completed', 'cancelled'],
+    default: 'draft'
   },
+  
   progress: {
-    percentage: { type: Number, min: 0, max: 100, default: 0 },
-    currentPhase: {
+    percentage: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 0
+    },
+    phase: {
       type: String,
-      enum: ['planning', 'asset_identification', 'threat_identification', 'vulnerability_assessment', 'impact_analysis', 'risk_calculation', 'mitigation_planning', 'reporting', 'review']
+      enum: ['initiation', 'asset_identification', 'threat_analysis', 'vulnerability_assessment', 
+             'risk_analysis', 'risk_evaluation', 'treatment_planning', 'reporting', 'completed']
     },
     milestones: [{
       name: String,
       description: String,
       dueDate: Date,
       completedDate: Date,
-      status: { type: String, enum: ['pending', 'in_progress', 'completed', 'overdue'], default: 'pending' }
+      status: {
+        type: String,
+        enum: ['pending', 'in_progress', 'completed', 'delayed']
+      }
     }]
   },
   
-  // Assessment team
-  assessor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  team: [{
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    role: {
-      type: String,
-      enum: ['lead_assessor', 'assessor', 'subject_matter_expert', 'stakeholder', 'reviewer']
+  // Team & Ownership
+  team: {
+    owner: {
+      userId: String,
+      name: String,
+      email: String,
+      department: String
     },
-    responsibilities: [String]
+    lead: {
+      userId: String,
+      name: String,
+      email: String
+    },
+    members: [{
+      userId: String,
+      name: String,
+      email: String,
+      role: String
+    }],
+    stakeholders: [{
+      name: String,
+      role: String,
+      email: String,
+      department: String
+    }]
+  },
+  
+  // Assets Under Assessment
+  assets: [{
+    assetId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Asset'
+    },
+    name: String,
+    type: String,
+    criticality: {
+      type: String,
+      enum: ['critical', 'high', 'medium', 'low']
+    },
+    value: Number,
+    risksIdentified: Number
   }],
   
-  // Risk analysis results
+  // Threats Identified
+  threats: [{
+    threatId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Threat'
+    },
+    name: String,
+    type: String,
+    likelihood: Number,
+    impactedAssets: [String]
+  }],
+  
+  // Vulnerabilities Found
+  vulnerabilities: [{
+    vulnerabilityId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Vulnerability'
+    },
+    name: String,
+    severity: String,
+    cvssScore: Number,
+    exploitable: Boolean
+  }],
+  
+  // Risk Analysis Results
   riskAnalysis: {
-    totalRisks: { type: Number, default: 0 },
-    riskDistribution: {
+    totalRisks: {
+      type: Number,
+      default: 0
+    },
+    
+    // Risk by Severity
+    bySeverity: {
       critical: { type: Number, default: 0 },
       high: { type: Number, default: 0 },
       medium: { type: Number, default: 0 },
       low: { type: Number, default: 0 }
     },
-    overallRiskScore: { type: Number, min: 0, max: 100, default: 0 },
-    riskAppetite: {
-      level: { type: String, enum: ['very_low', 'low', 'moderate', 'high', 'very_high'] },
-      threshold: { type: Number, min: 0, max: 100 }
+    
+    // Risk by Category
+    byCategory: {
+      strategic: { type: Number, default: 0 },
+      operational: { type: Number, default: 0 },
+      financial: { type: Number, default: 0 },
+      compliance: { type: Number, default: 0 },
+      reputational: { type: Number, default: 0 },
+      technical: { type: Number, default: 0 },
+      physical: { type: Number, default: 0 }
     },
-    riskTolerance: {
-      financial: { type: Number, min: 0 },
-      operational: { type: Number, min: 0, max: 100 },
-      reputational: { type: Number, min: 0, max: 100 }
+    
+    // Risk Scores
+    inherentRisk: {
+      score: Number,                     // 0-100
+      level: {
+        type: String,
+        enum: ['critical', 'high', 'medium', 'low', 'negligible']
+      }
+    },
+    
+    residualRisk: {
+      score: Number,                     // 0-100
+      level: {
+        type: String,
+        enum: ['critical', 'high', 'medium', 'low', 'negligible']
+      }
+    },
+    
+    riskReduction: {
+      score: Number,
+      percentage: Number
+    },
+    
+    // Top Risks
+    topRisks: [{
+      riskId: String,
+      title: String,
+      score: Number,
+      level: String,
+      category: String
+    }],
+    
+    // Financial Impact
+    financialImpact: {
+      annualLossExpectancy: Number,      // ALE
+      singleLossExpectancy: Number,      // SLE
+      annualRateOccurrence: Number,      // ARO
+      totalExposure: Number,
+      currency: {
+        type: String,
+        default: 'USD'
+      }
     }
   },
   
-  // Assets and threats
-  assets: [{
-    assetId: { type: mongoose.Schema.Types.ObjectId, ref: 'Asset' },
-    criticality: { type: String, enum: ['critical', 'high', 'medium', 'low'] },
-    exposure: { type: Number, min: 0, max: 100 }
-  }],
-  
-  threats: [{
-    threatId: { type: mongoose.Schema.Types.ObjectId, ref: 'Threat' },
-    likelihood: { type: Number, min: 0, max: 5 },
-    impact: { type: Number, min: 0, max: 5 },
-    riskScore: { type: Number, min: 0, max: 25 }
-  }],
-  
-  // Risk register reference
-  riskRegister: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'RiskRegister'
-  },
-  
-  // Controls and mitigations
-  controls: [{
-    controlId: { type: mongoose.Schema.Types.ObjectId, ref: 'Control' },
-    effectiveness: { type: Number, min: 0, max: 100 },
-    implementationStatus: { type: String, enum: ['planned', 'implemented', 'tested', 'optimized'] }
-  }],
-  
-  mitigations: [{
-    mitigationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Mitigation' },
-    status: { type: String, enum: ['planned', 'in_progress', 'completed', 'cancelled'] },
-    effectiveness: { type: Number, min: 0, max: 100 }
-  }],
-  
-  // Compliance mapping
-  compliance: [{
-    framework: { type: String, enum: ['NIST-CSF', 'ISO27001', 'PCI-DSS', 'HIPAA', 'SOX', 'GDPR', 'CCPA'] },
-    requirements: [{
-      requirementId: String,
+  // Risk Treatment Strategies
+  treatment: {
+    totalStrategies: {
+      type: Number,
+      default: 0
+    },
+    byType: {
+      mitigate: { type: Number, default: 0 },
+      accept: { type: Number, default: 0 },
+      transfer: { type: Number, default: 0 },
+      avoid: { type: Number, default: 0 }
+    },
+    strategies: [{
+      riskId: String,
+      type: {
+        type: String,
+        enum: ['mitigate', 'accept', 'transfer', 'avoid']
+      },
       description: String,
-      compliance: { type: String, enum: ['compliant', 'non_compliant', 'not_applicable'] },
-      evidence: String
-    }],
-    overallCompliance: { type: Number, min: 0, max: 100 }
-  }],
-  
-  // Financial impact analysis
-  financialImpact: {
-    totalPotentialLoss: { type: Number, min: 0 },
-    annualizedLossExpectancy: { type: Number, min: 0 },
-    riskAdjustedValue: { type: Number, min: 0 },
-    insuranceCoverage: { type: Number, min: 0 },
-    currency: { type: String, default: 'USD' }
+      costEstimate: Number,
+      timeframe: String,
+      status: String
+    }]
   },
   
-  // Operational impact
-  operationalImpact: {
-    downtime: { type: Number, min: 0 }, // hours
-    productivityLoss: { type: Number, min: 0, max: 100 }, // percentage
-    recoveryTime: { type: Number, min: 0 }, // hours
-    alternativeProcesses: { type: Boolean, default: false }
+  // Controls Assessment
+  controls: {
+    total: {
+      type: Number,
+      default: 0
+    },
+    existing: {
+      type: Number,
+      default: 0
+    },
+    planned: {
+      type: Number,
+      default: 0
+    },
+    effectiveness: {
+      type: String,
+      enum: ['very_effective', 'effective', 'partially_effective', 'ineffective', 'not_tested']
+    },
+    controlsList: [{
+      controlId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Control'
+      },
+      name: String,
+      type: String,
+      effectiveness: String,
+      riskReduction: Number
+    }]
   },
   
-  // Reporting and documentation
-  reports: [{
-    reportId: { type: mongoose.Schema.Types.ObjectId, ref: 'RiskReport' },
-    type: { type: String, enum: ['executive', 'technical', 'compliance', 'detailed'] },
-    generatedDate: { type: Date, default: Date.now },
-    status: { type: String, enum: ['draft', 'final', 'archived'], default: 'draft' }
-  }],
-  
-  // Approval and review
-  approval: {
-    required: { type: Boolean, default: true },
+  // Risk Acceptance
+  acceptance: {
+    required: Boolean,
     approvers: [{
-      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      name: String,
+      email: String,
       role: String,
-      status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+      level: String,
+      status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected']
+      },
       date: Date,
       comments: String
     }],
-    finalStatus: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
-    approvedDate: Date
-  },
-  
-  // Quality assurance
-  qualityAssurance: {
-    reviewed: { type: Boolean, default: false },
-    reviewer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    reviewDate: Date,
-    issues: [{
-      issueId: String,
-      description: String,
-      severity: { type: String, enum: ['critical', 'major', 'minor'] },
-      status: { type: String, enum: ['open', 'resolved', 'accepted'], default: 'open' },
-      resolution: String
-    }],
-    approved: { type: Boolean, default: false }
-  },
-  
-  // Audit trail
-  auditTrail: [{
-    action: {
+    finalStatus: {
       type: String,
-      enum: ['created', 'updated', 'status_changed', 'approved', 'reviewed', 'reported']
+      enum: ['pending', 'approved', 'rejected']
     },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    timestamp: { type: Date, default: Date.now },
-    details: mongoose.Schema.Types.Mixed,
-    ipAddress: String
+    approvedDate: Date,
+    conditions: [String],
+    reviewDate: Date
+  },
+  
+  // Compliance Mapping
+  compliance: {
+    frameworks: [{
+      name: String,
+      requirements: [String],
+      gaps: [String],
+      complianceScore: Number
+    }],
+    overallCompliance: Number
+  },
+  
+  // Reports Generated
+  reports: [{
+    reportId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'RiskReport'
+    },
+    type: String,
+    generatedDate: Date,
+    format: String
   }],
   
+  // Findings & Recommendations
+  findings: {
+    summary: String,
+    keyFindings: [{
+      category: String,
+      finding: String,
+      severity: String,
+      evidence: String
+    }],
+    recommendations: [{
+      priority: {
+        type: String,
+        enum: ['critical', 'high', 'medium', 'low']
+      },
+      title: String,
+      description: String,
+      expectedBenefit: String,
+      estimatedCost: Number,
+      timeframe: String,
+      owner: String
+    }]
+  },
+  
+  // Review & Quality Assurance
+  review: {
+    required: Boolean,
+    reviewers: [{
+      name: String,
+      email: String,
+      role: String
+    }],
+    reviewDate: Date,
+    status: {
+      type: String,
+      enum: ['not_started', 'in_progress', 'completed']
+    },
+    findings: [String],
+    approved: Boolean
+  },
+  
+  // Historical Data
+  history: [{
+    date: Date,
+    action: String,
+    performedBy: String,
+    changes: mongoose.Schema.Types.Mixed,
+    riskSnapshot: {
+      inherentRisk: Number,
+      residualRisk: Number,
+      totalRisks: Number
+    }
+  }],
+  
+  // Related Assessments
+  related: {
+    previousAssessment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'RiskAssessment'
+    },
+    followUpAssessments: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'RiskAssessment'
+    }]
+  },
+  
   // Metadata
-  tags: [String],
-  customFields: mongoose.Schema.Types.Mixed,
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  version: { type: Number, default: 1 }
+  metadata: {
+    confidentiality: {
+      type: String,
+      enum: ['public', 'internal', 'confidential', 'restricted'],
+      default: 'internal'
+    },
+    tags: [String],
+    customFields: mongoose.Schema.Types.Mixed,
+    version: {
+      type: Number,
+      default: 1
+    },
+    createdBy: {
+      userId: String,
+      name: String,
+      email: String
+    },
+    lastModifiedBy: {
+      userId: String,
+      name: String,
+      email: String
+    }
+  }
+  
 }, {
-  timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  timestamps: true
 });
 
 // Indexes
-riskAssessmentSchema.index({ assessmentId: 1 });
 riskAssessmentSchema.index({ type: 1, status: 1 });
-riskAssessmentSchema.index({ 'schedule.startDate': -1 });
-riskAssessmentSchema.index({ 'riskAnalysis.overallRiskScore': -1 });
-riskAssessmentSchema.index({ createdBy: 1 });
+riskAssessmentSchema.index({ 'scope.type': 1, 'scope.entityId': 1 });
+riskAssessmentSchema.index({ 'schedule.startDate': 1 });
+riskAssessmentSchema.index({ 'riskAnalysis.inherentRisk.level': 1 });
 
-// Virtual for duration
-riskAssessmentSchema.virtual('duration').get(function() {
-  if (this.schedule.actualStartDate && this.schedule.actualEndDate) {
-    return Math.ceil((this.schedule.actualEndDate - this.schedule.actualStartDate) / (1000 * 60 * 60 * 24));
-  }
-  return Math.ceil((this.schedule.endDate - this.schedule.startDate) / (1000 * 60 * 60 * 24));
-});
-
-// Virtual for risk level
-riskAssessmentSchema.virtual('riskLevel').get(function() {
-  const score = this.riskAnalysis.overallRiskScore;
-  if (score >= 80) return 'critical';
-  if (score >= 60) return 'high';
-  if (score >= 40) return 'medium';
-  if (score >= 20) return 'low';
-  return 'very_low';
-});
-
-// Pre-save middleware
+// Pre-save hook
 riskAssessmentSchema.pre('save', function(next) {
-  if (this.isModified()) {
-    this.version += 1;
-    this.updatedBy = this.updatedBy || this.createdBy;
+  if (!this.assessmentId) {
+    this.assessmentId = `RA-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
   }
   next();
 });
 
-// Instance methods
-riskAssessmentSchema.methods.calculateOverallRiskScore = function() {
-  if (this.threats.length === 0) return 0;
+// Instance Methods
+riskAssessmentSchema.methods.calculateRiskScores = function() {
+  // Calculate inherent and residual risk scores based on assets and threats
+  let totalInherentRisk = 0;
+  let totalResidualRisk = 0;
+  let riskCount = 0;
   
-  const totalRiskScore = this.threats.reduce((sum, threat) => sum + threat.riskScore, 0);
-  this.riskAnalysis.overallRiskScore = Math.round((totalRiskScore / this.threats.length) * 4); // Scale to 0-100
-  return this.riskAnalysis.overallRiskScore;
-};
-
-riskAssessmentSchema.methods.updateProgress = function(percentage, phase, updatedBy) {
-  this.progress.percentage = Math.min(100, Math.max(0, percentage));
-  if (phase) this.progress.currentPhase = phase;
-  
-  this.auditTrail.push({
-    action: 'updated',
-    userId: updatedBy,
-    details: { progress: this.progress.percentage, phase: this.progress.currentPhase }
+  this.assets.forEach(asset => {
+    if (asset.risksIdentified) {
+      riskCount += asset.risksIdentified;
+    }
   });
+  
+  if (riskCount > 0) {
+    this.riskAnalysis.inherentRisk.score = totalInherentRisk / riskCount;
+    this.riskAnalysis.residualRisk.score = totalResidualRisk / riskCount;
+    this.riskAnalysis.riskReduction.score = totalInherentRisk - totalResidualRisk;
+    this.riskAnalysis.riskReduction.percentage = 
+      ((totalInherentRisk - totalResidualRisk) / totalInherentRisk) * 100;
+  }
+  
+  return this;
 };
 
-riskAssessmentSchema.methods.addAuditEntry = function(action, userId, details, ipAddress) {
-  this.auditTrail.push({
+riskAssessmentSchema.methods.addHistoryEntry = function(action, performedBy, changes) {
+  this.history.push({
+    date: new Date(),
     action,
-    userId,
-    details,
-    ipAddress
+    performedBy,
+    changes,
+    riskSnapshot: {
+      inherentRisk: this.riskAnalysis.inherentRisk.score,
+      residualRisk: this.riskAnalysis.residualRisk.score,
+      totalRisks: this.riskAnalysis.totalRisks
+    }
   });
+  
+  // Keep only last 100 history entries
+  if (this.history.length > 100) {
+    this.history = this.history.slice(-100);
+  }
+  
+  return this;
 };
 
-// Static methods
-riskAssessmentSchema.statics.findByType = function(type) {
-  return this.find({ type });
+riskAssessmentSchema.methods.complete = function() {
+  this.status = 'completed';
+  this.progress.percentage = 100;
+  this.progress.phase = 'completed';
+  this.schedule.actualEndDate = new Date();
+  return this;
 };
 
-riskAssessmentSchema.statics.findHighRisk = function(threshold = 70) {
-  return this.find({ 'riskAnalysis.overallRiskScore': { $gte: threshold } });
+// Static Methods
+riskAssessmentSchema.statics.findByScope = async function(scopeType, entityId) {
+  return this.find({
+    'scope.type': scopeType,
+    'scope.entityId': entityId
+  }).sort({ 'schedule.startDate': -1 });
 };
 
-riskAssessmentSchema.statics.findByStatus = function(status) {
-  return this.find({ status });
+riskAssessmentSchema.statics.findHighRisk = async function() {
+  return this.find({
+    'riskAnalysis.inherentRisk.level': { $in: ['critical', 'high'] },
+    status: { $in: ['in_progress', 'completed'] }
+  }).sort({ 'riskAnalysis.inherentRisk.score': -1 });
+};
+
+riskAssessmentSchema.statics.findRecent = async function(limit = 10) {
+  return this.find()
+    .sort({ 'schedule.startDate': -1 })
+    .limit(limit);
 };
 
 riskAssessmentSchema.statics.getStatistics = async function() {
@@ -318,22 +549,26 @@ riskAssessmentSchema.statics.getStatistics = async function() {
       $group: {
         _id: null,
         total: { $sum: 1 },
-        byType: { $push: '$type' },
-        byStatus: { $push: '$status' },
-        averageRiskScore: { $avg: '$riskAnalysis.overallRiskScore' },
-        maxRiskScore: { $max: '$riskAnalysis.overallRiskScore' },
-        minRiskScore: { $min: '$riskAnalysis.overallRiskScore' }
+        completed: {
+          $sum: { $cond: [{ $eq: ['$status', 'completed'] }, 1, 0] }
+        },
+        inProgress: {
+          $sum: { $cond: [{ $eq: ['$status', 'in_progress'] }, 1, 0] }
+        },
+        avgInherentRisk: { $avg: '$riskAnalysis.inherentRisk.score' },
+        avgResidualRisk: { $avg: '$riskAnalysis.residualRisk.score' },
+        totalRisks: { $sum: '$riskAnalysis.totalRisks' }
       }
     }
   ]);
   
   return stats[0] || {
     total: 0,
-    byType: [],
-    byStatus: [],
-    averageRiskScore: 0,
-    maxRiskScore: 0,
-    minRiskScore: 0
+    completed: 0,
+    inProgress: 0,
+    avgInherentRisk: 0,
+    avgResidualRisk: 0,
+    totalRisks: 0
   };
 };
 
