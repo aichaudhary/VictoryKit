@@ -7,18 +7,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        fraudguard: {
-          primary: '#EF4444',
-          secondary: '#EC4899',
-          accent: '#06B6D4',
+        drplan: {
+          primary: '#10B981',
+          secondary: '#059669',
+          accent: '#34D399',
           dark: '#0F172A',
           darker: '#020617',
         },
-        risk: {
-          low: '#22C55E',
-          medium: '#EAB308',
-          high: '#F97316',
+        rto: {
+          excellent: '#10B981',
+          good: '#34D399',
+          warning: '#FBBF24',
           critical: '#EF4444',
+        },
+        status: {
+          operational: '#10B981',
+          degraded: '#F59E0B',
+          failed: '#EF4444',
+          testing: '#3B82F6',
         }
       },
       fontFamily: {
@@ -42,13 +48,13 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'fraud-gradient': 'linear-gradient(135deg, #EF4444 0%, #EC4899 100%)',
-        'accent-gradient': 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%)',
+        'dr-gradient': 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+        'recovery-gradient': 'linear-gradient(135deg, #34D399 0%, #10B981 100%)',
       },
       boxShadow: {
-        'glow-red': '0 0 20px rgba(239, 68, 68, 0.3), 0 0 40px rgba(239, 68, 68, 0.2)',
-        'glow-cyan': '0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(6, 182, 212, 0.2)',
-        'glow-green': '0 0 20px rgba(34, 197, 94, 0.3), 0 0 40px rgba(34, 197, 94, 0.2)',
+        'glow-green': '0 0 20px rgba(16, 185, 129, 0.3), 0 0 40px rgba(16, 185, 129, 0.2)',
+        'glow-emerald': '0 0 20px rgba(5, 150, 105, 0.3), 0 0 40px rgba(5, 150, 105, 0.2)',
+        'glow-blue': '0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.2)',
       },
       borderRadius: {
         'xl': '1rem',

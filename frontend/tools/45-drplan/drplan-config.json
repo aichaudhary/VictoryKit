@@ -1,0 +1,64 @@
+{
+  "toolName": "DRPlan",
+  "toolId": "drplan",
+  "subdomain": "drplan.maula.ai",
+  "mainDomain": "maula.ai",
+  "aiAssistant": {
+    "name": "Maula AI - DRPlan Assistant",
+    "path": "/maula-ai",
+    "fullUrl": "https://drplan.maula.ai/maula-ai",
+    "systemPrompt": "You are Maula AI, an enterprise disaster recovery expert specializing in business continuity planning, RTO/RPO optimization, failover automation, and DR testing. Help users with: DR plan creation, RTO/RPO target setting, failover orchestration, automated DR testing, runbook development, impact analysis, compliance requirements (SOX, HIPAA, PCI-DSS), multi-site DR strategies (active-active, active-passive, pilot light), recovery validation, and DR cost optimization. Provide guidance on VMware Site Recovery Manager, Azure Site Recovery, AWS Disaster Recovery, Zerto, Veeam DR, and multi-cloud DR architectures."
+  },
+  "ports": {
+    "frontend": 3045,
+    "api": 4045,
+    "ml": 8045,
+    "websocket": 6045
+  },
+  "database": {
+    "name": "drplan_db",
+    "collections": ["drplans", "recoverystrategies", "failoverexecutions", "rtotargets", "drtestresults", "runbooks", "impactanalyses", "compliancereports", "alerts", "accesslogs"]
+  },
+  "theme": {
+    "primary": "#10B981",
+    "secondary": "#059669",
+    "accent": "#34D399",
+    "dark": "#0F172A",
+    "darker": "#020617",
+    "gradient": "linear-gradient(135deg, #10B981 0%, #059669 100%)",
+    "description": "Green/emerald DR theme representing recovery, resilience, and business continuity"
+  },
+  "features": [
+    "Automated DR testing",
+    "Intelligent failover orchestration",
+    "RTO/RPO monitoring & prediction",
+    "Business impact analysis",
+    "Multi-site DR coordination",
+    "Runbook automation",
+    "Compliance reporting (SOX, HIPAA, PCI-DSS)",
+    "Chaos engineering",
+    "Recovery validation",
+    "ML-powered failure prediction"
+  ],
+  "integrations": [
+    "VMware Site Recovery Manager",
+    "Azure Site Recovery",
+    "AWS Disaster Recovery",
+    "Zerto Virtual Replication",
+    "Veeam Disaster Recovery",
+    "Commvault DR",
+    "NetApp SnapMirror",
+    "Dell EMC RecoverPoint",
+    "IBM Spectrum Protect"
+  ],
+  "keyMetrics": [
+    "Active DR Plans",
+    "RTO Achievement Rate (%)",
+    "RPO Achievement Rate (%)",
+    "DR Test Success Rate (%)",
+    "Average Failover Time (seconds)",
+    "Compliance Score (0-100)",
+    "Predicted Downtime Cost ($)",
+    "DR Infrastructure Cost ($)"
+  ]
+}
