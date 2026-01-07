@@ -71,7 +71,7 @@ export const tools: SecurityTool[] = [
     description: "Stop fraud before it starts. AI-powered fraud detection that analyzes patterns in real-time, identifying suspicious activities with 99.9% accuracy.",
     category: "Threat Detection",
     stats: { threatsBlocked: "10M+", uptime: "<50ms Resp", accuracy: "99.9%" },
-    imageUrl: "https://picsum.photos/seed/fguard/1200/800",
+    imageUrl: "/images/tools/fraudguard.jpg",
     url: "https://fraudguard.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
@@ -81,7 +81,7 @@ export const tools: SecurityTool[] = [
     description: "Intelligence that sees everything. Advanced threat intelligence platform that monitors dark web markets, forums, and encrypted channels.",
     category: "Intelligence",
     stats: { threatsBlocked: "50K+ Src", uptime: "Global", accuracy: "Real-time" },
-    imageUrl: "https://picsum.photos/seed/iscout/1200/800",
+    imageUrl: "/images/tools/intelliscout.jpg",
     url: "https://intelliscout.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
@@ -91,7 +91,7 @@ export const tools: SecurityTool[] = [
     description: "360Â° threat visibility. Comprehensive threat detection system that correlates signals across your entire infrastructure.",
     category: "Threat Detection",
     stats: { threatsBlocked: "99.7% Det", uptime: "<1m MTTD", accuracy: "<0.1% FP" },
-    imageUrl: "https://picsum.photos/seed/tradar/1200/800",
+    imageUrl: "/images/tools/threatradar.jpg",
     url: "https://threatradar.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
@@ -101,7 +101,7 @@ export const tools: SecurityTool[] = [
     description: "Hunt malware with precision. Advanced malware analysis platform using sandboxing, static analysis, and behavioral detection.",
     category: "Malware",
     stats: { threatsBlocked: "1M+ Samples", uptime: "500+ Zero-Day", accuracy: "<30s Analys" },
-    imageUrl: "https://picsum.photos/seed/mhunter/1200/800",
+    imageUrl: "/images/tools/malwarehunter.jpg",
     url: "https://malwarehunter.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
@@ -111,7 +111,7 @@ export const tools: SecurityTool[] = [
     description: "Catch every phish in the net. Multi-layered phishing detection that analyzes URLs, emails, and web content.",
     category: "Phishing",
     stats: { threatsBlocked: "5M+ Block", uptime: "99.8% Det", accuracy: "100M+ Scans" },
-    imageUrl: "https://picsum.photos/seed/pguard/1200/800",
+    imageUrl: "/images/tools/phishguard.jpg",
     url: "https://phishguard.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
@@ -121,7 +121,7 @@ export const tools: SecurityTool[] = [
     description: "Find weaknesses before attackers do. Continuous vulnerability scanning for your entire attack surface identifying CVEs and misconfigurations.",
     category: "Vulnerability",
     stats: { threatsBlocked: "200K+ CVEs", uptime: "10K hosts/hr", accuracy: "99.5%" },
-    imageUrl: "https://picsum.photos/seed/vscan/1200/800",
+    imageUrl: "/images/tools/vulnscan.jpg",
     url: "https://vulnscan.maula.ai",
     theme: categoryThemes['Compliance']
   },
@@ -131,7 +131,7 @@ export const tools: SecurityTool[] = [
     description: "AI-driven penetration testing. Automated penetration testing powered by AI that thinks like a hacker for continuous validation.",
     category: "Penetration Testing",
     stats: { threatsBlocked: "1000+ Vectors", uptime: "50K+ Exploit", accuracy: "Full Stack" },
-    imageUrl: "https://picsum.photos/seed/pentest/1200/800",
+    imageUrl: "/images/tools/pentestai.jpg",
     url: "https://pentestai.maula.ai",
     theme: categoryThemes['AI-Powered']
   },
@@ -141,7 +141,7 @@ export const tools: SecurityTool[] = [
     description: "Code security from the start. Static and dynamic application security testing integrated into your CI/CD pipeline.",
     category: "Code Security",
     stats: { threatsBlocked: "30+ Lang", uptime: "5000+ Rules", accuracy: "<5% FP" },
-    imageUrl: "https://picsum.photos/seed/scode/1200/800",
+    imageUrl: "/images/tools/securecode.jpg",
     url: "https://securecode.maula.ai",
     theme: categoryThemes['Cloud Security']
   },
@@ -151,7 +151,7 @@ export const tools: SecurityTool[] = [
     description: "Compliance made simple. Automated compliance monitoring and reporting for SOC2, ISO 27001, NIST, and more.",
     category: "Compliance",
     stats: { threatsBlocked: "20+ Frames", uptime: "1000+ Ctrl", accuracy: "90% Auto" },
-    imageUrl: "https://picsum.photos/seed/compliance/1200/800",
+    imageUrl: "/images/tools/compliancecheck.jpg",
     url: "https://compliancecheck.maula.ai",
     theme: categoryThemes['Compliance']
   },
@@ -161,7 +161,7 @@ export const tools: SecurityTool[] = [
     description: "Protect what matters most. Enterprise data loss prevention with intelligent content inspection across your organization.",
     category: "Data Protection",
     stats: { threatsBlocked: "100+ Types", uptime: "Custom Sens", accuracy: "AES-256" },
-    imageUrl: "https://picsum.photos/seed/dguardian/1200/800",
+    imageUrl: "/images/tools/dataguardian.jpg",
     url: "https://dataguardian.maula.ai",
     theme: categoryThemes['Data Protection']
   },
