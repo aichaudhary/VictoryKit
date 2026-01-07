@@ -1,12 +1,14 @@
 {
   "toolName": "MobileDefend",
   "toolId": "43-mobiledefend",
-  "subdomain": "mobiledefend.maula.ai",
+  "subdomain": "mobiledefend",
+  "fullDomain": "mobiledefend.maula.ai",
   "aiAssistant": "mobiledefend.maula.ai/maula-ai",
   "description": "Enterprise Mobile Application Security Platform - Protect iOS and Android apps from vulnerabilities, malware, and runtime threats",
   "ports": {
     "frontend": 3043,
-    "api": 4043,
+    "backend": 4043,
+    "aiWebSocket": 6043,
     "ml": 8043
   },
   "databaseName": "mobiledefend_db",
@@ -28,5 +30,107 @@
     "Compliance Reporting (OWASP MASVS, PCI, GDPR, HIPAA)",
     "Code Analysis & Secure Coding Recommendations"
   ],
-  "systemPrompt": "You are MobileDefend AI, an expert in mobile application security with deep knowledge of iOS/Android vulnerabilities, SAST/DAST scanning, runtime protection (RASP), malware detection, secure coding practices, and mobile compliance frameworks (OWASP MASVS, PCI Mobile, GDPR, HIPAA). You help users scan mobile apps for vulnerabilities, detect malware, analyze code security, manage mobile devices, monitor threats, and generate compliance reports. You can autonomously perform multi-step security assessments, upload app binaries, and provide actionable remediation code snippets. Always explain security findings clearly and prioritize critical mobile vulnerabilities."
+  "systemPrompt": "You are MobileDefend AI, an expert in mobile application security with deep knowledge of iOS/Android vulnerabilities, SAST/DAST scanning, runtime protection (RASP), malware detection, secure coding practices, and mobile compliance frameworks (OWASP MASVS, PCI Mobile, GDPR, HIPAA). You help users scan mobile apps for vulnerabilities, detect malware, analyze code security, manage mobile devices, monitor threats, and generate compliance reports. You can autonomously perform multi-step security assessments, upload app binaries, and provide actionable remediation code snippets. Always explain security findings clearly and prioritize critical mobile vulnerabilities.",
+  "aiFunctions": [
+    {
+      "name": "scan_app_static",
+      "description": "Perform static analysis (SAST) on mobile app binary for vulnerabilities and insecure code",
+      "parameters": {
+        "appFile": "Path to APK/IPA file",
+        "platform": "Platform: android, ios",
+        "scanDepth": "Scan depth: quick, standard, deep",
+        "includeOwaspTop10": "Check against OWASP Mobile Top 10"
+      }
+    },
+    {
+      "name": "scan_app_dynamic",
+      "description": "Perform dynamic analysis (DAST) on running mobile app for runtime vulnerabilities",
+      "parameters": {
+        "appId": "Application ID or package name",
+        "platform": "Platform: android, ios",
+        "testScenarios": "Test scenarios to run",
+        "interceptNetwork": "Intercept and analyze network traffic"
+      }
+    },
+    {
+      "name": "detect_malware",
+      "description": "Scan mobile app for malware, trojans, and malicious behavior",
+      "parameters": {
+        "appFile": "Path to APK/IPA file",
+        "analysisMethods": "Methods: signature, behavioral, ml",
+        "sandbox": "Run in sandbox environment",
+        "extractIndicators": "Extract IOCs and behaviors"
+      }
+    },
+    {
+      "name": "analyze_permissions",
+      "description": "Analyze app permissions and identify overprivileged access requests",
+      "parameters": {
+        "appId": "Application ID or package name",
+        "platform": "Platform: android, ios",
+        "checkPrivacy": "Check for privacy-sensitive permissions",
+        "compareBaseline": "Compare against category baseline"
+      }
+    },
+    {
+      "name": "protect_runtime",
+      "description": "Configure Runtime Application Self-Protection (RASP) policies",
+      "parameters": {
+        "appId": "Application ID",
+        "protectionLevel": "Level: monitor, warn, block",
+        "antiTampering": "Enable anti-tampering protection",
+        "rootJailbreakDetection": "Detect rooted/jailbroken devices"
+      }
+    },
+    {
+      "name": "scan_code",
+      "description": "Analyze source code for security vulnerabilities and insecure patterns",
+      "parameters": {
+        "sourcePath": "Path to source code directory",
+        "language": "Language: swift, kotlin, java, react-native, flutter",
+        "includeSecrets": "Scan for hardcoded secrets",
+        "generateFixes": "Generate code fix suggestions"
+      }
+    },
+    {
+      "name": "manage_devices",
+      "description": "Manage mobile devices through MDM integration and security policies",
+      "parameters": {
+        "deviceIds": "Device IDs to manage",
+        "action": "Action: scan, wipe, lock, locate, policy",
+        "policyName": "Policy to apply",
+        "mdmProvider": "MDM provider: intune, jamf, mobileiron"
+      }
+    },
+    {
+      "name": "audit_compliance",
+      "description": "Audit mobile apps against compliance frameworks",
+      "parameters": {
+        "appId": "Application ID",
+        "framework": "Framework: OWASP_MASVS, PCI, GDPR, HIPAA, SOC2",
+        "level": "MASVS level: L1, L2, R",
+        "generateEvidence": "Generate compliance evidence"
+      }
+    },
+    {
+      "name": "monitor_threats",
+      "description": "Monitor mobile threat landscape and app security posture",
+      "parameters": {
+        "appIds": "Applications to monitor",
+        "timeRange": "Monitoring time range",
+        "threatFeed": "Include threat intelligence feed",
+        "alertThreshold": "Alert threshold: low, medium, high"
+      }
+    },
+    {
+      "name": "generate_report",
+      "description": "Generate mobile security reports and assessments",
+      "parameters": {
+        "reportType": "Type: vulnerability, compliance, executive, pentest",
+        "appIds": "Applications to include",
+        "startDate": "Report period start",
+        "endDate": "Report period end"
+      }
+    }
+  ]
 }

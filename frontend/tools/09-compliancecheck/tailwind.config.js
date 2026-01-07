@@ -16,6 +16,23 @@ export default {
           800: "#3730a3",
           900: "#312e81",
         },
+        compliance: {
+          primary: "#6366f1",
+          secondary: "#4f46e5",
+          accent: "#818cf8",
+          dark: "#0f0f1a",
+          darker: "#0a0a12",
+        },
+      },
+      backgroundImage: {
+        'compliance-gradient': 'linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%)',
+        'audit-gradient': 'linear-gradient(180deg, #0f0f1a 0%, #312e81 100%)',
+        'framework-gradient': 'linear-gradient(135deg, #312e81 0%, #3730a3 50%, #4338ca 100%)',
+      },
+      boxShadow: {
+        'glow-indigo': '0 0 20px rgba(99, 102, 241, 0.4)',
+        'glow-indigo-lg': '0 0 40px rgba(99, 102, 241, 0.5)',
+        'glow-compliance': '0 0 30px rgba(129, 140, 248, 0.3)',
       },
       animation: {
         checkScan: "checkScan 2s ease-in-out infinite",

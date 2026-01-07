@@ -16,7 +16,22 @@ export default {
           800: "#166534",
           900: "#14532d",
           950: "#052e16",
+          primary: "#10b981",
+          secondary: "#059669",
+          accent: "#34d399",
+          dark: "#0a1f17",
+          darker: "#061210",
         },
+      },
+      backgroundImage: {
+        'guardian-gradient': 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
+        'data-gradient': 'linear-gradient(180deg, #0a1f17 0%, #14532d 100%)',
+        'protection-gradient': 'linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%)',
+      },
+      boxShadow: {
+        'glow-emerald': '0 0 20px rgba(16, 185, 129, 0.4)',
+        'glow-emerald-lg': '0 0 40px rgba(16, 185, 129, 0.5)',
+        'glow-guardian': '0 0 30px rgba(52, 211, 153, 0.3)',
       },
       animation: {
         "shield-pulse": "shieldPulse 2s ease-in-out infinite",

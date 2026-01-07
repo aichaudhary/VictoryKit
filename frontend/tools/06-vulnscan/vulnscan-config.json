@@ -1,0 +1,784 @@
+{
+  "tool": {
+    "id": "06-vulnscan",
+    "name": "VulnScan",
+    "fullName": "Enterprise Vulnerability Scanner",
+    "version": "1.0.0",
+    "description": "Comprehensive vulnerability scanning platform with AI-powered risk assessment, CVE correlation, and automated remediation tracking",
+    "category": "Vulnerability Management",
+    "icon": "shield-exclamation",
+    "color": "#FF5722",
+    "gradient": ["#FF5722", "#E64A19"]
+  },
+
+  "deployment": {
+    "domain": "vulnscan.maula.ai",
+    "ports": {
+      "frontend": 3006,
+      "backend": 4006,
+      "websocket": 6006,
+      "mlEngine": 8006
+    },
+    "database": {
+      "name": "vulnscan_db",
+      "collections": [
+        "vulnerabilities",
+        "assets",
+        "scans",
+        "scanresults",
+        "remediations",
+        "policies",
+        "reports",
+        "integrations",
+        "cvecache",
+        "scheduledscans",
+        "scanprofiles",
+        "exploits"
+      ]
+    }
+  },
+
+  "features": {
+    "core": [
+      "Network Vulnerability Scanning",
+      "Web Application Security Testing",
+      "Container Image Analysis",
+      "Cloud Infrastructure Assessment",
+      "API Security Testing",
+      "Authenticated Scanning",
+      "Compliance Checking",
+      "Asset Discovery"
+    ],
+    "advanced": [
+      "CVE Correlation Engine",
+      "Exploit Database Integration",
+      "CVSS v3.1 Scoring",
+      "AI Risk Prediction",
+      "Zero-Day Detection",
+      "False Positive Reduction",
+      "Trend Analysis",
+      "Attack Surface Mapping"
+    ],
+    "automation": [
+      "Scheduled Scanning",
+      "Continuous Monitoring",
+      "Auto-Discovery",
+      "Remediation Workflows",
+      "JIRA Integration",
+      "Slack Notifications",
+      "Email Alerts",
+      "Webhook Callbacks"
+    ]
+  },
+
+  "scanTypes": {
+    "network": {
+      "id": "network",
+      "name": "Network Scan",
+      "description": "Comprehensive network vulnerability assessment",
+      "icon": "network-wired",
+      "techniques": [
+        "Port Scanning",
+        "Service Detection",
+        "OS Fingerprinting",
+        "Banner Grabbing",
+        "Protocol Analysis"
+      ],
+      "defaultPorts": "1-65535",
+      "timeout": 3600,
+      "concurrent": 100
+    },
+    "web_application": {
+      "id": "web_application",
+      "name": "Web Application Scan",
+      "description": "OWASP-compliant web security testing",
+      "icon": "globe",
+      "techniques": [
+        "SQL Injection Detection",
+        "XSS Detection",
+        "CSRF Testing",
+        "Authentication Bypass",
+        "Session Management",
+        "Input Validation",
+        "Directory Traversal",
+        "File Inclusion"
+      ],
+      "crawlDepth": 5,
+      "timeout": 7200
+    },
+    "container": {
+      "id": "container",
+      "name": "Container Scan",
+      "description": "Docker and Kubernetes vulnerability analysis",
+      "icon": "docker",
+      "techniques": [
+        "Image Layer Analysis",
+        "Base Image Vulnerabilities",
+        "Configuration Audit",
+        "Secrets Detection",
+        "Runtime Security"
+      ],
+      "registries": ["docker.io", "gcr.io", "ecr", "acr"]
+    },
+    "cloud": {
+      "id": "cloud",
+      "name": "Cloud Security Scan",
+      "description": "Multi-cloud security assessment",
+      "icon": "cloud",
+      "providers": ["AWS", "Azure", "GCP", "OCI"],
+      "checks": [
+        "IAM Misconfigurations",
+        "Network Security Groups",
+        "Storage Permissions",
+        "Encryption Settings",
+        "Logging Configuration",
+        "Resource Exposure"
+      ]
+    },
+    "api": {
+      "id": "api",
+      "name": "API Security Scan",
+      "description": "REST and GraphQL API testing",
+      "icon": "code",
+      "techniques": [
+        "Authentication Testing",
+        "Authorization Bypass",
+        "Rate Limiting",
+        "Input Fuzzing",
+        "Schema Validation",
+        "BOLA Detection"
+      ]
+    },
+    "compliance": {
+      "id": "compliance",
+      "name": "Compliance Scan",
+      "description": "Regulatory compliance assessment",
+      "icon": "clipboard-check",
+      "frameworks": [
+        "PCI-DSS",
+        "HIPAA",
+        "SOC2",
+        "GDPR",
+        "ISO27001",
+        "NIST",
+        "CIS"
+      ]
+    }
+  },
+
+  "severityLevels": {
+    "critical": {
+      "level": 5,
+      "name": "Critical",
+      "color": "#DC2626",
+      "cvssRange": [9.0, 10.0],
+      "slaHours": 24,
+      "description": "Immediate action required - system compromise likely"
+    },
+    "high": {
+      "level": 4,
+      "name": "High",
+      "color": "#EA580C",
+      "cvssRange": [7.0, 8.9],
+      "slaHours": 72,
+      "description": "Urgent attention needed - significant risk"
+    },
+    "medium": {
+      "level": 3,
+      "name": "Medium",
+      "color": "#D97706",
+      "cvssRange": [4.0, 6.9],
+      "slaHours": 168,
+      "description": "Should be addressed - moderate risk"
+    },
+    "low": {
+      "level": 2,
+      "name": "Low",
+      "color": "#059669",
+      "cvssRange": [0.1, 3.9],
+      "slaHours": 720,
+      "description": "Minor issue - limited risk"
+    },
+    "informational": {
+      "level": 1,
+      "name": "Informational",
+      "color": "#6B7280",
+      "cvssRange": [0, 0],
+      "slaHours": null,
+      "description": "No security risk - for awareness only"
+    }
+  },
+
+  "cvssMetrics": {
+    "version": "3.1",
+    "attackVector": {
+      "N": { "name": "Network", "value": 0.85 },
+      "A": { "name": "Adjacent", "value": 0.62 },
+      "L": { "name": "Local", "value": 0.55 },
+      "P": { "name": "Physical", "value": 0.20 }
+    },
+    "attackComplexity": {
+      "L": { "name": "Low", "value": 0.77 },
+      "H": { "name": "High", "value": 0.44 }
+    },
+    "privilegesRequired": {
+      "N": { "name": "None", "values": { "unchanged": 0.85, "changed": 0.85 } },
+      "L": { "name": "Low", "values": { "unchanged": 0.62, "changed": 0.68 } },
+      "H": { "name": "High", "values": { "unchanged": 0.27, "changed": 0.50 } }
+    },
+    "userInteraction": {
+      "N": { "name": "None", "value": 0.85 },
+      "R": { "name": "Required", "value": 0.62 }
+    },
+    "scope": {
+      "U": { "name": "Unchanged" },
+      "C": { "name": "Changed" }
+    },
+    "impact": {
+      "N": { "name": "None", "value": 0 },
+      "L": { "name": "Low", "value": 0.22 },
+      "H": { "name": "High", "value": 0.56 }
+    }
+  },
+
+  "vulnerabilityCategories": {
+    "injection": {
+      "id": "injection",
+      "name": "Injection Vulnerabilities",
+      "cwes": ["CWE-89", "CWE-78", "CWE-90", "CWE-91"],
+      "owasp": "A03:2021",
+      "description": "SQL, OS, LDAP, and other injection attacks"
+    },
+    "brokenAuth": {
+      "id": "broken_auth",
+      "name": "Broken Authentication",
+      "cwes": ["CWE-287", "CWE-384", "CWE-613"],
+      "owasp": "A07:2021",
+      "description": "Authentication and session management flaws"
+    },
+    "sensitiveDataExposure": {
+      "id": "sensitive_data",
+      "name": "Sensitive Data Exposure",
+      "cwes": ["CWE-200", "CWE-312", "CWE-319"],
+      "owasp": "A02:2021",
+      "description": "Cryptographic failures and data exposure"
+    },
+    "xxe": {
+      "id": "xxe",
+      "name": "XML External Entities",
+      "cwes": ["CWE-611"],
+      "owasp": "A05:2021",
+      "description": "XML parsing vulnerabilities"
+    },
+    "brokenAccessControl": {
+      "id": "broken_access",
+      "name": "Broken Access Control",
+      "cwes": ["CWE-22", "CWE-284", "CWE-285", "CWE-639"],
+      "owasp": "A01:2021",
+      "description": "Authorization and access control failures"
+    },
+    "securityMisconfig": {
+      "id": "security_misconfig",
+      "name": "Security Misconfiguration",
+      "cwes": ["CWE-16", "CWE-200", "CWE-732"],
+      "owasp": "A05:2021",
+      "description": "Insecure default configurations"
+    },
+    "xss": {
+      "id": "xss",
+      "name": "Cross-Site Scripting",
+      "cwes": ["CWE-79"],
+      "owasp": "A03:2021",
+      "description": "Reflected, stored, and DOM-based XSS"
+    },
+    "insecureDeserialization": {
+      "id": "insecure_deserialization",
+      "name": "Insecure Deserialization",
+      "cwes": ["CWE-502"],
+      "owasp": "A08:2021",
+      "description": "Object deserialization vulnerabilities"
+    },
+    "vulnerableComponents": {
+      "id": "vulnerable_components",
+      "name": "Vulnerable Components",
+      "cwes": ["CWE-937"],
+      "owasp": "A06:2021",
+      "description": "Known vulnerabilities in dependencies"
+    },
+    "insufficientLogging": {
+      "id": "insufficient_logging",
+      "name": "Insufficient Logging",
+      "cwes": ["CWE-778"],
+      "owasp": "A09:2021",
+      "description": "Logging and monitoring failures"
+    },
+    "ssrf": {
+      "id": "ssrf",
+      "name": "Server-Side Request Forgery",
+      "cwes": ["CWE-918"],
+      "owasp": "A10:2021",
+      "description": "Server-side request manipulation"
+    }
+  },
+
+  "assetTypes": {
+    "host": {
+      "id": "host",
+      "name": "Host/Server",
+      "icon": "server",
+      "scanTypes": ["network", "compliance"],
+      "fields": ["hostname", "ipAddress", "osType"]
+    },
+    "network": {
+      "id": "network",
+      "name": "Network Range",
+      "icon": "network-wired",
+      "scanTypes": ["network"],
+      "fields": ["cidr", "vlan", "networkType"]
+    },
+    "webApplication": {
+      "id": "web_application",
+      "name": "Web Application",
+      "icon": "globe",
+      "scanTypes": ["web_application", "api"],
+      "fields": ["url", "technology", "framework"]
+    },
+    "api": {
+      "id": "api",
+      "name": "API Endpoint",
+      "icon": "code",
+      "scanTypes": ["api"],
+      "fields": ["baseUrl", "apiType", "authType"]
+    },
+    "container": {
+      "id": "container",
+      "name": "Container/Image",
+      "icon": "docker",
+      "scanTypes": ["container"],
+      "fields": ["image", "registry", "tag"]
+    },
+    "cloudResource": {
+      "id": "cloud_resource",
+      "name": "Cloud Resource",
+      "icon": "cloud",
+      "scanTypes": ["cloud", "compliance"],
+      "fields": ["provider", "resourceType", "resourceId"]
+    },
+    "database": {
+      "id": "database",
+      "name": "Database",
+      "icon": "database",
+      "scanTypes": ["network", "compliance"],
+      "fields": ["dbType", "hostname", "port"]
+    },
+    "iot": {
+      "id": "iot",
+      "name": "IoT Device",
+      "icon": "microchip",
+      "scanTypes": ["network"],
+      "fields": ["deviceType", "manufacturer", "firmware"]
+    }
+  },
+
+  "scanProfiles": {
+    "quick": {
+      "id": "quick",
+      "name": "Quick Scan",
+      "description": "Fast assessment of common vulnerabilities",
+      "duration": "5-15 minutes",
+      "depth": 1,
+      "ports": "top-100",
+      "checks": "basic"
+    },
+    "standard": {
+      "id": "standard",
+      "name": "Standard Scan",
+      "description": "Balanced scan with good coverage",
+      "duration": "30-60 minutes",
+      "depth": 2,
+      "ports": "top-1000",
+      "checks": "standard"
+    },
+    "comprehensive": {
+      "id": "comprehensive",
+      "name": "Comprehensive Scan",
+      "description": "Full vulnerability assessment",
+      "duration": "2-4 hours",
+      "depth": 3,
+      "ports": "all",
+      "checks": "full"
+    },
+    "pciDss": {
+      "id": "pci_dss",
+      "name": "PCI-DSS Compliance",
+      "description": "Payment card industry compliance scan",
+      "duration": "1-2 hours",
+      "depth": 3,
+      "compliance": "PCI-DSS"
+    },
+    "hipaa": {
+      "id": "hipaa",
+      "name": "HIPAA Compliance",
+      "description": "Healthcare compliance assessment",
+      "duration": "1-2 hours",
+      "depth": 3,
+      "compliance": "HIPAA"
+    },
+    "penetration": {
+      "id": "penetration",
+      "name": "Penetration Test",
+      "description": "Aggressive vulnerability discovery",
+      "duration": "4-8 hours",
+      "depth": 4,
+      "ports": "all",
+      "checks": "aggressive"
+    }
+  },
+
+  "remediationWorkflows": {
+    "statuses": [
+      { "id": "open", "name": "Open", "color": "#EF4444" },
+      { "id": "acknowledged", "name": "Acknowledged", "color": "#F59E0B" },
+      { "id": "in_progress", "name": "In Progress", "color": "#3B82F6" },
+      { "id": "pending_verification", "name": "Pending Verification", "color": "#8B5CF6" },
+      { "id": "resolved", "name": "Resolved", "color": "#10B981" },
+      { "id": "risk_accepted", "name": "Risk Accepted", "color": "#6B7280" },
+      { "id": "false_positive", "name": "False Positive", "color": "#9CA3AF" }
+    ],
+    "priorityMatrix": {
+      "critical_production": { "priority": "P1", "sla": 24 },
+      "critical_staging": { "priority": "P2", "sla": 72 },
+      "high_production": { "priority": "P2", "sla": 72 },
+      "high_staging": { "priority": "P3", "sla": 168 },
+      "medium_production": { "priority": "P3", "sla": 168 },
+      "medium_staging": { "priority": "P4", "sla": 336 },
+      "low_any": { "priority": "P4", "sla": 720 }
+    }
+  },
+
+  "integrations": {
+    "ticketing": [
+      { "id": "jira", "name": "JIRA", "icon": "jira" },
+      { "id": "servicenow", "name": "ServiceNow", "icon": "servicenow" },
+      { "id": "github", "name": "GitHub Issues", "icon": "github" },
+      { "id": "gitlab", "name": "GitLab Issues", "icon": "gitlab" },
+      { "id": "azure_devops", "name": "Azure DevOps", "icon": "azure" }
+    ],
+    "communication": [
+      { "id": "slack", "name": "Slack", "icon": "slack" },
+      { "id": "teams", "name": "Microsoft Teams", "icon": "microsoft" },
+      { "id": "pagerduty", "name": "PagerDuty", "icon": "pagerduty" },
+      { "id": "opsgenie", "name": "OpsGenie", "icon": "opsgenie" }
+    ],
+    "cicd": [
+      { "id": "jenkins", "name": "Jenkins", "icon": "jenkins" },
+      { "id": "gitlab_ci", "name": "GitLab CI", "icon": "gitlab" },
+      { "id": "github_actions", "name": "GitHub Actions", "icon": "github" },
+      { "id": "azure_pipelines", "name": "Azure Pipelines", "icon": "azure" }
+    ],
+    "threatIntel": [
+      { "id": "nvd", "name": "NVD", "url": "https://nvd.nist.gov" },
+      { "id": "exploit_db", "name": "Exploit-DB", "url": "https://www.exploit-db.com" },
+      { "id": "cisa_kev", "name": "CISA KEV", "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog" },
+      { "id": "mitre_cve", "name": "MITRE CVE", "url": "https://cve.mitre.org" }
+    ]
+  },
+
+  "scanEngines": {
+    "nmap": {
+      "id": "nmap",
+      "name": "Nmap",
+      "type": "network",
+      "capabilities": ["port_scan", "service_detection", "os_detection", "scripting"]
+    },
+    "nuclei": {
+      "id": "nuclei",
+      "name": "Nuclei",
+      "type": "vulnerability",
+      "capabilities": ["template_scanning", "cve_detection", "misconfig_detection"]
+    },
+    "trivy": {
+      "id": "trivy",
+      "name": "Trivy",
+      "type": "container",
+      "capabilities": ["image_scan", "sbom", "config_audit"]
+    },
+    "zap": {
+      "id": "zap",
+      "name": "OWASP ZAP",
+      "type": "web",
+      "capabilities": ["active_scan", "passive_scan", "spidering", "fuzzing"]
+    },
+    "prowler": {
+      "id": "prowler",
+      "name": "Prowler",
+      "type": "cloud",
+      "capabilities": ["aws_audit", "azure_audit", "gcp_audit", "compliance"]
+    },
+    "custom": {
+      "id": "custom",
+      "name": "Custom Scripts",
+      "type": "generic",
+      "capabilities": ["custom_checks", "api_testing", "business_logic"]
+    }
+  },
+
+  "reports": {
+    "types": [
+      {
+        "id": "executive_summary",
+        "name": "Executive Summary",
+        "description": "High-level overview for management",
+        "format": ["pdf", "html"],
+        "sections": ["overview", "risk_score", "critical_findings", "trends"]
+      },
+      {
+        "id": "technical_report",
+        "name": "Technical Report",
+        "description": "Detailed findings for security teams",
+        "format": ["pdf", "html", "json"],
+        "sections": ["all_vulnerabilities", "technical_details", "evidence", "remediation"]
+      },
+      {
+        "id": "compliance_report",
+        "name": "Compliance Report",
+        "description": "Regulatory compliance assessment",
+        "format": ["pdf"],
+        "sections": ["compliance_status", "controls", "gaps", "recommendations"]
+      },
+      {
+        "id": "delta_report",
+        "name": "Delta Report",
+        "description": "Changes between scans",
+        "format": ["pdf", "html"],
+        "sections": ["new_vulnerabilities", "resolved", "unchanged", "trend"]
+      },
+      {
+        "id": "asset_report",
+        "name": "Asset Report",
+        "description": "Asset-centric vulnerability view",
+        "format": ["pdf", "csv"],
+        "sections": ["asset_inventory", "risk_by_asset", "remediation_status"]
+      }
+    ],
+    "scheduling": {
+      "frequencies": ["daily", "weekly", "monthly", "quarterly"],
+      "formats": ["pdf", "html", "csv", "json"],
+      "delivery": ["email", "slack", "storage"]
+    }
+  },
+
+  "dashboard": {
+    "widgets": [
+      {
+        "id": "vulnerability_overview",
+        "name": "Vulnerability Overview",
+        "type": "stats",
+        "metrics": ["total", "critical", "high", "medium", "low"]
+      },
+      {
+        "id": "risk_score_gauge",
+        "name": "Risk Score",
+        "type": "gauge",
+        "range": [0, 100]
+      },
+      {
+        "id": "severity_distribution",
+        "name": "Severity Distribution",
+        "type": "pie_chart"
+      },
+      {
+        "id": "trend_chart",
+        "name": "Vulnerability Trend",
+        "type": "line_chart",
+        "periods": ["7d", "30d", "90d", "1y"]
+      },
+      {
+        "id": "top_vulnerabilities",
+        "name": "Top Vulnerabilities",
+        "type": "table",
+        "columns": ["cve", "severity", "assets", "age"]
+      },
+      {
+        "id": "asset_risk_map",
+        "name": "Asset Risk Map",
+        "type": "heatmap"
+      },
+      {
+        "id": "remediation_progress",
+        "name": "Remediation Progress",
+        "type": "progress"
+      },
+      {
+        "id": "scan_activity",
+        "name": "Recent Scans",
+        "type": "activity_feed"
+      },
+      {
+        "id": "exploitability_chart",
+        "name": "Exploitability Analysis",
+        "type": "bar_chart"
+      },
+      {
+        "id": "compliance_status",
+        "name": "Compliance Status",
+        "type": "compliance_grid"
+      }
+    ]
+  },
+
+  "notifications": {
+    "events": [
+      { "id": "scan_started", "name": "Scan Started", "severity": "info" },
+      { "id": "scan_completed", "name": "Scan Completed", "severity": "info" },
+      { "id": "scan_failed", "name": "Scan Failed", "severity": "error" },
+      { "id": "critical_found", "name": "Critical Vulnerability Found", "severity": "critical" },
+      { "id": "high_found", "name": "High Vulnerability Found", "severity": "high" },
+      { "id": "new_cve", "name": "New CVE Affecting Assets", "severity": "warning" },
+      { "id": "exploit_available", "name": "Exploit Available", "severity": "critical" },
+      { "id": "sla_breach", "name": "SLA Breach Warning", "severity": "warning" },
+      { "id": "remediation_complete", "name": "Remediation Completed", "severity": "success" }
+    ],
+    "channels": ["email", "slack", "teams", "webhook", "sms", "push"]
+  },
+
+  "mlModels": {
+    "riskPrediction": {
+      "name": "Vulnerability Risk Predictor",
+      "type": "classification",
+      "features": ["cvss", "exploitability", "asset_criticality", "exposure", "age"],
+      "output": ["risk_level", "confidence"]
+    },
+    "falsePositiveDetection": {
+      "name": "False Positive Detector",
+      "type": "classification",
+      "features": ["vulnerability_type", "context", "historical_fp"],
+      "output": ["is_false_positive", "confidence"]
+    },
+    "prioritization": {
+      "name": "Remediation Prioritizer",
+      "type": "ranking",
+      "features": ["severity", "exploitability", "asset_value", "ease_of_fix"],
+      "output": ["priority_score", "recommended_order"]
+    },
+    "trendPrediction": {
+      "name": "Vulnerability Trend Predictor",
+      "type": "regression",
+      "features": ["historical_counts", "patch_rate", "new_asset_rate"],
+      "output": ["predicted_count", "trend_direction"]
+    },
+    "exploitPrediction": {
+      "name": "Exploit Likelihood Predictor",
+      "type": "classification",
+      "features": ["cve_age", "vendor", "product_popularity", "disclosure_source"],
+      "output": ["exploit_likelihood", "time_to_exploit"]
+    }
+  },
+
+  "api": {
+    "version": "v1",
+    "basePath": "/api/v1/vulnscan",
+    "rateLimit": {
+      "requests": 1000,
+      "window": "1h"
+    },
+    "endpoints": {
+      "scans": {
+        "prefix": "/scans",
+        "operations": ["list", "create", "get", "cancel", "rerun", "compare"]
+      },
+      "vulnerabilities": {
+        "prefix": "/vulnerabilities",
+        "operations": ["list", "get", "update", "export", "correlate"]
+      },
+      "assets": {
+        "prefix": "/assets",
+        "operations": ["list", "create", "get", "update", "delete", "import", "discover"]
+      },
+      "reports": {
+        "prefix": "/reports",
+        "operations": ["generate", "list", "get", "schedule", "export"]
+      },
+      "schedules": {
+        "prefix": "/schedules",
+        "operations": ["list", "create", "get", "update", "delete", "enable", "disable"]
+      },
+      "remediations": {
+        "prefix": "/remediations",
+        "operations": ["list", "create", "update", "verify", "statistics"]
+      },
+      "integrations": {
+        "prefix": "/integrations",
+        "operations": ["list", "configure", "test", "sync"]
+      },
+      "dashboard": {
+        "prefix": "/dashboard",
+        "operations": ["overview", "trends", "risk-score", "widgets"]
+      }
+    }
+  },
+
+  "security": {
+    "authentication": ["jwt", "api_key", "oauth2"],
+    "authorization": {
+      "roles": ["admin", "security_analyst", "developer", "viewer", "api_only"],
+      "permissions": [
+        "scans:create",
+        "scans:read",
+        "scans:manage",
+        "vulnerabilities:read",
+        "vulnerabilities:update",
+        "vulnerabilities:export",
+        "assets:create",
+        "assets:read",
+        "assets:update",
+        "assets:delete",
+        "reports:create",
+        "reports:read",
+        "settings:manage",
+        "integrations:manage"
+      ]
+    },
+    "dataProtection": {
+      "encryption": "AES-256",
+      "credentialStorage": "vault",
+      "auditLogging": true,
+      "dataRetention": "365d"
+    }
+  },
+
+  "compliance": {
+    "frameworks": [
+      {
+        "id": "pci_dss_4",
+        "name": "PCI-DSS 4.0",
+        "requirements": ["11.3", "11.4", "6.3", "6.4"]
+      },
+      {
+        "id": "hipaa",
+        "name": "HIPAA",
+        "requirements": ["164.308(a)(8)", "164.312(a)(1)"]
+      },
+      {
+        "id": "soc2",
+        "name": "SOC 2 Type II",
+        "requirements": ["CC6.1", "CC6.6", "CC7.1"]
+      },
+      {
+        "id": "iso27001",
+        "name": "ISO 27001:2022",
+        "requirements": ["A.12.6.1", "A.18.2.3"]
+      },
+      {
+        "id": "nist_csf",
+        "name": "NIST CSF",
+        "requirements": ["ID.RA", "PR.IP", "DE.CM"]
+      },
+      {
+        "id": "cis",
+        "name": "CIS Controls v8",
+        "requirements": ["7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7"]
+      }
+    ]
+  }
+}

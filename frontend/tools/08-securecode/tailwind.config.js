@@ -19,7 +19,23 @@ export default {
           700: "#15803d",
           800: "#166534",
           900: "#14532d",
+          primary: "#22c55e",
+          secondary: "#16a34a",
+          accent: "#4ade80",
+          dark: "#0f1a14",
+          darker: "#0a120e",
         },
+      },
+      backgroundImage: {
+        'securecode-gradient': 'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%)',
+        'code-gradient': 'linear-gradient(180deg, #0f1a14 0%, #14532d 100%)',
+        'analysis-gradient': 'linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%)',
+        'terminal-gradient': 'linear-gradient(180deg, #0a0a0a 0%, #0f1a14 100%)',
+      },
+      boxShadow: {
+        'glow-green': '0 0 20px rgba(34, 197, 94, 0.4)',
+        'glow-green-lg': '0 0 40px rgba(34, 197, 94, 0.5)',
+        'glow-code': '0 0 30px rgba(74, 222, 128, 0.3)',
       },
       animation: {
         codeScan: "codeScan 2s ease-in-out infinite",

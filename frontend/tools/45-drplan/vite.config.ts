@@ -7,17 +7,17 @@ export default defineConfig({
   plugins: [react()],
   
   server: {
-    port: 3001,
+    port: 3045,
     host: true,
     cors: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:4001',
+        target: 'http://localhost:4045',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/ws': {
-        target: 'ws://localhost:6001',
+        target: 'ws://localhost:6045',
         ws: true,
         changeOrigin: true,
       },
@@ -25,7 +25,7 @@ export default defineConfig({
   },
 
   preview: {
-    port: 3001,
+    port: 3045,
     host: true,
   },
 
