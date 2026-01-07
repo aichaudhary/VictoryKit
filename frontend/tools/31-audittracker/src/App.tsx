@@ -1,93 +1,132 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Shield, Menu, X, MessageSquare, ChevronLeft, ChevronRight, 
-  Search, Settings, Bell, TrendingUp, Activity, FileText,
-  AlertTriangle, CheckCircle, Clock, Send, Sparkles, Mic, 
-  Paperclip, MoreHorizontal, User, Bot
+  Menu, X, MessageSquare, ChevronLeft, ChevronRight, 
+  Search, Settings, Bell, Send, Sparkles, User, Bot,
+  LayoutDashboard, FileSearch, Clock, Filter, Activity, BookOpen,
+  Download, Calendar, Shield, Eye, AlertTriangle, CheckCircle
 } from 'lucide-react';
 
 // Components
-import TransactionForm from './components/TransactionForm';
-import FraudScoreCard from './components/FraudScoreCard';
-import RiskVisualization from './components/RiskVisualization';
-import TransactionHistory from './components/TransactionHistory';
-import AlertsPanel from './components/AlertsPanel';
-import ExportReport from './components/ExportReport';
+import AuditDashboard from './components/AuditDashboard';
+import AuditLogs from './components/AuditLogs';
+import AuditTimeline from './components/AuditTimeline';
+import ComplianceReports from './components/ComplianceReports';
+import AuditSettings from './components/AuditSettings';
 
-// Types and constants
-import { 
-  Transaction, FraudScore, Alert, Tab, SettingsState, 
-  Message, WorkspaceMode 
-} from './types';
-import { NAV_ITEMS, DEFAULT_SETTINGS, PROVIDER_CONFIG } from './constants';
+// Types
+interface AuditLog {
+  id: string;
+  timestamp: Date;
+  action: string;
+  category: 'authentication' | 'authorization' | 'data_access' | 'configuration' | 'security' | 'system';
+  severity: 'info' | 'warning' | 'error' | 'critical';
+  user: string;
+  resource: string;
+  ip: string;
+  details: string;
+  outcome: 'success' | 'failure';
+}
 
-// Services
-import { fraudguardAPI } from './services/fraudguardAPI';
-import { executeTool, getToolDefinitions } from './services/fraudguard-tools';
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
+type Tab = 'dashboard' | 'logs' | 'timeline' | 'reports' | 'settings';
+
+const NAV_ITEMS = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'logs', label: 'Audit Logs', icon: FileSearch },
+  { id: 'timeline', label: 'Timeline', icon: Clock },
+  { id: 'reports', label: 'Compliance Reports', icon: BookOpen },
+  { id: 'settings', label: 'Settings', icon: Settings },
+];
 
 const App: React.FC = () => {
-  // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState<Tab>('analyze');
-  const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>('fraud-detection');
-  const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS);
+  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   
-  // Data state
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [fraudScores, setFraudScores] = useState<Record<string, FraudScore>>({});
-  const [currentScore, setCurrentScore] = useState<FraudScore | null>(null);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  
+  // Sample data
+  const [logs, setLogs] = useState<AuditLog[]>([
+    {
+      id: '1',
+      timestamp: new Date(),
+      action: 'User Login',
+      category: 'authentication',
+      severity: 'info',
+      user: 'admin@company.com',
+      resource: '/auth/login',
+      ip: '192.168.1.100',
+      details: 'Successful authentication via SSO',
+      outcome: 'success'
+    },
+    {
+      id: '2',
+      timestamp: new Date(Date.now() - 300000),
+      action: 'Permission Denied',
+      category: 'authorization',
+      severity: 'warning',
+      user: 'user@company.com',
+      resource: '/api/admin/users',
+      ip: '192.168.1.105',
+      details: 'Attempted access to admin endpoint without privileges',
+      outcome: 'failure'
+    },
+    {
+      id: '3',
+      timestamp: new Date(Date.now() - 600000),
+      action: 'Database Query',
+      category: 'data_access',
+      severity: 'info',
+      user: 'api-service',
+      resource: 'users_table',
+      ip: '10.0.0.50',
+      details: 'SELECT query on users table (1000 rows)',
+      outcome: 'success'
+    },
+    {
+      id: '4',
+      timestamp: new Date(Date.now() - 900000),
+      action: 'Failed Login Attempt',
+      category: 'authentication',
+      severity: 'error',
+      user: 'unknown',
+      resource: '/auth/login',
+      ip: '203.0.113.50',
+      details: 'Multiple failed login attempts detected',
+      outcome: 'failure'
+    }
+  ]);
+
+  const [stats, setStats] = useState({
+    totalEvents: 15847,
+    todayEvents: 342,
+    warningEvents: 23,
+    criticalEvents: 5,
+    complianceScore: 94,
+    retentionDays: 365
+  });
+
   // Chat state
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'assistant',
-      content: "Welcome to FraudGuard! I'm your AI-powered fraud detection assistant. I can help you analyze transactions, detect suspicious patterns, and manage fraud alerts. How can I assist you today?",
+      content: "Welcome to AuditTracker! I'm your AI-powered audit log analyst. I can help you search through audit logs, identify suspicious patterns, generate compliance reports, and investigate security incidents. What would you like to analyze?",
       timestamp: new Date(),
-      provider: settings.selectedProvider,
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Handle transaction analysis
-  const handleAnalyzeTransaction = async (transaction: Transaction) => {
-    setIsLoading(true);
-    try {
-      const score = await fraudguardAPI.transactions.analyze(transaction);
-      setCurrentScore(score);
-      setFraudScores((prev) => ({ ...prev, [transaction.transaction_id]: score }));
-      setTransactions((prev) => [transaction, ...prev]);
-      
-      // Add assistant message about analysis
-      const riskColor = score.risk_level === 'critical' ? 'red' : 
-                       score.risk_level === 'high' ? 'orange' : 
-                       score.risk_level === 'medium' ? 'yellow' : 'green';
-      
-      setMessages((prev) => [...prev, {
-        id: Date.now().toString(),
-        role: 'assistant',
-        content: `Transaction analyzed. Risk Score: ${score.score}/100 (${score.risk_level.toUpperCase()}). ${score.indicators.length} risk indicators detected.`,
-        timestamp: new Date(),
-        provider: settings.selectedProvider,
-      }]);
-    } catch (error) {
-      console.error('Analysis failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Handle chat message
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
@@ -98,419 +137,219 @@ const App: React.FC = () => {
       timestamp: new Date(),
     };
     
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI response (would connect to real AI service)
-    setTimeout(async () => {
-      // Check for tool-related keywords
-      let response = '';
-      
-      if (inputValue.toLowerCase().includes('analyze') && inputValue.toLowerCase().includes('transaction')) {
-        response = "I can help you analyze a transaction. Please use the Transaction Form on the left to enter the transaction details, or provide me with the transaction data and I'll analyze it for you.";
-      } else if (inputValue.toLowerCase().includes('alert')) {
-        response = "You can manage fraud alerts from the Alerts panel. Would you like me to create a new alert rule? Just tell me the alert type, threshold score, and notification channels you'd like to use.";
-      } else if (inputValue.toLowerCase().includes('report') || inputValue.toLowerCase().includes('export')) {
-        response = "I can help you export reports. Go to the Export section to generate PDF or CSV reports with your fraud analysis data. You can filter by date range and risk levels.";
-      } else if (inputValue.toLowerCase().includes('score') || inputValue.toLowerCase().includes('risk')) {
-        response = `Based on my analysis, the current risk assessment shows ${transactions.length} transactions processed with an average risk score. Would you like me to break down the risk factors or show you the visualization?`;
-      } else {
-        response = "I'm here to help with fraud detection and analysis. I can:\n\n• Analyze transactions for fraud risk\n• Show risk visualizations and patterns\n• Create and manage fraud alerts\n• Export detailed reports\n\nWhat would you like to do?";
-      }
+    setTimeout(() => {
+      const responses: Record<string, string> = {
+        'search': "I'll search the audit logs for you. I found:\n\n• **342 events today**\n• **23 warnings** requiring attention\n• **5 critical alerts** from failed auth attempts\n\nWould you like me to drill down into any specific category?",
+        'suspicious': "I've analyzed the logs and detected suspicious patterns:\n\n1. **Brute Force Attempt** - 15 failed logins from IP 203.0.113.50\n2. **Unusual Access** - Admin API accessed outside business hours\n3. **Data Export** - Large data query from new user account\n\nShould I generate an incident report?",
+        'compliance': "Based on current audit data, your compliance status:\n\n• **SOC 2:** 96% compliant\n• **HIPAA:** 94% compliant\n• **GDPR:** 92% compliant\n\nGaps identified in data retention policies. Would you like a detailed report?",
+        'default': "I can help you with:\n\n• **Search Logs** - Find specific events by user, action, or time\n• **Detect Anomalies** - Identify suspicious patterns\n• **Compliance Reports** - Generate audit documentation\n• **Investigate Incidents** - Trace security events\n\nWhat would you like to explore?"
+      };
 
-      const assistantMessage: Message = {
+      const input = inputValue.toLowerCase();
+      let response = responses['default'];
+      if (input.includes('search') || input.includes('find')) response = responses['search'];
+      else if (input.includes('suspicious') || input.includes('anomal') || input.includes('threat')) response = responses['suspicious'];
+      else if (input.includes('compliance') || input.includes('report') || input.includes('soc')) response = responses['compliance'];
+
+      setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
         content: response,
         timestamp: new Date(),
-        provider: settings.selectedProvider,
-      };
-      
-      setMessages((prev) => [...prev, assistantMessage]);
+      }]);
       setIsTyping(false);
     }, 1500);
   };
 
-  // Handle alert operations
-  const handleCreateAlert = async (alert: Omit<Alert, 'id' | 'created_at' | 'triggered_count'>) => {
-    try {
-      const newAlert = await fraudguardAPI.alerts.create(alert);
-      setAlerts((prev) => [...prev, newAlert]);
-    } catch (error) {
-      // For demo, create locally
-      const localAlert: Alert = {
-        ...alert,
-        id: `alert_${Date.now()}`,
-        created_at: new Date().toISOString(),
-        triggered_count: 0,
-      };
-      setAlerts((prev) => [...prev, localAlert]);
-    }
-  };
-
-  const handleDeleteAlert = (id: string) => {
-    setAlerts((prev) => prev.filter((a) => a.id !== id));
-  };
-
-  const handleToggleAlert = (id: string, active: boolean) => {
-    setAlerts((prev) => prev.map((a) => a.id === id ? { ...a, active } : a));
-  };
-
-  // Handle report export
-  const handleExport = async (format: 'pdf' | 'csv', options: any) => {
-    // Simulate export
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log('Exporting:', format, options);
-  };
-
-  // Render tab content
-  const renderTabContent = () => {
+  const renderContent = () => {
     switch (activeTab) {
-      case 'analyze':
-        return (
-          <div className="space-y-6">
-            <TransactionForm onSubmit={handleAnalyzeTransaction} isLoading={isLoading} />
-            {currentScore && (
-              <FraudScoreCard 
-                score={currentScore} 
-                onApprove={() => console.log('Approved')}
-                onDecline={() => console.log('Declined')}
-                onReview={() => console.log('Review')}
-              />
-            )}
-          </div>
-        );
-      case 'visualize':
-        return (
-          <RiskVisualization 
-            data={[
-              { label: 'Card Mismatch', value: 35, color: '#EF4444' },
-              { label: 'High Velocity', value: 25, color: '#F97316' },
-              { label: 'New Device', value: 20, color: '#EAB308' },
-              { label: 'Location Risk', value: 15, color: '#22C55E' },
-              { label: 'Amount Flag', value: 5, color: '#3B82F6' },
-            ]}
-            chartType="risk_breakdown"
-          />
-        );
-      case 'history':
-        return (
-          <TransactionHistory 
-            transactions={transactions}
-            fraudScores={fraudScores}
-            onSelectTransaction={(t) => {
-              const score = fraudScores[t.transaction_id];
-              if (score) setCurrentScore(score);
-              setActiveTab('analyze');
-            }}
-          />
-        );
-      case 'alerts':
-        return (
-          <AlertsPanel 
-            alerts={alerts}
-            onCreateAlert={handleCreateAlert}
-            onDeleteAlert={handleDeleteAlert}
-            onToggleAlert={handleToggleAlert}
-          />
-        );
+      case 'dashboard':
+        return <AuditDashboard logs={logs} stats={stats} />;
+      case 'logs':
+        return <AuditLogs logs={logs} />;
+      case 'timeline':
+        return <AuditTimeline logs={logs} />;
       case 'reports':
-        return (
-          <ExportReport 
-            transactions={transactions}
-            fraudScores={fraudScores}
-            onExport={handleExport}
-          />
-        );
+        return <ComplianceReports />;
+      case 'settings':
+        return <AuditSettings />;
       default:
-        return null;
+        return <AuditDashboard logs={logs} stats={stats} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 bg-slate-900/80 backdrop-blur-lg border-b border-red-500/30">
-        <div className="flex items-center justify-between h-full px-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-slate-800 rounded-lg transition-colors"
-            >
-              {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-white" />
-              </div>
+    <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
+      {/* Sidebar */}
+      <div className={`${sidebarOpen ? 'w-64' : 'w-16'} bg-gray-800 border-r border-gray-700 transition-all duration-300 flex flex-col`}>
+        <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
+              <FileSearch className="w-6 h-6 text-white" />
+            </div>
+            {sidebarOpen && (
               <div>
-                <h1 className="font-bold text-lg">FraudGuard</h1>
-                <p className="text-xs text-red-400">AI Fraud Detection</p>
+                <h1 className="font-bold text-lg">AuditTracker</h1>
+                <p className="text-xs text-gray-400">Security Audit Logs</p>
               </div>
+            )}
+          </div>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 hover:bg-gray-700 rounded">
+            {sidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+          </button>
+        </div>
+
+        <nav className="flex-1 p-2 space-y-1">
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id as Tab)}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                activeTab === item.id 
+                  ? 'bg-teal-600 text-white' 
+                  : 'text-gray-400 hover:bg-gray-700 hover:text-white'
+              }`}
+            >
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              {sidebarOpen && <span>{item.label}</span>}
+            </button>
+          ))}
+        </nav>
+
+        {sidebarOpen && (
+          <div className="p-4 border-t border-gray-700 space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-400">Today's Events</span>
+              <span className="font-semibold text-teal-400">{stats.todayEvents}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-400">Warnings</span>
+              <span className="font-semibold text-yellow-400">{stats.warningEvents}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-400">Critical</span>
+              <span className="font-semibold text-red-400">{stats.criticalEvents}</span>
             </div>
           </div>
+        )}
+      </div>
 
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <header className="h-16 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
-            {/* Workspace Mode Selector */}
-            <div className="flex items-center gap-2 bg-slate-800 rounded-lg p-1">
-              <button
-                onClick={() => setWorkspaceMode('fraud-detection')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'fraud-detection' 
-                    ? 'bg-red-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Detection
-              </button>
-              <button
-                onClick={() => setWorkspaceMode('analytics')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'analytics' 
-                    ? 'bg-cyan-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Analytics
-              </button>
-              <button
-                onClick={() => setWorkspaceMode('monitoring')}
-                className={`px-3 py-1.5 rounded-md text-sm transition-all ${
-                  workspaceMode === 'monitoring' 
-                    ? 'bg-yellow-500 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Monitoring
-              </button>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <input 
+                type="text"
+                placeholder="Search audit logs..."
+                className="pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:border-teal-500 w-80"
+              />
             </div>
-
-            {/* Notifications */}
-            <button className="relative p-2 hover:bg-slate-800 rounded-lg transition-colors">
-              <Bell className="w-5 h-5" />
-              {alerts.filter(a => a.active).length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <button className="p-2 hover:bg-gray-700 rounded-lg relative">
+              <Bell className="w-5 h-5 text-gray-400" />
+              {stats.criticalEvents > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center">
+                  {stats.criticalEvents}
+                </span>
               )}
             </button>
-
-            {/* Settings */}
-            <button className="p-2 hover:bg-slate-800 rounded-lg transition-colors">
-              <Settings className="w-5 h-5" />
-            </button>
-
-            {/* Toggle Chat */}
-            <button
+            <button 
               onClick={() => setChatOpen(!chatOpen)}
-              className={`p-2 rounded-lg transition-colors ${
-                chatOpen ? 'bg-red-500/20 text-red-400' : 'hover:bg-slate-800'
-              }`}
+              className={`p-2 rounded-lg transition-colors ${chatOpen ? 'bg-teal-600' : 'hover:bg-gray-700'}`}
             >
               <MessageSquare className="w-5 h-5" />
             </button>
+            <button className="p-2 hover:bg-gray-700 rounded-lg">
+              <Settings className="w-5 h-5 text-gray-400" />
+            </button>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="flex pt-16">
-        {/* Sidebar */}
-        <aside 
-          className={`fixed left-0 top-16 bottom-0 bg-slate-900/50 backdrop-blur border-r border-red-500/20 transition-all duration-300 ${
-            sidebarOpen ? 'w-64' : 'w-16'
-          }`}
-        >
-          <nav className="p-4 space-y-2">
-            {NAV_ITEMS.map((item) => {
-              const Icon = {
-                'search': Search,
-                'analyze': Activity,
-                'visualize': TrendingUp,
-                'history': Clock,
-                'alerts': AlertTriangle,
-                'reports': FileText,
-                'settings': Settings,
-              }[item.id] || Activity;
+        <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 overflow-auto p-6">
+            {renderContent()}
+          </div>
 
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id as Tab)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                    activeTab === item.id
-                      ? 'bg-gradient-to-r from-red-500/20 to-pink-500/20 border border-red-500/30 text-white'
-                      : 'text-gray-400 hover:bg-slate-800 hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  {sidebarOpen && <span>{item.label}</span>}
+          {chatOpen && (
+            <div className="w-96 bg-gray-800 border-l border-gray-700 flex flex-col">
+              <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-sm">Audit AI Assistant</h3>
+                    <p className="text-xs text-gray-400">Powered by Neural Link</p>
+                  </div>
+                </div>
+                <button onClick={() => setChatOpen(false)} className="p-1 hover:bg-gray-700 rounded">
+                  <X className="w-4 h-4" />
                 </button>
-              );
-            })}
-          </nav>
+              </div>
 
-          {/* Quick Stats */}
-          {sidebarOpen && (
-            <div className="absolute bottom-4 left-4 right-4">
-              <div className="p-4 bg-gradient-to-br from-red-500/10 to-pink-500/10 rounded-xl border border-red-500/30">
-                <h4 className="text-sm font-bold text-white mb-3">Quick Stats</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Analyzed Today</span>
-                    <span className="text-white font-bold">{transactions.length}</span>
+              <div className="flex-1 overflow-auto p-4 space-y-4">
+                {messages.map((message) => (
+                  <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                      message.role === 'user' ? 'bg-teal-600' : 'bg-gray-700'
+                    }`}>
+                      {message.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                    </div>
+                    <div className={`max-w-[80%] p-3 rounded-lg ${message.role === 'user' ? 'bg-teal-600' : 'bg-gray-700'}`}>
+                      <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      <span className="text-xs text-gray-400 mt-1 block">
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">High Risk</span>
-                    <span className="text-red-400 font-bold">
-                      {Object.values(fraudScores).filter(s => s.risk_level === 'high' || s.risk_level === 'critical').length}
-                    </span>
+                ))}
+                {isTyping && (
+                  <div className="flex gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gray-700 flex items-center justify-center">
+                      <Bot className="w-4 h-4" />
+                    </div>
+                    <div className="bg-gray-700 p-3 rounded-lg">
+                      <div className="flex gap-1">
+                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" />
+                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }} />
+                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Active Alerts</span>
-                    <span className="text-yellow-400 font-bold">{alerts.filter(a => a.active).length}</span>
-                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              <div className="p-4 border-t border-gray-700">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="Ask about audit logs..."
+                    className="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm focus:outline-none focus:border-teal-500"
+                  />
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!inputValue.trim() || isTyping}
+                    className="p-2 bg-teal-600 hover:bg-teal-700 rounded-lg disabled:opacity-50"
+                  >
+                    <Send className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
             </div>
           )}
-        </aside>
-
-        {/* Main Content */}
-        <main 
-          className={`flex-1 p-6 transition-all duration-300 ${
-            sidebarOpen ? 'ml-64' : 'ml-16'
-          } ${chatOpen ? 'mr-96' : ''}`}
-        >
-          <div className="max-w-4xl mx-auto">
-            {/* Page Header */}
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold">
-                {NAV_ITEMS.find(n => n.id === activeTab)?.label || 'FraudGuard'}
-              </h2>
-              <p className="text-gray-400 mt-1">
-                {activeTab === 'analyze' && 'Analyze transactions for potential fraud'}
-                {activeTab === 'visualize' && 'Visualize risk patterns and trends'}
-                {activeTab === 'history' && 'View and manage transaction history'}
-                {activeTab === 'alerts' && 'Configure and manage fraud alerts'}
-                {activeTab === 'reports' && 'Generate and export reports'}
-              </p>
-            </div>
-
-            {/* Tab Content */}
-            {renderTabContent()}
-          </div>
-        </main>
-
-        {/* Chat Panel */}
-        {chatOpen && (
-          <aside className="fixed right-0 top-16 bottom-0 w-96 bg-slate-900/50 backdrop-blur border-l border-red-500/20 flex flex-col">
-            {/* Chat Header */}
-            <div className="p-4 border-b border-red-500/20">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold">AI Assistant</h3>
-                    <p className="text-xs text-green-400 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-                      Online
-                    </p>
-                  </div>
-                </div>
-                <select 
-                  value={settings.selectedProvider}
-                  onChange={(e) => setSettings({ ...settings, selectedProvider: e.target.value as any })}
-                  className="bg-slate-800 border border-red-500/30 rounded-lg px-2 py-1 text-sm"
-                >
-                  {Object.entries(PROVIDER_CONFIG).map(([key, config]) => (
-                    <option key={key} value={key}>{config.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => (
-                <div 
-                  key={message.id}
-                  className={`flex gap-3 ${message.role === 'user' ? 'flex-row-reverse' : ''}`}
-                >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                    message.role === 'user' 
-                      ? 'bg-cyan-500/20' 
-                      : 'bg-gradient-to-br from-red-500 to-pink-500'
-                  }`}>
-                    {message.role === 'user' ? (
-                      <User className="w-4 h-4 text-cyan-400" />
-                    ) : (
-                      <Bot className="w-4 h-4 text-white" />
-                    )}
-                  </div>
-                  <div className={`max-w-[80%] p-3 rounded-xl ${
-                    message.role === 'user'
-                      ? 'bg-cyan-500/20 border border-cyan-500/30'
-                      : 'bg-slate-800/50 border border-red-500/30'
-                  }`}>
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    <p className="text-[10px] text-gray-500 mt-1">
-                      {message.timestamp.toLocaleTimeString()}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              
-              {isTyping && (
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="bg-slate-800/50 border border-red-500/30 p-3 rounded-xl">
-                    <div className="flex gap-1">
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <div className="p-4 border-t border-red-500/20">
-              <div className="flex items-center gap-2 bg-slate-800/50 border border-red-500/30 rounded-xl p-2">
-                <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
-                  <Paperclip className="w-4 h-4 text-gray-400" />
-                </button>
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Ask about fraud detection..."
-                  className="flex-1 bg-transparent outline-none text-sm"
-                />
-                <button className="p-2 hover:bg-slate-700 rounded-lg transition-colors">
-                  <Mic className="w-4 h-4 text-gray-400" />
-                </button>
-                <button 
-                  onClick={handleSendMessage}
-                  disabled={!inputValue.trim()}
-                  className="p-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg transition-all hover:opacity-90 disabled:opacity-50"
-                >
-                  <Send className="w-4 h-4 text-white" />
-                </button>
-              </div>
-              <p className="text-[10px] text-gray-500 text-center mt-2">
-                Powered by {PROVIDER_CONFIG[settings.selectedProvider]?.name || 'AI'}
-              </p>
-            </div>
-          </aside>
-        )}
+        </div>
       </div>
     </div>
   );

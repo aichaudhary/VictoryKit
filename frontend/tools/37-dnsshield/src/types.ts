@@ -1,53 +1,110 @@
-export type Sender = 'YOU' | 'AGENT' | 'SYSTEM';
+// DNSShield Types
 
-export interface Message {
+export interface DNSQuery {
   id: string;
-  sender: Sender;
-  text: string;
-  timestamp: string;
-  isImage?: boolean;
-  groundingUrls?: string[];
-  functionCall?: FunctionCallResult;
+  domain: string;
+  queryType: string;
+  sourceIP: string;
+  timestamp: Date;
+  responseTime: number;
+  status: 'allowed' | 'blocked' | 'monitored';
+  threatLevel: 'low' | 'medium' | 'high' | 'critical';
+  category?: string;
+  reputation?: number;
 }
 
-export interface FunctionCallResult {
-  name: string;
-  args: Record<string, any>;
-  result?: any;
+export interface DNSThreat {
+  id: string;
+  domain: string;
+  threatType: 'malware' | 'phishing' | 'botnet' | 'spam' | 'tunneling' | 'amplification';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  confidence: number;
+  firstSeen: Date;
+  lastSeen: Date;
+  sources: string[];
+  indicators: string[];
 }
 
-export interface ChatSession {
+export interface DNSRule {
   id: string;
   name: string;
-  active: boolean;
-  messages: Message[];
-  settings: SettingsState;
+  description: string;
+  type: 'domain' | 'category' | 'pattern' | 'reputation';
+  action: 'allow' | 'block' | 'monitor' | 'redirect';
+  conditions: DNSRuleCondition[];
+  enabled: boolean;
+  priority: number;
+  hits: number;
+  lastHit?: Date;
 }
 
-export type NeuralTool = 
-  | 'none' 
-  | 'fraud_analysis'
-  | 'risk_visualization'
-  | 'transaction_history'
-  | 'alerts'
-  | 'reports'
-  | 'web_search'
-  | 'canvas'
-  | 'browser';
+export interface DNSRuleCondition {
+  field: string;
+  operator: 'equals' | 'contains' | 'regex' | 'range' | 'in';
+  value: any;
+}
 
-export type WorkspaceMode = 'CHAT' | 'PORTAL' | 'CANVAS' | 'FRAUD_DASHBOARD';
+export interface DNSAnalytics {
+  totalQueries: number;
+  blockedQueries: number;
+  maliciousQueries: number;
+  topDomains: Array<{ domain: string; count: number }>;
+  topThreats: Array<{ type: string; count: number }>;
+  queryTypes: Record<string, number>;
+  timeSeries: Array<{ timestamp: Date; queries: number; threats: number }>;
+}
 
-export interface CanvasState {
-  content: string;
-  type: 'text' | 'code' | 'html' | 'video' | 'image' | 'chart';
-  language?: string;
+export interface DNSAlert {
+  id: string;
   title: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  type: 'threat' | 'anomaly' | 'policy' | 'system';
+  domain?: string;
+  sourceIP?: string;
+  timestamp: Date;
+  acknowledged: boolean;
+  resolved: boolean;
 }
 
-export interface SettingsState {
-  customPrompt: string;
-  agentName: string;
-  temperature: number;
+export interface DNSSettings {
+  monitoring: {
+    enabled: boolean;
+    realTimeUpdates: boolean;
+    retentionDays: number;
+  };
+  security: {
+    autoBlock: boolean;
+    threatThreshold: number;
+    whitelistEnabled: boolean;
+  };
+  alerting: {
+    emailNotifications: boolean;
+    webhookUrl?: string;
+    alertThreshold: 'low' | 'medium' | 'high' | 'critical';
+  };
+}
+
+export interface DNSStats {
+  queriesPerSecond: number;
+  totalQueries: number;
+  blockedPercentage: number;
+  activeThreats: number;
+  uptime: number;
+  responseTime: number;
+}
+
+export interface DomainReputation {
+  domain: string;
+  score: number; // 0-100, higher is worse
+  category: string;
+  lastChecked: Date;
+  sources: Array<{
+    name: string;
+    score: number;
+    category: string;
+  }>;
+}
   maxTokens: number;
   provider: string;
   model: string;
