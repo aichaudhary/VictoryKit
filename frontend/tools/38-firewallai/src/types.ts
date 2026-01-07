@@ -1,3 +1,5 @@
+// FirewallAI Types - AI-Powered Firewall Management
+
 export type Sender = 'YOU' | 'AGENT' | 'SYSTEM';
 
 export interface Message {
@@ -6,7 +8,7 @@ export interface Message {
   text: string;
   timestamp: string;
   isImage?: boolean;
-  groundingUrls?: string[];
+  groundingUrls?: string[][];
   functionCall?: FunctionCallResult;
 }
 
@@ -24,18 +26,18 @@ export interface ChatSession {
   settings: SettingsState;
 }
 
-export type NeuralTool = 
-  | 'none' 
-  | 'fraud_analysis'
-  | 'risk_visualization'
-  | 'transaction_history'
+export type NeuralTool =
+  | 'none'
+  | 'firewall_rules'
+  | 'traffic_analysis'
+  | 'threat_detection'
+  | 'policy_engine'
   | 'alerts'
   | 'reports'
-  | 'web_search'
-  | 'canvas'
-  | 'browser';
+  | 'network_monitor'
+  | 'intrusion_detection';
 
-export type WorkspaceMode = 'CHAT' | 'PORTAL' | 'CANVAS' | 'FRAUD_DASHBOARD';
+export type WorkspaceMode = 'CHAT' | 'PORTAL' | 'CANVAS' | 'FIREWALL_DASHBOARD';
 
 export interface CanvasState {
   content: string;
@@ -64,64 +66,143 @@ export interface NavItem {
   description: string;
 }
 
-// FraudGuard Specific Types
-export interface Transaction {
+// FirewallAI Specific Types
+export interface FirewallRule {
   id: string;
-  transaction_id: string;
-  amount: number;
-  currency: string;
-  user_ip?: string;
-  device_fingerprint?: string;
-  email?: string;
-  card_last4?: string;
-  merchant_id?: string;
-  timestamp: string;
-  status: 'pending' | 'approved' | 'declined' | 'flagged';
-  fraud_score?: number;
-  risk_level?: 'low' | 'medium' | 'high';
-}
-
-export interface FraudScore {
-  transaction_id: string;
-  score: number;
-  risk_level: 'low' | 'medium' | 'high';
-  confidence: number;
-  indicators: FraudIndicator[];
-  recommendation: string;
-  ml_model_version: string;
-  analyzed_at: string;
-}
-
-export interface FraudIndicator {
-  type: string;
-  severity: 'low' | 'medium' | 'high';
+  name: string;
   description: string;
-  weight: number;
+  action: 'allow' | 'deny' | 'reject' | 'drop';
+  protocol: 'tcp' | 'udp' | 'icmp' | 'all';
+  source_ip?: string;
+  source_port?: number;
+  destination_ip?: string;
+  destination_port?: number;
+  direction: 'inbound' | 'outbound' | 'both';
+  priority: number;
+  enabled: boolean;
+  created_at: string;
+  updated_at: string;
+  hit_count: number;
+  last_hit?: string;
+}
+
+export interface TrafficLog {
+  id: string;
+  timestamp: string;
+  source_ip: string;
+  destination_ip: string;
+  source_port: number;
+  destination_port: number;
+  protocol: string;
+  action: 'allowed' | 'denied' | 'rejected' | 'dropped';
+  rule_id?: string;
+  rule_name?: string;
+  bytes_sent: number;
+  bytes_received: number;
+  packets_sent: number;
+  packets_received: number;
+  interface: string;
+  threat_level?: 'low' | 'medium' | 'high' | 'critical';
+  threat_type?: string;
 }
 
 export interface Alert {
   id: string;
-  alert_type: 'high_risk_transaction' | 'suspicious_pattern' | 'velocity_breach' | 'unusual_location';
-  threshold: number;
-  notification_channels: ('email' | 'webhook' | 'sms' | 'slack')[];
-  active: boolean;
+  title: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  type: 'intrusion' | 'anomaly' | 'policy_violation' | 'dos_attack' | 'malware' | 'unauthorized_access';
+  source_ip?: string;
+  destination_ip?: string;
+  rule_id?: string;
+  timestamp: string;
+  status: 'new' | 'acknowledged' | 'resolved' | 'false_positive';
+  ai_analysis?: string;
+  recommended_action?: string;
+}
+
+export interface ThreatAnalysis {
+  id: string;
+  timestamp: string;
+  threat_type: string;
+  confidence_score: number;
+  indicators: ThreatIndicator[];
+  affected_rules: string[];
+  recommended_actions: string[];
+  risk_level: 'low' | 'medium' | 'high' | 'critical';
+  ai_insights: string;
+}
+
+export interface ThreatIndicator {
+  type: string;
+  value: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+  first_seen: string;
+  last_seen: string;
+  hit_count: number;
+}
+
+export interface Policy {
+  id: string;
+  name: string;
+  description: string;
+  rules: FirewallRule[];
+  enabled: boolean;
+  priority: number;
   created_at: string;
-  triggered_count: number;
+  updated_at: string;
+  compliance_framework?: string;
+  tags: string[];
+}
+
+export interface RealTimeData {
+  timestamp: string;
+  total_connections: number;
+  active_connections: number;
+  blocked_connections: number;
+  throughput_mbps: number;
+  cpu_usage: number;
+  memory_usage: number;
+  alerts_per_minute: number;
+  top_blocked_ips: { ip: string; count: number }[];
+  top_protocols: { protocol: string; count: number }[];
+  threat_trends: { timestamp: string; count: number }[];
+}
+
+export interface Vendor {
+  id: string;
+  name: string;
+  type: 'firewall' | 'ids' | 'ips' | 'utm' | 'waf';
+  ip_address: string;
+  status: 'online' | 'offline' | 'maintenance';
+  last_seen: string;
+  version: string;
+  managed_rules: number;
+  active_alerts: number;
 }
 
 export interface AnalyticsData {
-  total_transactions: number;
-  flagged_transactions: number;
-  average_fraud_score: number;
-  high_risk_percentage: number;
-  transactions_by_day: { date: string; count: number; flagged: number }[];
-  risk_distribution: { level: string; count: number }[];
-  top_fraud_indicators: { indicator: string; count: number }[];
+  total_rules: number;
+  active_rules: number;
+  total_alerts: number;
+  resolved_alerts: number;
+  blocked_traffic_gb: number;
+  allowed_traffic_gb: number;
+  top_threats: { type: string; count: number }[];
+  alerts_by_severity: { severity: string; count: number }[];
+  traffic_by_protocol: { protocol: string; bytes: number }[];
+  performance_metrics: {
+    uptime_percentage: number;
+    average_response_time: number;
+    false_positive_rate: number;
+    detection_accuracy: number;
+  };
 }
 
 export interface Tab {
   id: string;
-  type: 'chat' | 'web' | 'code' | 'chart' | 'transaction' | 'report';
+  type: 'chat' | 'dashboard' | 'rules' | 'traffic' | 'alerts' | 'analytics' | 'policies';
   title: string;
   content: any;
   status: 'loading' | 'active' | 'complete' | 'error';

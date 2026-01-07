@@ -53,10 +53,9 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      role: 'assistant',
-      content: "Welcome to FirewallAI! I'm your Advanced Firewall Management and Threat Detection Platform. I can help you monitor network traffic, manage firewall rules, analyze threats with AI/ML, and orchestrate security responses. How can I assist you today?",
-      timestamp: new Date(),
-      provider: settings.selectedProvider,
+      sender: 'AGENT',
+      text: "Welcome to FirewallAI! I'm your Advanced Firewall Management and Threat Detection Platform. I can help you monitor network traffic, manage firewall rules, analyze threats with AI/ML, and orchestrate security responses. How can I assist you today?",
+      timestamp: new Date().toISOString(),
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -129,10 +128,9 @@ const App: React.FC = () => {
 
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
-        role: 'assistant',
-        content: `Firewall rule "${rule.name}" created successfully with ${rule.action} action.`,
-        timestamp: new Date(),
-        provider: settings.selectedProvider,
+        sender: 'AGENT',
+        text: `Firewall rule "${rule.name}" created successfully with ${rule.action} action.`,
+        timestamp: new Date().toISOString(),
       }]);
     } catch (error) {
       console.error('Failed to create rule:', error);
@@ -168,10 +166,9 @@ const App: React.FC = () => {
 
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
-        role: 'assistant',
-        content: `Threat analysis completed. Detected ${analysis.threats.length} active threats with ${analysis.anomalies.length} anomalies. Overall risk level: ${analysis.overallRisk}.`,
-        timestamp: new Date(),
-        provider: settings.selectedProvider,
+        sender: 'AGENT',
+        text: `Threat analysis completed. Detected ${analysis.threats.length} active threats with ${analysis.anomalies.length} anomalies. Overall risk level: ${analysis.overallRisk}.`,
+        timestamp: new Date().toISOString(),
       }]);
     } catch (error) {
       console.error('Threat analysis failed:', error);
@@ -186,9 +183,9 @@ const App: React.FC = () => {
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      role: 'user',
-      content: inputValue,
-      timestamp: new Date(),
+      sender: 'YOU',
+      text: inputValue,
+      timestamp: new Date().toISOString(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -216,10 +213,9 @@ const App: React.FC = () => {
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response,
-        timestamp: new Date(),
-        provider: settings.selectedProvider,
+        sender: 'AGENT',
+        text: response,
+        timestamp: new Date().toISOString(),
       };
 
       setMessages((prev) => [...prev, assistantMessage]);

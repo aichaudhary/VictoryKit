@@ -34,104 +34,206 @@ export const PROVIDER_CONFIG = [
 ];
 
 export const DEFAULT_SETTINGS: SettingsState = {
-  customPrompt: `You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models.
+  customPrompt: `You are FirewallAI, an expert in network security and firewall management with deep knowledge of intrusion detection, threat analysis, policy enforcement, and AI-powered security operations.
 
 CAPABILITIES:
-- Analyze transactions for fraud indicators and calculate risk scores (0-100)
-- Detect suspicious patterns in transaction data
-- Provide actionable recommendations for risk mitigation
-- Generate detailed fraud reports
-- Create alerts for high-risk transactions
+- Analyze network traffic for security threats and anomalies
+- Manage firewall rules and security policies
+- Detect intrusions and unauthorized access attempts
+- Provide real-time threat intelligence and recommendations
+- Generate comprehensive security reports and analytics
+- Optimize firewall performance and rule efficiency
 
 AVAILABLE FUNCTIONS:
-- analyze_transaction: Analyze a transaction for fraud indicators
-- get_fraud_score: Get the fraud risk score for a transaction
-- open_risk_visualization: Open charts and graphs for analysis
-- get_transaction_history: Fetch transaction history with filters
-- create_alert: Create fraud monitoring alerts
-- export_report: Generate and export fraud reports
-
-Always be thorough in your analysis and explain findings in clear, non-technical language.`,
-  agentName: "FraudGuard AI",
+- analyze_traffic: Analyze network traffic for security threats
+- create_firewall_rule: Create new firewall rules with AI optimization
+- detect_intrusions: Run intrusion detection on network segments
+- generate_security_report: Generate detailed security analytics reports
+- optimize_rules: Optimize firewall rules for better performance
+- threat_intelligence: Get latest threat intelligence and IOCs
+- policy_compliance: Check firewall policies against compliance frameworks`,
+  agentName: 'FirewallAI',
   temperature: 0.7,
   maxTokens: 4096,
   provider: 'gemini',
-  model: "gemini-2.5-flash-preview",
-  activeTool: 'fraud_analysis',
-  workspaceMode: 'CHAT',
-  portalUrl: 'https://www.google.com/search?igu=1',
+  model: 'gemini-2.5-flash-preview',
+  activeTool: 'none',
+  workspaceMode: 'FIREWALL_DASHBOARD',
+  portalUrl: 'http://localhost:3038',
   canvas: {
-    content: "// FraudGuard Workspace\n\nReady for fraud analysis.",
+    content: '',
     type: 'text',
-    title: 'FraudGuard_Canvas'
+    title: 'Firewall Analysis Canvas',
+    language: 'text'
   }
 };
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Fraud Analysis', icon: '🛡️', tool: 'fraud_analysis', description: 'Analyze transactions for fraud' },
-  { label: 'Risk Dashboard', icon: '📊', tool: 'risk_visualization', description: 'View risk charts and graphs' },
-  { label: 'Transaction History', icon: '📜', tool: 'transaction_history', description: 'Browse past transactions' },
-  { label: 'Alerts', icon: '🔔', tool: 'alerts', description: 'Manage fraud alerts' },
-  { label: 'Reports', icon: '📄', tool: 'reports', description: 'Generate fraud reports' },
-  { label: 'Web Portal', icon: '🌐', tool: 'browser', description: 'Open web browser' },
-  { label: 'Canvas', icon: '🖌️', tool: 'canvas', description: 'Collaborative workspace' },
-  { label: 'Web Search', icon: '🔍', tool: 'web_search', description: 'Search the web' }
+  {
+    label: 'Firewall Rules',
+    icon: 'Shield',
+    tool: 'firewall_rules',
+    description: 'Manage and optimize firewall rules'
+  },
+  {
+    label: 'Traffic Analysis',
+    icon: 'Activity',
+    tool: 'traffic_analysis',
+    description: 'Analyze network traffic patterns'
+  },
+  {
+    label: 'Threat Detection',
+    icon: 'AlertTriangle',
+    tool: 'threat_detection',
+    description: 'AI-powered threat detection and analysis'
+  },
+  {
+    label: 'Policy Engine',
+    icon: 'FileText',
+    tool: 'policy_engine',
+    description: 'Security policy management and compliance'
+  },
+  {
+    label: 'Alerts',
+    icon: 'Bell',
+    tool: 'alerts',
+    description: 'Security alerts and notifications'
+  },
+  {
+    label: 'Reports',
+    icon: 'BarChart3',
+    tool: 'reports',
+    description: 'Security analytics and reporting'
+  },
+  {
+    label: 'Network Monitor',
+    icon: 'Monitor',
+    tool: 'network_monitor',
+    description: 'Real-time network monitoring'
+  },
+  {
+    label: 'Intrusion Detection',
+    icon: 'Eye',
+    tool: 'intrusion_detection',
+    description: 'Advanced intrusion detection system'
+  }
 ];
 
-export const FRAUD_PRESETS: Record<string, { prompt: string; temp: number }> = {
-  thorough: { 
-    prompt: "Perform extremely detailed fraud analysis. Check every indicator, cross-reference patterns, and provide comprehensive risk assessment.", 
-    temp: 0.3 
+export const THREAT_CATEGORIES = [
+  'malware',
+  'intrusion',
+  'dos_attack',
+  'unauthorized_access',
+  'data_exfiltration',
+  'phishing',
+  'ransomware',
+  'zero_day',
+  'insider_threat',
+  'supply_chain'
+];
+
+export const PROTOCOLS = [
+  'tcp',
+  'udp',
+  'icmp',
+  'http',
+  'https',
+  'ftp',
+  'ssh',
+  'telnet',
+  'smtp',
+  'dns'
+];
+
+export const RULE_ACTIONS = [
+  'allow',
+  'deny',
+  'reject',
+  'drop',
+  'log',
+  'alert'
+];
+
+export const SEVERITY_LEVELS = [
+  'low',
+  'medium',
+  'high',
+  'critical'
+];
+
+export const ALERT_TYPES = [
+  'intrusion',
+  'anomaly',
+  'policy_violation',
+  'dos_attack',
+  'malware',
+  'unauthorized_access',
+  'suspicious_traffic',
+  'configuration_change'
+];
+
+export const VENDOR_CONFIG = [
+  {
+    id: 'palo_alto',
+    name: 'Palo Alto Networks',
+    type: 'firewall',
+    supported_features: ['threat_prevention', 'url_filtering', 'application_control']
   },
-  quick: { 
-    prompt: "Perform quick fraud screening. Focus on major red flags and provide a rapid risk assessment.", 
-    temp: 0.5 
+  {
+    id: 'checkpoint',
+    name: 'Check Point',
+    type: 'firewall',
+    supported_features: ['identity_awareness', 'threat_emulation', 'sandblast']
   },
-  educational: { 
-    prompt: "Explain fraud analysis in educational terms. Help the user understand fraud patterns and detection methods.", 
-    temp: 0.7 
+  {
+    id: 'cisco_asa',
+    name: 'Cisco ASA',
+    type: 'firewall',
+    supported_features: ['vpn', 'intrusion_prevention', 'content_filtering']
   },
-  investigative: { 
-    prompt: "Take an investigative approach. Look for hidden patterns, connections, and potential fraud networks.", 
-    temp: 0.4 
+  {
+    id: 'fortinet',
+    name: 'Fortinet FortiGate',
+    type: 'utm',
+    supported_features: ['web_filtering', 'antivirus', 'ips', 'application_control']
+  },
+  {
+    id: 'juniper_srx',
+    name: 'Juniper SRX',
+    type: 'firewall',
+    supported_features: ['app_secure', 'idp', 'utm']
   }
-};
+];
 
-export const RISK_COLORS = {
-  low: '#00ff88',
-  medium: '#ffaa00',
-  high: '#ff0055'
-};
+export const COMPLIANCE_FRAMEWORKS = [
+  'PCI_DSS',
+  'HIPAA',
+  'SOX',
+  'GDPR',
+  'NIST',
+  'ISO_27001',
+  'CIS_Controls'
+];
 
-export const API_ENDPOINTS = {
-  fraudguard: {
-    analyze: '/api/fraudguard/analyze',
-    score: '/api/fraudguard/score',
-    transactions: '/api/fraudguard/transactions',
-    analytics: '/api/fraudguard/analytics',
-    alerts: '/api/fraudguard/alerts',
-    reports: '/api/fraudguard/reports'
-  },
-  ml: {
-    predict: '/api/ml/predict',
-    score: '/api/ml/score',
-    train: '/api/ml/train'
-  },
-  ai: {
-    chat: '/api/ai/chat',
-    ws: '/ws/ai'
-  }
-};
+export const TIME_RANGES = [
+  { label: 'Last 5 minutes', value: '5m' },
+  { label: 'Last 15 minutes', value: '15m' },
+  { label: 'Last hour', value: '1h' },
+  { label: 'Last 6 hours', value: '6h' },
+  { label: 'Last 24 hours', value: '24h' },
+  { label: 'Last 7 days', value: '7d' },
+  { label: 'Last 30 days', value: '30d' }
+];
 
-export const VENDOR_CONFIG = {
-  pfsense: { name: 'pfSense' },
-  palo_alto: { name: 'Palo Alto Networks' },
-  fortinet: { name: 'Fortinet' },
-  checkpoint: { name: 'Check Point' },
-  cisco_asa: { name: 'Cisco ASA' },
-  aws_firewall: { name: 'AWS Network Firewall' },
-  azure_firewall: { name: 'Azure Firewall' },
-  gcp_armor: { name: 'Google Cloud Armor' },
-  cloudflare: { name: 'Cloudflare WAF' },
-  akamai: { name: 'Akamai Kona Site Defender' },
-};
+export const CHART_COLORS = [
+  '#3B82F6', // blue
+  '#EF4444', // red
+  '#10B981', // green
+  '#F59E0B', // yellow
+  '#8B5CF6', // purple
+  '#06B6D4', // cyan
+  '#F97316', // orange
+  '#84CC16', // lime
+  '#EC4899', // pink
+  '#6B7280'  // gray
+];
