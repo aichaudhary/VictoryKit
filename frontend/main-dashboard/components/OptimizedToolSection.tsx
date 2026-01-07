@@ -140,7 +140,10 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
               </div>
             </div>
 
-            <button className={`group flex items-center gap-3 ${themeBgClass} text-white font-black px-10 py-4 rounded-xl text-xs tracking-[0.1em] transition-all hover:scale-105 active:scale-95 shadow-xl`}>
+            <button 
+              className={`group flex items-center gap-3 ${themeBgClass} text-white font-black px-10 py-4 rounded-xl text-xs tracking-[0.1em] transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer`}
+              onClick={() => window.open(tool.url, '_blank')}
+            >
               ACTIVATE SHIELD <ArrowRight className="w-4 h-4" />
             </button>
           </div>

@@ -1,4 +1,4 @@
-
+﻿
 import { SecurityTool } from '../types';
 
 const categoryThemes: Record<string, SecurityTool['theme']> = {
@@ -72,6 +72,7 @@ export const tools: SecurityTool[] = [
     category: "Threat Detection",
     stats: { threatsBlocked: "10M+", uptime: "<50ms Resp", accuracy: "99.9%" },
     imageUrl: "https://picsum.photos/seed/fguard/1200/800",
+    url: "https://fraudguard.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
   {
@@ -81,15 +82,17 @@ export const tools: SecurityTool[] = [
     category: "Intelligence",
     stats: { threatsBlocked: "50K+ Src", uptime: "Global", accuracy: "Real-time" },
     imageUrl: "https://picsum.photos/seed/iscout/1200/800",
+    url: "https://intelliscout.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
   {
     id: 3,
     name: "ThreatRadar",
-    description: "360° threat visibility. Comprehensive threat detection system that correlates signals across your entire infrastructure.",
+    description: "360Â° threat visibility. Comprehensive threat detection system that correlates signals across your entire infrastructure.",
     category: "Threat Detection",
     stats: { threatsBlocked: "99.7% Det", uptime: "<1m MTTD", accuracy: "<0.1% FP" },
     imageUrl: "https://picsum.photos/seed/tradar/1200/800",
+    url: "https://threatradar.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
   {
@@ -99,6 +102,7 @@ export const tools: SecurityTool[] = [
     category: "Malware",
     stats: { threatsBlocked: "1M+ Samples", uptime: "500+ Zero-Day", accuracy: "<30s Analys" },
     imageUrl: "https://picsum.photos/seed/mhunter/1200/800",
+    url: "https://malwarehunter.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
   {
@@ -108,6 +112,7 @@ export const tools: SecurityTool[] = [
     category: "Phishing",
     stats: { threatsBlocked: "5M+ Block", uptime: "99.8% Det", accuracy: "100M+ Scans" },
     imageUrl: "https://picsum.photos/seed/pguard/1200/800",
+    url: "https://phishguard.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
   {
@@ -117,6 +122,7 @@ export const tools: SecurityTool[] = [
     category: "Vulnerability",
     stats: { threatsBlocked: "200K+ CVEs", uptime: "10K hosts/hr", accuracy: "99.5%" },
     imageUrl: "https://picsum.photos/seed/vscan/1200/800",
+    url: "https://vulnscan.maula.ai",
     theme: categoryThemes['Compliance']
   },
   {
@@ -126,6 +132,7 @@ export const tools: SecurityTool[] = [
     category: "Penetration Testing",
     stats: { threatsBlocked: "1000+ Vectors", uptime: "50K+ Exploit", accuracy: "Full Stack" },
     imageUrl: "https://picsum.photos/seed/pentest/1200/800",
+    url: "https://pentestai.maula.ai",
     theme: categoryThemes['AI-Powered']
   },
   {
@@ -135,6 +142,7 @@ export const tools: SecurityTool[] = [
     category: "Code Security",
     stats: { threatsBlocked: "30+ Lang", uptime: "5000+ Rules", accuracy: "<5% FP" },
     imageUrl: "https://picsum.photos/seed/scode/1200/800",
+    url: "https://securecode.maula.ai",
     theme: categoryThemes['Cloud Security']
   },
   {
@@ -144,6 +152,7 @@ export const tools: SecurityTool[] = [
     category: "Compliance",
     stats: { threatsBlocked: "20+ Frames", uptime: "1000+ Ctrl", accuracy: "90% Auto" },
     imageUrl: "https://picsum.photos/seed/compliance/1200/800",
+    url: "https://compliancecheck.maula.ai",
     theme: categoryThemes['Compliance']
   },
   {
@@ -153,6 +162,7 @@ export const tools: SecurityTool[] = [
     category: "Data Protection",
     stats: { threatsBlocked: "100+ Types", uptime: "Custom Sens", accuracy: "AES-256" },
     imageUrl: "https://picsum.photos/seed/dguardian/1200/800",
+    url: "https://dataguardian.maula.ai",
     theme: categoryThemes['Data Protection']
   },
   {
@@ -162,6 +172,7 @@ export const tools: SecurityTool[] = [
     category: "Cryptography",
     stats: { threatsBlocked: "50+ Algo", uptime: "99.99%", accuracy: "HSM Integr" },
     imageUrl: "https://picsum.photos/seed/cshield/1200/800",
+    url: "https://cryptovault.maula.ai",
     theme: categoryThemes['Data Protection']
   },
   {
@@ -171,6 +182,7 @@ export const tools: SecurityTool[] = [
     category: "Identity & Access",
     stats: { threatsBlocked: "200+ Integr", uptime: "15+ Auth", accuracy: "Unlimited" },
     imageUrl: "https://picsum.photos/seed/iamctrl/1200/800",
+    url: "https://loganalyzer.maula.ai",
     theme: categoryThemes['Identity & Access']
   },
   {
@@ -180,6 +192,7 @@ export const tools: SecurityTool[] = [
     category: "Logging",
     stats: { threatsBlocked: "1M+ EPS", uptime: "500+ Parsers", accuracy: "Real-time" },
     imageUrl: "https://picsum.photos/seed/logintel/1200/800",
+    url: "https://accesscontrol.maula.ai",
     theme: categoryThemes['Incident Response']
   },
   {
@@ -189,6 +202,7 @@ export const tools: SecurityTool[] = [
     category: "Network",
     stats: { threatsBlocked: "100Gbps", uptime: "50K+ Sig", accuracy: "<1ms Lat" },
     imageUrl: "https://picsum.photos/seed/ndefender/1200/800",
+    url: "https://encryptionmanager.maula.ai",
     theme: categoryThemes['Network Security']
   },
   {
@@ -198,6 +212,7 @@ export const tools: SecurityTool[] = [
     category: "Endpoint",
     stats: { threatsBlocked: "99.9% Det", uptime: "W/M/L Plat", accuracy: "<10s Resp" },
     imageUrl: "https://picsum.photos/seed/eshield/1200/800",
+    url: "https://cryptovault.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
   {
@@ -207,6 +222,7 @@ export const tools: SecurityTool[] = [
     category: "Cloud",
     stats: { threatsBlocked: "Multi-Cloud", uptime: "1000+ Checks", accuracy: "Auto Remed" },
     imageUrl: "https://picsum.photos/seed/csecure/1200/800",
+    url: "https://networkmonitor.maula.ai",
     theme: categoryThemes['Cloud Security']
   },
   {
@@ -216,6 +232,7 @@ export const tools: SecurityTool[] = [
     category: "API",
     stats: { threatsBlocked: "Unlimited", uptime: "50+ Atk Typ", accuracy: "<5ms Lat" },
     imageUrl: "https://picsum.photos/seed/aguardian/1200/800",
+    url: "https://audittrail.maula.ai",
     theme: categoryThemes['Cloud Security']
   },
   {
@@ -225,6 +242,7 @@ export const tools: SecurityTool[] = [
     category: "Container",
     stats: { threatsBlocked: "All Major", uptime: "200K+ CVEs", accuracy: "<30s Scan" },
     imageUrl: "https://picsum.photos/seed/cwatch/1200/800",
+    url: "https://threatmodel.maula.ai",
     theme: categoryThemes['Cloud Security']
   },
   {
@@ -234,6 +252,7 @@ export const tools: SecurityTool[] = [
     category: "DevSecOps",
     stats: { threatsBlocked: "20+ Tools", uptime: "<5min Scan", accuracy: "Full Pipe" },
     imageUrl: "https://picsum.photos/seed/devsecops/1200/800",
+    url: "https://riskassess.maula.ai",
     theme: categoryThemes['Cloud Security']
   },
   {
@@ -243,6 +262,7 @@ export const tools: SecurityTool[] = [
     category: "Incident Response",
     stats: { threatsBlocked: "60% MTTR", uptime: "100+ Playbk", accuracy: "50+ Integr" },
     imageUrl: "https://picsum.photos/seed/incident/1200/800",
+    url: "https://securityscore.maula.ai",
     theme: categoryThemes['Incident Response']
   },
   {
@@ -252,6 +272,7 @@ export const tools: SecurityTool[] = [
     category: "Forensics",
     stats: { threatsBlocked: "50+ Src", uptime: "20+ Analysis", accuracy: "All Format" },
     imageUrl: "https://picsum.photos/seed/forensics/1200/800",
+    url: "https://wafmanager.maula.ai",
     theme: categoryThemes['Incident Response']
   },
   {
@@ -261,6 +282,7 @@ export const tools: SecurityTool[] = [
     category: "Intelligence",
     stats: { threatsBlocked: "100+ Src", uptime: "10M+ IOCs", accuracy: "Real-time" },
     imageUrl: "https://picsum.photos/seed/tintel/1200/800",
+    url: "https://apiguard.maula.ai",
     theme: categoryThemes['Threat Detection']
   },
   {
@@ -270,6 +292,7 @@ export const tools: SecurityTool[] = [
     category: "Behavior",
     stats: { threatsBlocked: "Unlimited", uptime: "20+ Models", accuracy: "<1hr Det" },
     imageUrl: "https://picsum.photos/seed/bwatch/1200/800",
+    url: "https://botdefender.maula.ai",
     theme: categoryThemes['Incident Response']
   },
   {
@@ -279,6 +302,7 @@ export const tools: SecurityTool[] = [
     category: "Anomaly",
     stats: { threatsBlocked: "10M+ EPS", uptime: "98% Acc", accuracy: "<1% FP" },
     imageUrl: "https://picsum.photos/seed/anomaly/1200/800",
+    url: "https://ddosshield.maula.ai",
     theme: categoryThemes['Incident Response']
   },
   {
@@ -288,6 +312,7 @@ export const tools: SecurityTool[] = [
     category: "Red Team",
     stats: { threatsBlocked: "200+ Tech", uptime: "50+ Evasion", accuracy: "Detailed" },
     imageUrl: "https://picsum.photos/seed/redteam/1200/800",
+    url: "https://sslmonitor.maula.ai",
     theme: categoryThemes['AI-Powered']
   },
   {
@@ -297,6 +322,7 @@ export const tools: SecurityTool[] = [
     category: "Blue Team",
     stats: { threatsBlocked: "10x Faster", uptime: "80% Auto", accuracy: "24/7" },
     imageUrl: "https://picsum.photos/seed/blueteam/1200/800",
+    url: "https://blueteamai.maula.ai",
     theme: categoryThemes['AI-Powered']
   },
   {
@@ -306,6 +332,7 @@ export const tools: SecurityTool[] = [
     category: "SIEM",
     stats: { threatsBlocked: "1M+ EPS", uptime: "Custom Ret", accuracy: "500+ Rules" },
     imageUrl: "https://picsum.photos/seed/siem/1200/800",
+    url: "https://siemcommander.maula.ai",
     theme: categoryThemes['AI-Powered']
   },
   {
@@ -315,6 +342,7 @@ export const tools: SecurityTool[] = [
     category: "SOAR",
     stats: { threatsBlocked: "500+ Integr", uptime: "90% MTTR Red", accuracy: "95% Auto" },
     imageUrl: "https://picsum.photos/seed/soar/1200/800",
+    url: "https://soarengine.maula.ai",
     theme: categoryThemes['AI-Powered']
   },
   {
@@ -324,6 +352,7 @@ export const tools: SecurityTool[] = [
     category: "Risk",
     stats: { threatsBlocked: "200+ Fact", uptime: "95% Acc", accuracy: "Real-time" },
     imageUrl: "https://picsum.photos/seed/riskscore/1200/800",
+    url: "https://riskscoreai.maula.ai",
     theme: categoryThemes['AI-Powered']
   },
   {
@@ -333,6 +362,7 @@ export const tools: SecurityTool[] = [
     category: "Policy",
     stats: { threatsBlocked: "500+ Temp", uptime: "All Major", accuracy: "Real-time" },
     imageUrl: "https://picsum.photos/seed/policy/1200/800",
+    url: "https://policyengine.maula.ai",
     theme: categoryThemes['Compliance']
   },
   {
@@ -342,6 +372,7 @@ export const tools: SecurityTool[] = [
     category: "Audit",
     stats: { threatsBlocked: "All Major", uptime: "85% Auto", accuracy: "70% Saved" },
     imageUrl: "https://picsum.photos/seed/audit/1200/800",
+    url: "https://audittracker.maula.ai",
     theme: categoryThemes['Compliance']
   },
   {
@@ -351,6 +382,7 @@ export const tools: SecurityTool[] = [
     category: "Zero Trust",
     stats: { threatsBlocked: "Continuous", uptime: "Real-time", accuracy: "80% Reduc" },
     imageUrl: "https://picsum.photos/seed/zerotrust/1200/800",
+    url: "https://zerotrustai.maula.ai",
     theme: categoryThemes['Identity & Access']
   },
   {
@@ -360,6 +392,7 @@ export const tools: SecurityTool[] = [
     category: "Password",
     stats: { threatsBlocked: "AES-256", uptime: "Automated", accuracy: "Complete" },
     imageUrl: "https://picsum.photos/seed/pvault/1200/800",
+    url: "https://passwordvault.maula.ai",
     theme: categoryThemes['Identity & Access']
   },
   {
@@ -369,6 +402,7 @@ export const tools: SecurityTool[] = [
     category: "Biometric",
     stats: { threatsBlocked: "99.99% Acc", uptime: "Face/Voice", accuracy: "<1s Speed" },
     imageUrl: "https://picsum.photos/seed/biometric/1200/800",
+    url: "https://biometricai.maula.ai",
     theme: categoryThemes['Identity & Access']
   },
   {
@@ -378,6 +412,7 @@ export const tools: SecurityTool[] = [
     category: "Email",
     stats: { threatsBlocked: "100M+ Day", uptime: "99.9% Det", accuracy: "<100ms Lat" },
     imageUrl: "https://picsum.photos/seed/emailguard/1200/800",
+    url: "https://emailguard.maula.ai",
     theme: categoryThemes['Network Security']
   },
   {
@@ -387,6 +422,7 @@ export const tools: SecurityTool[] = [
     category: "Web",
     stats: { threatsBlocked: "100+ Cat", uptime: "1B+ Classified", accuracy: "Real-time" },
     imageUrl: "https://picsum.photos/seed/webfilter/1200/800",
+    url: "https://webfilter.maula.ai",
     theme: categoryThemes['Network Security']
   },
   {
@@ -396,6 +432,7 @@ export const tools: SecurityTool[] = [
     category: "DNS",
     stats: { threatsBlocked: "1B+ Qry/Day", uptime: "10M+ Thrts", accuracy: "<10ms Lat" },
     imageUrl: "https://picsum.photos/seed/dnsshield/1200/800",
+    url: "https://dnsshield.maula.ai",
     theme: categoryThemes['Network Security']
   },
   {
@@ -405,6 +442,7 @@ export const tools: SecurityTool[] = [
     category: "Firewall",
     stats: { threatsBlocked: "100Gbps", uptime: "Unlimited", accuracy: "99.9%" },
     imageUrl: "https://picsum.photos/seed/firewall/1200/800",
+    url: "https://firewallai.maula.ai",
     theme: categoryThemes['Network Security']
   },
   {
@@ -414,6 +452,7 @@ export const tools: SecurityTool[] = [
     category: "VPN",
     stats: { threatsBlocked: "Unlimited", uptime: "AES-256", accuracy: "All Major" },
     imageUrl: "https://picsum.photos/seed/vpnguard/1200/800",
+    url: "https://vpnguardian.maula.ai",
     theme: categoryThemes['Network Security']
   },
   {
@@ -423,6 +462,7 @@ export const tools: SecurityTool[] = [
     category: "Wireless",
     stats: { threatsBlocked: "All 802.11", uptime: "Real-time", accuracy: "Enterprise" },
     imageUrl: "https://picsum.photos/seed/wireless/1200/800",
+    url: "https://wirelesswatch.maula.ai",
     theme: categoryThemes['Network Security']
   },
   {
@@ -432,6 +472,7 @@ export const tools: SecurityTool[] = [
     category: "IoT",
     stats: { threatsBlocked: "10K+ Dev", uptime: "50+ Proto", accuracy: "Complete" },
     imageUrl: "https://picsum.photos/seed/iotsecure/1200/800",
+    url: "https://datalossprevention.maula.ai",
     theme: categoryThemes['Cloud Security']
   },
   {
@@ -441,6 +482,7 @@ export const tools: SecurityTool[] = [
     category: "Mobile",
     stats: { threatsBlocked: "iOS/Android", uptime: "99.9% Det", accuracy: "<1% Battery" },
     imageUrl: "https://picsum.photos/seed/mdefend/1200/800",
+    url: "https://iotsecure.maula.ai",
     theme: categoryThemes['Network Security']
   },
   {
@@ -450,6 +492,7 @@ export const tools: SecurityTool[] = [
     category: "Backup",
     stats: { threatsBlocked: "<1min Recov", uptime: "Custom Ret", accuracy: "AES-256" },
     imageUrl: "https://picsum.photos/seed/backup/1200/800",
+    url: "https://mobiledefend.maula.ai",
     theme: categoryThemes['Data Protection']
   },
   {
@@ -459,6 +502,7 @@ export const tools: SecurityTool[] = [
     category: "DR",
     stats: { threatsBlocked: "<15min RTO", uptime: "<5min RPO", accuracy: "Automated" },
     imageUrl: "https://picsum.photos/seed/drplan/1200/800",
+    url: "https://backupguard.maula.ai",
     theme: categoryThemes['Incident Response']
   },
   {
@@ -468,6 +512,7 @@ export const tools: SecurityTool[] = [
     category: "Privacy",
     stats: { threatsBlocked: "<24hr Resp", uptime: "GDPR/CCPA", accuracy: "90% Auto" },
     imageUrl: "https://picsum.photos/seed/privacy/1200/800",
+    url: "https://drplan.maula.ai",
     theme: categoryThemes['Data Protection']
   },
   {
@@ -477,6 +522,7 @@ export const tools: SecurityTool[] = [
     category: "GDPR",
     stats: { threatsBlocked: "All 99 Art", uptime: "100+ Temp", accuracy: "Audit Redy" },
     imageUrl: "https://picsum.photos/seed/gdpr/1200/800",
+    url: "https://privacyshield.maula.ai",
     theme: categoryThemes['Compliance']
   },
   {
@@ -486,6 +532,7 @@ export const tools: SecurityTool[] = [
     category: "HIPAA",
     stats: { threatsBlocked: "All HIPAA", uptime: "BAA Supprt", accuracy: "Audit Redy" },
     imageUrl: "https://picsum.photos/seed/hipaa/1200/800",
+    url: "https://gdprcompliance.maula.ai",
     theme: categoryThemes['Compliance']
   },
   {
@@ -495,6 +542,7 @@ export const tools: SecurityTool[] = [
     category: "PCI-DSS",
     stats: { threatsBlocked: "All 12 Req", uptime: "All SAQ", accuracy: "Continuous" },
     imageUrl: "https://picsum.photos/seed/pcidss/1200/800",
+    url: "https://hipaaguard.maula.ai",
     theme: categoryThemes['Compliance']
   },
   {
@@ -504,6 +552,7 @@ export const tools: SecurityTool[] = [
     category: "Bug Bounty",
     stats: { threatsBlocked: "50K+ Resrch", uptime: "<1hr Triag", accuracy: "<24hr Pay" },
     imageUrl: "https://picsum.photos/seed/bugbounty/1200/800",
+    url: "https://pcidsscheck.maula.ai",
     theme: categoryThemes['AI-Powered']
   },
   {
@@ -513,6 +562,9 @@ export const tools: SecurityTool[] = [
     category: "Education",
     stats: { threatsBlocked: "200+ Crse", uptime: "30+ Lang", accuracy: "95% Engagem" },
     imageUrl: "https://picsum.photos/seed/cyberedu/1200/800",
+    url: "https://bugbountyai.maula.ai",
     theme: categoryThemes['Incident Response']
   }
 ];
+
+

@@ -10,6 +10,7 @@ export interface SecurityTool {
     accuracy: string;
   };
   imageUrl: string;
+  url: string; // Subdomain URL for navigation
   theme: {
     primary: string;    // e.g., 'purple-500'
     secondary: string;  // e.g., 'pink-500'
