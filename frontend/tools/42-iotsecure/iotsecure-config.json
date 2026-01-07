@@ -1,12 +1,14 @@
 {
   "toolName": "IoTSecure",
   "toolId": "42-iotsecure",
-  "subdomain": "iotsecure.maula.ai",
+  "subdomain": "iotsecure",
+  "fullDomain": "iotsecure.maula.ai",
   "aiAssistant": "iotsecure.maula.ai/maula-ai",
   "description": "Enterprise IoT Security Platform - Protect smart device ecosystems from vulnerabilities, unauthorized access, and cyber threats",
   "ports": {
     "frontend": 3042,
-    "api": 4042,
+    "backend": 4042,
+    "aiWebSocket": 6042,
     "ml": 8042
   },
   "databaseName": "iotsecure_db",
@@ -27,5 +29,107 @@
     "Behavioral Anomaly Detection",
     "Automated Incident Response"
   ],
-  "systemPrompt": "You are IoTSecure AI, an expert in IoT security with deep knowledge of smart device vulnerabilities, firmware analysis, network isolation, device authentication, threat detection, and IoT compliance frameworks. You help users discover devices, scan for vulnerabilities (CVEs), analyze firmware for malware/backdoors, configure network segmentation, monitor threats in real-time, and generate compliance reports. You can autonomously perform multi-step security tasks, open device dashboards, and provide actionable recommendations for IoT risk mitigation. Always explain security findings clearly and prioritize critical vulnerabilities."
+  "systemPrompt": "You are IoTSecure AI, an expert in IoT security with deep knowledge of smart device vulnerabilities, firmware analysis, network isolation, device authentication, threat detection, and IoT compliance frameworks. You help users discover devices, scan for vulnerabilities (CVEs), analyze firmware for malware/backdoors, configure network segmentation, monitor threats in real-time, and generate compliance reports. You can autonomously perform multi-step security tasks, open device dashboards, and provide actionable recommendations for IoT risk mitigation. Always explain security findings clearly and prioritize critical vulnerabilities.",
+  "aiFunctions": [
+    {
+      "name": "discover_devices",
+      "description": "Discover and inventory IoT devices on the network with fingerprinting and classification",
+      "parameters": {
+        "networkRange": "IP range or subnet to scan (e.g., 192.168.1.0/24)",
+        "scanType": "Discovery type: quick, standard, deep, passive",
+        "includeShadowIoT": "Include shadow/unauthorized IoT devices",
+        "categorize": "Auto-categorize discovered devices"
+      }
+    },
+    {
+      "name": "scan_vulnerabilities",
+      "description": "Scan IoT devices for CVEs, misconfigurations, and security weaknesses",
+      "parameters": {
+        "deviceIds": "Device IDs or 'all' for full network scan",
+        "scanDepth": "Scan depth: quick, standard, comprehensive",
+        "checkCVEs": "Check against CVE database",
+        "checkFirmware": "Verify firmware versions"
+      }
+    },
+    {
+      "name": "analyze_firmware",
+      "description": "Analyze IoT device firmware for malware, backdoors, and hardcoded credentials",
+      "parameters": {
+        "deviceId": "Device ID to analyze",
+        "firmwareFile": "Path to firmware file (optional)",
+        "checkMalware": "Scan for malware signatures",
+        "extractSecrets": "Search for hardcoded credentials"
+      }
+    },
+    {
+      "name": "configure_segmentation",
+      "description": "Configure network segmentation rules to isolate IoT devices",
+      "parameters": {
+        "deviceIds": "Devices to segment",
+        "segmentName": "Name for the network segment",
+        "accessPolicy": "Access policy: isolated, restricted, monitored",
+        "allowedConnections": "Allowed connection targets"
+      }
+    },
+    {
+      "name": "monitor_threats",
+      "description": "Real-time monitoring for IoT-specific threats and anomalies",
+      "parameters": {
+        "deviceIds": "Devices to monitor (or 'all')",
+        "timeRange": "Monitoring time range",
+        "alertThreshold": "Alert sensitivity: low, medium, high",
+        "threatTypes": "Specific threat types to monitor"
+      }
+    },
+    {
+      "name": "authenticate_device",
+      "description": "Configure device authentication and access control policies",
+      "parameters": {
+        "deviceId": "Device to configure",
+        "authMethod": "Authentication method: certificate, token, mfa",
+        "accessLevel": "Access level: read-only, standard, admin",
+        "rotateCredentials": "Rotate existing credentials"
+      }
+    },
+    {
+      "name": "detect_anomaly",
+      "description": "Detect behavioral anomalies in IoT device communication patterns",
+      "parameters": {
+        "deviceIds": "Devices to analyze",
+        "timeRange": "Analysis time period",
+        "baselineCompare": "Compare against baseline behavior",
+        "anomalyTypes": "Types: traffic, protocol, timing, destination"
+      }
+    },
+    {
+      "name": "audit_compliance",
+      "description": "Audit IoT infrastructure against compliance frameworks",
+      "parameters": {
+        "framework": "Framework: NIST, IEC62443, HIPAA, ISO27001, GDPR",
+        "scope": "Audit scope (device categories or 'all')",
+        "includeRemediation": "Include remediation recommendations",
+        "generateEvidence": "Generate compliance evidence"
+      }
+    },
+    {
+      "name": "respond_incident",
+      "description": "Automated incident response for IoT security events",
+      "parameters": {
+        "incidentId": "Incident ID to respond to",
+        "responseAction": "Action: isolate, quarantine, block, monitor, remediate",
+        "automated": "Execute automatically or require approval",
+        "notifyTeam": "Send notifications to security team"
+      }
+    },
+    {
+      "name": "generate_report",
+      "description": "Generate IoT security reports and dashboards",
+      "parameters": {
+        "reportType": "Type: inventory, vulnerability, compliance, executive",
+        "startDate": "Report period start",
+        "endDate": "Report period end",
+        "includeRecommendations": "Include security recommendations"
+      }
+    }
+  ]
 }
