@@ -1,0 +1,147 @@
+{
+  "toolName": "WAFManager",
+  "toolId": "21",
+  "tagline": "AI-Powered Web Application Firewall Management",
+  "subdomain": "wafmanager",
+  "fullDomain": "wafmanager.maula.ai",
+  "aiAssistant": "Maula",
+  "description": "Comprehensive WAF rule management, traffic analysis, and attack protection platform powered by AI",
+  "ports": {
+    "frontend": 3021,
+    "backend": 4021,
+    "aiWebSocket": 6021,
+    "ml": 8021
+  },
+  "databaseName": "wafmanager_db",
+  "theme": {
+    "primary": "#ff6600",
+    "secondary": "#0088ff",
+    "accent": "#00ff88",
+    "background": "#0a0f1c"
+  },
+  "features": [
+    "WAF rule management",
+    "Real-time traffic analysis",
+    "Attack pattern detection",
+    "Custom rule creation",
+    "OWASP Top 10 protection",
+    "Rate limiting controls",
+    "Geo-blocking capabilities",
+    "Bot mitigation",
+    "SSL/TLS inspection",
+    "Compliance reporting"
+  ],
+  "systemPrompt": "You are Maula, the AI assistant for WAFManager - an AI-powered Web Application Firewall management platform. You help security teams configure WAF rules, analyze attack patterns, optimize protection, and ensure web applications are secure against threats like SQL injection, XSS, and CSRF.",
+  "aiFunctions": [
+    {
+      "name": "analyze_traffic",
+      "description": "Analyze web traffic patterns for threats and anomalies",
+      "parameters": {
+        "timeRange": "string - Time range to analyze",
+        "endpoint": "string - Specific endpoint to analyze",
+        "includeBlocked": "boolean - Include blocked requests",
+        "groupBy": "string - Group by: ip, endpoint, rule, country"
+      }
+    },
+    {
+      "name": "create_rule",
+      "description": "Create a new WAF protection rule",
+      "parameters": {
+        "ruleName": "string - Name of the rule",
+        "ruleType": "string - Type: block, allow, rate-limit, challenge",
+        "conditions": "object - Rule matching conditions",
+        "action": "string - Action to take on match"
+      }
+    },
+    {
+      "name": "detect_attacks",
+      "description": "Detect and classify web application attacks",
+      "parameters": {
+        "timeRange": "string - Time range to scan",
+        "attackTypes": "array - Types: sqli, xss, csrf, lfi, rfi, rce",
+        "severity": "string - Minimum severity: low, medium, high, critical",
+        "autoBlock": "boolean - Auto-block detected attackers"
+      }
+    },
+    {
+      "name": "optimize_rules",
+      "description": "AI-driven optimization of WAF rules",
+      "parameters": {
+        "targetMetric": "string - Optimize for: security, performance, balanced",
+        "analyzeEffectiveness": "boolean - Analyze current rule effectiveness",
+        "removeDuplicates": "boolean - Remove duplicate/redundant rules",
+        "suggestNew": "boolean - Suggest new rules based on traffic"
+      }
+    },
+    {
+      "name": "manage_blocklist",
+      "description": "Manage IP and pattern blocklists",
+      "parameters": {
+        "action": "string - Action: add, remove, list, import",
+        "entries": "array - IPs, CIDRs, or patterns",
+        "reason": "string - Reason for blocking",
+        "duration": "string - Block duration"
+      }
+    },
+    {
+      "name": "analyze_attack_patterns",
+      "description": "Analyze historical attack patterns and trends",
+      "parameters": {
+        "timeRange": "string - Time range for analysis",
+        "groupBy": "string - Group by: type, source, target, time",
+        "includeGeo": "boolean - Include geographic data",
+        "predictTrends": "boolean - Predict future attack trends"
+      }
+    },
+    {
+      "name": "test_rule",
+      "description": "Test WAF rules against sample payloads",
+      "parameters": {
+        "ruleId": "string - Rule ID to test",
+        "testPayloads": "array - Payloads to test against",
+        "includeOwasp": "boolean - Include OWASP test suite",
+        "reportFalsePositives": "boolean - Check for false positives"
+      }
+    },
+    {
+      "name": "configure_protection",
+      "description": "Configure protection levels and policies",
+      "parameters": {
+        "protectionLevel": "string - Level: low, medium, high, paranoid",
+        "owaspRules": "boolean - Enable OWASP Core Rule Set",
+        "customRules": "array - Custom rules to enable",
+        "exceptions": "array - Exception paths or patterns"
+      }
+    },
+    {
+      "name": "investigate_incident",
+      "description": "Investigate a WAF security incident",
+      "parameters": {
+        "incidentId": "string - Incident ID",
+        "includePayloads": "boolean - Include attack payloads",
+        "traceSource": "boolean - Trace attack source",
+        "generateReport": "boolean - Generate incident report"
+      }
+    },
+    {
+      "name": "generate_report",
+      "description": "Generate WAF protection and compliance reports",
+      "parameters": {
+        "reportType": "string - Type: security, compliance, traffic, executive",
+        "timeRange": "string - Report time range",
+        "format": "string - Format: pdf, csv, json",
+        "includeRecommendations": "boolean - Include improvement recommendations"
+      }
+    }
+  ],
+  "navigationItems": [
+    { "label": "Dashboard", "path": "/", "icon": "dashboard" },
+    { "label": "Rules", "path": "/rules", "icon": "rule" },
+    { "label": "Traffic", "path": "/traffic", "icon": "traffic" },
+    { "label": "Attacks", "path": "/attacks", "icon": "warning" },
+    { "label": "Policies", "path": "/policies", "icon": "policy" },
+    { "label": "Analytics", "path": "/analytics", "icon": "analytics" },
+    { "label": "Reports", "path": "/reports", "icon": "description" },
+    { "label": "Settings", "path": "/settings", "icon": "settings" }
+  ]
+}

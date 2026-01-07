@@ -1,0 +1,147 @@
+{
+  "toolName": "APIGuard",
+  "toolId": "22",
+  "tagline": "AI-Powered API Security & Protection",
+  "subdomain": "apiguard",
+  "fullDomain": "apiguard.maula.ai",
+  "aiAssistant": "Maula",
+  "description": "Comprehensive API security platform for monitoring, protecting, and securing REST and GraphQL APIs",
+  "ports": {
+    "frontend": 3022,
+    "backend": 4022,
+    "aiWebSocket": 6022,
+    "ml": 8022
+  },
+  "databaseName": "apiguard_db",
+  "theme": {
+    "primary": "#8855ff",
+    "secondary": "#00ff88",
+    "accent": "#ffaa00",
+    "background": "#0a0f1c"
+  },
+  "features": [
+    "API endpoint discovery",
+    "Authentication monitoring",
+    "Rate limiting & throttling",
+    "Anomaly detection",
+    "Schema validation",
+    "Sensitive data protection",
+    "OWASP API Top 10",
+    "GraphQL security",
+    "API versioning control",
+    "Usage analytics"
+  ],
+  "systemPrompt": "You are Maula, the AI assistant for APIGuard - an AI-powered API security platform. You help security teams protect APIs from attacks, monitor authentication, detect anomalies, and ensure API compliance with security standards like OWASP API Top 10.",
+  "aiFunctions": [
+    {
+      "name": "discover_endpoints",
+      "description": "Discover and catalog API endpoints",
+      "parameters": {
+        "target": "string - Base URL or domain to discover",
+        "includeAuthenticated": "boolean - Include authenticated endpoints",
+        "detectVersions": "boolean - Detect API versions",
+        "scanDepth": "number - Discovery depth level"
+      }
+    },
+    {
+      "name": "analyze_traffic",
+      "description": "Analyze API traffic patterns and usage",
+      "parameters": {
+        "timeRange": "string - Time range to analyze",
+        "endpoint": "string - Specific endpoint to analyze",
+        "includePayloads": "boolean - Include request/response payloads",
+        "groupBy": "string - Group by: endpoint, user, ip, method"
+      }
+    },
+    {
+      "name": "detect_anomalies",
+      "description": "Detect anomalous API behavior and potential attacks",
+      "parameters": {
+        "timeRange": "string - Time range to scan",
+        "anomalyTypes": "array - Types: rate, payload, auth, injection",
+        "sensitivity": "string - Detection sensitivity: low, medium, high",
+        "autoBlock": "boolean - Auto-block detected attackers"
+      }
+    },
+    {
+      "name": "validate_schema",
+      "description": "Validate API requests/responses against schema",
+      "parameters": {
+        "endpoint": "string - API endpoint to validate",
+        "schemaType": "string - Schema type: openapi, graphql, json-schema",
+        "strictMode": "boolean - Enable strict validation",
+        "reportViolations": "boolean - Report schema violations"
+      }
+    },
+    {
+      "name": "configure_protection",
+      "description": "Configure API protection policies",
+      "parameters": {
+        "protectionLevel": "string - Level: basic, standard, strict",
+        "rateLimiting": "object - Rate limiting configuration",
+        "authRequired": "boolean - Require authentication",
+        "ipWhitelist": "array - Allowed IP addresses"
+      }
+    },
+    {
+      "name": "monitor_auth",
+      "description": "Monitor authentication and authorization events",
+      "parameters": {
+        "timeRange": "string - Time range to monitor",
+        "authTypes": "array - Types: api-key, oauth, jwt, basic",
+        "detectBrute": "boolean - Detect brute force attempts",
+        "alertOn": "array - Events to alert on"
+      }
+    },
+    {
+      "name": "check_compliance",
+      "description": "Check API compliance with security standards",
+      "parameters": {
+        "standards": "array - Standards: owasp-api, pci-dss, gdpr",
+        "endpoints": "array - Endpoints to check",
+        "includeRemediation": "boolean - Include remediation steps",
+        "generateReport": "boolean - Generate compliance report"
+      }
+    },
+    {
+      "name": "protect_sensitive",
+      "description": "Detect and protect sensitive data in APIs",
+      "parameters": {
+        "dataTypes": "array - Types: pii, financial, health, credentials",
+        "scanPayloads": "boolean - Scan request/response payloads",
+        "maskData": "boolean - Mask sensitive data in logs",
+        "alertOnExposure": "boolean - Alert on data exposure"
+      }
+    },
+    {
+      "name": "investigate_incident",
+      "description": "Investigate an API security incident",
+      "parameters": {
+        "incidentId": "string - Incident ID",
+        "includeTimeline": "boolean - Include event timeline",
+        "correlateEvents": "boolean - Correlate related events",
+        "generateReport": "boolean - Generate incident report"
+      }
+    },
+    {
+      "name": "generate_report",
+      "description": "Generate API security and usage reports",
+      "parameters": {
+        "reportType": "string - Type: security, usage, compliance, executive",
+        "timeRange": "string - Report time range",
+        "endpoints": "array - Specific endpoints to include",
+        "format": "string - Format: pdf, csv, json"
+      }
+    }
+  ],
+  "navigationItems": [
+    { "label": "Dashboard", "path": "/", "icon": "dashboard" },
+    { "label": "APIs", "path": "/apis", "icon": "api" },
+    { "label": "Endpoints", "path": "/endpoints", "icon": "hub" },
+    { "label": "Traffic", "path": "/traffic", "icon": "swap_horiz" },
+    { "label": "Anomalies", "path": "/anomalies", "icon": "warning" },
+    { "label": "Policies", "path": "/policies", "icon": "policy" },
+    { "label": "Reports", "path": "/reports", "icon": "description" },
+    { "label": "Settings", "path": "/settings", "icon": "settings" }
+  ]
+}
