@@ -1,0 +1,147 @@
+{
+  "toolName": "SSLMonitor",
+  "toolId": "25",
+  "tagline": "AI-Powered SSL/TLS Certificate Management",
+  "subdomain": "sslmonitor",
+  "fullDomain": "sslmonitor.maula.ai",
+  "aiAssistant": "Maula",
+  "description": "Comprehensive SSL/TLS certificate monitoring, expiration tracking, and security analysis platform powered by AI",
+  "ports": {
+    "frontend": 3025,
+    "backend": 4025,
+    "aiWebSocket": 6025,
+    "ml": 8025
+  },
+  "databaseName": "sslmonitor_db",
+  "theme": {
+    "primary": "#00ff88",
+    "secondary": "#8855ff",
+    "accent": "#ffaa00",
+    "background": "#0a0f1c"
+  },
+  "features": [
+    "SSL certificate discovery",
+    "Expiration monitoring & alerts",
+    "Certificate chain validation",
+    "Security vulnerability scanning",
+    "Protocol version analysis",
+    "Cipher suite assessment",
+    "CAA record verification",
+    "HSTS compliance checking",
+    "Automated renewal reminders",
+    "Multi-domain management"
+  ],
+  "systemPrompt": "You are Maula, the AI assistant for SSLMonitor - an AI-powered SSL/TLS certificate management platform. You help security teams monitor certificate expiration, validate certificate chains, analyze SSL configurations, and ensure compliance. Provide expert guidance on certificate security best practices.",
+  "aiFunctions": [
+    {
+      "name": "scan_certificate",
+      "description": "Scan and analyze an SSL/TLS certificate for a domain",
+      "parameters": {
+        "domain": "string - Domain to scan",
+        "port": "number - Port to check (default: 443)",
+        "includeChain": "boolean - Include full certificate chain",
+        "checkOcsp": "boolean - Check OCSP status"
+      }
+    },
+    {
+      "name": "check_expiration",
+      "description": "Check certificate expiration status across monitored domains",
+      "parameters": {
+        "domains": "array - Specific domains to check (empty for all)",
+        "warningDays": "number - Days before expiry to warn (default: 30)",
+        "criticalDays": "number - Days before expiry for critical alert",
+        "includeWildcards": "boolean - Include wildcard certificates"
+      }
+    },
+    {
+      "name": "validate_chain",
+      "description": "Validate the complete certificate chain for trust issues",
+      "parameters": {
+        "domain": "string - Domain to validate",
+        "checkRevocation": "boolean - Check for revoked certificates",
+        "verifyIntermediate": "boolean - Verify intermediate certificates",
+        "checkRootStore": "boolean - Verify against root certificate stores"
+      }
+    },
+    {
+      "name": "analyze_security",
+      "description": "Comprehensive SSL/TLS security analysis",
+      "parameters": {
+        "domain": "string - Domain to analyze",
+        "checkProtocols": "boolean - Check protocol versions (TLS 1.0-1.3)",
+        "checkCiphers": "boolean - Analyze cipher suites",
+        "checkVulnerabilities": "boolean - Check for known vulnerabilities"
+      }
+    },
+    {
+      "name": "monitor_domain",
+      "description": "Add or configure domain monitoring",
+      "parameters": {
+        "domain": "string - Domain to monitor",
+        "action": "string - Action: add, remove, update, pause",
+        "checkInterval": "string - Check interval (e.g., '1h', '6h', '24h')",
+        "alertContacts": "array - Email/webhook contacts for alerts"
+      }
+    },
+    {
+      "name": "check_compliance",
+      "description": "Check SSL/TLS compliance against security standards",
+      "parameters": {
+        "domain": "string - Domain to check",
+        "standards": "array - Standards: pci-dss, hipaa, nist, soc2",
+        "includeHsts": "boolean - Check HSTS configuration",
+        "includeCaa": "boolean - Check CAA records"
+      }
+    },
+    {
+      "name": "discover_certificates",
+      "description": "Discover all SSL certificates in a domain or network",
+      "parameters": {
+        "target": "string - Domain, IP range, or network CIDR",
+        "ports": "array - Ports to scan (default: [443, 8443])",
+        "includeSubdomains": "boolean - Discover subdomain certificates",
+        "maxDepth": "number - Maximum discovery depth"
+      }
+    },
+    {
+      "name": "compare_configs",
+      "description": "Compare SSL configurations between domains or over time",
+      "parameters": {
+        "domains": "array - Domains to compare",
+        "compareType": "string - Type: between-domains, over-time",
+        "timeRange": "string - Time range for historical comparison",
+        "metrics": "array - Metrics to compare"
+      }
+    },
+    {
+      "name": "get_recommendations",
+      "description": "Get AI-powered recommendations for SSL/TLS improvements",
+      "parameters": {
+        "domain": "string - Domain to analyze",
+        "priority": "string - Priority focus: security, performance, compatibility",
+        "includeSteps": "boolean - Include implementation steps",
+        "considerBrowserSupport": "boolean - Consider browser compatibility"
+      }
+    },
+    {
+      "name": "generate_report",
+      "description": "Generate SSL/TLS status and compliance reports",
+      "parameters": {
+        "reportType": "string - Type: status, compliance, security, inventory",
+        "domains": "array - Domains to include (empty for all)",
+        "format": "string - Output format: pdf, csv, json, html",
+        "includeHistory": "boolean - Include historical data"
+      }
+    }
+  ],
+  "navigationItems": [
+    { "label": "Dashboard", "path": "/", "icon": "dashboard" },
+    { "label": "Certificates", "path": "/certificates", "icon": "verified_user" },
+    { "label": "Domains", "path": "/domains", "icon": "language" },
+    { "label": "Alerts", "path": "/alerts", "icon": "notifications" },
+    { "label": "Scans", "path": "/scans", "icon": "search" },
+    { "label": "Compliance", "path": "/compliance", "icon": "check_circle" },
+    { "label": "Reports", "path": "/reports", "icon": "description" },
+    { "label": "Settings", "path": "/settings", "icon": "settings" }
+  ]
+}

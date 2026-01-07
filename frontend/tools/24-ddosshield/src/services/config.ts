@@ -1,9 +1,9 @@
 /**
- * FraudGuard Configuration
- * Tool #01 - AI-Powered Fraud Detection & Prevention
+ * DDOSShield Configuration
+ * Tool #24 - AI-Powered DDoS Protection & Mitigation
  */
 
-import configData from '../../fraudguard-config.json';
+import configData from '../../ddosshield-config.json';
 
 export interface AIFunction {
   name: string;
@@ -42,21 +42,21 @@ export const config: ToolConfig = configData as ToolConfig;
 
 // Utility functions
 export const getApiUrl = (): string => {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env?.DEV ?? process.env.NODE_ENV === 'development';
   return isDev 
     ? `http://localhost:${config.ports.backend}`
     : `https://${config.fullDomain}/api`;
 };
 
 export const getWsUrl = (): string => {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env?.DEV ?? process.env.NODE_ENV === 'development';
   const protocol = isDev ? 'ws' : 'wss';
   const host = isDev ? `localhost:${config.ports.aiWebSocket}` : config.fullDomain;
   return `${protocol}://${host}/maula-ai`;
 };
 
 export const getMlUrl = (): string => {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env?.DEV ?? process.env.NODE_ENV === 'development';
   return isDev 
     ? `http://localhost:${config.ports.ml}`
     : `https://${config.fullDomain}/ml`;
@@ -75,29 +75,36 @@ export const getFeatures = (): string[] => config.features;
 
 export const getNavigationItems = () => config.navigationItems;
 
-// Risk level definitions
-export const RISK_LEVELS = {
-  LOW: { min: 0, max: 30, color: '#00ff88', label: 'Low Risk' },
-  MEDIUM: { min: 31, max: 60, color: '#ffaa00', label: 'Medium Risk' },
-  HIGH: { min: 61, max: 80, color: '#ff6600', label: 'High Risk' },
-  CRITICAL: { min: 81, max: 100, color: '#ff0055', label: 'Critical Risk' }
+// Attack severity levels
+export const ATTACK_SEVERITY = {
+  LOW: { min: 0, max: 100, color: '#00ff88', label: 'Low' },
+  MEDIUM: { min: 101, max: 1000, color: '#ffaa00', label: 'Medium' },
+  HIGH: { min: 1001, max: 10000, color: '#ff6600', label: 'High' },
+  CRITICAL: { min: 10001, max: Infinity, color: '#ff4444', label: 'Critical' }
 } as const;
 
-// Fraud types
-export const FRAUD_TYPES = [
-  'card-not-present',
-  'account-takeover',
-  'synthetic-identity',
-  'friendly-fraud',
-  'chargeback-fraud',
-  'payment-fraud',
-  'identity-theft',
-  'phishing',
-  'velocity-abuse',
-  'promotion-abuse'
+// Attack types
+export const ATTACK_TYPES = [
+  'volumetric',
+  'syn-flood',
+  'udp-flood',
+  'icmp-flood',
+  'http-flood',
+  'slowloris',
+  'dns-amplification',
+  'ntp-amplification',
+  'memcached',
+  'application-layer'
 ] as const;
 
-// Alert severities
-export const ALERT_SEVERITIES = ['low', 'medium', 'high', 'critical'] as const;
+// Mitigation strategies
+export const MITIGATION_STRATEGIES = [
+  'block',
+  'rate-limit',
+  'challenge',
+  'scrub',
+  'null-route',
+  'geo-block'
+] as const;
 
 export default config;

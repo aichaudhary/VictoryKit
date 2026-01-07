@@ -1,6 +1,6 @@
 /**
- * FraudGuard AI Service
- * Tool #01 - WebSocket client for AI-powered fraud detection
+ * DDOSShield AI Service
+ * Tool #24 - WebSocket client for AI-powered DDoS protection
  */
 
 import { getWsUrl, getSystemPrompt, getAIFunctions } from './config';
@@ -32,7 +32,7 @@ type MessageHandler = (message: AIMessage) => void;
 type ConnectionHandler = (session: AISession) => void;
 type ErrorHandler = (error: Error) => void;
 
-class FraudGuardAIService {
+class DDOSShieldAIService {
   private ws: WebSocket | null = null;
   private session: AISession | null = null;
   private messageHandlers: Set<MessageHandler> = new Set();
@@ -49,7 +49,7 @@ class FraudGuardAIService {
         this.ws = new WebSocket(url);
 
         this.ws.onopen = () => {
-          console.log('[FraudGuard AI] Connected');
+          console.log('[DDOSShield AI] Connected');
           this.reconnectAttempts = 0;
         };
 
@@ -58,19 +58,19 @@ class FraudGuardAIService {
             const message = JSON.parse(event.data);
             this.handleMessage(message, resolve);
           } catch (error) {
-            console.error('[FraudGuard AI] Parse error:', error);
+            console.error('[DDOSShield AI] Parse error:', error);
           }
         };
 
         this.ws.onerror = (error) => {
-          console.error('[FraudGuard AI] WebSocket error:', error);
+          console.error('[DDOSShield AI] WebSocket error:', error);
           const err = new Error('WebSocket connection error');
           this.errorHandlers.forEach(handler => handler(err));
           reject(err);
         };
 
         this.ws.onclose = () => {
-          console.log('[FraudGuard AI] Disconnected');
+          console.log('[DDOSShield AI] Disconnected');
           if (this.session) {
             this.session.connected = false;
           }
@@ -110,7 +110,7 @@ class FraudGuardAIService {
         break;
 
       case 'function_result':
-        console.log('[FraudGuard AI] Function result:', message.payload);
+        console.log('[DDOSShield AI] Function result:', message.payload);
         break;
 
       case 'error':
@@ -124,7 +124,7 @@ class FraudGuardAIService {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
-      console.log(`[FraudGuard AI] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
+      console.log(`[DDOSShield AI] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
       setTimeout(() => this.connect(), delay);
     }
   }
@@ -139,7 +139,7 @@ class FraudGuardAIService {
 
   sendMessage(content: string, context?: Record<string, unknown>): string {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      throw new Error('Not connected to FraudGuard AI');
+      throw new Error('Not connected to DDOSShield AI');
     }
 
     const messageId = crypto.randomUUID();
@@ -163,7 +163,7 @@ class FraudGuardAIService {
 
   callFunction(functionName: string, parameters: Record<string, unknown>): string {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      throw new Error('Not connected to FraudGuard AI');
+      throw new Error('Not connected to DDOSShield AI');
     }
 
     const requestId = crypto.randomUUID();
@@ -213,150 +213,148 @@ class FraudGuardAIService {
     return getSystemPrompt();
   }
 
-  // Convenience methods for FraudGuard AI functions
+  // Convenience methods for DDOSShield AI functions
 
-  async analyzeTransaction(params: {
-    transactionId: string;
-    amount?: number;
-    userIp?: string;
-    deviceFingerprint?: string;
-    includeVelocity?: boolean;
-  }): Promise<string> {
-    return this.callFunction('analyze_transaction', {
-      transactionId: params.transactionId,
-      amount: params.amount,
-      userIp: params.userIp,
-      deviceFingerprint: params.deviceFingerprint,
-      includeVelocity: params.includeVelocity ?? true
-    });
-  }
-
-  async calculateRiskScore(params: {
-    transactionId: string;
-    includeFactors?: boolean;
-    compareBaseline?: boolean;
-    modelVersion?: string;
-  }): Promise<string> {
-    return this.callFunction('calculate_risk_score', {
-      transactionId: params.transactionId,
-      includeFactors: params.includeFactors ?? true,
-      compareBaseline: params.compareBaseline ?? true,
-      modelVersion: params.modelVersion || 'latest'
-    });
-  }
-
-  async detectPatterns(params: {
+  async analyzeTraffic(params: {
     timeRange: string;
-    patternTypes?: string[];
-    minConfidence?: number;
-    groupBy?: 'user' | 'merchant' | 'card' | 'device';
+    targetEndpoint?: string;
+    includeGeoData?: boolean;
+    baselineComparison?: boolean;
   }): Promise<string> {
-    return this.callFunction('detect_patterns', {
+    return this.callFunction('analyze_traffic', {
       timeRange: params.timeRange,
-      patternTypes: params.patternTypes || ['velocity', 'geo', 'behavioral', 'device'],
-      minConfidence: params.minConfidence || 0.7,
-      groupBy: params.groupBy || 'user'
+      targetEndpoint: params.targetEndpoint,
+      includeGeoData: params.includeGeoData ?? true,
+      baselineComparison: params.baselineComparison ?? true
     });
   }
 
-  async investigateAccount(params: {
-    accountId: string;
-    includeHistory?: boolean;
-    checkSynthetic?: boolean;
-    networkAnalysis?: boolean;
-  }): Promise<string> {
-    return this.callFunction('investigate_account', {
-      accountId: params.accountId,
-      includeHistory: params.includeHistory ?? true,
-      checkSynthetic: params.checkSynthetic ?? true,
-      networkAnalysis: params.networkAnalysis ?? true
-    });
-  }
-
-  async createAlertRule(params: {
-    ruleName: string;
-    conditions: Record<string, unknown>;
-    severity?: 'low' | 'medium' | 'high' | 'critical';
-    responseAction?: 'alert' | 'block' | 'review' | 'escalate';
-  }): Promise<string> {
-    return this.callFunction('create_alert_rule', {
-      ruleName: params.ruleName,
-      conditions: params.conditions,
-      severity: params.severity || 'medium',
-      responseAction: params.responseAction || 'alert'
-    });
-  }
-
-  async analyzeChargeback(params: {
-    merchantId: string;
-    timeRange?: string;
-    includeReasons?: boolean;
-    predictRisk?: boolean;
-  }): Promise<string> {
-    return this.callFunction('analyze_chargeback', {
-      merchantId: params.merchantId,
-      timeRange: params.timeRange || '30d',
-      includeReasons: params.includeReasons ?? true,
-      predictRisk: params.predictRisk ?? true
-    });
-  }
-
-  async verifyIdentity(params: {
-    userId: string;
-    verificationLevel?: 'basic' | 'enhanced' | 'comprehensive';
-    checkDocuments?: boolean;
-    biometricMatch?: boolean;
-  }): Promise<string> {
-    return this.callFunction('verify_identity', {
-      userId: params.userId,
-      verificationLevel: params.verificationLevel || 'enhanced',
-      checkDocuments: params.checkDocuments ?? false,
-      biometricMatch: params.biometricMatch ?? false
-    });
-  }
-
-  async monitorRealtime(params: {
-    monitorScope?: 'all' | 'high-risk' | 'flagged' | 'new-users';
+  async detectAttack(params: {
+    sensitivity?: 'low' | 'medium' | 'high';
+    attackTypes?: string[];
+    autoMitigate?: boolean;
     alertThreshold?: number;
-    autoBlock?: boolean;
-    streamDuration?: string;
   }): Promise<string> {
-    return this.callFunction('monitor_realtime', {
-      monitorScope: params.monitorScope || 'high-risk',
-      alertThreshold: params.alertThreshold || 70,
-      autoBlock: params.autoBlock ?? false,
-      streamDuration: params.streamDuration || '1h'
+    return this.callFunction('detect_attack', {
+      sensitivity: params.sensitivity || 'medium',
+      attackTypes: params.attackTypes || ['volumetric', 'protocol', 'application'],
+      autoMitigate: params.autoMitigate ?? false,
+      alertThreshold: params.alertThreshold || 10000
     });
   }
 
-  async auditCompliance(params: {
-    framework: 'PCI-DSS' | 'SOX' | 'GDPR' | 'AML';
-    scope?: string[];
-    includeRemediation?: boolean;
-    generateEvidence?: boolean;
+  async mitigateAttack(params: {
+    attackId: string;
+    strategy: 'block' | 'rate-limit' | 'challenge' | 'scrub';
+    duration?: string;
+    targetIps?: string[];
   }): Promise<string> {
-    return this.callFunction('audit_compliance', {
-      framework: params.framework,
-      scope: params.scope || ['all'],
-      includeRemediation: params.includeRemediation ?? true,
-      generateEvidence: params.generateEvidence ?? true
+    return this.callFunction('mitigate_attack', {
+      attackId: params.attackId,
+      strategy: params.strategy,
+      duration: params.duration || '1h',
+      targetIps: params.targetIps
+    });
+  }
+
+  async manageBlocklist(params: {
+    action: 'add' | 'remove' | 'list' | 'import';
+    ips?: string[];
+    reason?: string;
+    expiration?: string;
+  }): Promise<string> {
+    return this.callFunction('manage_blocklist', {
+      action: params.action,
+      ips: params.ips || [],
+      reason: params.reason,
+      expiration: params.expiration
+    });
+  }
+
+  async configureProtection(params: {
+    protectionLevel: 'basic' | 'standard' | 'aggressive';
+    rateLimit?: Record<string, unknown>;
+    geoBlocking?: string[];
+    challengeMode?: string;
+  }): Promise<string> {
+    return this.callFunction('configure_protection', {
+      protectionLevel: params.protectionLevel,
+      rateLimit: params.rateLimit,
+      geoBlocking: params.geoBlocking || [],
+      challengeMode: params.challengeMode || 'javascript'
+    });
+  }
+
+  async analyzeAttackPatterns(params: {
+    timeRange: string;
+    groupBy?: 'source' | 'type' | 'target' | 'time';
+    predictWindow?: string;
+    includeSignatures?: boolean;
+  }): Promise<string> {
+    return this.callFunction('analyze_attack_patterns', {
+      timeRange: params.timeRange,
+      groupBy: params.groupBy || 'type',
+      predictWindow: params.predictWindow || '7d',
+      includeSignatures: params.includeSignatures ?? true
+    });
+  }
+
+  async getTrafficBaseline(params: {
+    action: 'get' | 'update' | 'reset';
+    learningPeriod?: string;
+    endpoints?: string[];
+    metrics?: string[];
+  }): Promise<string> {
+    return this.callFunction('get_traffic_baseline', {
+      action: params.action,
+      learningPeriod: params.learningPeriod || '7d',
+      endpoints: params.endpoints || [],
+      metrics: params.metrics || ['pps', 'bandwidth', 'requests']
+    });
+  }
+
+  async investigateIncident(params: {
+    incidentId: string;
+    includeForensics?: boolean;
+    traceSource?: boolean;
+    generateReport?: boolean;
+  }): Promise<string> {
+    return this.callFunction('investigate_incident', {
+      incidentId: params.incidentId,
+      includeForensics: params.includeForensics ?? true,
+      traceSource: params.traceSource ?? true,
+      generateReport: params.generateReport ?? true
+    });
+  }
+
+  async optimizeProtection(params: {
+    optimizationGoal?: 'performance' | 'security' | 'balanced';
+    analyzeEffectiveness?: boolean;
+    autoApply?: boolean;
+    constraints?: Record<string, unknown>;
+  }): Promise<string> {
+    return this.callFunction('optimize_protection', {
+      optimizationGoal: params.optimizationGoal || 'balanced',
+      analyzeEffectiveness: params.analyzeEffectiveness ?? true,
+      autoApply: params.autoApply ?? false,
+      constraints: params.constraints
     });
   }
 
   async generateReport(params: {
-    reportType: 'summary' | 'detailed' | 'executive' | 'compliance';
-    startDate: string;
-    endDate: string;
-    format?: 'pdf' | 'csv' | 'json' | 'excel';
+    reportType: 'incident' | 'protection' | 'compliance' | 'executive';
+    timeRange: string;
+    format?: 'pdf' | 'csv' | 'json';
+    includeRecommendations?: boolean;
   }): Promise<string> {
     return this.callFunction('generate_report', {
       reportType: params.reportType,
-      startDate: params.startDate,
-      endDate: params.endDate,
-      format: params.format || 'pdf'
+      timeRange: params.timeRange,
+      format: params.format || 'pdf',
+      includeRecommendations: params.includeRecommendations ?? true
     });
   }
 }
 
-export const fraudGuardAI = new FraudGuardAIService();
-export default fraudGuardAI;
+export const ddosShieldAI = new DDOSShieldAIService();
+export default ddosShieldAI;

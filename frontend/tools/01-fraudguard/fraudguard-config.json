@@ -1,111 +1,140 @@
 {
   "toolName": "FraudGuard",
-  "tagline": "AI-Powered Fraud Detection",
-  "subdomain": "fguard.maula.ai",
-  "port": 3001,
-  "apiPort": 4001,
-  "mlPort": 8001,
-  "aiPort": 6001,
+  "toolId": "01-fraudguard",
+  "tagline": "AI-Powered Fraud Detection & Prevention",
+  "subdomain": "fraudguard",
+  "fullDomain": "fraudguard.maula.ai",
+  "aiAssistant": "fraudguard.maula.ai/maula-ai",
+  "description": "Enterprise-grade AI fraud detection platform with real-time transaction analysis, ML-powered risk scoring, pattern recognition, and automated response",
+  "ports": {
+    "frontend": 3001,
+    "backend": 4001,
+    "aiWebSocket": 6001,
+    "ml": 8001
+  },
   "databaseName": "fraudguard_db",
-  
-  "systemPrompt": "You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models. You help users analyze transactions, detect suspicious patterns, calculate fraud risk scores (0-100), identify fraud indicators, and generate detailed fraud reports. You can autonomously perform multi-step fraud analysis tasks, open multiple tabs for visualization, and provide actionable recommendations for risk mitigation. Always explain fraud concepts in clear, non-technical language while being thorough in your analysis.",
-  
-  "functions": [
-    {
-      "name": "analyze_transaction",
-      "description": "Analyze a transaction for fraud indicators and calculate risk score",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "transaction_id": { "type": "string", "description": "Unique transaction ID" },
-          "amount": { "type": "number", "description": "Transaction amount in USD" },
-          "user_ip": { "type": "string", "description": "User's IP address" },
-          "device_fingerprint": { "type": "string", "description": "Device fingerprint hash" },
-          "email": { "type": "string", "description": "User email address" },
-          "card_last4": { "type": "string", "description": "Last 4 digits of card number" },
-          "merchant_id": { "type": "string", "description": "Merchant identifier" }
-        },
-        "required": ["transaction_id", "amount"]
-      }
-    },
-    {
-      "name": "get_fraud_score",
-      "description": "Get the fraud risk score for a specific transaction",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "transaction_id": { "type": "string", "description": "Transaction ID to get score for" }
-        },
-        "required": ["transaction_id"]
-      }
-    },
-    {
-      "name": "open_risk_visualization",
-      "description": "Open a new tab with risk graphs, charts, and heat maps",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "transaction_id": { "type": "string", "description": "Transaction ID to visualize" },
-          "chart_type": { "type": "string", "enum": ["risk_breakdown", "timeline", "comparison", "heatmap"], "description": "Type of visualization" }
-        },
-        "required": ["transaction_id"]
-      }
-    },
-    {
-      "name": "get_transaction_history",
-      "description": "Fetch transaction history with optional filters",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "page": { "type": "number", "description": "Page number" },
-          "limit": { "type": "number", "description": "Items per page" },
-          "risk_level": { "type": "string", "enum": ["low", "medium", "high"], "description": "Filter by risk level" },
-          "date_from": { "type": "string", "description": "Start date (ISO format)" },
-          "date_to": { "type": "string", "description": "End date (ISO format)" }
-        }
-      }
-    },
-    {
-      "name": "create_alert",
-      "description": "Create a fraud monitoring alert with custom rules",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "alert_type": { "type": "string", "enum": ["high_risk_transaction", "suspicious_pattern", "velocity_breach", "unusual_location"] },
-          "threshold": { "type": "number", "description": "Alert threshold" },
-          "notification_channels": { "type": "array", "items": { "type": "string", "enum": ["email", "webhook", "sms", "slack"] } }
-        },
-        "required": ["alert_type"]
-      }
-    },
-    {
-      "name": "export_report",
-      "description": "Generate and export a detailed fraud analysis report",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "format": { "type": "string", "enum": ["pdf", "csv", "json", "excel"] },
-          "date_range": { "type": "object", "properties": { "start": { "type": "string" }, "end": { "type": "string" } } },
-          "include_charts": { "type": "boolean" },
-          "include_raw_data": { "type": "boolean" }
-        },
-        "required": ["format"]
-      }
-    }
-  ],
-  
-  "colorTheme": {
+  "theme": {
     "primary": "#ff0055",
     "secondary": "#00d4ff",
     "accent": "#ffdd00",
-    "success": "#00ff88",
-    "warning": "#ffaa00",
-    "danger": "#ff0055",
-    "background": "#0a0e27",
-    "surface": "#1a1f3a",
-    "text": "#ffffff"
+    "background": "#0a0e27"
   },
-  
+  "features": [
+    "Real-time Transaction Monitoring",
+    "ML-Powered Risk Scoring (0-100)",
+    "Pattern Recognition & Anomaly Detection",
+    "Device Fingerprinting & Velocity Checks",
+    "Geo-location Risk Analysis",
+    "Automated Alert & Response System",
+    "Compliance Reporting (PCI-DSS, SOX)",
+    "Multi-channel Fraud Prevention",
+    "Account Takeover Detection",
+    "Chargeback Prevention"
+  ],
+  "systemPrompt": "You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models. You help users analyze transactions, detect suspicious patterns, calculate fraud risk scores (0-100), identify fraud indicators, and generate detailed fraud reports. You can autonomously perform multi-step fraud analysis tasks, open multiple tabs for visualization, and provide actionable recommendations for risk mitigation. Always explain fraud concepts in clear, non-technical language while being thorough in your analysis.",
+  "aiFunctions": [
+    {
+      "name": "analyze_transaction",
+      "description": "Analyze a transaction for fraud indicators and calculate comprehensive risk score",
+      "parameters": {
+        "transactionId": "Unique transaction identifier",
+        "amount": "Transaction amount in USD",
+        "userIp": "User's IP address for geo-analysis",
+        "deviceFingerprint": "Device fingerprint hash",
+        "includeVelocity": "Check transaction velocity patterns"
+      }
+    },
+    {
+      "name": "calculate_risk_score",
+      "description": "Calculate ML-powered fraud risk score with detailed breakdown",
+      "parameters": {
+        "transactionId": "Transaction to score",
+        "includeFactors": "Include contributing risk factors",
+        "compareBaseline": "Compare against user baseline",
+        "modelVersion": "ML model version to use"
+      }
+    },
+    {
+      "name": "detect_patterns",
+      "description": "Detect fraud patterns across transactions using ML clustering",
+      "parameters": {
+        "timeRange": "Analysis time window",
+        "patternTypes": "Pattern types: velocity, geo, behavioral, device",
+        "minConfidence": "Minimum confidence threshold",
+        "groupBy": "Group by: user, merchant, card, device"
+      }
+    },
+    {
+      "name": "investigate_account",
+      "description": "Deep investigation of account for takeover or synthetic identity",
+      "parameters": {
+        "accountId": "Account to investigate",
+        "includeHistory": "Include full transaction history",
+        "checkSynthetic": "Check for synthetic identity markers",
+        "networkAnalysis": "Analyze connected accounts"
+      }
+    },
+    {
+      "name": "create_alert_rule",
+      "description": "Create custom fraud detection rules and alert thresholds",
+      "parameters": {
+        "ruleName": "Name for the alert rule",
+        "conditions": "Rule conditions and thresholds",
+        "severity": "Alert severity: low, medium, high, critical",
+        "responseAction": "Automated response: alert, block, review, escalate"
+      }
+    },
+    {
+      "name": "analyze_chargeback",
+      "description": "Analyze chargeback patterns and identify dispute trends",
+      "parameters": {
+        "merchantId": "Merchant to analyze",
+        "timeRange": "Analysis period",
+        "includeReasons": "Include chargeback reason codes",
+        "predictRisk": "Predict future chargeback risk"
+      }
+    },
+    {
+      "name": "verify_identity",
+      "description": "Verify user identity using multi-factor signals",
+      "parameters": {
+        "userId": "User to verify",
+        "verificationLevel": "Level: basic, enhanced, comprehensive",
+        "checkDocuments": "Verify identity documents",
+        "biometricMatch": "Include biometric verification"
+      }
+    },
+    {
+      "name": "monitor_realtime",
+      "description": "Real-time transaction monitoring with streaming analysis",
+      "parameters": {
+        "monitorScope": "Scope: all, high-risk, flagged, new-users",
+        "alertThreshold": "Risk score threshold for alerts",
+        "autoBlock": "Automatically block high-risk transactions",
+        "streamDuration": "Monitoring duration"
+      }
+    },
+    {
+      "name": "audit_compliance",
+      "description": "Audit fraud controls against compliance requirements",
+      "parameters": {
+        "framework": "Framework: PCI-DSS, SOX, GDPR, AML",
+        "scope": "Audit scope areas",
+        "includeRemediation": "Include remediation recommendations",
+        "generateEvidence": "Generate compliance evidence"
+      }
+    },
+    {
+      "name": "generate_report",
+      "description": "Generate comprehensive fraud analysis and performance reports",
+      "parameters": {
+        "reportType": "Type: summary, detailed, executive, compliance",
+        "startDate": "Report period start",
+        "endDate": "Report period end",
+        "format": "Output format: pdf, csv, json, excel"
+      }
+    }
+  ],
   "navigationItems": [
     { "label": "Fraud Analysis", "path": "/analyze", "icon": "Shield" },
     { "label": "Transaction History", "path": "/history", "icon": "History" },

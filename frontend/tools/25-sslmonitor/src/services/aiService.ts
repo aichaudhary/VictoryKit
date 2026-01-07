@@ -1,6 +1,6 @@
 /**
- * FraudGuard AI Service
- * Tool #01 - WebSocket client for AI-powered fraud detection
+ * SSLMonitor AI Service
+ * Tool #25 - WebSocket client for AI-powered SSL/TLS monitoring
  */
 
 import { getWsUrl, getSystemPrompt, getAIFunctions } from './config';
@@ -32,7 +32,7 @@ type MessageHandler = (message: AIMessage) => void;
 type ConnectionHandler = (session: AISession) => void;
 type ErrorHandler = (error: Error) => void;
 
-class FraudGuardAIService {
+class SSLMonitorAIService {
   private ws: WebSocket | null = null;
   private session: AISession | null = null;
   private messageHandlers: Set<MessageHandler> = new Set();
@@ -49,7 +49,7 @@ class FraudGuardAIService {
         this.ws = new WebSocket(url);
 
         this.ws.onopen = () => {
-          console.log('[FraudGuard AI] Connected');
+          console.log('[SSLMonitor AI] Connected');
           this.reconnectAttempts = 0;
         };
 
@@ -58,19 +58,19 @@ class FraudGuardAIService {
             const message = JSON.parse(event.data);
             this.handleMessage(message, resolve);
           } catch (error) {
-            console.error('[FraudGuard AI] Parse error:', error);
+            console.error('[SSLMonitor AI] Parse error:', error);
           }
         };
 
         this.ws.onerror = (error) => {
-          console.error('[FraudGuard AI] WebSocket error:', error);
+          console.error('[SSLMonitor AI] WebSocket error:', error);
           const err = new Error('WebSocket connection error');
           this.errorHandlers.forEach(handler => handler(err));
           reject(err);
         };
 
         this.ws.onclose = () => {
-          console.log('[FraudGuard AI] Disconnected');
+          console.log('[SSLMonitor AI] Disconnected');
           if (this.session) {
             this.session.connected = false;
           }
@@ -110,7 +110,7 @@ class FraudGuardAIService {
         break;
 
       case 'function_result':
-        console.log('[FraudGuard AI] Function result:', message.payload);
+        console.log('[SSLMonitor AI] Function result:', message.payload);
         break;
 
       case 'error':
@@ -124,7 +124,7 @@ class FraudGuardAIService {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
-      console.log(`[FraudGuard AI] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
+      console.log(`[SSLMonitor AI] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
       setTimeout(() => this.connect(), delay);
     }
   }
@@ -139,7 +139,7 @@ class FraudGuardAIService {
 
   sendMessage(content: string, context?: Record<string, unknown>): string {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      throw new Error('Not connected to FraudGuard AI');
+      throw new Error('Not connected to SSLMonitor AI');
     }
 
     const messageId = crypto.randomUUID();
@@ -163,7 +163,7 @@ class FraudGuardAIService {
 
   callFunction(functionName: string, parameters: Record<string, unknown>): string {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
-      throw new Error('Not connected to FraudGuard AI');
+      throw new Error('Not connected to SSLMonitor AI');
     }
 
     const requestId = crypto.randomUUID();
@@ -213,150 +213,148 @@ class FraudGuardAIService {
     return getSystemPrompt();
   }
 
-  // Convenience methods for FraudGuard AI functions
+  // Convenience methods for SSLMonitor AI functions
 
-  async analyzeTransaction(params: {
-    transactionId: string;
-    amount?: number;
-    userIp?: string;
-    deviceFingerprint?: string;
-    includeVelocity?: boolean;
+  async scanCertificate(params: {
+    domain: string;
+    port?: number;
+    includeChain?: boolean;
+    checkOcsp?: boolean;
   }): Promise<string> {
-    return this.callFunction('analyze_transaction', {
-      transactionId: params.transactionId,
-      amount: params.amount,
-      userIp: params.userIp,
-      deviceFingerprint: params.deviceFingerprint,
-      includeVelocity: params.includeVelocity ?? true
+    return this.callFunction('scan_certificate', {
+      domain: params.domain,
+      port: params.port || 443,
+      includeChain: params.includeChain ?? true,
+      checkOcsp: params.checkOcsp ?? true
     });
   }
 
-  async calculateRiskScore(params: {
-    transactionId: string;
-    includeFactors?: boolean;
-    compareBaseline?: boolean;
-    modelVersion?: string;
+  async checkExpiration(params: {
+    domains?: string[];
+    warningDays?: number;
+    criticalDays?: number;
+    includeWildcards?: boolean;
   }): Promise<string> {
-    return this.callFunction('calculate_risk_score', {
-      transactionId: params.transactionId,
-      includeFactors: params.includeFactors ?? true,
-      compareBaseline: params.compareBaseline ?? true,
-      modelVersion: params.modelVersion || 'latest'
+    return this.callFunction('check_expiration', {
+      domains: params.domains || [],
+      warningDays: params.warningDays || 30,
+      criticalDays: params.criticalDays || 7,
+      includeWildcards: params.includeWildcards ?? true
     });
   }
 
-  async detectPatterns(params: {
-    timeRange: string;
-    patternTypes?: string[];
-    minConfidence?: number;
-    groupBy?: 'user' | 'merchant' | 'card' | 'device';
+  async validateChain(params: {
+    domain: string;
+    checkRevocation?: boolean;
+    verifyIntermediate?: boolean;
+    checkRootStore?: boolean;
   }): Promise<string> {
-    return this.callFunction('detect_patterns', {
-      timeRange: params.timeRange,
-      patternTypes: params.patternTypes || ['velocity', 'geo', 'behavioral', 'device'],
-      minConfidence: params.minConfidence || 0.7,
-      groupBy: params.groupBy || 'user'
+    return this.callFunction('validate_chain', {
+      domain: params.domain,
+      checkRevocation: params.checkRevocation ?? true,
+      verifyIntermediate: params.verifyIntermediate ?? true,
+      checkRootStore: params.checkRootStore ?? true
     });
   }
 
-  async investigateAccount(params: {
-    accountId: string;
-    includeHistory?: boolean;
-    checkSynthetic?: boolean;
-    networkAnalysis?: boolean;
+  async analyzeSecurity(params: {
+    domain: string;
+    checkProtocols?: boolean;
+    checkCiphers?: boolean;
+    checkVulnerabilities?: boolean;
   }): Promise<string> {
-    return this.callFunction('investigate_account', {
-      accountId: params.accountId,
-      includeHistory: params.includeHistory ?? true,
-      checkSynthetic: params.checkSynthetic ?? true,
-      networkAnalysis: params.networkAnalysis ?? true
+    return this.callFunction('analyze_security', {
+      domain: params.domain,
+      checkProtocols: params.checkProtocols ?? true,
+      checkCiphers: params.checkCiphers ?? true,
+      checkVulnerabilities: params.checkVulnerabilities ?? true
     });
   }
 
-  async createAlertRule(params: {
-    ruleName: string;
-    conditions: Record<string, unknown>;
-    severity?: 'low' | 'medium' | 'high' | 'critical';
-    responseAction?: 'alert' | 'block' | 'review' | 'escalate';
+  async monitorDomain(params: {
+    domain: string;
+    action: 'add' | 'remove' | 'update' | 'pause';
+    checkInterval?: string;
+    alertContacts?: string[];
   }): Promise<string> {
-    return this.callFunction('create_alert_rule', {
-      ruleName: params.ruleName,
-      conditions: params.conditions,
-      severity: params.severity || 'medium',
-      responseAction: params.responseAction || 'alert'
+    return this.callFunction('monitor_domain', {
+      domain: params.domain,
+      action: params.action,
+      checkInterval: params.checkInterval || '6h',
+      alertContacts: params.alertContacts || []
     });
   }
 
-  async analyzeChargeback(params: {
-    merchantId: string;
+  async checkCompliance(params: {
+    domain: string;
+    standards?: ('PCI-DSS' | 'HIPAA' | 'NIST' | 'SOC2')[];
+    includeHsts?: boolean;
+    includeCaa?: boolean;
+  }): Promise<string> {
+    return this.callFunction('check_compliance', {
+      domain: params.domain,
+      standards: params.standards || ['PCI-DSS', 'NIST'],
+      includeHsts: params.includeHsts ?? true,
+      includeCaa: params.includeCaa ?? true
+    });
+  }
+
+  async discoverCertificates(params: {
+    target: string;
+    ports?: number[];
+    includeSubdomains?: boolean;
+    maxDepth?: number;
+  }): Promise<string> {
+    return this.callFunction('discover_certificates', {
+      target: params.target,
+      ports: params.ports || [443, 8443],
+      includeSubdomains: params.includeSubdomains ?? true,
+      maxDepth: params.maxDepth || 3
+    });
+  }
+
+  async compareConfigs(params: {
+    domains: string[];
+    compareType?: 'between-domains' | 'over-time';
     timeRange?: string;
-    includeReasons?: boolean;
-    predictRisk?: boolean;
+    metrics?: string[];
   }): Promise<string> {
-    return this.callFunction('analyze_chargeback', {
-      merchantId: params.merchantId,
+    return this.callFunction('compare_configs', {
+      domains: params.domains,
+      compareType: params.compareType || 'between-domains',
       timeRange: params.timeRange || '30d',
-      includeReasons: params.includeReasons ?? true,
-      predictRisk: params.predictRisk ?? true
+      metrics: params.metrics || ['grade', 'protocols', 'ciphers']
     });
   }
 
-  async verifyIdentity(params: {
-    userId: string;
-    verificationLevel?: 'basic' | 'enhanced' | 'comprehensive';
-    checkDocuments?: boolean;
-    biometricMatch?: boolean;
+  async getRecommendations(params: {
+    domain: string;
+    priority?: 'security' | 'performance' | 'compatibility';
+    includeSteps?: boolean;
+    considerBrowserSupport?: boolean;
   }): Promise<string> {
-    return this.callFunction('verify_identity', {
-      userId: params.userId,
-      verificationLevel: params.verificationLevel || 'enhanced',
-      checkDocuments: params.checkDocuments ?? false,
-      biometricMatch: params.biometricMatch ?? false
-    });
-  }
-
-  async monitorRealtime(params: {
-    monitorScope?: 'all' | 'high-risk' | 'flagged' | 'new-users';
-    alertThreshold?: number;
-    autoBlock?: boolean;
-    streamDuration?: string;
-  }): Promise<string> {
-    return this.callFunction('monitor_realtime', {
-      monitorScope: params.monitorScope || 'high-risk',
-      alertThreshold: params.alertThreshold || 70,
-      autoBlock: params.autoBlock ?? false,
-      streamDuration: params.streamDuration || '1h'
-    });
-  }
-
-  async auditCompliance(params: {
-    framework: 'PCI-DSS' | 'SOX' | 'GDPR' | 'AML';
-    scope?: string[];
-    includeRemediation?: boolean;
-    generateEvidence?: boolean;
-  }): Promise<string> {
-    return this.callFunction('audit_compliance', {
-      framework: params.framework,
-      scope: params.scope || ['all'],
-      includeRemediation: params.includeRemediation ?? true,
-      generateEvidence: params.generateEvidence ?? true
+    return this.callFunction('get_recommendations', {
+      domain: params.domain,
+      priority: params.priority || 'security',
+      includeSteps: params.includeSteps ?? true,
+      considerBrowserSupport: params.considerBrowserSupport ?? true
     });
   }
 
   async generateReport(params: {
-    reportType: 'summary' | 'detailed' | 'executive' | 'compliance';
-    startDate: string;
-    endDate: string;
-    format?: 'pdf' | 'csv' | 'json' | 'excel';
+    reportType: 'status' | 'compliance' | 'security' | 'inventory';
+    domains?: string[];
+    format?: 'pdf' | 'csv' | 'json' | 'html';
+    includeHistory?: boolean;
   }): Promise<string> {
     return this.callFunction('generate_report', {
       reportType: params.reportType,
-      startDate: params.startDate,
-      endDate: params.endDate,
-      format: params.format || 'pdf'
+      domains: params.domains || [],
+      format: params.format || 'pdf',
+      includeHistory: params.includeHistory ?? true
     });
   }
 }
 
-export const fraudGuardAI = new FraudGuardAIService();
-export default fraudGuardAI;
+export const sslMonitorAI = new SSLMonitorAIService();
+export default sslMonitorAI;

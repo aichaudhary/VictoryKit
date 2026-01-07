@@ -1,9 +1,9 @@
 /**
- * FraudGuard Configuration
- * Tool #01 - AI-Powered Fraud Detection & Prevention
+ * SSLMonitor Configuration
+ * Tool #25 - AI-Powered SSL/TLS Certificate Management
  */
 
-import configData from '../../fraudguard-config.json';
+import configData from '../../sslmonitor-config.json';
 
 export interface AIFunction {
   name: string;
@@ -42,21 +42,21 @@ export const config: ToolConfig = configData as ToolConfig;
 
 // Utility functions
 export const getApiUrl = (): string => {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env?.DEV ?? process.env.NODE_ENV === 'development';
   return isDev 
     ? `http://localhost:${config.ports.backend}`
     : `https://${config.fullDomain}/api`;
 };
 
 export const getWsUrl = (): string => {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env?.DEV ?? process.env.NODE_ENV === 'development';
   const protocol = isDev ? 'ws' : 'wss';
   const host = isDev ? `localhost:${config.ports.aiWebSocket}` : config.fullDomain;
   return `${protocol}://${host}/maula-ai`;
 };
 
 export const getMlUrl = (): string => {
-  const isDev = import.meta.env.DEV;
+  const isDev = import.meta.env?.DEV ?? process.env.NODE_ENV === 'development';
   return isDev 
     ? `http://localhost:${config.ports.ml}`
     : `https://${config.fullDomain}/ml`;
@@ -75,29 +75,28 @@ export const getFeatures = (): string[] => config.features;
 
 export const getNavigationItems = () => config.navigationItems;
 
-// Risk level definitions
-export const RISK_LEVELS = {
-  LOW: { min: 0, max: 30, color: '#00ff88', label: 'Low Risk' },
-  MEDIUM: { min: 31, max: 60, color: '#ffaa00', label: 'Medium Risk' },
-  HIGH: { min: 61, max: 80, color: '#ff6600', label: 'High Risk' },
-  CRITICAL: { min: 81, max: 100, color: '#ff0055', label: 'Critical Risk' }
+// Certificate status levels
+export const CERT_STATUS = {
+  VALID: { color: '#00ff88', label: 'Valid', icon: 'check_circle' },
+  EXPIRING_SOON: { color: '#ffaa00', label: 'Expiring Soon', icon: 'warning' },
+  EXPIRED: { color: '#ff4444', label: 'Expired', icon: 'error' },
+  REVOKED: { color: '#ff0000', label: 'Revoked', icon: 'cancel' },
+  UNKNOWN: { color: '#888888', label: 'Unknown', icon: 'help' }
 } as const;
 
-// Fraud types
-export const FRAUD_TYPES = [
-  'card-not-present',
-  'account-takeover',
-  'synthetic-identity',
-  'friendly-fraud',
-  'chargeback-fraud',
-  'payment-fraud',
-  'identity-theft',
-  'phishing',
-  'velocity-abuse',
-  'promotion-abuse'
+// TLS protocol versions
+export const TLS_VERSIONS = [
+  { version: 'TLS 1.3', secure: true, recommended: true },
+  { version: 'TLS 1.2', secure: true, recommended: true },
+  { version: 'TLS 1.1', secure: false, recommended: false },
+  { version: 'TLS 1.0', secure: false, recommended: false },
+  { version: 'SSL 3.0', secure: false, recommended: false }
 ] as const;
 
-// Alert severities
-export const ALERT_SEVERITIES = ['low', 'medium', 'high', 'critical'] as const;
+// Security grades
+export const SECURITY_GRADES = ['A+', 'A', 'A-', 'B', 'C', 'D', 'E', 'F', 'T'] as const;
+
+// Compliance standards
+export const COMPLIANCE_STANDARDS = ['PCI-DSS', 'HIPAA', 'NIST', 'SOC2', 'GDPR'] as const;
 
 export default config;
