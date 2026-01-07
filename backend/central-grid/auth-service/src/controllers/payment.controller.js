@@ -1,7 +1,7 @@
-const ToolAccess = require('../models/ToolAccess.model');
-const { ApiResponse } = require('../utils/apiResponse');
-const { ApiError } = require('../utils/apiError');
-const logger = require('../utils/logger');
+const ToolAccess = require('../../../../shared/models/ToolAccess.model');
+const { ApiResponse } = require('../../../../shared/utils/apiResponse');
+const { ApiError } = require('../../../../shared/utils/apiError');
+const logger = require('../../../../shared/utils/logger');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Tool pricing and details

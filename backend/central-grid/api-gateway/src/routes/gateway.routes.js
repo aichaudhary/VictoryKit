@@ -1,9 +1,9 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const { authMiddleware, optionalAuth } = require('../../../shared/middleware/auth.middleware');
-const { checkToolAccessFromRoute } = require('../../../shared/middleware/toolAccess.middleware');
-const { apiLimiter } = require('../../../shared/middleware/rateLimiter.middleware');
-const logger = require('../../../shared/utils/logger');
+const { authMiddleware, optionalAuth } = require('../../../../shared/middleware/auth.middleware');
+const { checkToolAccessFromRoute } = require('../../../../shared/middleware/toolAccess.middleware');
+const { apiLimiter } = require('../../../../shared/middleware/rateLimiter.middleware');
+const logger = require('../../../../shared/utils/logger');
 
 const router = express.Router();
 

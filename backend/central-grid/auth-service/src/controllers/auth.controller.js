@@ -1,9 +1,9 @@
-const User = require('../../../shared/models/User.model');
-const Session = require('../../../shared/models/Session.model');
-const { ApiError } = require('../../../shared/utils/apiError');
-const { ApiResponse } = require('../../../shared/utils/apiResponse');
+const User = require('../../../../shared/models/User.model');
+const Session = require('../../../../shared/models/Session.model');
+const { ApiError } = require('../../../../shared/utils/apiError');
+const { ApiResponse } = require('../../../../shared/utils/apiResponse');
 const crypto = require('crypto');
-const logger = require('../../../shared/utils/logger');
+const logger = require('../../../../shared/utils/logger');
 
 class AuthController {
   // Register new user

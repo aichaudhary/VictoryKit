@@ -1,0 +1,51 @@
+#!/bin/bash
+# Fix nginx config for maula.ai
+
+cat > /tmp/nginx-maula.conf << 'NGINX'
+server {
+    server_name maula.ai www.maula.ai;
+    root /var/www/maula.ai/live;
+    index index.html;
+
+    # SPA routing
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # API Gateway proxy
+    location /api {
+        proxy_pass http://localhost:4000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    # Gzip
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript;
+
+    # SSL managed by Certbot
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/maula.ai/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/maula.ai/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+}
+
+server {
+    listen 80;
+    server_name maula.ai www.maula.ai;
+    return 301 https://$host$request_uri;
+}
+NGINX
+
+sudo cp /tmp/nginx-maula.conf /etc/nginx/sites-available/maula.ai
+sudo nginx -t && sudo systemctl reload nginx
+echo "Nginx configured successfully!"
