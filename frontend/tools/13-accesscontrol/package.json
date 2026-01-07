@@ -1,9 +1,10 @@
 {
   "name": "accesscontrol-frontend",
   "version": "1.0.0",
-  "description": "AccessControl Tool 13 - RBAC & Permission Management",
+  "description": "AccessControl - AI-Powered Access Management & Authorization System | VictoryKit Tool 13",
   "private": true,
   "type": "module",
+  "homepage": "https://accesscontrol.maula.ai",
   "scripts": {
     "dev": "vite --port 3013",
     "build": "tsc && vite build",
