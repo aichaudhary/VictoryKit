@@ -1,0 +1,20 @@
+{
+  "name": "webfilter-ai-assistant",
+  "version": "1.0.0",
+  "description": "AI Assistant for WebFilter - Advanced Web Content Filtering & URL Security",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "ws": "^8.18.0",
+    "dotenv": "^16.4.7",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
