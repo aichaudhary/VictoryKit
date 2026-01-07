@@ -3,9 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const { errorHandler, notFoundHandler } = require('../../../../shared/middleware/errorHandler.middleware');
+const { errorHandler, notFoundHandler } = require('../../../shared/middleware/errorHandler.middleware');
 const gatewayRoutes = require('./routes/gateway.routes');
-const logger = require('../../../../shared/utils/logger');
+const logger = require('../../../shared/utils/logger');
 
 const app = express();
 

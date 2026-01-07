@@ -3,11 +3,11 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const { connectDatabase } = require('../../../../shared/config/database');
-const { errorHandler, notFoundHandler } = require('../../../../shared/middleware/errorHandler.middleware');
+const { connectDatabase } = require('../../../shared/config/database');
+const { errorHandler, notFoundHandler } = require('../../../shared/middleware/errorHandler.middleware');
 const authRoutes = require('./routes/auth.routes');
 const paymentRoutes = require('./routes/payment.routes');
-const logger = require('../../../../shared/utils/logger');
+const logger = require('../../../shared/utils/logger');
 
 const app = express();
 
