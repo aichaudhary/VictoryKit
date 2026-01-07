@@ -3,7 +3,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import { Sparkles, Send, Brain, Loader2, X, Wand2, Search, MapPin, MessageSquare, ExternalLink } from 'lucide-react';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Initialize AI with API key from environment variable
+const getAI = () => {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
+  if (!apiKey) {
+    console.warn('VITE_GEMINI_API_KEY not set. AI features will be disabled.');
+    return null;
+  }
+  return new GoogleGenAI({ apiKey });
+};
+
+const ai = getAI();
 
 interface Props {
   currentImageUrl?: string;
@@ -27,6 +37,10 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
 
   const handleAction = async (mode: 'fast' | 'think' | 'edit' | 'search' | 'maps' | 'chat') => {
     if (!prompt.trim() && mode !== 'edit') return;
+    if (!ai) {
+      setResponse('AI service not available. Please configure VITE_GEMINI_API_KEY.');
+      return;
+    }
     setIsLoading(true);
     setResponse('');
     setGroundingLinks([]);
