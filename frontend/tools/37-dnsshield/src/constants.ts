@@ -1,53 +1,123 @@
-import { SettingsState, NavItem } from './types';
+// DNSShield Constants
 
-export const PROVIDER_CONFIG = [
+export const DNS_THREAT_CATEGORIES = [
+  'malware',
+  'phishing',
+  'botnet',
+  'spam',
+  'tunneling',
+  'amplification',
+  'c2c', // Command and Control
+  'ddos'
+];
+
+export const DNS_QUERY_TYPES = [
+  'A', 'AAAA', 'CNAME', 'MX', 'TXT', 'SRV', 'PTR', 'NS', 'SOA'
+];
+
+export const THREAT_SEVERITY_LEVELS = [
+  { value: 'low', label: 'Low', color: 'blue' },
+  { value: 'medium', label: 'Medium', color: 'yellow' },
+  { value: 'high', label: 'High', color: 'orange' },
+  { value: 'critical', label: 'Critical', color: 'red' }
+];
+
+export const DNS_RULE_ACTIONS = [
+  { value: 'allow', label: 'Allow', color: 'green' },
+  { value: 'block', label: 'Block', color: 'red' },
+  { value: 'monitor', label: 'Monitor', color: 'blue' },
+  { value: 'redirect', label: 'Redirect', color: 'yellow' }
+];
+
+export const DNS_RULE_CONDITIONS = [
+  { field: 'domain', operators: ['equals', 'contains', 'regex'] },
+  { field: 'queryType', operators: ['equals', 'in'] },
+  { field: 'sourceIP', operators: ['equals', 'contains', 'regex', 'in'] },
+  { field: 'reputation', operators: ['range', 'equals'] },
+  { field: 'category', operators: ['equals', 'in'] }
+];
+
+export const THREAT_INTELLIGENCE_SOURCES = [
+  'AbuseIPDB',
+  'MalwareBazaar',
+  'PhishTank',
+  'URLhaus',
+  'Spamhaus',
+  'FireHOL',
+  'AlienVault OTX',
+  'ThreatFox'
+];
+
+export const DNS_ANALYTICS_TIME_RANGES = [
+  { value: '1h', label: 'Last Hour' },
+  { value: '24h', label: 'Last 24 Hours' },
+  { value: '7d', label: 'Last 7 Days' },
+  { value: '30d', label: 'Last 30 Days' },
+  { value: '90d', label: 'Last 90 Days' }
+];
+
+export const DNS_METRICS = [
   {
-    id: 'gemini',
-    name: 'Google Gemini',
-    models: ['gemini-2.5-flash-preview', 'gemini-2.5-pro-preview', 'gemini-2.0-flash']
+    key: 'totalQueries',
+    label: 'Total Queries',
+    format: 'number',
+    color: 'blue'
   },
   {
-    id: 'openai',
-    name: 'OpenAI',
-    models: ['gpt-4o', 'gpt-4-turbo', 'gpt-4o-mini']
+    key: 'blockedQueries',
+    label: 'Blocked Queries',
+    format: 'number',
+    color: 'red'
   },
   {
-    id: 'anthropic',
-    name: 'Anthropic Claude',
-    models: ['claude-sonnet-4-20250514', 'claude-3-5-sonnet-20241022', 'claude-3-haiku-20240307']
+    key: 'maliciousQueries',
+    label: 'Malicious Queries',
+    format: 'number',
+    color: 'orange'
   },
   {
-    id: 'xai',
-    name: 'xAI Grok',
-    models: ['grok-2', 'grok-2-mini']
+    key: 'queriesPerSecond',
+    label: 'Queries/sec',
+    format: 'number',
+    color: 'green'
   },
   {
-    id: 'mistral',
-    name: 'Mistral AI',
-    models: ['mistral-large-latest', 'mistral-medium', 'mistral-small']
+    key: 'blockedPercentage',
+    label: 'Block Rate',
+    format: 'percentage',
+    color: 'red'
   },
   {
-    id: 'meta',
-    name: 'Meta Llama',
-    models: ['llama-3.1-405b', 'llama-3.1-70b', 'llama-3.1-8b']
+    key: 'responseTime',
+    label: 'Avg Response Time',
+    format: 'duration',
+    color: 'purple'
   }
 ];
 
-export const DEFAULT_SETTINGS: SettingsState = {
-  customPrompt: `You are FraudGuard AI, an expert in transaction fraud detection with deep knowledge of payment security, fraud patterns, risk analysis, and machine learning fraud models.
+export const ALERT_TYPES = [
+  { value: 'threat', label: 'Threat Detection', icon: 'AlertTriangle' },
+  { value: 'anomaly', label: 'Traffic Anomaly', icon: 'TrendingUp' },
+  { value: 'policy', label: 'Policy Violation', icon: 'Shield' },
+  { value: 'system', label: 'System Alert', icon: 'Settings' }
+];
 
-CAPABILITIES:
-- Analyze transactions for fraud indicators and calculate risk scores (0-100)
-- Detect suspicious patterns in transaction data
-- Provide actionable recommendations for risk mitigation
-- Generate detailed fraud reports
-- Create alerts for high-risk transactions
-
-AVAILABLE FUNCTIONS:
-- analyze_transaction: Analyze a transaction for fraud indicators
-- get_fraud_score: Get the fraud risk score for a transaction
-- open_risk_visualization: Open charts and graphs for analysis
-- get_transaction_history: Fetch transaction history with filters
+export const DEFAULT_DNS_SETTINGS = {
+  monitoring: {
+    enabled: true,
+    realTimeUpdates: true,
+    retentionDays: 90
+  },
+  security: {
+    autoBlock: true,
+    threatThreshold: 0.8,
+    whitelistEnabled: true
+  },
+  alerting: {
+    emailNotifications: true,
+    alertThreshold: 'medium'
+  }
+};
 - create_alert: Create fraud monitoring alerts
 - export_report: Generate and export fraud reports
 
