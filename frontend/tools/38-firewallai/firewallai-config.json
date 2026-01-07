@@ -1,0 +1,233 @@
+{
+  "toolInfo": {
+    "id": 38,
+    "name": "FirewallAI",
+    "displayName": "FirewallAI - Intelligent Network Defense",
+    "description": "AI-driven firewall management with real-time policy generation, intrusion detection, and automated containment",
+    "category": "Network Security",
+    "version": "1.0.0",
+    "icon": "🧱",
+    "color": "#f97316",
+    "theme": "orange"
+  },
+  "deployment": {
+    "subdomain": "firewallai",
+    "domain": "maula.ai",
+    "fullUrl": "https://firewallai.maula.ai",
+    "aiAssistantUrl": "https://firewallai.maula.ai/maula-ai"
+  },
+  "ports": {
+    "frontend": 3038,
+    "backend": 4038,
+    "aiWebSocket": 6038,
+    "waf": 8080,
+    "dashboard": 9038
+  },
+  "database": {
+    "name": "firewallai_db",
+    "collections": [
+      "firewall_events",
+      "policies",
+      "rule_versions",
+      "threat_intel_cache",
+      "incidents",
+      "audit_logs",
+      "network_assets",
+      "traffic_profiles",
+      "anomaly_signals",
+      "playbooks"
+    ]
+  },
+  "features": {
+    "policyAutomation": {
+      "enabled": true,
+      "zeroTrust": true,
+      "microSegmentation": true,
+      "changeSimulation": true,
+      "driftDetection": true
+    },
+    "threatDetection": {
+      "enabled": true,
+      "intrusionDetection": true,
+      "eastWestMonitoring": true,
+      "behavioralAnalytics": true,
+      "threatCorrelation": true
+    },
+    "response": {
+      "enabled": true,
+      "autoContainment": true,
+      "dynamicRules": true,
+      "networkIsolation": true,
+      "soarPlaybooks": true
+    },
+    "visibility": {
+      "enabled": true,
+      "trafficInsights": true,
+      "assetDiscovery": true,
+      "complianceReports": true,
+      "attackSurface": true
+    }
+  },
+  "aiAssistant": {
+    "enabled": true,
+    "model": "gemini-1.5-pro",
+    "wsPort": 6038,
+    "functions": [
+      {
+        "name": "analyze_traffic_pattern",
+        "description": "Detect anomalies in network traffic patterns and surface likely threats",
+        "parameters": {
+          "timeRange": "string",
+          "segments": "array",
+          "threshold": "number",
+          "includeBaselines": "boolean"
+        },
+        "category": "Detection"
+      },
+      {
+        "name": "generate_firewall_policy",
+        "description": "Generate firewall policies based on business context, assets, and risk appetite",
+        "parameters": {
+          "assets": "array",
+          "riskLevel": "string",
+          "controls": "array",
+          "changeWindow": "string"
+        },
+        "category": "Policy"
+      },
+      {
+        "name": "simulate_rule_change",
+        "description": "Simulate impact of rule changes on traffic, availability, and risk",
+        "parameters": {
+          "rules": "array",
+          "trafficProfile": "object",
+          "blastRadius": "string",
+          "rollbackPlan": "string"
+        },
+        "category": "Simulation"
+      },
+      {
+        "name": "detect_intrusion_campaign",
+        "description": "Correlate multi-stage intrusion patterns and suggest mitigations",
+        "parameters": {
+          "events": "array",
+          "timeHorizon": "string",
+          "includeMITRE": "boolean",
+          "sensitivity": "string"
+        },
+        "category": "Detection"
+      },
+      {
+        "name": "recommend_microsegmentation",
+        "description": "Design microsegmentation policies based on asset relationships and data flows",
+        "parameters": {
+          "assets": "array",
+          "flows": "array",
+          "sensitivityTags": "array",
+          "guardrails": "array"
+        },
+        "category": "Architecture"
+      },
+      {
+        "name": "optimize_waf_rules",
+        "description": "Tune WAF signatures and thresholds to reduce false positives and block exploits",
+        "parameters": {
+          "application": "string",
+          "attackVectors": "array",
+          "falsePositivePatterns": "array",
+          "performanceBudget": "number"
+        },
+        "category": "Optimization"
+      },
+      {
+        "name": "generate_incident_runbook",
+        "description": "Create step-by-step containment and recovery runbooks for detected incidents",
+        "parameters": {
+          "incidentType": "string",
+          "severity": "string",
+          "affectedAssets": "array",
+          "dependencies": "array"
+        },
+        "category": "Response"
+      },
+      {
+        "name": "enrich_threat_intel",
+        "description": "Enrich alerts with threat intelligence, exploit paths, and recommended blocks",
+        "parameters": {
+          "indicator": "string",
+          "indicatorType": "string",
+          "sources": "array",
+          "confidenceFloor": "number"
+        },
+        "category": "Intelligence"
+      },
+      {
+        "name": "assess_compliance_gap",
+        "description": "Assess firewall controls against compliance frameworks and highlight gaps",
+        "parameters": {
+          "framework": "string",
+          "controls": "array",
+          "evidence": "array",
+          "exceptions": "array"
+        },
+        "category": "Compliance"
+      },
+      {
+        "name": "forecast_capacity",
+        "description": "Forecast firewall and WAF capacity needs based on traffic growth and attack trends",
+        "parameters": {
+          "currentUtilization": "object",
+          "growthRate": "number",
+          "seasonality": "array",
+          "attackPatterns": "array"
+        },
+        "category": "Planning"
+      }
+    ]
+  },
+  "integrations": {
+    "logSources": ["syslog", "cloudtrail", "vpc-flow", "netflow"],
+    "siem": ["splunk", "elk", "chronicle"],
+    "soar": ["xsoar", "phantom"],
+    "ticketing": ["jira", "servicenow"],
+    "threatIntel": ["otx", "misp", "virusTotal", "crowdstrike"]
+  },
+  "security": {
+    "encryption": {
+      "atRest": true,
+      "inTransit": true,
+      "kms": "aws-kms"
+    },
+    "rbac": {
+      "enabled": true,
+      "roles": ["viewer", "analyst", "engineer", "admin"],
+      "mfa": true
+    },
+    "audit": {
+      "enabled": true,
+      "immutableLogs": true,
+      "retentionDays": 365
+    }
+  },
+  "performance": {
+    "sla": "99.9%",
+    "maxLatencyMs": 50,
+    "throughput": "40Gbps",
+    "autoscaling": true,
+    "caching": true
+  },
+  "compliance": {
+    "frameworks": ["NIST 800-53", "SOC2", "ISO 27001", "PCI-DSS"],
+    "dataResidency": "us-east-1",
+    "logging": true,
+    "alerting": true
+  },
+  "monitoring": {
+    "enabled": true,
+    "metrics": ["pps", "latency", "drop_rate", "blocked_attacks", "waf_hits"],
+    "alerting": {
+      "critical": ["intrusion_detected", "policy_violation", "capacity_exceeded"],
+      "warning": ["latency_spike", "rule_drift", "intel_stale"]
+    }
+  }
+}

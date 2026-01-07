@@ -1,7 +1,9 @@
+import configService from './config';
+
 // FirewallAI API Service
 // Handles all API communications with the backend
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || configService.getAPIURL();
 
 class FirewallAPI {
   private baseURL: string;
