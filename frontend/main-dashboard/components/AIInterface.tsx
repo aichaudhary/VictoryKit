@@ -1,19 +1,6 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import { Sparkles, Send, Brain, Loader2, X, Wand2, Search, MapPin, MessageSquare, ExternalLink } from 'lucide-react';
-
-// Initialize AI with API key from environment variable
-const getAI = () => {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
-  if (!apiKey) {
-    console.warn('VITE_GEMINI_API_KEY not set. AI features will be disabled.');
-    return null;
-  }
-  return new GoogleGenAI({ apiKey });
-};
-
-const ai = getAI();
 
 interface Props {
   currentImageUrl?: string;
@@ -37,13 +24,12 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
 
   const handleAction = async (mode: 'fast' | 'think' | 'edit' | 'search' | 'maps' | 'chat') => {
     if (!prompt.trim() && mode !== 'edit') return;
-    if (!ai) {
-      setResponse('AI service not available. Please configure VITE_GEMINI_API_KEY.');
-      return;
-    }
     setIsLoading(true);
     setResponse('');
     setGroundingLinks([]);
+
+    // Initialize GoogleGenAI inside handleAction to ensure it uses the latest configuration context
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
     try {
       if (mode === 'edit' && currentImageUrl) {
@@ -81,6 +67,7 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
         setResponse(result.text);
         const chunks = result.candidates?.[0]?.groundingMetadata?.groundingChunks;
         if (chunks) {
+          // Correctly extract and display search grounding URLs as per guidelines
           const links = chunks.filter(c => c.web).map(c => ({ title: c.web.title, uri: c.web.uri }));
           setGroundingLinks(links);
         }
@@ -103,6 +90,7 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
         setResponse(result.text);
         const chunks = result.candidates?.[0]?.groundingMetadata?.groundingChunks;
         if (chunks) {
+          // Correctly extract and display maps grounding URLs as per guidelines
           const links = chunks.filter(c => c.maps).map(c => ({ title: c.maps.title || 'Location', uri: c.maps.uri }));
           setGroundingLinks(links);
         }
@@ -112,7 +100,8 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
         setResponse(result.text);
       } else {
         const result = await ai.models.generateContent({
-          model: 'gemini-2.5-flash-lite-latest',
+          // Use standard model name for flash lite tasks
+          model: 'gemini-flash-lite-latest',
           contents: prompt
         });
         setResponse(result.text);
@@ -129,7 +118,7 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
     return (
       <button 
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 left-8 z-[110] bg-white text-black p-4 rounded-full shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center border border-purple-500/30 group"
+        className="fixed bottom-8 right-8 z-[110] bg-white text-black p-4 rounded-full shadow-[0_0_25px_rgba(255,255,255,0.4)] hover:scale-110 active:scale-95 transition-all flex items-center justify-center border border-purple-500/30 group"
         aria-label="Open AI Command"
       >
         <Sparkles className="w-6 h-6 text-purple-600 animate-pulse transition-transform group-hover:rotate-12" />
@@ -138,7 +127,7 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
   }
 
   return (
-    <div className="fixed bottom-8 left-8 z-[110] w-[400px] glass rounded-[2rem] p-6 shadow-2xl border border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-300 backdrop-blur-3xl">
+    <div className="fixed bottom-8 right-8 z-[110] w-[400px] glass rounded-[2rem] p-6 shadow-2xl border border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-300 backdrop-blur-3xl">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <Brain className="w-5 h-5 text-purple-400" />

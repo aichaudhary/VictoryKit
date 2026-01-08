@@ -1,9 +1,7 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { GoogleGenAI } from '@google/genai';
 import { Sparkles, Send, Brain, Loader2, X, Wand2, Search, MapPin, MessageSquare, ExternalLink } from 'lucide-react';
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 interface Props {
   currentImageUrl?: string;
@@ -18,6 +16,8 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
   const [response, setResponse] = useState<string | React.ReactNode>('');
   const [groundingLinks, setGroundingLinks] = useState<{title: string, uri: string}[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const ai = useMemo(() => apiKey ? new GoogleGenAI({ apiKey }) : null, [apiKey]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -30,6 +30,12 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
     setIsLoading(true);
     setResponse('');
     setGroundingLinks([]);
+
+    if (!ai) {
+      setResponse('Add VITE_GEMINI_API_KEY to your .env.local to enable the neural interface.');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       if (mode === 'edit' && currentImageUrl) {
@@ -130,7 +136,7 @@ const AIInterface: React.FC<Props> = ({ currentImageUrl, onUpdateImage }) => {
           <Brain className="w-5 h-5 text-purple-400" />
           <span className="font-black text-[10px] uppercase tracking-widest text-white/60">Neural Interface v5.0</span>
         </div>
-        <button onClick={() => setIsOpen(false)} className="text-white/20 hover:text-white transition-colors">
+        <button onClick={() => setIsOpen(false)} className="text-white/20 hover:text-white transition-colors" aria-label="Close AI panel">
           <X className="w-5 h-5" />
         </button>
       </div>

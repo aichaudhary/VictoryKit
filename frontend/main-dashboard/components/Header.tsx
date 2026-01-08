@@ -1,14 +1,17 @@
 
 import React from 'react';
 import { Shield, ChevronRight } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useScroll } from '../context/ScrollContext';
 
 const Header: React.FC = () => {
-  const { setView } = useAuth();
+  const { setView } = useScroll();
 
   return (
     <header className="fixed top-0 left-0 w-full z-[100] glass px-6 md:px-12 py-4 flex items-center justify-between transition-all duration-300">
-      <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('landing')}>
+      <div 
+        className="flex items-center gap-3 cursor-pointer" 
+        onClick={() => setView('home')}
+      >
         <div className="bg-purple-600 p-2 rounded-lg">
           <Shield className="text-white w-6 h-6" />
         </div>
@@ -16,21 +19,16 @@ const Header: React.FC = () => {
       </div>
 
       <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-        <span onClick={() => setView('products')} className="hover:text-white cursor-pointer transition-colors">Products</span>
-        <span onClick={() => setView('solutions')} className="hover:text-white cursor-pointer transition-colors">Solutions</span>
-        <span onClick={() => setView('docs')} className="hover:text-white cursor-pointer transition-colors">Docs</span>
-        <span onClick={() => setView('pricing')} className="hover:text-white cursor-pointer transition-colors">Pricing</span>
+        <button onClick={() => setView('products')} className="hover:text-white transition-colors">Products</button>
+        <button onClick={() => setView('solutions')} className="hover:text-white transition-colors">Solutions</button>
+        <button onClick={() => setView('docs')} className="hover:text-white transition-colors">Docs</button>
+        <button onClick={() => setView('pricing')} className="hover:text-white transition-colors">Pricing</button>
       </nav>
 
       <div className="flex items-center gap-4">
+        <button className="hidden sm:block text-sm font-medium text-white hover:text-purple-400 transition-colors">Log in</button>
         <button 
-          onClick={() => setView('login')}
-          className="hidden sm:block text-sm font-medium text-white hover:text-purple-400 transition-colors"
-        >
-          Log in
-        </button>
-        <button 
-          onClick={() => setView('signup')}
+          onClick={() => setView('products')}
           className="bg-white text-black text-sm font-bold px-5 py-2 rounded-full flex items-center gap-2 hover:bg-purple-50 transition-all"
         >
           Get Started <ChevronRight className="w-4 h-4" />

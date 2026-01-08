@@ -29,7 +29,8 @@ const SideNavigation: React.FC = () => {
     
     setTargetIndex(index);
     const heroHeight = window.innerHeight;
-    const sectionHeight = window.innerHeight * 2.5; // Matches OptimizedToolSection height
+    // Fix: Updated sectionHeight calculation to 1.2 * window.innerHeight to match the h-[120vh] defined in OptimizedToolSection
+    const sectionHeight = window.innerHeight * 1.2;
     
     window.scrollTo({
       top: heroHeight + index * sectionHeight,
