@@ -219,7 +219,7 @@ class ConfigService {
   }
   
   getAIWebSocketUrl(): string {
-    return `ws://localhost:${this.config.aiPort}/maula-ai`;
+    return `ws://localhost:${this.config.aiPort}/maula/ai`;
   }
 }
 

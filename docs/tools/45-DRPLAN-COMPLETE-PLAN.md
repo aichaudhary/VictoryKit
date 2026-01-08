@@ -5,7 +5,7 @@
 **DRPlan** is a world-class enterprise disaster recovery planning platform designed for Fortune 500 companies to ensure business continuity during catastrophic events. Built for zero downtime tolerance, DRPlan automates DR testing, orchestrates failover procedures, monitors RTO/RPO targets, and validates recovery strategies with ML-powered impact analysis.
 
 **Domain:** `drplan.maula.ai`  
-**AI Assistant:** `drplan.maula.ai/maula-ai`  
+**AI Assistant:** `drplan.maula.ai/maula/ai`  
 **Ports:** Frontend 3045, API 4045, ML 8045
 
 ---

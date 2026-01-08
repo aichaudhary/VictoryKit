@@ -20,7 +20,7 @@ class AuditAIService {
   constructor() {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsHost = import.meta.env.VITE_WS_HOST || 'localhost:6031';
-    this.wsUrl = `${wsProtocol}//${wsHost}/maula-ai`;
+    this.wsUrl = `${wsProtocol}//${wsHost}/maula/ai`;
   }
   
   connect(): Promise<void> {

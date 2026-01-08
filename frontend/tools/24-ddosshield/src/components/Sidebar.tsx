@@ -2,6 +2,9 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
+const BASE_PATH = '/maula';
+const withBase = (path: string) => (path === '/' ? BASE_PATH : `${BASE_PATH}${path}`);
+
 const Sidebar: React.FC = () => {
   const location = useLocation();
 
@@ -24,16 +27,20 @@ const Sidebar: React.FC = () => {
       </div>
 
       <nav className="sidebar-nav">
-        {menuItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
-          >
+        {menuItems.map((item) => {
+          const fullPath = withBase(item.path);
+          const isActive = location.pathname === fullPath;
+          return (
+            <Link
+              key={item.path}
+              to={fullPath}
+              className={`nav-item ${isActive ? 'active' : ''}`}
+            >
             <span className="nav-icon">{item.icon}</span>
             <span className="nav-label">{item.label}</span>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="sidebar-footer">

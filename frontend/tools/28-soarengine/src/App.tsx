@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Briefcase, BookOpen, Link2, Search,
   Zap, FileBarChart, Bot, Settings, Shield, Bell, ChevronRight, LogOut, User
@@ -18,6 +19,9 @@ import {
   EnrichmentResult, MetricsData, DashboardStats, SOARSettings
 } from './types';
 import { DEFAULT_SETTINGS } from './constants';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+
+const BASE_PATH = '/maula';
 
 // Mock data
 const mockCases: Case[] = [
@@ -206,8 +210,9 @@ const mockMetrics: MetricsData[] = [
   { timestamp: '2026-01-05', cases_opened: 33, cases_closed: 35, avg_response_time: 20, playbooks_executed: 45, automations_run: 178, sla_breaches: 0 },
 ];
 
-function App() {
+function CoreApp() {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const navigate = useNavigate();
   const [cases, setCases] = useState<Case[]>(mockCases);
   const [playbooks, setPlaybooks] = useState<Playbook[]>(mockPlaybooks);
   const [integrations, setIntegrations] = useState<Integration[]>(mockIntegrations);
@@ -530,6 +535,13 @@ function App() {
                 </span>
               )}
             </button>
+            <button
+              onClick={() => navigate(`${BASE_PATH}/ai`)}
+              className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-300 rounded-full hover:bg-purple-500/20 transition-colors"
+            >
+              <Bot className="w-4 h-4" />
+              <span className="text-sm">Neural Link AI</span>
+            </button>
             <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               <span className="text-xs text-green-400 font-medium">All Systems Operational</span>
@@ -545,5 +557,16 @@ function App() {
     </div>
   );
 }
+
+const App: React.FC = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<Navigate to={BASE_PATH} replace />} />
+      <Route path={`${BASE_PATH}`} element={<CoreApp />} />
+      <Route path={`${BASE_PATH}/ai`} element={<NeuralLinkInterface />} />
+      <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
+    </Routes>
+  </Router>
+);
 
 export default App;

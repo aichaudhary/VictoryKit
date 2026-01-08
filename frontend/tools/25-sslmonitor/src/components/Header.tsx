@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { systemAPI } from '../services/api';
 import { SystemStatus } from '../types';
 import wsService from '../services/websocket';
 import './Header.css';
 
+const BASE_PATH = '/maula';
+
 const Header: React.FC = () => {
   const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null);
   const [isOnline, setIsOnline] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Update current time every second
@@ -122,6 +126,12 @@ const Header: React.FC = () => {
         <div className="current-time">
           {currentTime.toLocaleString()}
         </div>
+        <button
+          className="ai-button"
+          onClick={() => navigate(`${BASE_PATH}/ai`)}
+        >
+          Neural Link AI
+        </button>
 
         <div className="user-menu">
           <button className="user-btn">

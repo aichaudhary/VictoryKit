@@ -14,7 +14,7 @@
     "subdomain": "wirelesswatch",
     "domain": "maula.ai",
     "fullUrl": "https://wirelesswatch.maula.ai",
-    "aiAssistantUrl": "https://wirelesswatch.maula.ai/maula-ai"
+    "aiAssistantUrl": "https://wirelesswatch.maula.ai/maula/ai"
   },
   "ports": {
     "frontend": 3040,

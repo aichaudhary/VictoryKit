@@ -5,7 +5,7 @@
 **MobileDefend** is an enterprise mobile application security platform that protects iOS and Android apps from security vulnerabilities, malware, and runtime threats. The platform provides comprehensive SAST/DAST scanning, runtime app protection (RASP), mobile device management (MDM) integration, and real-time mobile threat defense.
 
 **Domain:** `mobiledefend.maula.ai`  
-**AI Assistant:** `mobiledefend.maula.ai/maula-ai`  
+**AI Assistant:** `mobiledefend.maula.ai/maula/ai`  
 **Ports:** Frontend 3043, API 4043, ML 8043
 
 ---
@@ -231,7 +231,7 @@
 - Alert Configuration (Slack, email, PagerDuty)
 - API Keys and Authentication
 
-#### 11. AI Assistant (`/maula-ai`)
+#### 11. AI Assistant (`/maula/ai`)
 **Purpose:** Natural language mobile security management
 
 **Capabilities:**

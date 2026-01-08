@@ -46,10 +46,10 @@
   - Color theme (blue professional palette)
   - 10 navigation items
   - Subdomain: pcidsschk.maula.ai
-  - Neural-Link path: /maula-ai (same across all 50 tools)
+  - Neural-Link path: /maula/ai (same across all 50 tools)
 
 - ✅ Cleaned Up:
-  - Deleted neural-link-interface folder (AI accessed via /maula-ai)
+  - Deleted neural-link-interface folder (AI accessed via /maula/ai)
   - Removed fraudguard-config.json
 
 ## 🚧 NEXT STEPS (Frontend React Components)
@@ -89,7 +89,7 @@
 ```
 Tool #49: PCI DSS Check
 ├── Subdomain: pcidsschk.maula.ai
-├── Neural-Link AI: pcidsschk.maula.ai/maula-ai
+├── Neural-Link AI: pcidsschk.maula.ai/maula/ai
 ├── Frontend: Port 3049
 ├── Backend API: Port 4049
 ├── WebSocket: Port 6049

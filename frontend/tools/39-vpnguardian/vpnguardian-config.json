@@ -14,7 +14,7 @@
     "subdomain": "vpnguardian",
     "domain": "maula.ai",
     "fullUrl": "https://vpnguardian.maula.ai",
-    "aiAssistantUrl": "https://vpnguardian.maula.ai/maula-ai"
+    "aiAssistantUrl": "https://vpnguardian.maula.ai/maula/ai"
   },
   "ports": {
     "frontend": 3039,

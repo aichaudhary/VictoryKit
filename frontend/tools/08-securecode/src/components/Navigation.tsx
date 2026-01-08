@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   Code,
@@ -91,8 +92,8 @@ const Navigation: React.FC = () => {
 
       {/* AI Assistant */}
       <div className="p-4 border-t border-securecode-800/50">
-        <a
-          href="/maula-ai"
+        <Link
+          to="/maula/ai"
           className={`flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-securecode-600/20 to-emerald-600/20 border border-securecode-500/30 hover:border-securecode-400/50 transition-all group ${isCollapsed ? 'justify-center' : ''}`}
         >
           <Bot size={20} className="text-securecode-400 group-hover:text-securecode-300" />
@@ -102,7 +103,7 @@ const Navigation: React.FC = () => {
               <p className="text-xs text-gray-500">Code Security Assistant</p>
             </div>
           )}
-        </a>
+        </Link>
       </div>
     </nav>
   );

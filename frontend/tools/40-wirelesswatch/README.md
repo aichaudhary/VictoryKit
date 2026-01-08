@@ -327,7 +327,7 @@ MIT License - See [LICENSE](../../../LICENSE) for details.
 ## 🔗 Links
 
 - **Production**: https://wirelesswatch.maula.ai
-- **AI Assistant**: https://wirelesswatch.maula.ai/maula-ai
+- **AI Assistant**: https://wirelesswatch.maula.ai/maula/ai
 - **API Docs**: https://wirelesswatch.maula.ai/api/docs
 - **Status**: https://status.maula.ai
 

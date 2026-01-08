@@ -22,10 +22,10 @@ app.get('/health', (req, res) => {
 // Create HTTP server
 const server = http.createServer(app);
 
-// Create WebSocket server on /maula-ai path
+// Create WebSocket server on /maula/ai path
 const wss = new WebSocket.Server({
   server,
-  path: '/maula-ai'
+  path: '/maula/ai'
 });
 
 console.log('🤖 SOAREngine AI Assistant WebSocket server initializing...');
@@ -237,7 +237,7 @@ async function handleFunctionCall(ws, message) {
 // Start server
 server.listen(PORT, () => {
   console.log(`🤖 SOAREngine AI Assistant running on port ${PORT}`);
-  console.log(`🔗 WebSocket: ws://localhost:${PORT}/maula-ai`);
+  console.log(`🔗 WebSocket: ws://localhost:${PORT}/maula/ai`);
   console.log(`📡 HTTP Health: http://localhost:${PORT}/health`);
 });
 

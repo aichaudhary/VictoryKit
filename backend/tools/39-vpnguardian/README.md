@@ -34,7 +34,7 @@ VPNGuardian is an AI-powered VPN security platform that provides comprehensive V
 │  └─────────────┘  └─────────────┘  └─────────────┘              │
 ├─────────────────────────────────────────────────────────────────┤
 │                    AI Assistant (Gemini 1.5 Pro)                 │
-│                    WebSocket: ws://localhost:6039/maula-ai       │
+│                    WebSocket: ws://localhost:6039/maula/ai       │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

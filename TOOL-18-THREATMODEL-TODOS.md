@@ -5,7 +5,7 @@
 - [ ] **Model Recommendations**: Use Claude Opus/Sonnet 4.5 for intelligent threat modeling suggestions based on current threat landscapes and attack patterns
 - [ ] **User Experience Design**: Design premium VIP-level interface with intuitive threat modeling diagrams, attack trees, and AI-assisted threat scenario development
 - [ ] **Domain Configuration**: Ensure threatmodel.maula.ai subdomain setup and routing
-- [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula-ai path with LIVE AI Assistance option for threat modeling
+- [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula/ai path with LIVE AI Assistance option for threat modeling
 
 ## 🗄️ **PHASE 2: DATABASE DESIGN (MongoDB)**
 - [ ] **ThreatModel Collection Schema**: Comprehensive threat model with system boundaries, trust levels, and threat scenarios
@@ -62,7 +62,7 @@
 ## 🔗 **PHASE 6: NEURAL-LINK INTERFACE INTEGRATION**
 - [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/18-threatmodel/
 - [ ] **AI Streaming Setup**: Implement real-time AI conversation streaming for threat modeling assistance
-- [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula-ai interface
+- [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula/ai interface
 - [ ] **Context Awareness**: AI understands current threat model context and components
 - [ ] **Voice Integration**: Optional voice input/output for hands-free threat modeling
 - [ ] **Multi-modal Interface**: Support for text, voice, and visual AI interactions
@@ -120,7 +120,7 @@
 - [ ] No legacy/duplicate/unused files remaining
 - [ ] README.md added with complete backend/frontend/database details
 - [ ] Domain threatmodel.maula.ai configured
-- [ ] /maula-ai path integrated for AI assistance
+- [ ] /maula/ai path integrated for AI assistance
 - [ ] Claude Opus/Sonnet 4.5 optimally utilized for intelligence
 - [ ] Premium VIP-level user experience achieved
 - [ ] 360-degree completion: backend, frontend, database, AI, docs

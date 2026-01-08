@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server, path: '/maula-ai' });
+const wss = new WebSocket.Server({ server, path: '/maula/ai' });
 
 const PORT = process.env.AI_PORT || 6030;
 
@@ -22,7 +22,7 @@ app.get('/health', (req, res) => {
     service: 'PolicyEngine AI Assistant',
     status: 'healthy',
     port: PORT,
-    websocket: '/maula-ai'
+    websocket: '/maula/ai'
   });
 });
 
@@ -138,7 +138,7 @@ wss.on('connection', (ws, req) => {
 
 server.listen(PORT, () => {
   console.log(`PolicyEngine AI Assistant running on port ${PORT}`);
-  console.log(`WebSocket server running at ws://localhost:${PORT}/maula-ai`);
+  console.log(`WebSocket server running at ws://localhost:${PORT}/maula/ai`);
 });
 
 module.exports = { app, server, wss };

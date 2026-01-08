@@ -51,7 +51,7 @@ export function getApiUrl(): string {
 export function getWebSocketUrl(): string {
   const config = getConfig();
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  return `${protocol}//${config.base_domain}:${config.ai_port}/maula-ai`;
+  return `${protocol}//${config.base_domain}:${config.ai_port}/maula/ai`;
 }
 
 export function getTheme() {

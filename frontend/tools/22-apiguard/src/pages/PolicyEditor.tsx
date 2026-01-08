@@ -19,6 +19,9 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 
+const BASE_PATH = '/maula';
+const policiesPath = `${BASE_PATH}/policies`;
+
 // Default policy template
 const defaultPolicyCode = `{
   "name": "New Security Policy",
@@ -267,7 +270,7 @@ export default function PolicyEditor() {
       <div className="flex items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-4">
           <Link
-            to="/policies"
+            to={policiesPath}
             className="p-2 hover:bg-api-dark rounded-lg text-api-muted hover:text-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -410,10 +413,10 @@ export default function PolicyEditor() {
           {/* Scope */}
           <div className="api-card p-5">
             <h3 className="text-sm font-semibold text-white mb-4">Apply To</h3>
-            
-            <div className="space-y-3">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
+                <Link
+                  to={policiesPath}
+                  className="api-btn api-btn-secondary"
+                >
                   type="checkbox"
                   checked={applyToAll}
                   onChange={(e) => {

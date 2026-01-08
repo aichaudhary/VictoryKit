@@ -390,7 +390,7 @@ export function getApiUrl(): string {
 
 export function getWsUrl(): string {
   const ports = getPortConfig();
-  return import.meta.env.VITE_WS_URL || `ws://localhost:${ports.aiWebSocket}/maula-ai`;
+  return import.meta.env.VITE_WS_URL || `ws://localhost:${ports.aiWebSocket}/maula/ai`;
 }
 
 export function getMlEngineUrl(): string {

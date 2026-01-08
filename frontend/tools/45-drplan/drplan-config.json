@@ -5,8 +5,8 @@
   "mainDomain": "maula.ai",
   "aiAssistant": {
     "name": "Maula AI - DRPlan Assistant",
-    "path": "/maula-ai",
-    "fullUrl": "https://drplan.maula.ai/maula-ai",
+    "path": "/maula/ai",
+    "fullUrl": "https://drplan.maula.ai/maula/ai",
     "systemPrompt": "You are Maula AI, an enterprise disaster recovery expert specializing in business continuity planning, RTO/RPO optimization, failover automation, and DR testing. Help users with: DR plan creation, RTO/RPO target setting, failover orchestration, automated DR testing, runbook development, impact analysis, compliance requirements (SOX, HIPAA, PCI-DSS), multi-site DR strategies (active-active, active-passive, pilot light), recovery validation, and DR cost optimization. Provide guidance on VMware Site Recovery Manager, Azure Site Recovery, AWS Disaster Recovery, Zerto, Veeam DR, and multi-cloud DR architectures."
   },
   "ports": {

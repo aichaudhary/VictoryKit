@@ -771,7 +771,7 @@ frontend/tools/47-gdprcompliance/
 
 - **Home**: `maula.ai` → Main dashboard
 - **Tool**: `gdprcompliance.maula.ai` → GDPR compliance platform
-- **AI Assistant**: `gdprcompliance.maula.ai/maula-ai` → GDPR AI chatbot
+- **AI Assistant**: `gdprcompliance.maula.ai/maula/ai` → GDPR AI chatbot
 
 ---
 

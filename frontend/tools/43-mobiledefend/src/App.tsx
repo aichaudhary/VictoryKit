@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { 
   Shield, Menu, X, MessageSquare, ChevronLeft, ChevronRight, 
   Search, Settings, Bell, TrendingUp, Activity, FileText,
@@ -25,7 +27,7 @@ import { NAV_ITEMS, DEFAULT_SETTINGS, PROVIDER_CONFIG } from './constants';
 import { fraudguardAPI } from './services/fraudguardAPI';
 import { executeTool, getToolDefinitions } from './services/fraudguard-tools';
 
-const App: React.FC = () => {
+const MobileDefendExperience: React.FC = () => {
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
@@ -515,5 +517,15 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+
+const App: React.FC = () => (
+  <Routes>
+    <Route path="/" element={<Navigate to="/maula" replace />} />
+    <Route path="/maula" element={<MobileDefendExperience />} />
+    <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    <Route path="/*" element={<Navigate to="/maula" replace />} />
+  </Routes>
+);
 
 export default App;

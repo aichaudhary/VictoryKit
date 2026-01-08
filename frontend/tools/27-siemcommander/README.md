@@ -95,7 +95,7 @@ npm run dev
 ### Access
 - **Frontend:** http://localhost:3027
 - **Backend API:** http://localhost:4027
-- **AI Assistant:** ws://localhost:6027/maula-ai
+- **AI Assistant:** ws://localhost:6027/maula/ai
 - **ML Engine:** http://localhost:8027
 
 ---

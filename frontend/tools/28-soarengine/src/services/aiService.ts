@@ -10,7 +10,7 @@ class SOAREngineAI {
 
   connect(onMessage: (data: any) => void) {
     this.onMessageCallback = onMessage;
-    const wsUrl = import.meta.env.VITE_AI_WS_URL || 'ws://localhost:6028/maula-ai';
+    const wsUrl = import.meta.env.VITE_AI_WS_URL || 'ws://localhost:6028/maula/ai';
 
     try {
       this.ws = new WebSocket(wsUrl);

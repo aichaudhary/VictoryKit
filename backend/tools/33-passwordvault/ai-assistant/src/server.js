@@ -43,7 +43,7 @@ When helping users:
 You have access to functions that allow you to interact with the PasswordVault system. Use them to provide real-time assistance.`;
 
 // Create WebSocket server
-const wss = new WebSocket.Server({ port: PORT, path: '/maula-ai' });
+const wss = new WebSocket.Server({ port: PORT, path: '/maula/ai' });
 
 console.log(`PasswordVault AI Assistant WebSocket server running on port ${PORT}`);
 

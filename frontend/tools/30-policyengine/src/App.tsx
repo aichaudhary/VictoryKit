@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { 
   Menu, X, MessageSquare, ChevronLeft, ChevronRight, 
   Search, Settings, Bell, Send, Sparkles, User, Bot, Scale,
@@ -11,6 +12,9 @@ import PolicyEditor from './components/PolicyEditor';
 import ComplianceMapping from './components/ComplianceMapping';
 import PolicyViolations from './components/PolicyViolations';
 import PolicyWorkflows from './components/PolicyWorkflows';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+
+const BASE_PATH = '/maula';
 
 // Types
 interface Policy {
@@ -53,10 +57,11 @@ const NAV_ITEMS = [
   { id: 'workflows', label: 'Approval Workflows', icon: GitBranch },
 ];
 
-const App: React.FC = () => {
+const CoreApp: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+  const navigate = useNavigate();
   
   // Data state
   const [policies, setPolicies] = useState<Policy[]>([
@@ -289,6 +294,13 @@ const App: React.FC = () => {
             >
               <MessageSquare className="w-5 h-5" />
             </button>
+            <button
+              onClick={() => navigate(`${BASE_PATH}/ai`)}
+              className="px-3 py-2 bg-violet-600/20 text-violet-300 rounded-lg hover:bg-violet-600/30 transition-colors flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span className="text-sm">Neural Link AI</span>
+            </button>
             <button className="p-2 hover:bg-gray-700 rounded-lg">
               <Settings className="w-5 h-5 text-gray-400" />
             </button>
@@ -376,5 +388,16 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+const App: React.FC = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<Navigate to={BASE_PATH} replace />} />
+      <Route path={`${BASE_PATH}`} element={<CoreApp />} />
+      <Route path={`${BASE_PATH}/ai`} element={<NeuralLinkInterface />} />
+      <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
+    </Routes>
+  </Router>
+);
 
 export default App;

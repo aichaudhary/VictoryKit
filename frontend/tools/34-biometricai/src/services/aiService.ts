@@ -1,7 +1,7 @@
 // BiometricAI AI Service
 // WebSocket client for AI-powered biometric assistance
 
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:6034/maula-ai';
+const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:6034/maula/ai';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4034';
 
 // Types

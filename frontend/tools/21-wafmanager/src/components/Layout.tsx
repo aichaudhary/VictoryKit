@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Shield, 
@@ -20,11 +20,15 @@ import {
   VolumeX,
   ChevronLeft,
   ChevronRight,
-  Zap
+  Zap,
+  MessageSquare
 } from 'lucide-react';
 import { useWAFStore } from '../stores/wafStore';
 import { wsService } from '../services/websocket';
 import clsx from 'clsx';
+
+const BASE_PATH = '/maula';
+const resolvePath = (path: string) => (path === '/' ? BASE_PATH : `${BASE_PATH}${path}`);
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -40,6 +44,7 @@ const navItems = [
 
 export default function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { 
     connectionStatus, 
     attackCount, 
@@ -65,7 +70,7 @@ export default function Layout() {
 
   // Reset attack count when viewing dashboard
   useEffect(() => {
-    if (location.pathname === '/') {
+    if (location.pathname === BASE_PATH) {
       resetAttackCount();
     }
   }, [location.pathname, resetAttackCount]);
@@ -104,13 +109,14 @@ export default function Layout() {
           <ul className="space-y-1 px-3">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = location.pathname === item.path || 
-                (item.path !== '/' && location.pathname.startsWith(item.path));
+              const fullPath = resolvePath(item.path);
+              const isActive = location.pathname === fullPath || 
+                (item.path !== '/' && location.pathname.startsWith(fullPath));
               
               return (
                 <li key={item.path}>
                   <NavLink
-                    to={item.path}
+                    to={resolvePath(item.path)}
                     className={clsx(
                       'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 relative group',
                       isActive
@@ -176,12 +182,21 @@ export default function Layout() {
           </div>
           <span className="font-bold text-white">WAFManager</span>
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 text-waf-muted hover:text-white"
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate(`${BASE_PATH}/ai`)}
+            className="p-2 rounded-lg border border-waf-primary/40 text-waf-primary hover:bg-waf-primary/10"
+            aria-label="Open Neural Link AI"
+          >
+            <MessageSquare className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-waf-muted hover:text-white"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Overlay */}
@@ -207,11 +222,11 @@ export default function Layout() {
                   <ul className="space-y-1">
                     {navItems.map((item) => {
                       const Icon = item.icon;
-                      const isActive = location.pathname === item.path;
+                      const isActive = location.pathname === resolvePath(item.path);
                       return (
                         <li key={item.path}>
                           <NavLink
-                            to={item.path}
+                            to={resolvePath(item.path)}
                             onClick={() => setMobileMenuOpen(false)}
                             className={clsx(
                               'flex items-center gap-3 px-4 py-3 rounded-xl transition-all',
@@ -248,8 +263,8 @@ export default function Layout() {
           <div className="flex items-center gap-4">
             <h2 className="text-lg font-semibold text-white">
               {navItems.find(item => 
-                item.path === location.pathname || 
-                (item.path !== '/' && location.pathname.startsWith(item.path))
+                resolvePath(item.path) === location.pathname || 
+                (item.path !== '/' && location.pathname.startsWith(resolvePath(item.path)))
               )?.label || 'Dashboard'}
             </h2>
           </div>
@@ -275,6 +290,14 @@ export default function Layout() {
                 <span className="text-xs text-waf-muted">ms</span>
               </div>
             </div>
+
+            <button
+              onClick={() => navigate(`${BASE_PATH}/ai`)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-waf-primary/40 bg-waf-primary/10 text-waf-primary font-semibold hover:bg-waf-primary/20 transition-colors"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span className="text-sm">Neural Link AI</span>
+            </button>
 
             {/* Live Mode Toggle */}
             <button

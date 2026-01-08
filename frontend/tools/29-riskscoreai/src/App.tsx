@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Building2,
@@ -28,6 +29,9 @@ import {
   AIAssistantPanel,
   SettingsPanel,
 } from './components';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+
+const BASE_PATH = '/maula';
 
 const iconMap = {
   LayoutDashboard,
@@ -41,10 +45,11 @@ const iconMap = {
   Settings,
 };
 
-function App() {
+function CoreApp() {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const navigate = useNavigate();
 
   const renderContent = () => {
     switch (activeTab) {
@@ -216,6 +221,13 @@ function App() {
             </div>
 
             {/* Score Badge */}
+            <button
+              onClick={() => navigate(`${BASE_PATH}/ai`)}
+              className="flex items-center gap-2 bg-[#252529] px-4 py-2 rounded-lg text-amber-400 hover:text-white hover:bg-[#2f2f33] transition-colors"
+            >
+              <Bot className="w-5 h-5" />
+              <span className="text-sm font-medium">Neural Link AI</span>
+            </button>
             <div className="flex items-center gap-2 bg-[#252529] px-4 py-2 rounded-lg">
               <Shield className="w-5 h-5 text-amber-500" />
               <span className="text-white font-medium">78</span>
@@ -277,5 +289,16 @@ function NotificationItem({
     </div>
   );
 }
+
+const App: React.FC = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<Navigate to={BASE_PATH} replace />} />
+      <Route path={`${BASE_PATH}`} element={<CoreApp />} />
+      <Route path={`${BASE_PATH}/ai`} element={<NeuralLinkInterface />} />
+      <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
+    </Routes>
+  </Router>
+);
 
 export default App;

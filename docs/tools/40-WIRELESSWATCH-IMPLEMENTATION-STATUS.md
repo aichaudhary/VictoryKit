@@ -275,7 +275,7 @@ Ensure MongoDB is running and accessible at:
 1. **Domain Structure:**
    - Main platform: `maula.ai`
    - Tool access: `wirelesswatch.maula.ai`
-   - AI assistant: `wirelesswatch.maula.ai/maula-ai`
+   - AI assistant: `wirelesswatch.maula.ai/maula/ai`
 
 2. **Port Allocation:**
    - Frontend: 3040

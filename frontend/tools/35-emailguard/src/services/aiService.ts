@@ -1,7 +1,7 @@
 // EmailGuard AI Service
 // WebSocket client for AI-powered email security assistance
 
-const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:6035/maula-ai';
+const WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:6035/maula/ai';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4035';
 
 // Types

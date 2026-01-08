@@ -34,7 +34,7 @@ FirewallAI is an AI-driven firewall management platform that provides real-time 
 │  └─────────────┘  └─────────────┘  └─────────────┘              │
 ├─────────────────────────────────────────────────────────────────┤
 │                    AI Assistant (Gemini 1.5 Pro)                 │
-│                    WebSocket: ws://localhost:6038/maula-ai       │
+│                    WebSocket: ws://localhost:6038/maula/ai       │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -213,7 +213,7 @@ GET /functions
 
 ### WebSocket Connection
 ```
-ws://firewallai.maula.ai:6038/maula-ai
+ws://firewallai.maula.ai:6038/maula/ai
 ```
 
 ## Database Collections

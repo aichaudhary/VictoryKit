@@ -315,7 +315,7 @@ MIT License - See [LICENSE](../../../LICENSE) for details.
 ## 🔗 Links
 
 - **Production**: https://vpnguardian.maula.ai
-- **AI Assistant**: https://vpnguardian.maula.ai/maula-ai
+- **AI Assistant**: https://vpnguardian.maula.ai/maula/ai
 - **API Docs**: https://vpnguardian.maula.ai/api/docs
 - **Status**: https://status.maula.ai
 

@@ -336,7 +336,7 @@
 - All ports configured correctly (3048, 4048, 6048, 8048)
 - Database name: hipaaguard_db
 - Domain: hipaaguard.maula.ai
-- Neural Link at: hipaaguard.maula.ai/maula-ai
+- Neural Link at: hipaaguard.maula.ai/maula/ai
 - Following established pattern from Tool #49 (PCI DSS Check)
 - Branch isolation maintained for multi-team workflow
 - Ready for frontend React component development

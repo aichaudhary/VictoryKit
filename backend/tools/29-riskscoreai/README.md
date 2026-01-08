@@ -116,7 +116,7 @@ XAI_API_KEY=your_key_here
 **Frontend** (`frontend/tools/29-riskscoreai/.env`):
 ```env
 VITE_API_URL=http://localhost:4029
-VITE_AI_WS_URL=ws://localhost:6029/maula-ai
+VITE_AI_WS_URL=ws://localhost:6029/maula/ai
 ```
 
 ### Starting Services
@@ -138,7 +138,7 @@ npm run dev
 Access the application:
 - **Frontend**: http://localhost:3029
 - **API Health**: http://localhost:4029/health
-- **AI Assistant**: ws://localhost:6029/maula-ai
+- **AI Assistant**: ws://localhost:6029/maula/ai
 
 ---
 
@@ -501,7 +501,7 @@ The AI Assistant provides 10 specialized risk scoring functions accessible via W
 ### Connection
 
 ```javascript
-const ws = new WebSocket('ws://localhost:6029/maula-ai');
+const ws = new WebSocket('ws://localhost:6029/maula/ai');
 
 ws.onopen = () => {
   console.log('Connected to RiskScoreAI Assistant');

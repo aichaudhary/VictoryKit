@@ -153,7 +153,7 @@ export default function RulesManager() {
           <p className="text-waf-muted mt-1">Create and manage WAF protection rules</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/rules/editor" className="waf-btn-primary">
+          <Link to={editorPath()} className="waf-btn-primary">
             <Plus className="w-5 h-5" />
             Create Rule
           </Link>
@@ -405,7 +405,7 @@ export default function RulesManager() {
         <div className="waf-card py-12 text-center">
           <FileCode2 className="w-12 h-12 text-waf-muted mx-auto mb-4" />
           <p className="text-waf-muted">No rules found matching your criteria</p>
-          <Link to="/rules/editor" className="waf-btn-primary mt-4 inline-flex">
+          <Link to={editorPath()} className="waf-btn-primary mt-4 inline-flex">
             <Plus className="w-5 h-5" />
             Create First Rule
           </Link>

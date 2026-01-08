@@ -4,7 +4,7 @@
 **Tool Name:** PCI DSS Check  
 **Purpose:** PCI DSS Compliance Scanning & Payment Security Assessment  
 **Domain:** pcidsschk.maula.ai  
-**Neural Link:** pcidsschk.maula.ai/maula-ai
+**Neural Link:** pcidsschk.maula.ai/maula/ai
 
 ## Ports Configuration
 - **Frontend:** 3049

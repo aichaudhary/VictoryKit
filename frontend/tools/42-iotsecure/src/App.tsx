@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+import { Routes, Route, Navigate, Link } from 'react-router-dom';
 import { 
   Shield, Menu, ChevronLeft, Bell, Settings as SettingsIcon,
   Send, Bot, User, Sparkles, Wifi, AlertTriangle,
@@ -31,67 +33,73 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-}
+        {/* Sidebar */}
+        <aside 
+          className={`fixed left-0 top-16 bottom-0 bg-slate-900/90 backdrop-blur border-r border-cyan-500/20 transition-all duration-300 ${
+            sidebarOpen ? 'w-72' : 'w-20'
+          }`}
+        >
+          <div className="h-full flex flex-col">
+            {/* Sidebar Header */}
+            <div className="p-4 border-b border-cyan-500/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
+                {sidebarOpen && (
+                  <div>
+                    <h2 className="font-bold text-lg">IoTSecure</h2>
+                    <p className="text-xs text-cyan-400">AI-Powered IoT Defense</p>
+                  </div>
+                )}
+              </div>
+            </div>
 
-const App: React.FC = () => {
-  // UI State
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [chatOpen, setChatOpen] = useState(true);
-  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
-  
-  // Data state
-  const [overview, setOverview] = useState<DashboardOverview | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [notifications, setNotifications] = useState<number>(0);
-  
-  // Chat state
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: "Welcome to IoTSecure! 🛡️ I'm your AI-powered IoT security assistant. I can help you:\n\n• 📡 Discover and inventory IoT devices\n• 🔓 Scan for vulnerabilities\n• 🌐 Visualize network topology\n• 🚨 Manage security alerts\n• 📊 Analyze device behavior\n\nHow can I help secure your IoT environment today?",
-      timestamp: new Date(),
-    }
-  ]);
-  const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+            {/* Nav Items */}
+            <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1">
+              {NAV_ITEMS.map((item) => {
+                const Icon = getNavIcon(item.id);
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id as Tab)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all border border-transparent ${
+                      isActive
+                        ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-cyan-500/40 text-white shadow-lg shadow-cyan-500/10'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800/80 border-slate-800'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {sidebarOpen && <span className="font-medium">{item.label}</span>}
+                  </button>
+                );
+              })}
+            </nav>
 
-  // Load initial data
-  useEffect(() => {
-    fetchDashboardData();
-    const interval = setInterval(fetchDashboardData, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Scroll chat to bottom
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const fetchDashboardData = async () => {
-    try {
-      setIsLoading(true);
-      // Fetch dashboard overview for sidebar stats
-      const overviewRes = await iotSecureAPI.dashboard.getOverview();
-      if (overviewRes.data) {
-        setOverview(overviewRes.data);
-        setNotifications(overviewRes.data.alerts?.byStatus?.new || 0);
-      }
-    } catch (err) {
-      console.error('Failed to fetch dashboard data:', err);
-      // Demo data structure matching DashboardOverview type
-      setOverview({
-        riskScore: 72,
-        devices: {
-          total: 47,
-          byStatus: { online: 42, offline: 5, degraded: 0, maintenance: 0, quarantined: 0, decommissioned: 0 },
-          byType: { camera: 12, sensor: 18, controller: 8, gateway: 4, thermostat: 3, router: 2, unknown: 0, switch: 0, access_point: 0, smart_lock: 0, smart_plug: 0, hvac: 0, lighting: 0, medical_device: 0, industrial_plc: 0, scada: 0, building_automation: 0, environmental_sensor: 0, wearable: 0, vehicle: 0, smart_meter: 0, security_system: 0, voice_assistant: 0 },
-          byRiskLevel: { low: 20, medium: 15, high: 8, critical: 4 },
-          byCriticality: { low: 10, medium: 20, high: 12, critical: 5 }
-        },
-        vulnerabilities: {
-          total: 26,
+            {/* Sidebar Footer */}
+            <div className="p-4 border-t border-cyan-500/10 space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Security Score</span>
+                <span className="font-bold text-cyan-400">{overview?.riskScore || 0}/100</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Devices</span>
+                <span className="font-bold text-slate-200">{overview?.devices?.total || 0}</span>
+              </div>
+              <button className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium">
+                <Sparkles className="w-4 h-4" />
+                Quick Actions
+              </button>
+              <Link
+                to="/maula/ai"
+                className="block w-full mt-3 px-3 py-2 rounded-lg border border-cyan-400/40 text-center text-sm font-semibold text-white bg-slate-900/40 hover:bg-slate-800/80 hover:border-cyan-300 transition"
+              >
+                Open AI Assistant
+              </Link>
+            </div>
+          </div>
+        </aside>
           bySeverity: { critical: 3, high: 8, medium: 10, low: 5, info: 0 },
           byStatus: { open: 18, in_progress: 5, mitigated: 3, resolved: 0, accepted: 0, false_positive: 0 },
           exploitable: 5
@@ -584,5 +592,15 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+
+const App: React.FC = () => (
+  <Routes>
+    <Route path="/" element={<Navigate to="/maula" replace />} />
+    <Route path="/maula" element={<IoTSecureExperience />} />
+    <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    <Route path="/*" element={<Navigate to="/maula" replace />} />
+  </Routes>
+);
 
 export default App;

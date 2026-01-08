@@ -2,7 +2,7 @@
 ## Enterprise Data Loss Prevention & Protection Platform
 
 **Domain:** datalossprevention.maula.ai  
-**AI Assistant:** datalossprevention.maula.ai/maula-ai  
+**AI Assistant:** datalossprevention.maula.ai/maula/ai  
 **Status:** Starting Fresh Implementation  
 **Ports:** Frontend: 3041 | API: 4041 | ML: 8041  
 **Branch:** datalossprevention-tool-41-complete  
@@ -146,7 +146,7 @@
 ```
 Main Platform:     maula.ai
 Tool Access:       datalossprevention.maula.ai
-AI Assistant:      datalossprevention.maula.ai/maula-ai
+AI Assistant:      datalossprevention.maula.ai/maula/ai
 ```
 
 ### UI/UX Architecture
@@ -357,7 +357,7 @@ AI Assistant:      datalossprevention.maula.ai/maula-ai
   - Cloud storage (AWS, Azure, GCP)
   - Email (Office 365, Gmail)
 
-#### 11. **AI Assistant** (`/maula-ai`)
+#### 11. **AI Assistant** (`/maula/ai`)
 - **Live AI Chat Interface:**
   - "Show me all critical incidents today"
   - "What data did user@company.com access yesterday?"

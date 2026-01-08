@@ -10,13 +10,17 @@ import PolicyEditor from './pages/PolicyEditor';
 import Anomalies from './pages/Anomalies';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+
+const BASE_PATH = '/maula';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Navigate to={`${BASE_PATH}/dashboard`} replace />} />
+        <Route path={`${BASE_PATH}`} element={<Layout />}>
+          <Route index element={<Navigate to={`${BASE_PATH}/dashboard`} replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="apis" element={<APIInventory />} />
           <Route path="apis/:apiId" element={<APIDetail />} />
@@ -28,6 +32,8 @@ export default function App() {
           <Route path="analytics" element={<Analytics />} />
           <Route path="settings" element={<Settings />} />
         </Route>
+        <Route path={`${BASE_PATH}/ai`} element={<NeuralLinkInterface />} />
+        <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
       </Routes>
     </BrowserRouter>
   );

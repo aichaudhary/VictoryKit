@@ -34,7 +34,7 @@
 - **Frontend**: React 18.2 | TypeScript 5.3 | Vite 5.0 | Tailwind CSS 3.3
 - **AI**: Multi-LLM (Gemini 1.5 Pro, Claude 3.5 Sonnet, GPT-4 Turbo, xAI Grok)
 - **ML**: Isolation Forest, LSTM Autoencoder, Random Forest
-- **WebSocket**: Real-time AI streaming on port 6031 at `/maula-ai`
+- **WebSocket**: Real-time AI streaming on port 6031 at `/maula/ai`
 
 ---
 
@@ -614,7 +614,7 @@ Content-Type: application/json
 
 ### WebSocket Connection
 ```
-ws://audittracker.maula.ai:6031/maula-ai
+ws://audittracker.maula.ai:6031/maula/ai
 ```
 
 ### AI Functions

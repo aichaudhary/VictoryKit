@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { 
   Shield, Menu, X, MessageSquare, ChevronLeft, ChevronRight, 
   Search, Settings, Bell, LayoutDashboard, FileText, Server,
@@ -31,7 +33,7 @@ const iconMap: Record<string, React.FC<any>> = {
   FlaskConical, Users, AlertTriangle, BarChart3, Settings,
 };
 
-const App: React.FC = () => {
+const DRPlanExperience: React.FC = () => {
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
@@ -367,5 +369,15 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+
+const App: React.FC = () => (
+  <Routes>
+    <Route path="/" element={<Navigate to="/maula" replace />} />
+    <Route path="/maula" element={<DRPlanExperience />} />
+    <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    <Route path="/*" element={<Navigate to="/maula" replace />} />
+  </Routes>
+);
 
 export default App;

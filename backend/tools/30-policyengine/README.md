@@ -38,7 +38,7 @@ PolicyEngine is an enterprise-grade security policy management platform designed
   - `audit_logs` - Complete audit trail
 
 ### **AI Assistant (Port 6030)**
-- **WebSocket Server** at `/maula-ai`
+- **WebSocket Server** at `/maula/ai`
 - **Multi-LLM Support:** Gemini, Claude 3.5, GPT-4
 - **10 Policy-Specific Functions**
 - **Real-time streaming** with function calling

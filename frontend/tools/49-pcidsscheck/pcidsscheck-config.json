@@ -2,7 +2,7 @@
   "toolName": "PCI DSS Check",
   "tagline": "Comprehensive Payment Card Industry Compliance Validation",
   "subdomain": "pcidsschk.maula.ai",
-  "neuralLinkPath": "/maula-ai",
+  "neuralLinkPath": "/maula/ai",
   "port": 3049,
   "apiPort": 4049,
   "mlPort": 8049,

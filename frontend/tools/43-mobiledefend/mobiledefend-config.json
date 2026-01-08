@@ -3,7 +3,7 @@
   "toolId": "43-mobiledefend",
   "subdomain": "mobiledefend",
   "fullDomain": "mobiledefend.maula.ai",
-  "aiAssistant": "mobiledefend.maula.ai/maula-ai",
+  "aiAssistant": "mobiledefend.maula.ai/maula/ai",
   "description": "Enterprise Mobile Application Security Platform - Protect iOS and Android apps from vulnerabilities, malware, and runtime threats",
   "ports": {
     "frontend": 3043,

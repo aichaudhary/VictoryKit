@@ -5,7 +5,7 @@
 - [ ] **Model Recommendations**: Use Claude Opus/Sonnet 4.5 for intelligent security scoring suggestions based on current threat landscape and compliance requirements
 - [ ] **User Experience Design**: Design premium VIP-level interface with intuitive security dashboards, risk visualizations, and AI-assisted remediation recommendations
 - [ ] **Domain Configuration**: Ensure securityscore.maula.ai subdomain setup and routing
-- [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula-ai path with LIVE AI Assistance option for security analysis
+- [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula/ai path with LIVE AI Assistance option for security analysis
 
 ## 🗄️ **PHASE 2: DATABASE DESIGN (MongoDB)**
 - [ ] **Security Assessment Collection Schema**: Comprehensive security assessment model with scoring criteria, compliance frameworks, and risk factors
@@ -60,7 +60,7 @@
 ## 🔗 **PHASE 6: NEURAL-LINK INTERFACE INTEGRATION**
 - [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/20-securityscore/
 - [ ] **AI Streaming Setup**: Implement real-time AI conversation streaming for security analysis
-- [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula-ai interface
+- [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula/ai interface
 - [ ] **Context Awareness**: AI understands current security assessment context and scoring
 - [ ] **Voice Integration**: Optional voice input/output for hands-free security analysis
 - [ ] **Multi-modal Interface**: Support for text, voice, and visual AI interactions
@@ -118,7 +118,7 @@
 - [ ] No legacy/duplicate/unused files remaining
 - [ ] README.md added with complete backend/frontend/database details
 - [ ] Domain securityscore.maula.ai configured
-- [ ] /maula-ai path integrated for AI assistance
+- [ ] /maula/ai path integrated for AI assistance
 - [ ] Claude Opus/Sonnet 4.5 optimally utilized for intelligence
 - [ ] Premium VIP-level user experience achieved
 - [ ] 360-degree completion: backend, frontend, database, AI, docs

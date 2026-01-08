@@ -165,7 +165,7 @@ const IntelliScoutTool: React.FC = () => {
 
             {/* Neural Link Button */}
             <Link
-              to="/maula-ai"
+              to="/maula/ai"
               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg hover:from-green-500 hover:to-emerald-500 transition-all shadow-lg shadow-green-500/25"
             >
               <Bot className="w-5 h-5" />

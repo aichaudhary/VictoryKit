@@ -55,8 +55,8 @@
 - [x] Configure domain: maula.ai (home page)
 - [x] Set up subdomain: cryptovault.maula.ai
 - [x] Implement neural-link-interface as AI realtime live streaming
-- [x] Add LIVE AI Assistance option: cryptovault.maula.ai/maula-ai
-- [x] Ensure URL pattern: [tool-name].maula.ai/maula-ai consistent across tools
+- [x] Add LIVE AI Assistance option: cryptovault.maula.ai/maula/ai
+- [x] Ensure URL pattern: [tool-name].maula.ai/maula/ai consistent across tools
 
 ### Phase 7: Documentation and README
 - [x] Create README.md in backend/tools/15-cryptovault/

@@ -2,7 +2,7 @@
   "toolName": "SOAREngine",
   "tagline": "Security Orchestration, Automation & Response Platform",
   "subdomain": "soarengine.maula.ai",
-  "aiPath": "/maula-ai",
+  "aiPath": "/maula/ai",
   "port": 3028,
   "apiPort": 4028,
   "mlPort": 8028,

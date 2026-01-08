@@ -24,6 +24,9 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 
+const BASE_PATH = '/maula';
+const newPolicyPath = `${BASE_PATH}/policies/new`;
+
 // Local types for policy data
 interface LocalPolicy {
   id: string;
@@ -223,7 +226,7 @@ export default function Policies() {
           <p className="text-api-muted mt-1">Manage API security and governance rules</p>
         </div>
         <Link
-          to="/policies/new"
+          to={newPolicyPath}
           className="api-btn api-btn-primary flex items-center gap-2 w-fit"
         >
           <Plus className="w-4 h-4" />
@@ -444,7 +447,7 @@ export default function Policies() {
                     </button>
                   )}
                   <Link
-                    to={`/policies/${policy.id}`}
+                    to={`${BASE_PATH}/policies/${policy.id}`}
                     className="p-2 hover:bg-api-dark rounded-lg text-api-muted hover:text-white transition-colors"
                   >
                     <Edit className="w-4 h-4" />
@@ -473,7 +476,7 @@ export default function Policies() {
               : 'Get started by creating your first security policy'}
           </p>
           <Link
-            to="/policies/new"
+            to={newPolicyPath}
             className="api-btn api-btn-primary inline-flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />

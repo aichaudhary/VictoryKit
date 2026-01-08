@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Shield, AlertTriangle, FileSearch, Users, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 import { getDashboardMetrics, getIncidents } from '../services/api';
 
@@ -19,6 +20,7 @@ interface DashboardMetrics {
 }
 
 const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [recentIncidents, setRecentIncidents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -182,9 +184,9 @@ const Dashboard: React.FC = () => {
       <div className="bg-gradient-to-br from-dlp-dark to-gray-900 rounded-2xl p-6 border border-gray-700">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white">Recent Incidents</h2>
-          <a href="/incidents" className="text-dlp-primary hover:text-dlp-secondary transition-colors">
+          <Link to="/maula/incidents" className="text-dlp-primary hover:text-dlp-secondary transition-colors">
             View All →
-          </a>
+          </Link>
         </div>
 
         <div className="space-y-4">
@@ -198,7 +200,7 @@ const Dashboard: React.FC = () => {
               <div
                 key={incident.incidentId || index}
                 className="bg-dlp-darker/50 rounded-lg p-4 border border-gray-700/50 hover:border-dlp-primary/30 transition-all cursor-pointer"
-                onClick={() => window.location.href = `/incidents/${incident.incidentId}`}
+                onClick={() => navigate(`/maula/incidents/${incident.incidentId}`)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4 flex-1">

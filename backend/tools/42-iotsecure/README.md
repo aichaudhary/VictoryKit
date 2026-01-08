@@ -1281,6 +1281,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Built with 💙 by the Maula AI Team**
 
-[Website](https://maula.ai) • [Twitter](https://twitter.com/maula_ai) • [LinkedIn](https://linkedin.com/company/maula-ai)
+[Website](https://maula.ai) • [Twitter](https://twitter.com/maula_ai) • [LinkedIn](https://linkedin.com/company/maula/ai)
 
 </div>

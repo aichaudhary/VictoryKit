@@ -2,7 +2,7 @@
   "toolName": "SIEMCommander",
   "tagline": "AI-Powered Security Information & Event Management",
   "subdomain": "siemcommander.maula.ai",
-  "aiPath": "/maula-ai",
+  "aiPath": "/maula/ai",
   "port": 3027,
   "apiPort": 4027,
   "mlPort": 8027,

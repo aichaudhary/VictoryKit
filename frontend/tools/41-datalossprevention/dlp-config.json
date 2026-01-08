@@ -14,7 +14,7 @@
     "subdomain": "dlp",
     "domain": "maula.ai",
     "fullUrl": "https://dlp.maula.ai",
-    "aiAssistantUrl": "https://dlp.maula.ai/maula-ai"
+    "aiAssistantUrl": "https://dlp.maula.ai/maula/ai"
   },
   "ports": {
     "frontend": 3041,

@@ -2,7 +2,7 @@
 ## Wireless Network Security Monitoring & Protection
 
 **Domain:** wirelesswatch.maula.ai  
-**AI Assistant:** wirelesswatch.maula.ai/maula-ai  
+**AI Assistant:** wirelesswatch.maula.ai/maula/ai  
 **Status:** 50% Complete - Starting Full Implementation  
 **Ports:** Frontend: 3040 | API: 4040 | ML: 8040  
 **Branch:** tool-40-wirelesswatch-complete-implementation  
@@ -133,7 +133,7 @@
 ```
 Main Platform:     maula.ai
 Tool Access:       wirelesswatch.maula.ai
-AI Assistant:      wirelesswatch.maula.ai/maula-ai
+AI Assistant:      wirelesswatch.maula.ai/maula/ai
 ```
 
 ### UI/UX Architecture
@@ -289,7 +289,7 @@ AI Assistant:      wirelesswatch.maula.ai/maula-ai
   - SIEM integration
   - NAC/firewall integration
 
-#### 10. **AI Assistant** (`/maula-ai`)
+#### 10. **AI Assistant** (`/maula/ai`)
 - **Live AI Chat Interface:**
   - Real-time voice/text communication
   - Natural language queries

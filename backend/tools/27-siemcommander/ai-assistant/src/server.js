@@ -9,7 +9,7 @@ const { executeSIEMFunction } = require('./services/functionExecutor');
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server, path: '/maula-ai' });
+const wss = new WebSocket.Server({ server, path: '/maula/ai' });
 
 const PORT = process.env.SIEM_AI_PORT || 6027;
 
@@ -23,7 +23,7 @@ app.get('/health', (req, res) => {
     service: 'SIEMCommander AI Assistant', 
     port: PORT,
     websocket: 'active',
-    path: '/maula-ai'
+    path: '/maula/ai'
   });
 });
 
@@ -167,7 +167,7 @@ async function handleFunctionCall(ws, data) {
 // Start server
 server.listen(PORT, () => {
   console.log(`🤖 SIEMCommander AI Assistant running on port ${PORT}`);
-  console.log(`🌐 WebSocket path: ws://localhost:${PORT}/maula-ai`);
+  console.log(`🌐 WebSocket path: ws://localhost:${PORT}/maula/ai`);
   console.log(`💚 Multi-LLM providers: Gemini, Claude, GPT, Grok, Mistral, Llama`);
 });
 

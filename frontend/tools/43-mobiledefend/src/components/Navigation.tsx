@@ -70,7 +70,7 @@ export const Navigation: React.FC = () => {
       {/* AI Assistant Link */}
       <div className="p-4 border-t border-gray-800">
         <a
-          href="/maula-ai"
+          href="/maula/ai"
           className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-200"
         >
           <Bot className="w-5 h-5" />

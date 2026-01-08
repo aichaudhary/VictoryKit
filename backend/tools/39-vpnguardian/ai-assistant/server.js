@@ -51,7 +51,7 @@ const clients = new Map();
 const server = createServer(app);
 
 // WebSocket server
-const wss = new WebSocketServer({ server, path: '/maula-ai' });
+const wss = new WebSocketServer({ server, path: '/maula/ai' });
 
 // Function definitions for Gemini
 const functionDeclarations = [
@@ -432,7 +432,7 @@ app.get('/functions', (req, res) => {
 // Start server
 server.listen(PORT, () => {
   console.log(`[VPNGuardian AI] WebSocket server running on port ${PORT}`);
-  console.log(`[VPNGuardian AI] WebSocket path: /maula-ai`);
+  console.log(`[VPNGuardian AI] WebSocket path: /maula/ai`);
   console.log(`[VPNGuardian AI] Health endpoint: http://localhost:${PORT}/health`);
 });
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { 
   Shield, Menu, ChevronLeft, Bell, Settings, 
   MessageSquare, Search, Activity, Target,
@@ -24,8 +25,12 @@ import {
   DashboardStats, AlertStatus
 } from './types';
 import { NAV_ITEMS } from './constants';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
 
-const App: React.FC = () => {
+const BASE_PATH = '/maula';
+
+const CoreApp: React.FC = () => {
+  const navigate = useNavigate();
   // UI State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(false);
@@ -402,6 +407,15 @@ const App: React.FC = () => {
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
             </button>
 
+            {/* Neural Link */}
+            <button
+              onClick={() => navigate(`${BASE_PATH}/ai`)}
+              className="flex items-center gap-2 px-3 py-2 bg-blue-500/10 text-blue-300 rounded-lg hover:bg-blue-500/20 transition-colors"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span className="text-sm font-medium">Neural Link AI</span>
+            </button>
+
             {/* AI Assistant Toggle */}
             <button
               onClick={() => setChatOpen(!chatOpen)}
@@ -651,5 +665,16 @@ const MOCK_TECHNIQUES: MitreTechnique[] = [
   { id: 'T1078', name: 'Valid Accounts', tactic: 'Defense Evasion', description: 'Adversaries may obtain and abuse credentials of existing accounts.', detection: 'Monitor for unusual account usage patterns', mitigation: 'Implement MFA and monitor for credential abuse' },
   { id: 'T1071', name: 'Application Layer Protocol', tactic: 'Command and Control', description: 'Adversaries may communicate using application layer protocols.', detection: 'Analyze network traffic for anomalies', mitigation: 'Use network intrusion detection systems' }
 ];
+
+const App: React.FC = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<Navigate to={BASE_PATH} replace />} />
+      <Route path={`${BASE_PATH}`} element={<CoreApp />} />
+      <Route path={`${BASE_PATH}/ai`} element={<NeuralLinkInterface />} />
+      <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
+    </Routes>
+  </Router>
+);
 
 export default App;

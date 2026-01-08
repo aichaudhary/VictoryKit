@@ -71,7 +71,7 @@ const Navigation: React.FC = () => {
             Your backup security assistant
           </p>
           <a
-            href="/maula-ai"
+            href="/maula/ai"
             className="block w-full text-center py-2 bg-backup-gradient text-white rounded-lg font-medium hover:shadow-lg hover:shadow-backupguard-primary/20 transition-all"
           >
             Open Assistant

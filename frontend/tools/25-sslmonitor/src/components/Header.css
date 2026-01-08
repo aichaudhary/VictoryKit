@@ -134,6 +134,24 @@
   gap: 1rem;
 }
 
+.ai-button {
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 123, 255, 0.6);
+  background: linear-gradient(120deg, rgba(0, 123, 255, 0.1), rgba(0, 212, 255, 0.1));
+  color: #00d4ff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.ai-button:hover {
+  background: linear-gradient(120deg, rgba(0, 123, 255, 0.2), rgba(0, 212, 255, 0.2));
+  border-color: rgba(0, 212, 255, 0.9);
+}
+
 .current-time {
   font-size: 0.9rem;
   color: #cccccc;
@@ -220,6 +238,7 @@
   .header-right {
     order: 3;
     justify-content: center;
+    flex-wrap: wrap;
   }
 
   .page-title {

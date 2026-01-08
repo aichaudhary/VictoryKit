@@ -25,6 +25,6 @@ AI-driven firewall management with real-time policy generation, intrusion correl
 - Frontend env overrides: `VITE_API_URL`, `VITE_WS_URL` if non-default; default uses config ports.
 
 ## Deployment Notes
-- Subdomain: `firewallai.maula.ai`, AI endpoint path `/maula-ai`.
+- Subdomain: `firewallai.maula.ai`, AI endpoint path `/maula/ai`.
 - Datastore: `firewallai_db` collections for events, policies, intel cache, incidents, and playbooks.
 - Integrations: SIEM (Splunk/ELK/Chronicle), SOAR (XSOAR/Phantom), threat intel (OTX/MISP/VirusTotal/CrowdStrike).

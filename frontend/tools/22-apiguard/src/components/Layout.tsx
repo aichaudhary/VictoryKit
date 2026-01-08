@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Outlet, NavLink, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
@@ -21,9 +21,13 @@ import {
   VolumeX,
   Activity,
   Zap,
+  Bot
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useAPIGuardStore } from '../stores/apiGuardStore';
+
+const BASE_PATH = '/maula';
+const buildPath = (href: string) => (href === '/' ? BASE_PATH : `${BASE_PATH}${href}`);
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -38,6 +42,7 @@ const navigation = [
 
 export default function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const {
@@ -57,7 +62,7 @@ export default function Layout() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const currentPage = navigation.find(item => location.pathname.startsWith(item.href))?.name || 'APIGuard';
+  const currentPage = navigation.find(item => location.pathname.startsWith(buildPath(item.href)))?.name || 'APIGuard';
   const recentEventsCount = realTimeEvents.filter((e) => {
     const ts = e.timestamp instanceof Date ? e.timestamp.getTime() : new Date(e.timestamp).getTime();
     return ts > Date.now() - 60000;
@@ -98,15 +103,16 @@ export default function Layout() {
 
         {/* Navigation */}
         <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-          {navigation.map((item) => {
-            const isActive = location.pathname.startsWith(item.href);
+            {navigation.map((item) => {
+              const targetPath = buildPath(item.href);
+              const isActive = location.pathname.startsWith(targetPath);
             const Icon = item.icon;
             const showBadge = item.name === 'Anomalies' && openAnomalyCount > 0;
 
             return (
-              <NavLink
-                key={item.name}
-                to={item.href}
+                  <NavLink
+                    key={item.name}
+                    to={buildPath(item.href)}
                 className={clsx(
                   'group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative',
                   isActive
@@ -194,12 +200,13 @@ export default function Layout() {
               </div>
               <nav className="py-4 px-3 space-y-1">
                 {navigation.map((item) => {
-                  const isActive = location.pathname.startsWith(item.href);
+                  const targetPath = buildPath(item.href);
+                  const isActive = location.pathname.startsWith(targetPath);
                   const Icon = item.icon;
                   return (
                     <NavLink
                       key={item.name}
-                      to={item.href}
+                      to={buildPath(item.href)}
                       className={clsx(
                         'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors',
                         isActive
@@ -233,6 +240,14 @@ export default function Layout() {
           </div>
 
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(`${BASE_PATH}/ai`)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-api-primary/10 border border-api-primary/30 text-white/90 hover:bg-api-primary/20 transition-colors"
+            >
+              <Bot className="w-4 h-4 text-api-primary" />
+              <span className="text-sm font-medium hidden sm:inline text-white">Neural Link AI</span>
+              <span className="text-sm font-medium sm:hidden text-white">AI</span>
+            </button>
             {/* Live Events Counter */}
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-api-dark rounded-lg">
               <Activity className="w-4 h-4 text-api-primary" />

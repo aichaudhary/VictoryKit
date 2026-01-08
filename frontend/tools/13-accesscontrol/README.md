@@ -101,7 +101,7 @@ src/
 |----------|-------------|---------|
 | `VITE_ACCESSCONTROL_API_URL` | Backend API URL | `http://localhost:4013/api/v1/accesscontrol` |
 | `VITE_APP_DOMAIN` | Application domain | `https://accesscontrol.maula.ai` |
-| `VITE_NEURAL_LINK_URL` | Neural link URL | `https://accesscontrol.maula.ai/maula-ai` |
+| `VITE_NEURAL_LINK_URL` | Neural link URL | `https://accesscontrol.maula.ai/maula/ai` |
 | `VITE_ENABLE_SIMULATION` | Enable simulation mode | `true` |
 
 ## Development

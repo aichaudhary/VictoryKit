@@ -5,7 +5,7 @@ const { initializeAI } = require('./aiService');
 
 const PORT = process.env.WS_PORT || 6032;
 const server = http.createServer();
-const wss = new WebSocket.Server({ server, path: '/maula-ai' });
+const wss = new WebSocket.Server({ server, path: '/maula/ai' });
 
 const aiService = initializeAI();
 
@@ -71,5 +71,5 @@ wss.on('connection', (ws) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`🤖 ZeroTrustAI Assistant running on port ${PORT} at /maula-ai`);
+  console.log(`🤖 ZeroTrustAI Assistant running on port ${PORT} at /maula/ai`);
 });

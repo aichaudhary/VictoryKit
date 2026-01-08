@@ -31,7 +31,7 @@ app.get('/health', (req, res) => {
 const server = http.createServer(app);
 
 // Create WebSocket server
-const wss = new WebSocketServer({ server, path: '/maula-ai' });
+const wss = new WebSocketServer({ server, path: '/maula/ai' });
 
 // AI Provider configurations
 const AI_PROVIDERS = {
@@ -325,7 +325,7 @@ function sleep(ms) {
 // Start server
 server.listen(PORT, () => {
   console.log(`🔐 SSLMonitor AI Assistant running on port ${PORT}`);
-  console.log(`📡 WebSocket endpoint: ws://localhost:${PORT}/maula-ai`);
+  console.log(`📡 WebSocket endpoint: ws://localhost:${PORT}/maula/ai`);
   console.log(`💚 Health check: http://localhost:${PORT}/health`);
 });
 

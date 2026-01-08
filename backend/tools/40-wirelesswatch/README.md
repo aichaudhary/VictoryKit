@@ -34,7 +34,7 @@ WirelessWatch is an AI-powered wireless network security platform that provides 
 │  └─────────────┘  └─────────────┘  └─────────────┘              │
 ├─────────────────────────────────────────────────────────────────┤
 │                    AI Assistant (Gemini 1.5 Pro)                 │
-│                    WebSocket: ws://localhost:6040/maula-ai       │
+│                    WebSocket: ws://localhost:6040/maula/ai       │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

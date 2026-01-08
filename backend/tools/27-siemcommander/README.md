@@ -27,7 +27,7 @@
 - ✅ **Playbook Schema**: SOAR automation with execution tracking
 - ✅ **ThreatIntel Schema**: IOC database with enrichment
 
-#### **4. AI Assistant** (Port 6027 + `/maula-ai`)
+#### **4. AI Assistant** (Port 6027 + `/maula/ai`)
 - ✅ WebSocket server for real-time AI streaming
 - ✅ Multi-LLM support (Gemini, Claude, GPT, Grok, Mistral, Llama)
 - ✅ Function calling for 10 SIEM operations
@@ -46,7 +46,7 @@ SIEMCommander Ecosystem
 │
 ├─ Frontend (siemcommander.maula.ai)
 │   ├─ React UI
-│   ├─ Neural Link Interface (/maula-ai)
+│   ├─ Neural Link Interface (/maula/ai)
 │   └─ WebSocket Client
 │
 ├─ Backend API (Port 4027)
@@ -125,7 +125,7 @@ npm start
 # Terminal 2: AI Assistant
 cd backend/tools/27-siemcommander/ai-assistant
 npm start
-# Running on ws://localhost:6027/maula-ai
+# Running on ws://localhost:6027/maula/ai
 
 # Terminal 3: Frontend
 cd frontend/tools/27-siemcommander
@@ -211,7 +211,7 @@ curl http://localhost:4027/api/v1/siemcommander/dashboard/stats
 
 ```javascript
 // Connect to Neural Link
-const ws = new WebSocket('ws://localhost:6027/maula-ai');
+const ws = new WebSocket('ws://localhost:6027/maula/ai');
 
 ws.onopen = () => {
   console.log('Neural Link established');

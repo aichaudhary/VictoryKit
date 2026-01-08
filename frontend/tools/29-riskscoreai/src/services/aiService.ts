@@ -1,4 +1,4 @@
-const AI_WS_URL = import.meta.env.VITE_AI_WS_URL || 'ws://localhost:6029/maula-ai';
+const AI_WS_URL = import.meta.env.VITE_AI_WS_URL || 'ws://localhost:6029/maula/ai';
 
 export type AIProvider = 'gemini' | 'claude' | 'openai' | 'xai';
 

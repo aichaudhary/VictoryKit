@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
+const BASE_PATH = '/maula';
+const withBase = (path: string) => (path === '/' ? BASE_PATH : `${BASE_PATH}${path}`);
+
 const Sidebar: React.FC = () => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -54,6 +57,12 @@ const Sidebar: React.FC = () => {
       icon: '⚙️',
       label: 'Settings',
       description: 'Configuration'
+    },
+    {
+      path: '/ai',
+      icon: '🧠',
+      label: 'Neural Link AI',
+      description: 'Embedded Assistant'
     }
   ];
 
@@ -75,13 +84,17 @@ const Sidebar: React.FC = () => {
 
       <nav className="sidebar-nav">
         <ul className="nav-list">
-          {menuItems.map((item) => (
-            <li key={item.path} className="nav-item">
-              <Link
-                to={item.path}
-                className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
-                title={isCollapsed ? item.label : ''}
-              >
+          {menuItems.map((item) => {
+            const targetPath = withBase(item.path);
+            const isActive = location.pathname === targetPath;
+
+            return (
+              <li key={targetPath} className="nav-item">
+                <Link
+                  to={targetPath}
+                  className={`nav-link ${isActive ? 'active' : ''}`}
+                  title={isCollapsed ? item.label : ''}
+                >
                 <span className="nav-icon">{item.icon}</span>
                 {!isCollapsed && (
                   <div className="nav-content">
@@ -89,9 +102,10 @@ const Sidebar: React.FC = () => {
                     <span className="nav-description">{item.description}</span>
                   </div>
                 )}
-              </Link>
-            </li>
-          ))}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 

@@ -2,7 +2,7 @@
   "toolName": "HIPAAGuard",
   "tagline": "Healthcare Compliance & PHI Protection",
   "subdomain": "hipaaguard.maula.ai",
-  "neuralLinkPath": "/maula-ai",
+  "neuralLinkPath": "/maula/ai",
   "port": 3048,
   "apiPort": 4048,
   "mlPort": 8048,

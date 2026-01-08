@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Header.css';
+
+const BASE_PATH = '/maula';
 
 const Header: React.FC = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -8,6 +11,7 @@ const Header: React.FC = () => {
     traffic: 'normal',
     alerts: 0
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -43,6 +47,12 @@ const Header: React.FC = () => {
         <div className="time-display">
           {currentTime.toLocaleString()}
         </div>
+        <button
+          className="ai-button"
+          onClick={() => navigate(`${BASE_PATH}/ai`)}
+        >
+          Neural Link AI
+        </button>
         <div className="user-menu">
           <span>Admin</span>
           <div className="user-avatar">A</div>

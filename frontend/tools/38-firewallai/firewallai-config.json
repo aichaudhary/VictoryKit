@@ -14,7 +14,7 @@
     "subdomain": "firewallai",
     "domain": "maula.ai",
     "fullUrl": "https://firewallai.maula.ai",
-    "aiAssistantUrl": "https://firewallai.maula.ai/maula-ai"
+    "aiAssistantUrl": "https://firewallai.maula.ai/maula/ai"
   },
   "ports": {
     "frontend": 3038,

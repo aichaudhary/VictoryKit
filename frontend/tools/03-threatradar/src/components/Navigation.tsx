@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   Radar,
@@ -70,12 +70,12 @@ const Navigation: React.FC = () => {
           <p className="text-xs text-gray-400 mb-3">
             AI-powered threat hunting
           </p>
-          <a
-            href="/maula-ai"
+          <Link
+            to="/maula/ai"
             className="block w-full text-center py-2 bg-threat-gradient text-white rounded-lg font-medium hover:shadow-lg hover:shadow-threatradar-primary/30 transition-all"
           >
             Open Assistant
-          </a>
+          </Link>
         </div>
       </div>
     </nav>

@@ -55,8 +55,8 @@
 - [ ] Configure domain: maula.ai (home page)
 - [ ] Set up subdomain: networkmonitor.maula.ai
 - [ ] Implement neural-link-interface as AI realtime live streaming
-- [ ] Add LIVE AI Assistance option: networkmonitor.maula.ai/maula-ai
-- [ ] Ensure URL pattern: [tool-name].maula.ai/maula-ai consistent across tools
+- [ ] Add LIVE AI Assistance option: networkmonitor.maula.ai/maula/ai
+- [ ] Ensure URL pattern: [tool-name].maula.ai/maula/ai consistent across tools
 
 ### Phase 7: Documentation and README
 - [ ] Create README.md in backend/tools/16-networkmonitor/

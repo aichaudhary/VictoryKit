@@ -5,7 +5,7 @@
 **DataLossPrevention** is an enterprise-grade Data Loss Prevention (DLP) solution that provides comprehensive protection against data leaks, insider threats, and compliance violations. The system uses advanced ML models to classify sensitive data, detect policy violations, and prevent unauthorized data transfers.
 
 **Domain:** `datalossprevention.maula.ai`  
-**AI Assistant:** `datalossprevention.maula.ai/maula-ai`
+**AI Assistant:** `datalossprevention.maula.ai/maula/ai`
 
 ### Key Features
 
@@ -589,8 +589,8 @@ server {
     }
 
     # AI Assistant (Maula AI)
-    location /maula-ai {
-        proxy_pass http://localhost:3041/maula-ai;
+    location /maula/ai {
+        proxy_pass http://localhost:3041/maula/ai;
         proxy_set_header Host $host;
     }
 }
@@ -752,7 +752,7 @@ Proprietary - All Rights Reserved
 - **Documentation:** `/docs/tools/41-DATALOSSPREVENTION-COMPLETE-PLAN.md`
 - **Issues:** GitHub Issues
 - **Email:** support@maula.ai
-- **AI Assistant:** `datalossprevention.maula.ai/maula-ai`
+- **AI Assistant:** `datalossprevention.maula.ai/maula/ai`
 
 ---
 

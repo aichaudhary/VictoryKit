@@ -31,7 +31,7 @@ ZeroTrustAI is an advanced zero trust security platform that implements "never t
 
 ### Domain Structure
 - **Tool**: zerotrustai.maula.ai
-- **AI Assistant**: zerotrustai.maula.ai/maula-ai
+- **AI Assistant**: zerotrustai.maula.ai/maula/ai
 
 ## Zero Trust Principles
 

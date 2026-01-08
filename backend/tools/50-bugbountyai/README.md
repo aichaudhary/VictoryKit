@@ -4,7 +4,7 @@
 **Tool Name:** BugBountyAI  
 **Purpose:** AI-Powered Bug Bounty Platform & Vulnerability Management  
 **Domain:** bugbounty.maula.ai  
-**Neural Link:** bugbounty.maula.ai/maula-ai
+**Neural Link:** bugbounty.maula.ai/maula/ai
 
 ## Ports Configuration
 - **Frontend:** 3050

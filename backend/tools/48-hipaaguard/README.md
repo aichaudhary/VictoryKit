@@ -4,7 +4,7 @@
 **Tool Name:** HIPAAGuard  
 **Purpose:** HIPAA Compliance Management & Healthcare Data Protection  
 **Domain:** hipaaguard.maula.ai  
-**Neural Link:** hipaaguard.maula.ai/maula-ai
+**Neural Link:** hipaaguard.maula.ai/maula/ai
 
 ## Ports Configuration
 - **Frontend:** 3048

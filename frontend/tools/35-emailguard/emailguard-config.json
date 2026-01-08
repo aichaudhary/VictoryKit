@@ -470,9 +470,9 @@
       }
     ],
     "endpoints": {
-      "chat": "/maula-ai",
-      "stream": "/maula-ai/stream",
-      "functions": "/maula-ai/functions"
+      "chat": "/maula/ai",
+      "stream": "/maula/ai/stream",
+      "functions": "/maula/ai/functions"
     },
     "settings": {
       "maxTokens": 8192,

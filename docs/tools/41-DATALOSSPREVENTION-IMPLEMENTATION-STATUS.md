@@ -225,7 +225,7 @@
 8. **Compliance** (`/compliance`) - Framework status, audit reports, data subject requests
 9. **Reports** (`/reports`) - Executive dashboard, templates, custom builder
 10. **Settings** (`/settings`) - General, detection, response, integrations
-11. **AI Assistant** (`/maula-ai`) - Natural language DLP management
+11. **AI Assistant** (`/maula/ai`) - Natural language DLP management
 
 **Files to Create:**
 - `/frontend/tools/41-datalossprevention/src/components/*.tsx` (30+ components)
@@ -297,7 +297,7 @@
    - Create Dockerfiles
    - Configure docker-compose
    - Set up nginx routing for datalossprevention.maula.ai
-   - Configure AI assistant at /maula-ai
+   - Configure AI assistant at /maula/ai
 
 4. **Testing & QA** (Priority: Low)
    - Write tests

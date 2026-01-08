@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Shield, 
@@ -18,13 +18,13 @@ import {
 
 const Navigation: React.FC = () => {
   const navItems = [
-    { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { path: '/policies', icon: Shield, label: 'Policies' },
-    { path: '/incidents', icon: AlertTriangle, label: 'Incidents' },
-    { path: '/discovery', icon: Search, label: 'Discovery' },
-    { path: '/users', icon: Users, label: 'Users & Risk' },
-    { path: '/compliance', icon: FileCheck, label: 'Compliance' },
-    { path: '/settings', icon: Settings, label: 'Settings' },
+    { path: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: 'policies', icon: Shield, label: 'Policies' },
+    { path: 'incidents', icon: AlertTriangle, label: 'Incidents' },
+    { path: 'discovery', icon: Search, label: 'Discovery' },
+    { path: 'users', icon: Users, label: 'Users & Risk' },
+    { path: 'compliance', icon: FileCheck, label: 'Compliance' },
+    { path: 'settings', icon: Settings, label: 'Settings' },
   ];
 
   return (
@@ -64,13 +64,13 @@ const Navigation: React.FC = () => {
 
       {/* AI Assistant Link */}
       <div className="p-4 border-t border-gray-700">
-        <a
-          href="/maula-ai"
+        <Link
+          to="/maula/ai"
           className="flex items-center space-x-3 px-4 py-3 rounded-lg bg-gradient-to-r from-dlp-accent to-dlp-secondary text-white hover:shadow-glow-purple transition-all"
         >
           <Bot className="w-5 h-5" />
           <span className="font-medium">AI Assistant</span>
-        </a>
+        </Link>
       </div>
     </nav>
   );

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   Shield, 
   Server, 
@@ -34,6 +35,8 @@ import { getDashboardMetrics } from '../services/api';
 import { useWAFStore } from '../stores/wafStore';
 import { formatDistanceToNow } from 'date-fns';
 import clsx from 'clsx';
+
+const BASE_PATH = '/maula';
 
 const COLORS = {
   critical: '#dc2626',
@@ -414,9 +417,9 @@ export default function Dashboard() {
       <motion.div variants={itemVariants} className="waf-card">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-white">Recent Attacks</h3>
-          <a href="/attacks" className="text-sm text-waf-primary hover:text-waf-secondary transition-colors">
+          <Link to={`${BASE_PATH}/attacks`} className="text-sm text-waf-primary hover:text-waf-secondary transition-colors">
             View all →
-          </a>
+          </Link>
         </div>
         <div className="overflow-x-auto">
           <table className="waf-table">

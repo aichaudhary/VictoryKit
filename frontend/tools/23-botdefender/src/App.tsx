@@ -10,12 +10,16 @@ import IPReputation from './pages/IPReputation';
 import Analytics from './pages/Analytics';
 import Incidents from './pages/Incidents';
 import Settings from './pages/Settings';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+
+const BASE_PATH = '/maula';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Navigate to="/dashboard" replace />} />
+      <Route path="/" element={<Navigate to={BASE_PATH} replace />} />
+      <Route path={`${BASE_PATH}`} element={<Layout />}>
+        <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="traffic" element={<BotTraffic />} />
         <Route path="bots" element={<DetectedBots />} />
@@ -27,6 +31,8 @@ function App() {
         <Route path="incidents" element={<Incidents />} />
         <Route path="settings" element={<Settings />} />
       </Route>
+      <Route path={`${BASE_PATH}/ai`} element={<NeuralLinkInterface />} />
+      <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
     </Routes>
   );
 }

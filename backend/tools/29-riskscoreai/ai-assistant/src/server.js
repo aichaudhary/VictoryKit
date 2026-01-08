@@ -225,7 +225,7 @@ async function handleStreamRequest(ws, client, data) {
 server.on('upgrade', (request, socket, head) => {
   const pathname = url.parse(request.url).pathname;
   
-  if (pathname === '/maula-ai') {
+  if (pathname === '/maula/ai') {
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit('connection', ws, request);
     });
@@ -253,7 +253,7 @@ server.on('request', (req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`🤖 RiskScoreAI AI Assistant running on port ${PORT}`);
-  console.log(`🔌 WebSocket endpoint: ws://localhost:${PORT}/maula-ai`);
+  console.log(`🔌 WebSocket endpoint: ws://localhost:${PORT}/maula/ai`);
   console.log(`🧠 Multi-LLM: Gemini 1.5 Pro | Claude 3.5 Sonnet | GPT-4 Turbo | xAI Grok`);
   console.log(`📊 Risk Assessment Functions: 10 specialized tools`);
   console.log(`🔴🟡🟢 Risk Frameworks: NIST, ISO 27001, FAIR`);

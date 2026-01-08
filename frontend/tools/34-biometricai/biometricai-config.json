@@ -35,7 +35,7 @@
     { "id": "sessions", "label": "Sessions", "icon": "Clock", "path": "/sessions" },
     { "id": "analytics", "label": "Analytics", "icon": "BarChart3", "path": "/analytics" },
     { "id": "settings", "label": "Settings", "icon": "Settings", "path": "/settings" },
-    { "id": "maula-ai", "label": "Maula AI", "icon": "Brain", "path": "/maula-ai" }
+    { "id": "maula-ai", "label": "Maula AI", "icon": "Brain", "path": "/maula/ai" }
   ],
   
   "biometricModalities": [

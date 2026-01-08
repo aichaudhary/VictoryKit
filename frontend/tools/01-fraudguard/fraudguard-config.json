@@ -4,7 +4,7 @@
   "tagline": "AI-Powered Fraud Detection & Prevention",
   "subdomain": "fraudguard",
   "fullDomain": "fraudguard.maula.ai",
-  "aiAssistant": "fraudguard.maula.ai/maula-ai",
+  "aiAssistant": "fraudguard.maula.ai/maula/ai",
   "description": "Enterprise-grade AI fraud detection platform with real-time transaction analysis, ML-powered risk scoring, pattern recognition, and automated response",
   "ports": {
     "frontend": 3001,

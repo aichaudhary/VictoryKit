@@ -46,6 +46,9 @@ const gradeColors: Record<string, string> = {
   'F': '#dc2626',
 };
 
+const BASE_PATH = '/maula';
+const linkTo = (path: string) => `${BASE_PATH}${path}`;
+
 export default function Dashboard() {
   const { realTimeEvents, liveMode } = useAPIGuardStore();
   const [refreshKey, setRefreshKey] = useState(0);
@@ -307,7 +310,7 @@ export default function Dashboard() {
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-white">API Traffic (24h)</h3>
-            <Link to="/analytics" className="text-api-primary hover:text-api-secondary text-sm flex items-center gap-1">
+            <Link to={linkTo('/analytics')} className="text-api-primary hover:text-api-secondary text-sm flex items-center gap-1">
               View Details <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -348,7 +351,7 @@ export default function Dashboard() {
         >
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-white">Security Grades</h3>
-            <Link to="/apis" className="text-api-primary hover:text-api-secondary text-sm flex items-center gap-1">
+            <Link to={linkTo('/apis')} className="text-api-primary hover:text-api-secondary text-sm flex items-center gap-1">
               View All <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -465,7 +468,7 @@ export default function Dashboard() {
       >
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold text-white">Vulnerability Overview</h3>
-          <Link to="/security" className="text-api-primary hover:text-api-secondary text-sm flex items-center gap-1">
+          <Link to={linkTo('/security')} className="text-api-primary hover:text-api-secondary text-sm flex items-center gap-1">
             Run Scan <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -492,7 +495,7 @@ export default function Dashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link
-          to="/apis"
+          to={linkTo('/apis')}
           className="api-card p-5 hover:border-api-primary transition-colors group"
         >
           <div className="flex items-center gap-3">
@@ -507,7 +510,7 @@ export default function Dashboard() {
         </Link>
 
         <Link
-          to="/security"
+          to={linkTo('/security')}
           className="api-card p-5 hover:border-api-primary transition-colors group"
         >
           <div className="flex items-center gap-3">
@@ -522,7 +525,7 @@ export default function Dashboard() {
         </Link>
 
         <Link
-          to="/policies"
+          to={linkTo('/policies')}
           className="api-card p-5 hover:border-api-primary transition-colors group"
         >
           <div className="flex items-center gap-3">
@@ -537,7 +540,7 @@ export default function Dashboard() {
         </Link>
 
         <Link
-          to="/anomalies"
+          to={linkTo('/anomalies')}
           className="api-card p-5 hover:border-api-primary transition-colors group"
         >
           <div className="flex items-center gap-3">

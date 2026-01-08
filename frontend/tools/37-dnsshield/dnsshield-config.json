@@ -14,7 +14,7 @@
     "subdomain": "dnsshield",
     "domain": "maula.ai",
     "fullUrl": "https://dnsshield.maula.ai",
-    "aiAssistantUrl": "https://dnsshield.maula.ai/maula-ai"
+    "aiAssistantUrl": "https://dnsshield.maula.ai/maula/ai"
   },
   "ports": {
     "frontend": 3037,

@@ -3,7 +3,7 @@
   "toolId": "42-iotsecure",
   "subdomain": "iotsecure",
   "fullDomain": "iotsecure.maula.ai",
-  "aiAssistant": "iotsecure.maula.ai/maula-ai",
+  "aiAssistant": "iotsecure.maula.ai/maula/ai",
   "description": "Enterprise IoT Security Platform - Protect smart device ecosystems from vulnerabilities, unauthorized access, and cyber threats",
   "ports": {
     "frontend": 3042,

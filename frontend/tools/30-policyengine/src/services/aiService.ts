@@ -24,7 +24,7 @@ class AIService {
   private sessionId: string;
   
   constructor() {
-    this.wsURL = import.meta.env.VITE_POLICYENGINE_AI_WS_URL || 'ws://localhost:6030/maula-ai';
+    this.wsURL = import.meta.env.VITE_POLICYENGINE_AI_WS_URL || 'ws://localhost:6030/maula/ai';
     this.sessionId = this.generateSessionId();
   }
   

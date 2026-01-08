@@ -52,7 +52,7 @@ export const getWsUrl = (): string => {
   const isDev = import.meta.env.DEV;
   const protocol = isDev ? 'ws' : 'wss';
   const host = isDev ? `localhost:${config.ports.aiWebSocket}` : config.fullDomain;
-  return `${protocol}://${host}/maula-ai`;
+  return `${protocol}://${host}/maula/ai`;
 };
 
 export const getMlUrl = (): string => {

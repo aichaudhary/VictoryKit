@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
 // Pages
@@ -15,6 +15,9 @@ import Settings from './pages/Settings.tsx';
 // Components
 import Sidebar from './components/Sidebar.tsx';
 import Header from './components/Header.tsx';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
+
+const BASE_PATH = '/maula';
 
 function App() {
   return (
@@ -25,14 +28,17 @@ function App() {
           <Header />
           <main className="content">
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/traffic-monitor" element={<TrafficMonitor />} />
-              <Route path="/attack-detection" element={<AttackDetection />} />
-              <Route path="/mitigation-center" element={<MitigationCenter />} />
-              <Route path="/protection-rules" element={<ProtectionRules />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/incident-response" element={<IncidentResponse />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/" element={<Navigate to={BASE_PATH} replace />} />
+              <Route path={`${BASE_PATH}`} element={<Dashboard />} />
+              <Route path={`${BASE_PATH}/traffic-monitor`} element={<TrafficMonitor />} />
+              <Route path={`${BASE_PATH}/attack-detection`} element={<AttackDetection />} />
+              <Route path={`${BASE_PATH}/mitigation-center`} element={<MitigationCenter />} />
+              <Route path={`${BASE_PATH}/protection-rules`} element={<ProtectionRules />} />
+              <Route path={`${BASE_PATH}/analytics`} element={<Analytics />} />
+              <Route path={`${BASE_PATH}/incident-response`} element={<IncidentResponse />} />
+              <Route path={`${BASE_PATH}/settings`} element={<Settings />} />
+              <Route path={`${BASE_PATH}/ai`} element={<NeuralLinkInterface />} />
+              <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
             </Routes>
           </main>
         </div>

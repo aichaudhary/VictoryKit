@@ -5,7 +5,7 @@
 - [ ] **Model Recommendations**: Use Claude Opus/Sonnet 4.5 for intelligent feature suggestions based on current cybersecurity trends and user needs
 - [ ] **User Experience Design**: Design premium VIP-level interface with intuitive RBAC management, real-time policy visualization, and AI-assisted permission recommendations
 - [ ] **Domain Configuration**: Ensure accesscontrol.maula.ai subdomain setup and routing
-- [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula-ai path with LIVE AI Assistance option
+- [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula/ai path with LIVE AI Assistance option
 
 ## 🗄️ **PHASE 2: DATABASE DESIGN (MongoDB)**
 - [ ] **User Collection Schema**: Design comprehensive user model with MFA, session management, and audit trails
@@ -61,7 +61,7 @@
 ## 🔗 **PHASE 6: NEURAL-LINK INTERFACE INTEGRATION**
 - [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/13-accesscontrol/
 - [ ] **AI Streaming Setup**: Implement real-time AI conversation streaming
-- [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula-ai interface
+- [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula/ai interface
 - [ ] **Context Awareness**: AI understands current tool context and user actions
 - [ ] **Voice Integration**: Optional voice input/output for hands-free operation
 - [ ] **Multi-modal Interface**: Support for text, voice, and visual AI interactions
@@ -119,7 +119,7 @@
 - [ ] No legacy/duplicate/unused files remaining
 - [ ] README.md added with complete backend/frontend/database details
 - [ ] Domain accesscontrol.maula.ai configured
-- [ ] /maula-ai path integrated for AI assistance
+- [ ] /maula/ai path integrated for AI assistance
 - [ ] Claude Opus/Sonnet 4.5 optimally utilized for intelligence
 - [ ] Premium VIP-level user experience achieved
 - [ ] 360-degree completion: backend, frontend, database, AI, docs

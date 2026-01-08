@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, FileText, AlertTriangle, Bell, Target,
   Zap, Shield, Database, BarChart2, Bot, Settings,
@@ -19,8 +20,12 @@ import {
 } from './components';
 import type { Tab } from './types';
 import { NAV_ITEMS } from './constants';
+import NeuralLinkInterface from '../../../neural-link-interface/App';
 
-const App: React.FC = () => {
+const BASE_PATH = '/maula';
+
+const CoreApp: React.FC = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -171,6 +176,14 @@ const App: React.FC = () => {
               <Bot className="w-4 h-4" />
               <span className="text-sm">AI Assistant</span>
             </button>
+
+            <button
+              onClick={() => navigate(`${BASE_PATH}/ai`)}
+              className="flex items-center gap-2 px-3 py-2 bg-violet-500/10 text-violet-300 rounded-lg hover:bg-violet-500/20 transition-colors"
+            >
+              <Zap className="w-4 h-4" />
+              <span className="text-sm">Neural Link AI</span>
+            </button>
           </div>
         </header>
 
@@ -182,5 +195,16 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+const App: React.FC = () => (
+  <Router>
+    <Routes>
+      <Route path="/" element={<Navigate to={BASE_PATH} replace />} />
+      <Route path={`${BASE_PATH}`} element={<CoreApp />} />
+      <Route path={`${BASE_PATH}/ai`} element={<NeuralLinkInterface />} />
+      <Route path="*" element={<Navigate to={BASE_PATH} replace />} />
+    </Routes>
+  </Router>
+);
 
 export default App;

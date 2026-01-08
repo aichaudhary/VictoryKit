@@ -26,7 +26,7 @@ SOAREngine is an advanced security orchestration, automation, and response platf
   - `executions` - Playbook execution logs with real-time tracking
 
 ### **AI Assistant (Port 6028)**
-- **WebSocket Server** at `/maula-ai`
+- **WebSocket Server** at `/maula/ai`
 - **Multi-LLM Support:** Gemini, Claude 3.5 Sonnet, GPT-4
 - **10 SOAR-Specific Functions:** Playbook creation, execution, case management, automation metrics
 - **Real-time streaming** responses with function calling
@@ -151,7 +151,7 @@ npm run dev
 ```bash
 cd /workspaces/VictoryKit/backend/tools/28-soarengine/ai-assistant
 npm run dev
-# WebSocket on ws://localhost:6028/maula-ai
+# WebSocket on ws://localhost:6028/maula/ai
 ```
 
 **Start Frontend**
@@ -456,7 +456,7 @@ Surface: #1a1f3a   /* Dark Blue */
 ## 📞 Support & Contact
 
 **Tool Domain:** https://soarengine.maula.ai  
-**AI Assistant:** https://soarengine.maula.ai/maula-ai  
+**AI Assistant:** https://soarengine.maula.ai/maula/ai  
 **API Documentation:** http://localhost:4028/api/v1/soarengine/health  
 
 **Team:** VictoryKit Security Automation Team  

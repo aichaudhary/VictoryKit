@@ -45,7 +45,7 @@ const sessions = new Map();
 const clients = new Map();
 
 const server = createServer(app);
-const wss = new WebSocketServer({ server, path: '/maula-ai' });
+const wss = new WebSocketServer({ server, path: '/maula/ai' });
 
 // Function definitions
 const functionDeclarations = [
@@ -369,7 +369,7 @@ app.get('/functions', (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`[DLP AI] WebSocket server running on port ${PORT}`);
-  console.log(`[DLP AI] WebSocket path: /maula-ai`);
+  console.log(`[DLP AI] WebSocket path: /maula/ai`);
 });
 
 export default app;

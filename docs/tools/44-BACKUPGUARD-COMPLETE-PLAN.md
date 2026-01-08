@@ -5,7 +5,7 @@
 **BackupGuard** is a world-class enterprise backup security platform that ensures backup integrity, detects ransomware attacks, validates restore capabilities, and monitors compliance with industry standards. Built for Fortune 500 companies managing petabytes of data with zero-tolerance for data loss.
 
 **Domain:** `backupguard.maula.ai`  
-**AI Assistant:** `backupguard.maula.ai/maula-ai`  
+**AI Assistant:** `backupguard.maula.ai/maula/ai`  
 **Ports:** Frontend 3044, API 4044, ML 8044
 
 ---
@@ -245,7 +245,7 @@
 - User Management (RBAC, audit logs)
 - API Keys (REST API access)
 
-#### 11. AI Assistant (`/maula-ai`)
+#### 11. AI Assistant (`/maula/ai`)
 **Purpose:** Natural language backup management
 
 **Capabilities:**

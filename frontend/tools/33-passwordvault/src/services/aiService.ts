@@ -1,7 +1,7 @@
 // PasswordVault AI Service
 // WebSocket client for real-time AI assistance
 
-const WS_URL = import.meta.env.VITE_AI_WS_URL || 'ws://localhost:6033/maula-ai';
+const WS_URL = import.meta.env.VITE_AI_WS_URL || 'ws://localhost:6033/maula/ai';
 
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';

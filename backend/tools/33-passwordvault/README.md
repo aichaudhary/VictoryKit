@@ -8,7 +8,7 @@
 
 - **Frontend**: `https://passwordvault.maula.ai` (Production) | `http://localhost:3033` (Development)
 - **API**: `http://localhost:4033/api`
-- **AI Assistant**: `ws://localhost:6033/maula-ai`
+- **AI Assistant**: `ws://localhost:6033/maula/ai`
 - **ML Engine**: `http://localhost:8033`
 
 ---
@@ -67,7 +67,7 @@ PasswordVault is an enterprise-grade password and secrets management solution th
 │  ├── Password Generator                                          │
 │  ├── Security Audit                                              │
 │  ├── Sharing Center                                              │
-│  └── Maula AI Interface (/maula-ai)                             │
+│  └── Maula AI Interface (/maula/ai)                             │
 ├─────────────────────────────────────────────────────────────────┤
 │  API Gateway (Express.js)                          Port: 4033   │
 │  ├── /api/auth         - Authentication                         │
