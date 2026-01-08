@@ -84,7 +84,7 @@ app.use('*', (req, res) => {
 // MongoDB connection
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/accesscontrol', {
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/victorykit_accesscontrol', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       maxPoolSize: 10,

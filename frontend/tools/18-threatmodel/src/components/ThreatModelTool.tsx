@@ -3,6 +3,7 @@
  * Enhanced with AI Analysis, Threat Intelligence, Real-time Collaboration, and Reports
  */
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   threatModelApi,
   simulatedData,
@@ -19,6 +20,7 @@ import {
 type TabType = 'dashboard' | 'models' | 'threats' | 'analysis' | 'intel' | 'reports' | 'diagram' | 'mitigations';
 
 export default function ThreatModelTool() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<ThreatDashboard | null>(null);
   const [models, setModels] = useState<ThreatModel[]>([]);
@@ -679,6 +681,12 @@ export default function ThreatModelTool() {
                   🔄 Simulation Mode
                 </span>
               )}
+              <button
+                onClick={() => navigate('/maula/ai')}
+                className="px-4 py-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg"
+              >
+                <span>✨</span>AI Assistant
+              </button>
             </div>
           </div>
           <nav className="flex gap-2 mt-4 overflow-x-auto">

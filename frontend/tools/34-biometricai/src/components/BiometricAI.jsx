@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -88,6 +89,7 @@ const theme = createTheme({
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:4034';
 
 function BiometricAI() {
+  const navigate = useNavigate();
   // State management
   const [authStatus, setAuthStatus] = useState('idle'); // idle, authenticating, success, failed
   const [confidence, setConfidence] = useState(0);
@@ -545,6 +547,20 @@ function BiometricAI() {
           <Typography variant="h6" color="text.secondary">
             Advanced Multi-Modal Biometric Authentication
           </Typography>
+          <Button
+            variant="contained"
+            onClick={() => navigate('/maula/ai')}
+            sx={{
+              mt: 2,
+              background: 'linear-gradient(45deg, #00ff88 30%, #00cc6a 90%)',
+              '&:hover': {
+                background: 'linear-gradient(45deg, #00cc6a 30%, #00ff88 90%)',
+              },
+            }}
+            startIcon={<Analytics />}
+          >
+            AI Assistant
+          </Button>
         </Box>
 
         {/* Status Alerts */}

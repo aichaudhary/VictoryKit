@@ -3,6 +3,7 @@
  * Features: AI Analysis, Real-time Collaboration, Threat Intelligence, Compliance Integration
  */
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { riskAssessApi, simulatedData, type Risk, type RiskDashboard } from '../api/riskassess.api';
 
 type TabType = 'dashboard' | 'risks' | 'matrix' | 'ai-analysis' | 'threat-intel' | 'compliance' | 'reports' | 'analytics' | 'collaboration';
@@ -15,6 +16,7 @@ interface WebSocketMessage {
 }
 
 export default function RiskAssessTool() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<RiskDashboard | null>(null);
   const [risks, setRisks] = useState<Risk[]>([]);
@@ -634,6 +636,12 @@ export default function RiskAssessTool() {
                   🔄 Simulation Mode
                 </span>
               )}
+              <button
+                onClick={() => navigate('/maula/ai')}
+                className="px-4 py-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg"
+              >
+                <span>✨</span>AI Assistant
+              </button>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 <span className="text-sm text-gray-400">Real-time</span>

@@ -2,7 +2,7 @@
  * ThreatModel API Client - Tool 18 - Threat Modeling & Analysis
  * Enhanced with AI Analysis, Threat Intel, Reports, and Real-time WebSocket
  */
-const API_BASE_URL = import.meta.env.VITE_THREATMODEL_API_URL || 'http://localhost:4018/api/v1/threatmodel';
+const API_BASE_URL = import.meta.env.VITE_THREATMODEL_API_URL || 'http://localhost:4018/api';
 const WS_URL = import.meta.env.VITE_THREATMODEL_WS_URL || 'ws://localhost:4118';
 
 // ============================================================================

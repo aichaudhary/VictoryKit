@@ -21,7 +21,7 @@ const server = http.createServer(app);
 
 // Configuration
 const PORT = process.env.PORT || 4016;
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/victorykit";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/victorykit_networkmonitor";
 
 // Security middleware
 app.use(helmet({

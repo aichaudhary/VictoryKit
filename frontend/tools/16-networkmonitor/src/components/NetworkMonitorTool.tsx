@@ -3,6 +3,7 @@
  * Enhanced with WebSocket real-time updates, full alerts management, and topology view
  */
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   networkMonitorApi, 
   wsManager,
@@ -34,6 +35,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function NetworkMonitorTool() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<DashboardOverview | null>(null);
   const [devices, setDevices] = useState<NetworkDevice[]>([]);
@@ -577,6 +579,12 @@ export default function NetworkMonitorTool() {
                   🔄 Demo Mode
                 </span>
               )}
+              <button
+                onClick={() => navigate('/maula/ai')}
+                className="px-4 py-2 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg"
+              >
+                <span>✨</span>AI Assistant
+              </button>
             </div>
           </div>
           <nav className="flex gap-2 mt-4">

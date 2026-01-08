@@ -2,6 +2,7 @@
  * SecurityScore Tool Component v2.0 - Enhanced Security Posture Scoring
  */
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   securityScoreApi,
   simulatedData,
@@ -18,6 +19,7 @@ import {
 type TabType = 'dashboard' | 'breakdown' | 'compliance' | 'predictions' | 'improve' | 'reports';
 
 export default function SecurityScoreTool() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<ScoreDashboard | null>(null);
   const [aiAnalysis, setAiAnalysis] = useState<AIAnalysis | null>(null);
@@ -732,6 +734,12 @@ export default function SecurityScoreTool() {
                   🔄 Demo Mode
                 </span>
               )}
+              <button
+                onClick={() => navigate('/maula/ai')}
+                className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg"
+              >
+                <span>✨</span>AI Assistant
+              </button>
               <button
                 onClick={loadDashboard}
                 className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition-colors flex items-center gap-2"

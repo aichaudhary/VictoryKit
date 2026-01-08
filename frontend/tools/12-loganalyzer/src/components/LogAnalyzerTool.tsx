@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { logAnalyzerApi, simulatedData, type LogEntry, type LogDashboard, type LogAnalysisResult, type LogLevel, type LogSource } from '../api/loganalyzer.api';
 
 const levelColors: Record<LogLevel, { bg: string; text: string }> = {
@@ -17,6 +18,7 @@ const levelColors: Record<LogLevel, { bg: string; text: string }> = {
 type TabType = 'dashboard' | 'logs' | 'analysis' | 'anomalies';
 
 export default function LogAnalyzerTool() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<LogDashboard | null>(null);
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -253,6 +255,9 @@ export default function LogAnalyzerTool() {
               <div><h1 className="text-xl font-bold">LogAnalyzer</h1><p className="text-gray-400 text-sm">AI-Powered Log Analysis</p></div>
             </div>
             {usingSimulated && <span className="px-3 py-1 bg-yellow-900/30 border border-yellow-500/30 text-yellow-400 rounded-full text-sm">🔄 Simulation Mode</span>}
+            <button onClick={() => navigate('/maula/ai')} className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-medium transition-all shadow-lg hover:shadow-xl">
+              <span>✨</span><span>AI Assistant</span>
+            </button>
           </div>
           <nav className="flex gap-2 mt-4 overflow-x-auto">
             {tabs.map(tab => (

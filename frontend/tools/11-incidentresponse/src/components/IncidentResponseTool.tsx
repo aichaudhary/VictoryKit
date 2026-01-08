@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   incidentResponseApi,
   simulatedData,
@@ -231,6 +232,7 @@ function formatMinutes(minutes: number): string {
 type TabType = 'dashboard' | 'incidents' | 'playbooks' | 'create';
 
 export default function IncidentResponseTool() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<IncidentDashboard | null>(null);
   const [incidents, setIncidents] = useState<Incident[]>([]);
@@ -875,6 +877,15 @@ export default function IncidentResponseTool() {
                 🔄 Simulation Mode
               </span>
             )}
+
+            {/* AI Assistant Button */}
+            <button
+              onClick={() => navigate('/maula/ai')}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all shadow-lg hover:shadow-xl"
+            >
+              <span>✨</span>
+              <span>AI Assistant</span>
+            </button>
           </div>
 
           {/* Navigation */}

@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import {
   Shield, Menu, X, MessageSquare, ChevronLeft, ChevronRight,
   Search, Settings, Bell, TrendingUp, Activity, FileText,
   AlertTriangle, CheckCircle, Clock, Send, Sparkles, Mic,
   Paperclip, MoreHorizontal, User, Bot, Wifi, WifiOff
 } from 'lucide-react';
+
+// Pages
+import LandingPage from './pages/LandingPage';
+import NeuralLinkInterface from './components/NeuralLinkInterface';
 
 // Components
 import VPNSummary from './components/VPNSummary';
@@ -26,7 +31,9 @@ import { NAV_ITEMS, DEFAULT_SETTINGS } from './constants';
 // Services
 import { vpnGuardianAPI } from './services/vpnGuardianAPI';
 
-const App: React.FC = () => {
+const VPNGuardianExperience: React.FC = () => {
+  const navigate = useNavigate();
+
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
@@ -333,6 +340,14 @@ const App: React.FC = () => {
                   {wsConnection ? 'Connected' : 'Disconnected'}
                 </span>
               </div>
+              {/* AI Assistant */}
+              <button
+                onClick={() => navigate('/maula/ai')}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg font-medium transition-all shadow-md hover:shadow-lg"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>AI Assistant</span>
+              </button>
               <button className="p-2 hover:bg-gray-100 rounded-full">
                 <Bell className="h-5 w-5 text-gray-600" />
               </button>
@@ -425,5 +440,15 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/maula" element={<VPNGuardianExperience />} />
+      <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    </Routes>
+  );
+}
 
 export default App;

@@ -2,7 +2,7 @@
  * RiskAssess API Client - Tool 19 - Enhanced Risk Assessment & Management
  * Features: AI Analysis, Real-time Collaboration, Threat Intelligence, Compliance Integration
  */
-const API_BASE_URL = import.meta.env.VITE_RISKASSESS_API_URL || 'http://localhost:4119/api/v1';
+const API_BASE_URL = import.meta.env.VITE_RISKASSESS_API_URL || 'http://localhost:4019/api/v1';
 
 export interface Risk {
   _id: string;

@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BellIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,6 +55,15 @@ const Header: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* AI Assistant */}
+            <button
+              onClick={() => navigate('/maula/ai')}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-medium transition-all shadow-md"
+            >
+              <span>✨</span>
+              <span>AI Assistant</span>
+            </button>
 
             {/* Notifications */}
             <button

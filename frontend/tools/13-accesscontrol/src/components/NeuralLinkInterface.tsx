@@ -4,10 +4,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-
-interface NeuralLinkInterfaceProps {
-  onClose: () => void;
-}
+import { useNavigate } from 'react-router-dom';
 
 interface Message {
   id: string;
@@ -16,7 +13,8 @@ interface Message {
   timestamp: Date;
 }
 
-export default function NeuralLinkInterface({ onClose }: NeuralLinkInterfaceProps) {
+export default function NeuralLinkInterface() {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -119,7 +117,7 @@ export default function NeuralLinkInterface({ onClose }: NeuralLinkInterfaceProp
               <span className="text-sm text-gray-300">{isConnected ? 'Connected' : 'Disconnected'}</span>
             </div>
             <button
-              onClick={onClose}
+              onClick={() => navigate('/maula')}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
             >
               Close

@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { 
   Shield, Lock, UserCheck, Network, Laptop, Server,
   AlertTriangle, CheckCircle, XCircle, Activity, Eye,
   Key, Fingerprint, Globe, Cloud, Database, Settings,
   MessageSquare, Send, RefreshCw, FileText, Zap
 } from 'lucide-react';
+
+// Pages
+import LandingPage from './pages/LandingPage';
+import NeuralLinkInterface from './components/NeuralLinkInterface';
+
+// Components
 import ZeroTrustDashboard from './components/ZeroTrustDashboard';
 import IdentityVerification from './components/IdentityVerification';
 import AccessPolicies from './components/AccessPolicies';
@@ -35,7 +42,8 @@ interface AccessPolicy {
 
 type Tab = 'dashboard' | 'identity' | 'policies' | 'devices' | 'segments' | 'settings';
 
-const App: React.FC = () => {
+const ZeroTrustExperience: React.FC = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState<Array<{role: string, content: string}>>([
@@ -195,10 +203,18 @@ const App: React.FC = () => {
                 <span className="text-sm text-emerald-400">Zero Trust Active</span>
               </div>
               <button
+                onClick={() => navigate('/maula/ai')}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-lg font-medium transition-all"
+              >
+                <Zap className="w-4 h-4" />
+                <span>AI Assistant</span>
+              </button>
+              <button
                 onClick={() => setIsChatOpen(!isChatOpen)}
                 className="p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
               >
                 <MessageSquare className="w-5 h-5" />
+              </button>
               </button>
             </div>
           </div>
@@ -324,5 +340,15 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/maula" element={<ZeroTrustExperience />} />
+      <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    </Routes>
+  );
+}
 
 export default App;

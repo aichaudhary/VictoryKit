@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { 
   Shield, Menu, X, MessageSquare, ChevronLeft, ChevronRight, 
   Search, Settings, Bell, TrendingUp, Activity, FileText,
   AlertTriangle, CheckCircle, Clock, Send, Sparkles, Mic, 
   Paperclip, MoreHorizontal, User, Bot
 } from 'lucide-react';
+
+// Pages
+import LandingPage from './pages/LandingPage';
+import NeuralLinkInterface from './components/NeuralLinkInterface';
 
 // Components
 import TransactionForm from './components/TransactionForm';
@@ -25,7 +30,8 @@ import { NAV_ITEMS, DEFAULT_SETTINGS, PROVIDER_CONFIG } from './constants';
 import { fraudguardAPI } from './services/fraudguardAPI';
 import { executeTool, getToolDefinitions } from './services/fraudguard-tools';
 
-const App: React.FC = () => {
+const PasswordVaultExperience: React.FC = () => {
+  const navigate = useNavigate();
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
@@ -300,6 +306,15 @@ const App: React.FC = () => {
               <Settings className="w-5 h-5" />
             </button>
 
+            {/* AI Assistant */}
+            <button
+              onClick={() => navigate('/maula/ai')}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 rounded-lg font-medium transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>AI Assistant</span>
+            </button>
+
             {/* Toggle Chat */}
             <button
               onClick={() => setChatOpen(!chatOpen)}
@@ -515,5 +530,15 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/maula" element={<PasswordVaultExperience />} />
+      <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    </Routes>
+  );
+}
 
 export default App;

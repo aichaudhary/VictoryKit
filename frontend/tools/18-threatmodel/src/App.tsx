@@ -1,7 +1,17 @@
-import ThreatModelTool from './components/ThreatModelTool'
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import ThreatModelTool from './components/ThreatModelTool';
+import NeuralLinkInterface from "./components/NeuralLinkInterface";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
-  return <ThreatModelTool />
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/maula" element={<ThreatModelTool />} />
+      <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    </Routes>
+  );
 }
 
-export default App
+export default App;

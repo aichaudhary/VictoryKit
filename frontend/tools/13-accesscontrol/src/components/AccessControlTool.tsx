@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { accessControlApi, simulatedData, type User, type Role, type AccessDashboard } from '../api/accesscontrol.api';
 
 type TabType = 'dashboard' | 'users' | 'roles' | 'policies';
@@ -13,6 +14,7 @@ interface AccessControlToolProps {
 }
 
 export default function AccessControlTool({ onShowNeuralLink }: AccessControlToolProps) {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<AccessDashboard | null>(null);
   const [users, setUsers] = useState<User[]>([]);
@@ -142,14 +144,12 @@ export default function AccessControlTool({ onShowNeuralLink }: AccessControlToo
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">🔐</div><div><h1 className="text-xl font-bold">AccessControl</h1><p className="text-gray-400 text-sm">RBAC & Permission Management</p></div></div>
             <div className="flex items-center gap-3">
-              {onShowNeuralLink && (
-                <button
-                  onClick={onShowNeuralLink}
-                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg"
-                >
-                  🚀 LIVE AI Assistance
-                </button>
-              )}
+              <button
+                onClick={() => navigate('/maula/ai')}
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-medium transition-all duration-200 flex items-center gap-2 shadow-lg"
+              >
+                <span>✨</span> AI Assistant
+              </button>
               {usingSimulated && <span className="px-3 py-1 bg-yellow-900/30 border border-yellow-500/30 text-yellow-400 rounded-full text-sm">🔄 Simulation Mode</span>}
             </div>
           </div>

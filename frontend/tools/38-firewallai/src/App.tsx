@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import {
   Shield, Menu, X, MessageSquare, ChevronLeft, ChevronRight,
   Search, Settings, Bell, TrendingUp, Activity, FileText,
@@ -8,6 +9,10 @@ import {
   BarChart3, PieChart, LineChart, Filter, RefreshCw,
   Play, Pause, Square, Monitor, Cpu, HardDrive
 } from 'lucide-react';
+
+// Pages
+import LandingPage from './pages/LandingPage';
+import NeuralLinkInterface from './components/NeuralLinkInterface';
 
 // Components
 import FirewallDashboard from './components/FirewallDashboard';
@@ -31,7 +36,8 @@ import { NAV_ITEMS, DEFAULT_SETTINGS, VENDOR_CONFIG } from './constants';
 import { firewallAPI } from './services/firewallAPI';
 import { executeTool, getToolDefinitions } from './services/firewall-tools';
 
-const App: React.FC = () => {
+const FirewallAIExperience: React.FC = () => {
+  const navigate = useNavigate();
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
@@ -463,6 +469,15 @@ const App: React.FC = () => {
               <Settings className="w-5 h-5" />
             </button>
 
+            {/* AI Assistant */}
+            <button
+              onClick={() => navigate('/maula/ai')}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 rounded-lg font-medium transition-all"
+            >
+              <Zap className="w-4 h-4" />
+              <span>AI Assistant</span>
+            </button>
+
             {/* Toggle Chat */}
             <button
               onClick={() => setChatOpen(!chatOpen)}
@@ -690,5 +705,15 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/maula" element={<FirewallAIExperience />} />
+      <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    </Routes>
+  );
+}
 
 export default App;

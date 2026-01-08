@@ -1,7 +1,7 @@
 /**
  * CryptoVault API Client - Tool 15 - Secure Secrets Management
  */
-const API_BASE_URL = import.meta.env.VITE_CRYPTOVAULT_API_URL || 'http://localhost:4015/api/v1/cryptovault';
+const API_BASE_URL = import.meta.env.VITE_CRYPTOVAULT_API_URL || 'http://localhost:4015/api/v1';
 
 export interface Secret { _id: string; name: string; path: string; version: number; createdAt: string; updatedAt: string; expiresAt?: string; metadata?: Record<string, any>; }
 export interface VaultDashboard { overview: { totalSecrets: number; totalVersions: number; expiringSoon: number; accessCount24h: number; }; recentAccess: { secret: string; action: string; user: string; timestamp: string; }[]; }

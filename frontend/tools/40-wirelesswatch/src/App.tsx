@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { 
   Wifi, Menu, MessageSquare, ChevronLeft,
   Bell, Activity, FileText,
@@ -6,6 +7,10 @@ import {
   Paperclip, User, Bot, Radio, Laptop,
   Target, RefreshCw
 } from 'lucide-react';
+
+// Pages
+import LandingPage from './pages/LandingPage';
+import NeuralLinkInterface from './components/NeuralLinkInterface';
 
 // Components
 import {
@@ -32,7 +37,9 @@ interface NavItemDisplay {
   icon: React.ReactNode;
 }
 
-const App: React.FC = () => {
+const WirelessWatchExperience: React.FC = () => {
+  const navigate = useNavigate();
+
   // State
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
@@ -470,6 +477,15 @@ const App: React.FC = () => {
               </span>
             </div>
             
+            {/* AI Assistant */}
+            <button
+              onClick={() => navigate('/maula/ai')}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white rounded-lg font-medium transition-all shadow-md hover:shadow-lg"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>AI Assistant</span>
+            </button>
+            
             {/* Alerts indicator */}
             <button className="relative p-2 hover:bg-gray-700 rounded-lg">
               <Bell className="w-5 h-5 text-gray-400" />
@@ -600,5 +616,15 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/maula" element={<WirelessWatchExperience />} />
+      <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+    </Routes>
+  );
+}
 
 export default App;
