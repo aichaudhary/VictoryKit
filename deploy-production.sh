@@ -50,6 +50,42 @@ get_timestamp() {
     date +"%Y%m%d_%H%M%S"
 }
 
+# Function to deploy Cloudflare SSL certificates
+deploy_cloudflare_ssl() {
+    log_info "Deploying Cloudflare SSL certificates to EC2..."
+
+    local SSL_LOCAL_DIR="$PROJECT_ROOT/backend/ssl/cloudflare"
+    local SSL_REMOTE_DIR="/etc/ssl/cloudflare"
+
+    # Check if local certificate files exist
+    if [ ! -f "$SSL_LOCAL_DIR/origin-cert.pem" ] || [ ! -f "$SSL_LOCAL_DIR/origin-key.pem" ]; then
+        log_warning "Cloudflare SSL certificates not found in $SSL_LOCAL_DIR - skipping SSL deployment"
+        return 0
+    fi
+
+    # Create remote directory and deploy certificates
+    ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "
+        sudo mkdir -p $SSL_REMOTE_DIR
+        sudo chown root:root $SSL_REMOTE_DIR
+        sudo chmod 755 $SSL_REMOTE_DIR
+    "
+
+    # Copy certificate files
+    scp -i "$EC2_KEY" -o StrictHostKeyChecking=no "$SSL_LOCAL_DIR/origin-cert.pem" "$EC2_HOST:/tmp/"
+    scp -i "$EC2_KEY" -o StrictHostKeyChecking=no "$SSL_LOCAL_DIR/origin-key.pem" "$EC2_HOST:/tmp/"
+
+    # Move to proper location with correct permissions
+    ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "
+        sudo mv /tmp/origin-cert.pem $SSL_REMOTE_DIR/
+        sudo mv /tmp/origin-key.pem $SSL_REMOTE_DIR/
+        sudo chown root:root $SSL_REMOTE_DIR/origin-cert.pem $SSL_REMOTE_DIR/origin-key.pem
+        sudo chmod 644 $SSL_REMOTE_DIR/origin-cert.pem
+        sudo chmod 600 $SSL_REMOTE_DIR/origin-key.pem
+    "
+
+    log_success "Cloudflare SSL certificates deployed to $SSL_REMOTE_DIR"
+}
+
 # Function to build frontend
 build_frontend() {
     local tool=$1
@@ -158,8 +194,14 @@ server {
     listen 443 ssl http2;
     server_name $subdomain.maula.ai;
 
-    ssl_certificate /etc/letsencrypt/live/maula.ai/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/maula.ai/privkey.pem;
+    # Cloudflare Origin SSL Certificates
+    ssl_certificate /etc/ssl/cloudflare/origin-cert.pem;
+    ssl_certificate_key /etc/ssl/cloudflare/origin-key.pem;
+
+    # SSL Configuration for Cloudflare
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
 
     # Security headers
     add_header X-Frame-Options \"SAMEORIGIN\" always;
@@ -370,6 +412,9 @@ main() {
     git add .
     git commit -m "Deploy $(get_timestamp)" || log_warning "No changes to commit"
     git push origin $BRANCH
+
+    # Deploy Cloudflare SSL certificates first
+    deploy_cloudflare_ssl
 
     # Deploy main dashboard
     log_info "Deploying main dashboard..."
