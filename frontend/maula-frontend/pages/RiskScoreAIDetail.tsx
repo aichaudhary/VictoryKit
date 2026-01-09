@@ -1,0 +1,16 @@
+import React from 'react';
+import ToolDetailTemplate from '../components/ToolDetailTemplate';
+
+const RiskScoreAIDetail: React.FC = () => {
+  return (
+    <ToolDetailTemplate
+      toolId={19}
+      toolName="RiskAssess"
+      subdomain="riskassess"
+      color="#8B5CF6"
+      description="AI-powered risk quantification and assessment. Make data-driven security decisions."
+    />
+  );
+};
+
+export default RiskScoreAIDetail;
