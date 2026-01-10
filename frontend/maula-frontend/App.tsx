@@ -1,270 +1,306 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import ToolDetailTemplate from './components/ToolDetailTemplate';
 
-// Tool configuration - 50 tools with their subdomains and names
-const tools = [
-  { id: 1, name: 'FraudGuard', subdomain: 'fraudguard', color: '#EF4444', description: 'AI-powered fraud detection and prevention for enterprise security.' },
-  { id: 2, name: 'DarkWebMonitor', subdomain: 'darkwebmonitor', color: '#10B981', description: 'Intelligent threat reconnaissance and security intelligence gathering.' },
-  { id: 3, name: 'ZeroDayDetect', subdomain: 'zerodaydetect', color: '#F43F5E', description: 'Real-time threat detection and monitoring across your infrastructure.' },
-  { id: 4, name: 'RansomShield', subdomain: 'ransomshield', color: '#8B5CF6', description: 'Advanced malware detection and analysis using AI.' },
-  { id: 5, name: 'PhishNetAI', subdomain: 'phishnetai', color: '#0EA5E9', description: 'Comprehensive phishing detection and email security.' },
-  { id: 6, name: 'VulnScan', subdomain: 'vulnscan', color: '#F59E0B', description: 'Automated vulnerability scanning and assessment.' },
-  { id: 7, name: 'PenTestAI', subdomain: 'pentestai', color: '#6366F1', description: 'AI-assisted penetration testing and security assessment.' },
-  { id: 8, name: 'CodeSentinel', subdomain: 'codesentinel', color: '#3B82F6', description: 'Static and dynamic code security analysis.' },
-  { id: 9, name: 'RuntimeGuard', subdomain: 'runtimeguard', color: '#14B8A6', description: 'Automated compliance monitoring and reporting.' },
-  { id: 10, name: 'DataGuardian', subdomain: 'dataguardian', color: '#D946EF', description: 'Data protection and privacy enforcement.' },
-  { id: 11, name: 'IncidentResponse', subdomain: 'incidentresponse', color: '#EF4444', description: 'Incident response orchestration and automation.' },
-  { id: 12, name: 'XDRPlatform', subdomain: 'xdrplatform', color: '#22C55E', description: 'Intelligent log analysis and correlation.' },
-  { id: 13, name: 'IdentityForge', subdomain: 'identityforge', color: '#6366F1', description: 'Identity and access management.' },
-  { id: 14, name: 'SecretVault', subdomain: 'secretvault', color: '#A855F7', description: 'Enterprise encryption key management.' },
-  { id: 15, name: 'PrivilegeGuard', subdomain: 'privilegeguard', color: '#10B981', description: 'Secure secrets and credential management.' },
-  { id: 16, name: 'NetworkForensics', subdomain: 'networkforensics', color: '#06B6D4', description: 'Network traffic monitoring and analysis.' },
-  { id: 17, name: 'AuditTrailPro', subdomain: 'audittrailpro', color: '#3B82F6', description: 'Comprehensive audit logging and tracking.' },
-  { id: 18, name: 'ThreatModel', subdomain: 'threatmodel', color: '#F97316', description: 'Attack surface analysis and threat modeling.' },
-  { id: 19, name: 'RiskQuantify', subdomain: 'riskquantify', color: '#8B5CF6', description: 'AI-powered risk quantification and assessment.' },
-  { id: 20, name: 'SecurityDashboard', subdomain: 'securitydashboard', color: '#06B6D4', description: 'Security posture measurement and benchmarking.' },
-  { id: 21, name: 'WAFManager', subdomain: 'wafmanager', color: '#EC4899', description: 'Web application firewall management.' },
-  { id: 22, name: 'APIGuard', subdomain: 'apishield', color: '#8B5CF6', description: 'API security testing and monitoring.' },
-  { id: 23, name: 'BotMitigation', subdomain: 'botmitigation', color: '#F59E0B', description: 'Bot detection and mitigation.' },
-  { id: 24, name: 'DDoSShield', subdomain: 'ddosdefender', color: '#EF4444', description: 'DDoS attack detection and prevention.' },
-  { id: 25, name: 'SSLMonitor', subdomain: 'sslmonitor', color: '#10B981', description: 'SSL/TLS certificate monitoring.' },
-  { id: 26, name: 'BlueTeamAI', subdomain: 'blueteamai', color: '#3B82F6', description: 'AI-powered defensive security operations.' },
-  { id: 27, name: 'SIEMCommander', subdomain: 'siemcommander', color: '#22C55E', description: 'Security information and event management.' },
-  { id: 28, name: 'SOAREngine', subdomain: 'soarengine', color: '#A855F7', description: 'Security orchestration and automated response.' },
-  { id: 29, name: 'BehaviorAnalytics', subdomain: 'behavioranalytics', color: '#F97316', description: 'AI-driven risk scoring and prioritization.' },
-  { id: 30, name: 'PolicyEngine', subdomain: 'policyengine', color: '#6366F1', description: 'Security policy management and enforcement.' },
-  { id: 31, name: 'CloudPosture', subdomain: 'cloudposture', color: '#14B8A6', description: 'Audit trail tracking and compliance.' },
-  { id: 32, name: 'ZeroTrust', subdomain: 'zerotrust', color: '#8B5CF6', description: 'Zero trust architecture implementation.' },
-  { id: 33, name: 'KubeArmor', subdomain: 'kubearmor', color: '#EF4444', description: 'Enterprise password management.' },
-  { id: 34, name: 'ContainerScan', subdomain: 'containerscan', color: '#EC4899', description: 'Biometric authentication and verification.' },
-  { id: 35, name: 'EmailDefender', subdomain: 'emaildefender', color: '#0EA5E9', description: 'Email security and threat protection.' },
-  { id: 36, name: 'BrowserIsolation', subdomain: 'browserisolation', color: '#F59E0B', description: 'Web content filtering and security.' },
-  { id: 37, name: 'DNSShield', subdomain: 'dnsfirewall', color: '#22C55E', description: 'DNS security and protection.' },
-  { id: 38, name: 'FirewallAI', subdomain: 'firewallai', color: '#F97316', description: 'AI-enhanced firewall management.' },
-  { id: 39, name: 'VPNGuardian', subdomain: 'vpnanalyzer', color: '#6366F1', description: 'VPN security and monitoring.' },
-  { id: 40, name: 'WirelessHunter', subdomain: 'wirelesshunter', color: '#06B6D4', description: 'Wireless network security monitoring.' },
-  { id: 41, name: 'DLPAdvanced', subdomain: 'dlp', color: '#D946EF', description: 'Data loss prevention and protection.' },
-  { id: 42, name: 'IoTSentinel', subdomain: 'iotsentinel', color: '#10B981', description: 'IoT device security management.' },
-  { id: 43, name: 'MobileShield', subdomain: 'mobileshield', color: '#3B82F6', description: 'Mobile device security and MDM.' },
-  { id: 44, name: 'SupplyChainAI', subdomain: 'supplychainai', color: '#22C55E', description: 'Secure backup verification and testing.' },
-  { id: 45, name: 'DRPlan', subdomain: 'drplan', color: '#EF4444', description: 'Disaster recovery planning and testing.' },
-  { id: 46, name: 'PrivacyShield', subdomain: 'privacyshield', color: '#8B5CF6', description: 'Privacy protection and compliance.' },
-  { id: 47, name: 'GDPRCompliance', subdomain: 'gdprcompliance', color: '#14B8A6', description: 'GDPR compliance management.' },
-  { id: 48, name: 'HIPAAGuard', subdomain: 'hipaaguard', color: '#EC4899', description: 'HIPAA compliance and security.' },
-  { id: 49, name: 'PCIDSSCheck', subdomain: 'soc2automator', color: '#F59E0B', description: 'PCI DSS compliance checking.' },
-  { id: 50, name: 'ISO27001', subdomain: 'iso27001', color: '#6366F1', description: 'Bug bounty program management.' },
-];
+import React, { useEffect, useRef } from 'react';
+import Header from './components/Header';
+import HeroSection from './components/HeroSection';
+import OptimizedToolSection from './components/OptimizedToolSection';
+import SideNavigation from './components/SideNavigation';
+import Footer from './components/Footer';
+import AIInterface from './components/AIInterface';
+import AtmosphericTransition from './components/AtmosphericTransition';
 
-// Export tools for use in other components
-export { tools };
+// Auth Components
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Login from './components/Auth/Login';
+import SignUp from './components/Auth/SignUp';
+import ForgotPassword from './components/Auth/ForgotPassword';
+import ResetPassword from './components/Auth/ResetPassword';
 
-// Helper function to get current subdomain
-const getCurrentSubdomain = (): string | null => {
-  const hostname = window.location.hostname;
-  // Check if we're on a subdomain of maula.ai
-  if (hostname.endsWith('.maula.ai')) {
-    return hostname.replace('.maula.ai', '');
-  }
-  // For local development or www
-  if (hostname === 'maula.ai' || hostname === 'www.maula.ai' || hostname === 'localhost') {
-    return null;
-  }
-  // Check for subdomain pattern
-  const parts = hostname.split('.');
-  if (parts.length > 2) {
-    return parts[0];
-  }
-  return null;
-};
+// Tools 1-50
+import FraudGuardDetail from './pages/FraudGuardDetail';
+import IntelliScoutDetail from './pages/IntelliScoutDetail';
+import ThreatRadarDetail from './pages/ThreatRadarDetail';
+import MalwareHunterDetail from './pages/MalwareHunterDetail';
+import PhishGuardDetail from './pages/PhishGuardDetail';
+import VulnScanDetail from './pages/VulnScanDetail';
+import PenTestAIDetail from './pages/PenTestAIDetail';
+import SecureCodeDetail from './pages/SecureCodeDetail';
+import ComplianceCheckDetail from './pages/ComplianceCheckDetail';
+import DataGuardianDetail from './pages/DataGuardianDetail';
+import CryptoShieldDetail from './pages/CryptoShieldDetail';
+import IAMControlDetail from './pages/IAMControlDetail';
+import LogIntelDetail from './pages/LogIntelDetail';
+import NetDefenderDetail from './pages/NetDefenderDetail';
+import EndpointShieldDetail from './pages/EndpointShieldDetail';
+import CloudSecureDetail from './pages/CloudSecureDetail';
+import APIGuardianDetail from './pages/APIGuardianDetail';
+import ContainerWatchDetail from './pages/ContainerWatchDetail';
+import DevSecOpsDetail from './pages/DevSecOpsDetail';
+import IncidentCommandDetail from './pages/IncidentCommandDetail';
+import ForensicsLabDetail from './pages/ForensicsLabDetail';
+import ThreatIntelDetail from './pages/ThreatIntelDetail';
+import BehaviorWatchDetail from './pages/BehaviorWatchDetail';
+import AnomalyDetectDetail from './pages/AnomalyDetectDetail';
+import RedTeamAIDetail from './pages/RedTeamAIDetail';
+import BlueTeamAIDetail from './pages/BlueTeamAIDetail';
+import SIEMCommanderDetail from './pages/SIEMCommanderDetail';
+import SOAREngineDetail from './pages/SOAREngineDetail';
+import RiskScoreAIDetail from './pages/RiskScoreAIDetail';
+import PolicyEngineDetail from './pages/PolicyEngineDetail';
+import AuditTrackerDetail from './pages/AuditTrackerDetail';
+import ZeroTrustAIDetail from './pages/ZeroTrustAIDetail';
+import PasswordVaultDetail from './pages/PasswordVaultDetail';
+import BiometricAIDetail from './pages/BiometricAIDetail';
+import EmailGuardDetail from './pages/EmailGuardDetail';
+import WebFilterDetail from './pages/WebFilterDetail';
+import DNSShieldDetail from './pages/DNSShieldDetail';
+import FirewallAIDetail from './pages/FirewallAIDetail';
+import VPNGuardianDetail from './pages/VPNGuardianDetail';
+import WirelessWatchDetail from './pages/WirelessWatchDetail';
+import IoTSecureDetail from './pages/IoTSecureDetail';
+import MobileDefendDetail from './pages/MobileDefendDetail';
+import BackupGuardDetail from './pages/BackupGuardDetail';
+import DRPlanDetail from './pages/DRPlanDetail';
+import PrivacyShieldDetail from './pages/PrivacyShieldDetail';
+import GDPRComplianceDetail from './pages/GDPRComplianceDetail';
+import HIPAAGuardDetail from './pages/HIPAAGuardDetail';
+import PCIDSSDetail from './pages/PCIDSSDetail';
+import BugBountyAIDetail from './pages/BugBountyAIDetail';
+import CyberEduAIDetail from './pages/CyberEduAIDetail';
 
-// Get tool by subdomain
-const getToolBySubdomain = (subdomain: string) => {
-  return tools.find(tool => tool.subdomain === subdomain);
-};
+// Organizational Pages
+import ProductsPage from './pages/ProductsPage';
+import SolutionsPage from './pages/SolutionsPage';
+import DocsPage from './pages/DocsPage';
+import PricingPage from './pages/PricingPage';
+import { AboutUs, Careers, Contact, GlobalShieldDetail, LegalPage } from './pages/StaticDetailPages';
 
-// Tool Detail Page Component (for subdomain routing)
-const ToolDetailPage: React.FC<{ tool: typeof tools[0] }> = ({ tool }) => {
-  return (
-    <ToolDetailTemplate
-      toolId={tool.id}
-      toolName={tool.name}
-      subdomain={tool.subdomain}
-      color={tool.color}
-      description={tool.description}
-    />
-  );
-};
+// Dashboard
+import Dashboard from './pages/Dashboard';
+import APIAccessKeys from './pages/APIAccessKeys';
+import AdminHierarchy from './pages/AdminHierarchy';
+import SovereigntyNodes from './pages/SovereigntyNodes';
 
-// Tool Section Component for Homepage
-interface ToolSectionProps {
-  tool: typeof tools[0];
-}
+import { ScrollProvider, useScroll } from './context/ScrollContext';
+import { tools } from './data/tools';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const ToolSection: React.FC<ToolSectionProps> = ({ tool }) => {
-  const handleNavigate = () => {
-    // In production, this would navigate to the subdomain
-    // For dev, we use relative paths
-    window.location.href = `https://${tool.subdomain}.maula.ai`;
+gsap.registerPlugin(ScrollTrigger);
+
+const MainContent: React.FC = () => {
+  const { currentSection, view } = useScroll();
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    gsap.defaults({ ease: 'power3.out', duration: 1.2 });
+    window.onload = () => { ScrollTrigger.refresh(); };
+  }, []);
+
+  useEffect(() => {
+    if (!mainRef.current) return;
+
+    let nextColor = '#02000a';
+    if (['iam-control', 'zero-trust-ai', 'password-vault', 'biometric-ai'].includes(view)) {
+      nextColor = '#040412';
+    } else if (['log-intel', 'incident-command', 'forensics-lab', 'behavior-watch', 'anomaly-detect', 'dr-plan', 'cyber-edu-ai'].includes(view)) {
+      nextColor = '#0d0503';
+    } else if (['net-defender', 'email-guard', 'web-filter', 'dns-shield', 'firewall-ai', 'vpn-guardian', 'wireless-watch', 'mobile-defend'].includes(view)) {
+      nextColor = '#040d0a';
+    } else if (['fraud-guard', 'intelli-scout', 'threat-radar', 'malware-hunter', 'phish-guard', 'endpoint-shield', 'threat-intel'].includes(view)) {
+      nextColor = '#0d0404';
+    } else if (['cloud-secure', 'api-guardian', 'container-watch', 'devsecops', 'iot-secure', 'secure-code'].includes(view)) {
+      nextColor = '#040d12';
+    } else if (['red-team-ai', 'blue-team-ai', 'siem-commander', 'soar-engine', 'risk-score-ai', 'bug-bounty-ai', 'pen-test-ai'].includes(view)) {
+      nextColor = '#08040d';
+    } else if (['policy-engine', 'audit-tracker', 'gdpr-compliance', 'hipaa-guard', 'pcidss-guard', 'compliance-check', 'vuln-scan'].includes(view)) {
+      nextColor = '#0d0a04';
+    } else if (['backup-guard', 'privacy-shield', 'data-guardian', 'crypto-shield'].includes(view)) {
+      nextColor = '#04080d';
+    } else if (view === 'dashboard-api-keys') {
+      nextColor = '#02001a';
+    } else if (view === 'dashboard-admin-hierarchy') {
+      nextColor = '#020a02';
+    } else if (view === 'dashboard-sovereignty') {
+      nextColor = '#0d0a02';
+    } else if (view.startsWith('dashboard')) {
+      nextColor = '#02000a';
+    } else if (currentSection >= 0) {
+      nextColor = tools[currentSection]?.theme?.bgStop || '#02000a';
+    }
+
+    gsap.to(mainRef.current, {
+      backgroundColor: nextColor,
+      duration: 1,
+      ease: 'sine.inOut',
+      overwrite: 'auto'
+    });
+  }, [currentSection, view]);
+
+  // Unified View Routing
+  const renderView = () => {
+    switch (view) {
+      case 'login':
+        return <LoginView />;
+      case 'signup':
+        return <SignUpView />;
+      case 'forgot':
+        return <ForgotPasswordView />;
+      case 'reset':
+        return <ResetPasswordView />;
+      case 'dashboard':
+      case 'dashboard-marketplace':
+      case 'dashboard-fleet':
+      case 'dashboard-analytics':
+      case 'dashboard-billing':
+      case 'dashboard-settings':
+      case 'dashboard-logs':
+        return <Dashboard />;
+      case 'dashboard-api-keys': return <APIAccessKeys />;
+      case 'dashboard-admin-hierarchy': return <AdminHierarchy />;
+      case 'dashboard-sovereignty': return <SovereigntyNodes />;
+      case 'products': return <ProductsPage />;
+      case 'solutions': return <SolutionsPage />;
+      case 'docs': return <DocsPage />;
+      case 'pricing': return <PricingPage />;
+      case 'about-us': return <AboutUs />;
+      case 'careers': return <Careers />;
+      case 'press-kit': return <LegalPage title="Press Kit" />;
+      case 'contact': return <Contact />;
+      case 'privacy-policy': return <LegalPage title="Privacy Policy" />;
+      case 'terms-of-service': return <LegalPage title="Terms of Service" />;
+      case 'security-disclosure': return <LegalPage title="Security Disclosure" />;
+      case 'global-shield-detail': return <GlobalShieldDetail />;
+      case 'fraud-guard': return <FraudGuardDetail />;
+      case 'intelli-scout': return <IntelliScoutDetail />;
+      case 'threat-radar': return <ThreatRadarDetail />;
+      case 'malware-hunter': return <MalwareHunterDetail />;
+      case 'phish-guard': return <PhishGuardDetail />;
+      case 'vuln-scan': return <VulnScanDetail />;
+      case 'pen-test-ai': return <PenTestAIDetail />;
+      case 'secure-code': return <SecureCodeDetail />;
+      case 'compliance-check': return <ComplianceCheckDetail />;
+      case 'data-guardian': return <DataGuardianDetail />;
+      case 'crypto-shield': return <CryptoShieldDetail />;
+      case 'iam-control': return <IAMControlDetail />;
+      case 'log-intel': return <LogIntelDetail />;
+      case 'net-defender': return <NetDefenderDetail />;
+      case 'endpoint-shield': return <EndpointShieldDetail />;
+      case 'cloud-secure': return <CloudSecureDetail />;
+      case 'api-guardian': return <APIGuardianDetail />;
+      case 'container-watch': return <ContainerWatchDetail />;
+      case 'devsecops': return <DevSecOpsDetail />;
+      case 'incident-command': return <IncidentCommandDetail />;
+      case 'forensics-lab': return <ForensicsLabDetail />;
+      case 'threat-intel': return <ThreatIntelDetail />;
+      case 'behavior-watch': return <BehaviorWatchDetail />;
+      case 'anomaly-detect': return <AnomalyDetectDetail />;
+      case 'red-team-ai': return <RedTeamAIDetail />;
+      case 'blue-team-ai': return <BlueTeamAIDetail />;
+      case 'siem-commander': return <SIEMCommanderDetail />;
+      case 'soar-engine': return <SOAREngineDetail />;
+      case 'risk-score-ai': return <RiskScoreAIDetail />;
+      case 'policy-engine': return <PolicyEngineDetail />;
+      case 'audit-tracker': return <AuditTrackerDetail />;
+      case 'zero-trust-ai': return <ZeroTrustAIDetail />;
+      case 'password-vault': return <PasswordVaultDetail />;
+      case 'biometric-ai': return <BiometricAIDetail />;
+      case 'email-guard': return <EmailGuardDetail />;
+      case 'web-filter': return <WebFilterDetail />;
+      case 'dns-shield': return <DNSShieldDetail />;
+      case 'firewall-ai': return <FirewallAIDetail />;
+      case 'vpn-guardian': return <VPNGuardianDetail />;
+      case 'wireless-watch': return <WirelessWatchDetail />;
+      case 'iot-secure': return <IoTSecureDetail />;
+      case 'mobile-defend': return <MobileDefendDetail />;
+      case 'backup-guard': return <BackupGuardDetail />;
+      case 'dr-plan': return <DRPlanDetail />;
+      case 'privacy-shield': return <PrivacyShieldDetail />;
+      case 'gdpr-compliance': return <GDPRComplianceDetail />;
+      case 'hipaa-guard': return <HIPAAGuardDetail />;
+      case 'pcidss-guard': return <PCIDSSDetail />;
+      case 'bug-bounty-ai': return <BugBountyAIDetail />;
+      case 'cyber-edu-ai': return <CyberEduAIDetail />;
+      default: return null;
+    }
   };
 
+  const activeView = renderView();
+  if (activeView) return activeView;
+
   return (
-    <section 
-      className="tool-section"
-      style={{
-        padding: '40px 20px',
-        borderBottom: '1px solid #1e293b',
-        background: `linear-gradient(135deg, ${tool.color}10 0%, transparent 50%)`,
-      }}
+    <div 
+      ref={mainRef}
+      className="text-white selection:bg-white/10 relative min-h-screen transition-none"
+      style={{ backgroundColor: '#02000a' }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
-          <div>
-            <span style={{ color: tool.color, fontSize: '14px', fontWeight: 600 }}>
-              TOOL {String(tool.id).padStart(2, '0')}
-            </span>
-            <h2 style={{ 
-              fontSize: '28px', 
-              fontWeight: 'bold', 
-              color: 'white',
-              margin: '8px 0 0 0'
-            }}>
-              {tool.name}
-            </h2>
-          </div>
-          <button
-            onClick={handleNavigate}
-            style={{
-              padding: '12px 32px',
-              background: `linear-gradient(135deg, ${tool.color} 0%, ${tool.color}cc 100%)`,
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'transform 0.2s, box-shadow 0.2s',
-              boxShadow: `0 4px 14px ${tool.color}40`,
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = `0 6px 20px ${tool.color}60`;
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = `0 4px 14px ${tool.color}40`;
-            }}
-          >
-            View {tool.name} →
-          </button>
+      <div className="fixed inset-0 pointer-events-none opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] z-[999]" />
+      <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-transparent via-[#02000a]/30 to-[#02000a]/90 z-0" />
+
+      <Header />
+      <SideNavigation />
+      
+      <AIInterface onUpdateImage={() => {}} />
+      <AtmosphericTransition />
+      
+      <main className="relative z-10">
+        <HeroSection />
+        <div className="space-y-0">
+          {tools.map((tool, index) => (
+            <OptimizedToolSection 
+              key={tool.id} 
+              tool={tool} 
+              index={index} 
+            />
+          ))}
         </div>
-      </div>
-    </section>
-  );
-};
-
-// Homepage Component
-const HomePage: React.FC = () => {
-  return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: 'linear-gradient(180deg, #0f172a 0%, #020617 100%)',
-      color: 'white',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
-      {/* Header */}
-      <header style={{
-        padding: '24px 20px',
-        borderBottom: '1px solid #1e293b',
-        position: 'sticky',
-        top: 0,
-        background: 'rgba(15, 23, 42, 0.95)',
-        backdropFilter: 'blur(10px)',
-        zIndex: 100,
-      }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h1 style={{ 
-            fontSize: '28px', 
-            fontWeight: 'bold',
-            background: 'linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            margin: 0,
-          }}>
-            MAULA.AI
-          </h1>
-          <span style={{ color: '#64748b', fontSize: '14px' }}>
-            50 Security Tools • One Platform
-          </span>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section style={{
-        padding: '80px 20px',
-        textAlign: 'center',
-        background: 'linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%)',
-      }}>
-        <h2 style={{ 
-          fontSize: '48px', 
-          fontWeight: 'bold', 
-          marginBottom: '16px',
-          background: 'linear-gradient(135deg, white 0%, #94a3b8 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-        }}>
-          VictoryKit Security Suite
-        </h2>
-        <p style={{ color: '#94a3b8', fontSize: '18px', maxWidth: '600px', margin: '0 auto' }}>
-          Enterprise-grade AI-powered security tools. Click any tool below to explore.
-        </p>
-      </section>
-
-      {/* 50 Tool Sections */}
-      <main>
-        {tools.map((tool) => (
-          <ToolSection key={tool.id} tool={tool} />
-        ))}
       </main>
-
-      {/* Footer */}
-      <footer style={{
-        padding: '40px 20px',
-        textAlign: 'center',
-        borderTop: '1px solid #1e293b',
-        color: '#64748b',
-      }}>
-        <p>© 2026 Maula.AI - All Rights Reserved</p>
-      </footer>
+      
+      <Footer />
     </div>
   );
 };
 
-// Main App with Router - detects subdomain and shows appropriate content
+// Auth View Wrapper Components
+const LoginView: React.FC = () => {
+  const { view: authView } = useAuth();
+  if (authView === 'signup') return <SignUp />;
+  if (authView === 'forgot') return <ForgotPassword />;
+  if (authView === 'reset') return <ResetPassword />;
+  return <Login />;
+};
+
+const SignUpView: React.FC = () => {
+  const { view: authView } = useAuth();
+  if (authView === 'login') return <Login />;
+  if (authView === 'forgot') return <ForgotPassword />;
+  if (authView === 'reset') return <ResetPassword />;
+  return <SignUp />;
+};
+
+const ForgotPasswordView: React.FC = () => {
+  const { view: authView } = useAuth();
+  if (authView === 'login') return <Login />;
+  if (authView === 'signup') return <SignUp />;
+  if (authView === 'reset') return <ResetPassword />;
+  return <ForgotPassword />;
+};
+
+const ResetPasswordView: React.FC = () => {
+  const { view: authView } = useAuth();
+  if (authView === 'login') return <Login />;
+  if (authView === 'signup') return <SignUp />;
+  if (authView === 'forgot') return <ForgotPassword />;
+  return <ResetPassword />;
+};
+
 const App: React.FC = () => {
-  const subdomain = getCurrentSubdomain();
-  const tool = subdomain ? getToolBySubdomain(subdomain) : null;
-
-  // If on a tool subdomain (e.g., fraudguard.maula.ai), show that tool's detail page
-  if (tool) {
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<ToolDetailPage tool={tool} />} />
-          <Route path="/maula" element={<div>Tool Experience - Coming Soon</div>} />
-          <Route path="/maula/ai" element={<div>AI Assistant - Coming Soon</div>} />
-        </Routes>
-      </BrowserRouter>
-    );
-  }
-
-  // Otherwise show the main homepage (maula.ai)
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <ScrollProvider>
+        <MainContent />
+      </ScrollProvider>
+    </AuthProvider>
   );
 };
 

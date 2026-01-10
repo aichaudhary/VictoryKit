@@ -10,14 +10,16 @@
     "preview": "vite preview --port 3041"
   },
   "dependencies": {
+    "@google/genai": "^1.35.0",
     "axios": "^1.13.2",
     "date-fns": "^2.30.0",
+    "jspdf": "^4.0.0",
     "lucide-react": "^0.562.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.11.0",
-    "recharts": "^2.12.0",
-    "socket.io-client": "^4.5.4"
+    "react-router-dom": "^7.12.0",
+    "recharts": "^2.15.4",
+    "socket.io-client": "^4.8.3"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

@@ -245,13 +245,13 @@ const FraudGuardTool: React.FC = () => {
           </div>
 
           {/* Live Assistant Button */}
-          <Link
-            to="/maula/ai"
+          <a
+            href="/maula/ai/"
             className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
           >
             <Sparkles className="w-5 h-5" />
             <span className="font-medium">AI Assistant</span>
-          </Link>
+          </a>
         </div>
       </header>
 
