@@ -137,6 +137,18 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
   }, [index, pattern, setCurrentSection]);
 
   const handleDeploy = () => {
+    // External URL routing for deployed tools
+    const externalRoutes: Record<number, string> = {
+      1: 'https://fraudguard.maula.ai',
+      2: 'https://darkwebmonitor.maula.ai'
+    };
+    
+    // If tool has external route, redirect to it
+    if (externalRoutes[tool.id]) {
+      window.location.href = externalRoutes[tool.id];
+      return;
+    }
+    
     const routeMap: Record<number, string> = {
       1: 'fraud-guard', 2: 'intelli-scout', 3: 'threat-radar', 4: 'malware-hunter',
       5: 'phish-guard', 6: 'vuln-scan', 7: 'pen-test-ai', 8: 'secure-code',

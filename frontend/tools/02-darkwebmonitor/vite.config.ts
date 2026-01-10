@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   
   // Production base path for subdomain deployment
-  base: "/",
+  base: "/maula/",
 
   server: {
     port: 3002,
