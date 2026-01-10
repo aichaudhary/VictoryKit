@@ -365,4 +365,4 @@ auditTrailSchema.statics.findComplianceViolations = function(framework, hours = 
   }).sort({ timestamp: -1 });
 };
 
-module.exports = mongoose.model('AuditTrail', auditTrailSchema);
+module.exports = mongoose.model('AuditTrailPro', auditTrailSchema);

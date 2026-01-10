@@ -63,7 +63,7 @@ VictoryKit/
 │   │   ├─ sites-available/
 │   │   │   ├─ maula.ai.conf                 # Main site
 │   │   │   ├─ fguard.maula.ai.conf          # FraudGuard
-│   │   │   ├─ iscout.maula.ai.conf          # IntelliScout
+│   │   │   ├─ iscout.maula.ai.conf          # DarkWebMonitor
 │   │   │   └─ ... (51 total configs)
 │   │   │
 │   │   ├─ ssl/

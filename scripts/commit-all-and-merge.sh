@@ -63,7 +63,7 @@ Batch 3 - Infrastructure Security (12-21):
 • NetDefender (netdefender.maula.ai) - Network Defense
 • EndpointShield (endpointshield.maula.ai) - Endpoint Protection
 • CloudSecure (cloudsecure.maula.ai) - Cloud Security
-• APIGuardian (apiguardian.maula.ai) - API Security
+• APIGuardian (apishieldian.maula.ai) - API Security
 • ContainerWatch (containerwatch.maula.ai) - Container Security
 • DevSecOps (devsecops.maula.ai) - DevSecOps Pipeline
 • IncidentCommand (incidentcmd.maula.ai) - Incident Response
@@ -78,7 +78,7 @@ Batch 4 - Advanced Security (22-31):
 • ThreatIntelHub (threatintel.maula.ai) - Threat Intelligence
 • AssetDiscovery (assetdisco.maula.ai) - Asset Discovery
 • PatchManager (patchmgr.maula.ai) - Patch Management
-• BackupGuardian (backupguard.maula.ai) - Backup Security
+• BackupGuardian (supplychainai.maula.ai) - Backup Security
 • DisasterRecovery (disasterrecovery.maula.ai) - Disaster Recovery
 
 Batch 5 - Perimeter Security (32-41):
@@ -88,7 +88,7 @@ Batch 5 - Perimeter Security (32-41):
 • DDoSMitigator (ddosmit.maula.ai) - DDoS Mitigation
 • SecureGateway (secgateway.maula.ai) - Web Gateway
 • MobileSecurity (mobilesec.maula.ai) - Mobile Security
-• IoTSecure (iotsecure.maula.ai) - IoT Security
+• IoTSecure (iotsentinel.maula.ai) - IoT Security
 • SupplyChainSec (supplychainsec.maula.ai) - Supply Chain Security
 • BrandProtect (brandprotect.maula.ai) - Brand Protection
 • DataLossPrevention (dlp.maula.ai) - DLP

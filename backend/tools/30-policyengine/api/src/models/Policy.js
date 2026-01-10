@@ -116,7 +116,7 @@ const policySchema = new mongoose.Schema({
     complianceRate: { type: Number, min: 0, max: 100 },
     violationCount: { type: Number, default: 0 },
     exceptionCount: { type: Number, default: 0 },
-    lastComplianceCheck: Date,
+    lastRuntimeGuard: Date,
     enforcementSuccess: { type: Number, min: 0, max: 100 }
   },
   applicability: {
@@ -167,7 +167,7 @@ policySchema.methods.incrementVersion = function(type = 'minor') {
 policySchema.methods.updateComplianceMetrics = function(data) {
   this.metrics.complianceRate = data.complianceRate;
   this.metrics.violationCount = data.violationCount || this.metrics.violationCount;
-  this.metrics.lastComplianceCheck = new Date();
+  this.metrics.lastRuntimeGuard = new Date();
 };
 
 module.exports = mongoose.model('Policy', policySchema);

@@ -11,20 +11,20 @@ MongoDB is now running in a Docker container on port 27017.
 3. Select "Start All Tool APIs"
 
 This will open 3 terminals running:
-- MalwareHunter API (port 4004)
-- PhishGuard API (port 4005)
+- RansomShield API (port 4004)
+- PhishNetAI API (port 4005)
 - VulnScan API (port 4006)
 
 ### Option 2: Manual Terminal Commands
 
 ```bash
-# Terminal 1 - MalwareHunter
-cd backend/tools/04-malwarehunter/api
+# Terminal 1 - RansomShield
+cd backend/tools/04-ransomshield/api
 cp .env.example .env
 npm start
 
-# Terminal 2 - PhishGuard (in a new terminal)
-cd backend/tools/05-phishguard/api
+# Terminal 2 - PhishNetAI (in a new terminal)
+cd backend/tools/05-phishnetai/api
 cp .env.example .env
 npm install && npm start
 
@@ -39,8 +39,8 @@ npm install && npm start
 Codespaces will **automatically forward the ports**. Look for the "Ports" tab in VS Code (bottom panel) or click the notification that appears.
 
 You'll see URLs like:
-- **MalwareHunter**: `https://[your-codespace]-4004.app.github.dev`
-- **PhishGuard**: `https://[your-codespace]-4005.app.github.dev`
+- **RansomShield**: `https://[your-codespace]-4004.app.github.dev`
+- **PhishNetAI**: `https://[your-codespace]-4005.app.github.dev`
 - **VulnScan**: `https://[your-codespace]-4006.app.github.dev`
 
 ## 🧪 Test the APIs
@@ -61,8 +61,8 @@ Click on the globe icon 🌐 next to the port in the Ports tab to open it in you
 
 Test endpoints:
 - `/health` - Health check
-- `/api/v1/malwarehunter/*` - MalwareHunter endpoints
-- `/api/v1/phishguard/*` - PhishGuard endpoints
+- `/api/v1/ransomshield/*` - RansomShield endpoints
+- `/api/v1/phishnetai/*` - PhishNetAI endpoints
 - `/api/v1/vulnscan/*` - VulnScan endpoints
 
 ## 🔐 Authentication
@@ -91,8 +91,8 @@ Just close the terminal tabs or press `Ctrl+C` in each terminal.
 **Current Status:**
 - ✅ MongoDB container running
 - ✅ VS Code tasks configured
-- ✅ MalwareHunter API ready (port 4004)
-- ✅ PhishGuard API ready (port 4005)
+- ✅ RansomShield API ready (port 4004)
+- ✅ PhishNetAI API ready (port 4005)
 - ✅ VulnScan API ready (port 4006)
 
 **Next:** Run the task or start manually! 🫦🦾

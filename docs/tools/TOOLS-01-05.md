@@ -9,10 +9,10 @@
 | Tool | Name          | Port | DB                       | Status      | Priority |
 | ---- | ------------- | ---- | ------------------------ | ----------- | -------- |
 | 01   | FraudGuard    | 4001 | victorykit_fraudguard    | ✅ Complete | P0       |
-| 02   | IntelliScout  | 4002 | victorykit_intelliscout  | ✅ Complete | P0       |
-| 03   | ThreatRadar   | 4003 | victorykit_threatradar   | ✅ Complete | P0       |
-| 04   | MalwareHunter | 4004 | victorykit_malwarehunter | 🔄 Deployed | P0       |
-| 05   | PhishGuard    | 4005 | victorykit_phishguard    | 🔄 Deployed | P0       |
+| 02   | DarkWebMonitor  | 4002 | victorykit_darkwebmonitor  | ✅ Complete | P0       |
+| 03   | ZeroDayDetect   | 4003 | victorykit_zerodaydetect   | ✅ Complete | P0       |
+| 04   | RansomShield | 4004 | victorykit_ransomshield | 🔄 Deployed | P0       |
+| 05   | PhishNetAI    | 4005 | victorykit_phishnetai    | 🔄 Deployed | P0       |
 
 ---
 
@@ -164,7 +164,7 @@ frontend/src/
 
 ---
 
-## 🔍 Tool 02: IntelliScout
+## 🔍 Tool 02: DarkWebMonitor
 
 ### Threat Intelligence Platform
 
@@ -182,7 +182,7 @@ Aggregate, analyze, and correlate threat intelligence from multiple sources to p
 #### Directory Structure
 
 ```
-backend/tools/02-intelliscout/
+backend/tools/02-darkwebmonitor/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -271,24 +271,24 @@ backend/tools/02-intelliscout/
 #### API Endpoints
 
 ```
-POST   /api/v1/intelliscout/threats              # Create threat intel
-GET    /api/v1/intelliscout/threats              # List threats
-GET    /api/v1/intelliscout/threats/:id          # Get threat details
-PUT    /api/v1/intelliscout/threats/:id          # Update threat
-DELETE /api/v1/intelliscout/threats/:id          # Delete threat
+POST   /api/v1/darkwebmonitor/threats              # Create threat intel
+GET    /api/v1/darkwebmonitor/threats              # List threats
+GET    /api/v1/darkwebmonitor/threats/:id          # Get threat details
+PUT    /api/v1/darkwebmonitor/threats/:id          # Update threat
+DELETE /api/v1/darkwebmonitor/threats/:id          # Delete threat
 
-POST   /api/v1/intelliscout/iocs                 # Add IOC
-GET    /api/v1/intelliscout/iocs                 # List IOCs
-GET    /api/v1/intelliscout/iocs/search          # Search IOCs
-POST   /api/v1/intelliscout/iocs/lookup          # Bulk IOC lookup
-POST   /api/v1/intelliscout/iocs/enrich          # Enrich IOC data
+POST   /api/v1/darkwebmonitor/iocs                 # Add IOC
+GET    /api/v1/darkwebmonitor/iocs                 # List IOCs
+GET    /api/v1/darkwebmonitor/iocs/search          # Search IOCs
+POST   /api/v1/darkwebmonitor/iocs/lookup          # Bulk IOC lookup
+POST   /api/v1/darkwebmonitor/iocs/enrich          # Enrich IOC data
 
-POST   /api/v1/intelliscout/analyses             # Create analysis
-GET    /api/v1/intelliscout/analyses             # List analyses
-GET    /api/v1/intelliscout/analyses/:id         # Get analysis details
+POST   /api/v1/darkwebmonitor/analyses             # Create analysis
+GET    /api/v1/darkwebmonitor/analyses             # List analyses
+GET    /api/v1/darkwebmonitor/analyses/:id         # Get analysis details
 
-GET    /api/v1/intelliscout/feeds                # List feed sources
-POST   /api/v1/intelliscout/feeds/sync           # Sync feeds
+GET    /api/v1/darkwebmonitor/feeds                # List feed sources
+POST   /api/v1/darkwebmonitor/feeds/sync           # Sync feeds
 
 GET    /health                                    # Health check
 ```
@@ -299,7 +299,7 @@ GET    /health                                    # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── intelliscout/
+│       └── darkwebmonitor/
 │           ├── IntelDashboard.tsx           # Main dashboard
 │           ├── ThreatFeed.tsx               # Threat feed view
 │           ├── IOCSearch.tsx                # IOC search & lookup
@@ -307,19 +307,19 @@ frontend/src/
 │           ├── AnalysisView.tsx             # Analysis results
 │           └── FeedManager.tsx              # Feed source management
 ├── components/
-│   └── intelliscout/
+│   └── darkwebmonitor/
 │       ├── ThreatCard.tsx                   # Threat summary card
 │       ├── IOCTable.tsx                     # IOC data table
 │       ├── TTPMatrix.tsx                    # MITRE ATT&CK matrix
 │       ├── ThreatTimeline.tsx               # Threat timeline
 │       └── CorrelationGraph.tsx             # Threat correlation viz
 └── hooks/
-    └── useIntelliScout.ts                   # API hooks
+    └── useDarkWebMonitor.ts                   # API hooks
 ```
 
 ---
 
-## 🎯 Tool 03: ThreatRadar
+## 🎯 Tool 03: ZeroDayDetect
 
 ### Advanced Threat Detection System
 
@@ -337,7 +337,7 @@ Real-time network and endpoint monitoring with AI-powered threat detection, beha
 #### Directory Structure
 
 ```
-backend/tools/03-threatradar/
+backend/tools/03-zerodaydetect/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -445,23 +445,23 @@ backend/tools/03-threatradar/
 #### API Endpoints
 
 ```
-GET    /api/v1/threatradar/detections            # List detections
-GET    /api/v1/threatradar/detections/:id        # Get detection details
-PATCH  /api/v1/threatradar/detections/:id        # Update detection status
-POST   /api/v1/threatradar/detections/:id/respond # Trigger response
+GET    /api/v1/zerodaydetect/detections            # List detections
+GET    /api/v1/zerodaydetect/detections/:id        # Get detection details
+PATCH  /api/v1/zerodaydetect/detections/:id        # Update detection status
+POST   /api/v1/zerodaydetect/detections/:id/respond # Trigger response
 
-GET    /api/v1/threatradar/threats               # List confirmed threats
-GET    /api/v1/threatradar/threats/:id           # Get threat details
-POST   /api/v1/threatradar/threats/:id/mitigate  # Mitigate threat
+GET    /api/v1/zerodaydetect/threats               # List confirmed threats
+GET    /api/v1/zerodaydetect/threats/:id           # Get threat details
+POST   /api/v1/zerodaydetect/threats/:id/mitigate  # Mitigate threat
 
-GET    /api/v1/threatradar/rules                 # List detection rules
-POST   /api/v1/threatradar/rules                 # Create rule
-PUT    /api/v1/threatradar/rules/:id             # Update rule
-DELETE /api/v1/threatradar/rules/:id             # Delete rule
+GET    /api/v1/zerodaydetect/rules                 # List detection rules
+POST   /api/v1/zerodaydetect/rules                 # Create rule
+PUT    /api/v1/zerodaydetect/rules/:id             # Update rule
+DELETE /api/v1/zerodaydetect/rules/:id             # Delete rule
 
-GET    /api/v1/threatradar/dashboard             # Dashboard data
-GET    /api/v1/threatradar/statistics            # Detection statistics
-POST   /api/v1/threatradar/reports/generate      # Generate report
+GET    /api/v1/zerodaydetect/dashboard             # Dashboard data
+GET    /api/v1/zerodaydetect/statistics            # Detection statistics
+POST   /api/v1/zerodaydetect/reports/generate      # Generate report
 
 GET    /health                                    # Health check
 ```
@@ -472,7 +472,7 @@ GET    /health                                    # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── threatradar/
+│       └── zerodaydetect/
 │           ├── ThreatDashboard.tsx          # Real-time dashboard
 │           ├── DetectionList.tsx            # Detection events list
 │           ├── DetectionDetail.tsx          # Detection details
@@ -480,19 +480,19 @@ frontend/src/
 │           ├── RulesManager.tsx             # Detection rules
 │           └── ResponsePlaybooks.tsx        # Automated responses
 ├── components/
-│   └── threatradar/
+│   └── zerodaydetect/
 │       ├── ThreatMap.tsx                    # Geographic threat map
 │       ├── DetectionTimeline.tsx            # Real-time timeline
 │       ├── SeverityChart.tsx                # Severity distribution
 │       ├── NetworkGraph.tsx                 # Network visualization
 │       └── AlertStream.tsx                  # Live alert stream
 └── hooks/
-    └── useThreatRadar.ts                    # API hooks + WebSocket
+    └── useZeroDayDetect.ts                    # API hooks + WebSocket
 ```
 
 ---
 
-## 🦠 Tool 04: MalwareHunter
+## 🦠 Tool 04: RansomShield
 
 ### AI-Powered Malware Analysis Platform
 
@@ -510,7 +510,7 @@ Comprehensive malware analysis including static analysis, dynamic (sandbox) anal
 #### Directory Structure
 
 ```
-backend/tools/04-malwarehunter/
+backend/tools/04-ransomshield/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -618,22 +618,22 @@ backend/tools/04-malwarehunter/
 #### API Endpoints
 
 ```
-POST   /api/v1/malwarehunter/samples/upload      # Upload sample for analysis
-GET    /api/v1/malwarehunter/samples             # List samples
-GET    /api/v1/malwarehunter/samples/:id         # Get sample details
-DELETE /api/v1/malwarehunter/samples/:id         # Delete sample
-GET    /api/v1/malwarehunter/samples/statistics  # Sample statistics
-POST   /api/v1/malwarehunter/samples/scan-hash   # Check hash against DB
+POST   /api/v1/ransomshield/samples/upload      # Upload sample for analysis
+GET    /api/v1/ransomshield/samples             # List samples
+GET    /api/v1/ransomshield/samples/:id         # Get sample details
+DELETE /api/v1/ransomshield/samples/:id         # Delete sample
+GET    /api/v1/ransomshield/samples/statistics  # Sample statistics
+POST   /api/v1/ransomshield/samples/scan-hash   # Check hash against DB
 
-POST   /api/v1/malwarehunter/analyses            # Create analysis job
-GET    /api/v1/malwarehunter/analyses            # List analyses
-GET    /api/v1/malwarehunter/analyses/:id        # Get analysis results
-DELETE /api/v1/malwarehunter/analyses/:id        # Delete analysis
+POST   /api/v1/ransomshield/analyses            # Create analysis job
+GET    /api/v1/ransomshield/analyses            # List analyses
+GET    /api/v1/ransomshield/analyses/:id        # Get analysis results
+DELETE /api/v1/ransomshield/analyses/:id        # Delete analysis
 
-POST   /api/v1/malwarehunter/reports/generate    # Generate report
-GET    /api/v1/malwarehunter/reports             # List reports
-GET    /api/v1/malwarehunter/reports/:id         # Get report
-GET    /api/v1/malwarehunter/reports/:id/export  # Export report
+POST   /api/v1/ransomshield/reports/generate    # Generate report
+GET    /api/v1/ransomshield/reports             # List reports
+GET    /api/v1/ransomshield/reports/:id         # Get report
+GET    /api/v1/ransomshield/reports/:id/export  # Export report
 
 GET    /health                                    # Health check
 ```
@@ -644,7 +644,7 @@ GET    /health                                    # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── malwarehunter/
+│       └── ransomshield/
 │           ├── MalwareDashboard.tsx         # Main dashboard
 │           ├── SampleUpload.tsx             # Upload interface
 │           ├── SampleList.tsx               # Sample library
@@ -652,7 +652,7 @@ frontend/src/
 │           ├── AnalysisView.tsx             # Analysis results
 │           └── HashLookup.tsx               # Hash search
 ├── components/
-│   └── malwarehunter/
+│   └── ransomshield/
 │       ├── UploadDropzone.tsx               # Drag-drop upload
 │       ├── AnalysisProgress.tsx             # Analysis progress
 │       ├── MalwareClassification.tsx        # Classification display
@@ -660,12 +660,12 @@ frontend/src/
 │       ├── IOCExtractor.tsx                 # IOC extraction view
 │       └── YaraMatches.tsx                  # YARA rule matches
 └── hooks/
-    └── useMalwareHunter.ts                  # API hooks
+    └── useRansomShield.ts                  # API hooks
 ```
 
 ---
 
-## 🎣 Tool 05: PhishGuard
+## 🎣 Tool 05: PhishNetAI
 
 ### AI-Powered Phishing Detection
 
@@ -683,7 +683,7 @@ Real-time detection and analysis of phishing attempts across URLs, emails, and w
 #### Directory Structure
 
 ```
-backend/tools/05-phishguard/
+backend/tools/05-phishnetai/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -787,22 +787,22 @@ backend/tools/05-phishguard/
 #### API Endpoints
 
 ```
-POST   /api/v1/phishguard/urls/check             # Check single URL
-POST   /api/v1/phishguard/urls/batch             # Batch URL check
-GET    /api/v1/phishguard/urls                   # List checked URLs
-GET    /api/v1/phishguard/urls/:id               # Get URL analysis
-DELETE /api/v1/phishguard/urls/:id               # Delete URL record
-GET    /api/v1/phishguard/urls/statistics        # URL statistics
+POST   /api/v1/phishnetai/urls/check             # Check single URL
+POST   /api/v1/phishnetai/urls/batch             # Batch URL check
+GET    /api/v1/phishnetai/urls                   # List checked URLs
+GET    /api/v1/phishnetai/urls/:id               # Get URL analysis
+DELETE /api/v1/phishnetai/urls/:id               # Delete URL record
+GET    /api/v1/phishnetai/urls/statistics        # URL statistics
 
-POST   /api/v1/phishguard/analyses               # Create analysis
-GET    /api/v1/phishguard/analyses               # List analyses
-GET    /api/v1/phishguard/analyses/:id           # Get analysis
-DELETE /api/v1/phishguard/analyses/:id           # Delete analysis
+POST   /api/v1/phishnetai/analyses               # Create analysis
+GET    /api/v1/phishnetai/analyses               # List analyses
+GET    /api/v1/phishnetai/analyses/:id           # Get analysis
+DELETE /api/v1/phishnetai/analyses/:id           # Delete analysis
 
-POST   /api/v1/phishguard/reports/generate       # Generate report
-GET    /api/v1/phishguard/reports                # List reports
-GET    /api/v1/phishguard/reports/:id            # Get report
-GET    /api/v1/phishguard/reports/:id/export     # Export report
+POST   /api/v1/phishnetai/reports/generate       # Generate report
+GET    /api/v1/phishnetai/reports                # List reports
+GET    /api/v1/phishnetai/reports/:id            # Get report
+GET    /api/v1/phishnetai/reports/:id/export     # Export report
 
 GET    /health                                    # Health check
 ```
@@ -813,7 +813,7 @@ GET    /health                                    # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── phishguard/
+│       └── phishnetai/
 │           ├── PhishingDashboard.tsx        # Main dashboard
 │           ├── URLChecker.tsx               # URL check interface
 │           ├── URLHistory.tsx               # Check history
@@ -821,7 +821,7 @@ frontend/src/
 │           ├── BatchCheck.tsx               # Batch URL checking
 │           └── BrandMonitoring.tsx          # Brand protection
 ├── components/
-│   └── phishguard/
+│   └── phishnetai/
 │       ├── URLInput.tsx                     # URL input component
 │       ├── RiskIndicator.tsx                # Risk score display
 │       ├── ScreenshotViewer.tsx             # Site screenshot
@@ -829,7 +829,7 @@ frontend/src/
 │       ├── PhishingIndicators.tsx           # Detection indicators
 │       └── BrandAlert.tsx                   # Brand impersonation alert
 └── hooks/
-    └── usePhishGuard.ts                     # API hooks
+    └── usePhishNetAI.ts                     # API hooks
 ```
 
 ---
@@ -860,7 +860,7 @@ frontend/src/
 ┌─────────────────────────────────────────────────────────────────┐
 │                    MONGODB ATLAS CLUSTER                        │
 │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐            │
-│  │ fraudguard   │ │ intelliscout │ │ threatradar  │ ...        │
+│  │ fraudguard   │ │ darkwebmonitor │ │ zerodaydetect  │ ...        │
 │  └──────────────┘ └──────────────┘ └──────────────┘            │
 └─────────────────────────────────────────────────────────────────┘
         │           │           │           │           │
@@ -889,7 +889,7 @@ frontend/src/
   - [ ] Frontend components
   - [ ] Production deployment
 
-- [x] **Tool 02 - IntelliScout**
+- [x] **Tool 02 - DarkWebMonitor**
 
   - [x] Backend API structure
   - [x] Database models
@@ -898,7 +898,7 @@ frontend/src/
   - [ ] Frontend components
   - [ ] Production deployment
 
-- [x] **Tool 03 - ThreatRadar**
+- [x] **Tool 03 - ZeroDayDetect**
 
   - [x] Backend API structure
   - [x] Database models
@@ -907,7 +907,7 @@ frontend/src/
   - [ ] Frontend components
   - [ ] Production deployment
 
-- [x] **Tool 04 - MalwareHunter**
+- [x] **Tool 04 - RansomShield**
 
   - [x] Backend API structure
   - [x] Database models
@@ -917,7 +917,7 @@ frontend/src/
   - [ ] Frontend components
   - [x] EC2 deployment
 
-- [x] **Tool 05 - PhishGuard**
+- [x] **Tool 05 - PhishNetAI**
   - [x] Backend API structure
   - [x] Database models
   - [x] Controllers & routes
@@ -933,10 +933,10 @@ frontend/src/
 ```bash
 # Health checks
 curl http://api.maula.ai/fraudguard/health
-curl http://api.maula.ai/intelliscout/health
-curl http://api.maula.ai/threatradar/health
-curl http://api.maula.ai/malwarehunter/health
-curl http://api.maula.ai/phishguard/health
+curl http://api.maula.ai/darkwebmonitor/health
+curl http://api.maula.ai/zerodaydetect/health
+curl http://api.maula.ai/ransomshield/health
+curl http://api.maula.ai/phishnetai/health
 
 # Direct port testing (from EC2)
 curl http://localhost:4001/health

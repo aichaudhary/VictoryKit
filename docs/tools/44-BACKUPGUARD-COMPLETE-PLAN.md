@@ -1,11 +1,11 @@
-# Tool #44 - BackupGuard: Enterprise Backup Security & Integrity Monitoring 🏆
+# Tool #44 - SupplyChainAI: Enterprise Backup Security & Integrity Monitoring 🏆
 
 ## 🛡️ Overview
 
-**BackupGuard** is a world-class enterprise backup security platform that ensures backup integrity, detects ransomware attacks, validates restore capabilities, and monitors compliance with industry standards. Built for Fortune 500 companies managing petabytes of data with zero-tolerance for data loss.
+**SupplyChainAI** is a world-class enterprise backup security platform that ensures backup integrity, detects ransomware attacks, validates restore capabilities, and monitors compliance with industry standards. Built for Fortune 500 companies managing petabytes of data with zero-tolerance for data loss.
 
-**Domain:** `backupguard.maula.ai`  
-**AI Assistant:** `backupguard.maula.ai/maula/ai`  
+**Domain:** `supplychainai.maula.ai`  
+**AI Assistant:** `supplychainai.maula.ai/maula/ai`  
 **Ports:** Frontend 3044, API 4044, ML 8044
 
 ---

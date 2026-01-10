@@ -12,7 +12,7 @@
 
 ### Phase 1: Backend Foundation ✅ COMPLETE
 - [x] Database Models (7 models)
-  - [x] RiskAssessment.js - Risk assessment tracking with safeguard scoring
+  - [x] RiskQuantifyment.js - Risk assessment tracking with safeguard scoring
   - [x] PHIDiscovery.js - PHI scanning and location mapping
   - [x] Breach.js - Breach incident management with notifications
   - [x] BAA.js - Business Associate Agreement tracking
@@ -75,7 +75,7 @@
   - [x] neural-link-interface folder deleted
   - [x] fraudguard-config.json removed
   - [x] SecurityAwareness-config.json removed
-  - [x] bugbountyai-config.json removed
+  - [x] iso27001-config.json removed
 
 ### Phase 3: Documentation ✅ COMPLETE
 - [x] DESIGN.md
@@ -300,7 +300,7 @@
 - GET /compliance-overview - Compliance overview
 
 ### Database Indexes
-- RiskAssessment: assessmentId, status, assessmentDate
+- RiskQuantifyment: assessmentId, status, assessmentDate
 - PHIDiscovery: scanId, scanDate, status
 - Breach: breachId, incidentDate, status, severity
 - BAA: baaId, businessAssociateName, status, expirationDate

@@ -5,8 +5,8 @@ const CryptoShieldDetail: React.FC = () => {
   return (
     <ToolDetailTemplate
       toolId={14}
-      toolName="EncryptionManager"
-      subdomain="encryptionmanager"
+      toolName="SecretVault"
+      subdomain="secretvault"
       color="#A855F7"
       description="Enterprise encryption key management. Secure your sensitive data with industry-standard encryption."
     />

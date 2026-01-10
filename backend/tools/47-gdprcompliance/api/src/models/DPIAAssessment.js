@@ -301,7 +301,7 @@ const dpiaAssessmentSchema = new mongoose.Schema({
   },
 
   // Residual Risk Assessment
-  residualRiskAssessment: {
+  residualRiskQuantifyment: {
     overallResidualRisk: {
       type: String,
       enum: ['low', 'medium', 'high', 'critical']
@@ -399,8 +399,8 @@ dpiaAssessmentSchema.virtual('isHighRisk').get(function() {
 dpiaAssessmentSchema.virtual('requiresSupervisoryConsultation').get(function() {
   // Article 36: Consult if high residual risk remains after mitigation
   return (
-    this.residualRiskAssessment.overallResidualRisk === 'high' ||
-    this.residualRiskAssessment.overallResidualRisk === 'critical'
+    this.residualRiskQuantifyment.overallResidualRisk === 'high' ||
+    this.residualRiskQuantifyment.overallResidualRisk === 'critical'
   );
 });
 
@@ -423,7 +423,7 @@ dpiaAssessmentSchema.methods.assessCompleteness = function() {
   const completeness = {
     hasProcessingDescription: !!this.processingDescription.detailedDescription,
     hasNecessityJustification: !!this.necessityProportionality.necessity.justification,
-    hasRiskAssessment: this.riskAssessment.identifiedRisks.length > 0,
+    hasRiskQuantifyment: this.riskAssessment.identifiedRisks.length > 0,
     hasMitigationMeasures: this.mitigationMeasures.length > 0,
     hasDPOOpinion: this.team.dpoInvolved ? this.dpoOpinion.provided : true,
     hasDataSubjectConsultation: this.dataSubjectConsultation.required ? 

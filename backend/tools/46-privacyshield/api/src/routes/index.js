@@ -39,7 +39,7 @@ router.put('/mappings/:mappingId/risk', controller.calculateMappingRisk);
 router.post('/assessments', controller.createAssessment);
 router.get('/assessments', controller.getAssessments);
 router.put('/assessments/:assessmentId/complete', controller.completeAssessment);
-router.get('/assessments/high-risk', controller.findHighRiskAssessments);
+router.get('/assessments/high-risk', controller.findHighRiskQuantifyments);
 
 // ===== Data Subject Rights / DSAR =====
 router.post('/dsar', controller.createDSAR);

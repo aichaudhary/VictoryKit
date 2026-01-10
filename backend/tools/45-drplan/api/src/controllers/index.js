@@ -889,7 +889,7 @@ exports.getTrends = async (req, res) => {
   }
 };
 
-exports.getRiskAssessment = async (req, res) => {
+exports.getRiskQuantifyment = async (req, res) => {
   try {
     const systems = await System.find({ isActive: true }).select('name criticality status rto businessImpact');
     res.json({ riskAssessment: systems });

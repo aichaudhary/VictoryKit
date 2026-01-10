@@ -148,7 +148,7 @@ shared/
 ```javascript
 const { initializeTracing, withSecurityScanSpan } = require('@victorykit/shared');
 
-initializeTracing({ serviceName: 'malwarehunter' });
+initializeTracing({ serviceName: 'ransomshield' });
 
 // Trace security scans
 const result = await withSecurityScanSpan('malware', { target: file.name }, async (span) => {
@@ -161,13 +161,13 @@ const result = await withSecurityScanSpan('malware', { target: file.name }, asyn
 ```javascript
 const { initializeMetrics, recordSecurityScan, metricsHandler } = require('@victorykit/shared');
 
-initializeMetrics({ serviceName: 'phishguard' });
+initializeMetrics({ serviceName: 'phishnetai' });
 app.get('/metrics', metricsHandler);
 
 // Record scan metrics
 recordSecurityScan({
   type: 'url',
-  tool: 'phishguard',
+  tool: 'phishnetai',
   status: 'completed',
   duration: 1234,
   findings: [{ severity: 'high' }]
@@ -325,9 +325,9 @@ Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, security,
 
 Examples:
 ```bash
-git commit -m "feat(malwarehunter): add yara rule scanning"
+git commit -m "feat(ransomshield): add yara rule scanning"
 git commit -m "security(shared): add request fingerprinting middleware"
-git commit -m "fix(phishguard): handle unicode URLs correctly"
+git commit -m "fix(phishnetai): handle unicode URLs correctly"
 ```
 
 ### Pre-commit Checks

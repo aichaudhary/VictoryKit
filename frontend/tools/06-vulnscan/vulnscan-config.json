@@ -270,7 +270,7 @@
       "owasp": "A05:2021",
       "description": "XML parsing vulnerabilities"
     },
-    "brokenAccessControl": {
+    "brokenIdentityForge": {
       "id": "broken_access",
       "name": "Broken Access Control",
       "cwes": ["CWE-22", "CWE-284", "CWE-285", "CWE-639"],

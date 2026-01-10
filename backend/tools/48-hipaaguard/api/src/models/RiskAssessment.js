@@ -43,4 +43,4 @@ riskAssessmentSchema.index({ assessmentId: 1 });
 riskAssessmentSchema.index({ status: 1 });
 riskAssessmentSchema.index({ assessmentDate: -1 });
 
-module.exports = mongoose.model('RiskAssessment', riskAssessmentSchema);
+module.exports = mongoose.model('RiskQuantifyment', riskAssessmentSchema);

@@ -121,7 +121,7 @@ Security patch management and deployment.
 
 **Statics:** `findCritical()`, `findOverdue()`, `findByCVE()`
 
-### 6. ComplianceCheck Model (~690 lines)
+### 6. RuntimeGuard Model (~690 lines)
 Security compliance assessment and tracking.
 
 **Key Fields:** `checkId`, `framework`, `controls`, `results`, `gaps`, `remediation`, `assetCompliance`

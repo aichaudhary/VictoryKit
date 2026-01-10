@@ -21,7 +21,7 @@
 
 ### ✅ Backend (Complete)
 #### Models (7)
-1. **RiskAssessment.js** - HIPAA security risk assessments
+1. **RiskQuantifyment.js** - HIPAA security risk assessments
    - Fields: assessmentId, assessmentType, status, overallRiskScore, safeguardScores, ruleCompliance, findings
    - Safeguards: administrative, physical, technical
    - Rules: privacyRule, securityRule, breachNotification, enforcement

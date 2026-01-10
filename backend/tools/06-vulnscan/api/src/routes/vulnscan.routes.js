@@ -73,10 +73,10 @@ router.post('/patches/:id/test', controllers.testPatch);
 // COMPLIANCE MANAGEMENT ROUTES
 // ============================================================================
 
-router.post('/compliance', controllers.createComplianceCheck);
-router.get('/compliance', controllers.getComplianceChecks);
-router.get('/compliance/:id', controllers.getComplianceCheckById);
-router.post('/compliance/:id/complete', controllers.completeComplianceCheck);
+router.post('/compliance', controllers.createRuntimeGuard);
+router.get('/compliance', controllers.getRuntimeGuards);
+router.get('/compliance/:id', controllers.getRuntimeGuardById);
+router.post('/compliance/:id/complete', controllers.completeRuntimeGuard);
 
 // ============================================================================
 // REMEDIATION MANAGEMENT ROUTES

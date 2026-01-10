@@ -13,8 +13,8 @@ This will start:
 - **MongoDB** (Docker container on port 27017)
 - **Auth Service** (port 5000)
 - **API Gateway** (port 4000)
-- **MalwareHunter API** (port 4004)
-- **PhishGuard API** (port 4005)
+- **RansomShield API** (port 4004)
+- **PhishNetAI API** (port 4005)
 - **VulnScan API** (port 4006)
 
 ### 2. Test Health Endpoints
@@ -51,14 +51,14 @@ curl -X POST http://localhost:5000/api/v1/auth/login \
 
 Save the `token` from the response.
 
-### Test MalwareHunter API
+### Test RansomShield API
 
 ```bash
 # Set your token
 TOKEN="your-jwt-token-here"
 
 # Upload and analyze a malware sample
-curl -X POST http://localhost:4004/api/v1/malwarehunter/samples/upload \
+curl -X POST http://localhost:4004/api/v1/ransomshield/samples/upload \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
@@ -70,19 +70,19 @@ curl -X POST http://localhost:4004/api/v1/malwarehunter/samples/upload \
   }'
 
 # Get all samples
-curl http://localhost:4004/api/v1/malwarehunter/samples \
+curl http://localhost:4004/api/v1/ransomshield/samples \
   -H "Authorization: Bearer $TOKEN"
 
 # Get statistics
-curl http://localhost:4004/api/v1/malwarehunter/samples/statistics \
+curl http://localhost:4004/api/v1/ransomshield/samples/statistics \
   -H "Authorization: Bearer $TOKEN"
 ```
 
-### Test PhishGuard API
+### Test PhishNetAI API
 
 ```bash
 # Check a URL for phishing
-curl -X POST http://localhost:4005/api/v1/phishguard/urls/check \
+curl -X POST http://localhost:4005/api/v1/phishnetai/urls/check \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
@@ -90,7 +90,7 @@ curl -X POST http://localhost:4005/api/v1/phishguard/urls/check \
   }'
 
 # Batch check multiple URLs
-curl -X POST http://localhost:4005/api/v1/phishguard/urls/batch \
+curl -X POST http://localhost:4005/api/v1/phishnetai/urls/batch \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
@@ -102,7 +102,7 @@ curl -X POST http://localhost:4005/api/v1/phishguard/urls/batch \
   }'
 
 # Get all checked URLs
-curl http://localhost:4005/api/v1/phishguard/urls \
+curl http://localhost:4005/api/v1/phishnetai/urls \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -134,8 +134,8 @@ curl http://localhost:4006/api/v1/vulnscan/scans/statistics \
 |---------|------|---------|
 | Auth Service | 5000 | User authentication & payments |
 | API Gateway | 4000 | Unified entry point (with tool access control) |
-| MalwareHunter | 4004 | Malware analysis & detection |
-| PhishGuard | 4005 | Phishing URL detection |
+| RansomShield | 4004 | Malware analysis & detection |
+| PhishNetAI | 4005 | Phishing URL detection |
 | VulnScan | 4006 | Vulnerability scanning |
 
 ## Payment Flow
@@ -148,7 +148,7 @@ curl -X POST http://localhost:5000/api/v1/payment/purchase \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
-    "toolId": "04-malwarehunter"
+    "toolId": "04-ransomshield"
   }'
 
 # This returns a Stripe payment intent. In production, complete payment via Stripe.
@@ -158,7 +158,7 @@ curl -X POST http://localhost:5000/api/v1/payment/confirm \
   -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
-    "toolId": "04-malwarehunter",
+    "toolId": "04-ransomshield",
     "paymentIntentId": "payment-intent-id-from-previous-call"
   }'
 
@@ -218,7 +218,7 @@ kill -9 $(lsof -ti:4004)
 
 ```bash
 # Reinstall for specific tool
-cd backend/tools/04-malwarehunter/api
+cd backend/tools/04-ransomshield/api
 rm -rf node_modules package-lock.json
 npm install
 ```
@@ -232,8 +232,8 @@ npm install
 
 ## Next Steps
 
-1. ✅ All 3 tool APIs running (MalwareHunter, PhishGuard, VulnScan)
-2. 🔄 Complete remaining tools 07-10 (PenTestAI, SecureCode, ComplianceCheck, DataGuardian)
+1. ✅ All 3 tool APIs running (RansomShield, PhishNetAI, VulnScan)
+2. 🔄 Complete remaining tools 07-10 (PenTestAI, CodeSentinel, RuntimeGuard, DataGuardian)
 3. 🎨 Connect frontend dashboard
 4. 🧪 Add comprehensive test suites
 5. 📊 Integrate real ML engines

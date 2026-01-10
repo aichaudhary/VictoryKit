@@ -1,11 +1,11 @@
-# Tool #42 - IoTSecure: Complete Implementation Plan
+# Tool #42 - IoTSentinel: Complete Implementation Plan
 
 ## 🔐 Overview
 
-**IoTSecure** is an enterprise IoT security platform that protects smart device ecosystems from vulnerabilities, unauthorized access, and cyber threats. The platform provides comprehensive device discovery, vulnerability scanning, firmware analysis, network segmentation, and real-time threat monitoring for IoT infrastructures.
+**IoTSentinel** is an enterprise IoT security platform that protects smart device ecosystems from vulnerabilities, unauthorized access, and cyber threats. The platform provides comprehensive device discovery, vulnerability scanning, firmware analysis, network segmentation, and real-time threat monitoring for IoT infrastructures.
 
-**Domain:** `iotsecure.maula.ai`  
-**AI Assistant:** `iotsecure.maula.ai/maula/ai`  
+**Domain:** `iotsentinel.maula.ai`  
+**AI Assistant:** `iotsentinel.maula.ai/maula/ai`  
 **Ports:** Frontend 3042, API 4042, ML 8042
 
 ---

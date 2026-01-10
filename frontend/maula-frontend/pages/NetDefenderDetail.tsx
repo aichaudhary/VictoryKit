@@ -5,8 +5,8 @@ const NetDefenderDetail: React.FC = () => {
   return (
     <ToolDetailTemplate
       toolId={16}
-      toolName="NetworkMonitor"
-      subdomain="networkmonitor"
+      toolName="NetworkForensics"
+      subdomain="networkforensics"
       color="#06B6D4"
       description="Network traffic monitoring and analysis. Detect anomalies and threats in your network traffic."
     />

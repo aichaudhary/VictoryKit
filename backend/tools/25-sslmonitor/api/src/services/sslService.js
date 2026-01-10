@@ -115,7 +115,7 @@ class SSLService {
             // Step 6: Compliance check (90% progress)
             scanResult.progress = 90;
             this.updateScanProgress(scanId, 90, 'compliance_check');
-            const complianceResults = await this.performComplianceCheck(domain, basicInfo);
+            const complianceResults = await this.performRuntimeGuard(domain, basicInfo);
             scanResult.results.compliance = complianceResults;
 
             // Step 7: Finalize and save (100% progress)
@@ -878,7 +878,7 @@ class SSLService {
     /**
      * Compliance checking
      */
-    async performComplianceCheck(domain, basicInfo) {
+    async performRuntimeGuard(domain, basicInfo) {
         const compliance = {
             pciDss: { compliant: false, issues: [] },
             hipaa: { compliant: false, issues: [] },

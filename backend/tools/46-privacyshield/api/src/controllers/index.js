@@ -477,7 +477,7 @@ exports.completeAssessment = async (req, res) => {
   }
 };
 
-exports.findHighRiskAssessments = async (req, res) => {
+exports.findHighRiskQuantifyments = async (req, res) => {
   try {
     const assessments = await PrivacyAssessment.findHighRisk();
     const requireConsultation = await PrivacyAssessment.findRequiringSupervisoryConsultation();

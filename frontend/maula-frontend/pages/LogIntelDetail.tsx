@@ -5,8 +5,8 @@ const LogIntelDetail: React.FC = () => {
   return (
     <ToolDetailTemplate
       toolId={12}
-      toolName="LogAnalyzer"
-      subdomain="loganalyzer"
+      toolName="XDRPlatform"
+      subdomain="xdrplatform"
       color="#22C55E"
       description="Intelligent log analysis and correlation. Transform raw logs into actionable security insights."
     />

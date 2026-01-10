@@ -118,4 +118,4 @@ complianceCheckSchema.methods.addViolation = function(violation) {
   this.calculateComplianceScore();
 };
 
-module.exports = mongoose.model('ComplianceCheck', complianceCheckSchema);
+module.exports = mongoose.model('RuntimeGuard', complianceCheckSchema);

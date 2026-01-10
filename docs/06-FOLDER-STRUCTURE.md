@@ -120,7 +120,7 @@ VictoryKit/
 │       ├─ 30-captchaplus/
 │       ├─ 31-adaptivemfa/
 │       ├─ 32-accessmanager/
-│       ├─ 33-emailguard/
+│       ├─ 33-emaildefender/
 │       ├─ 34-phoneverify/
 │       ├─ 35-contactscore/
 │       ├─ 36-geofence/
@@ -276,7 +276,7 @@ VictoryKit/
 │       ├─ 30-captchaplus/
 │       ├─ 31-adaptivemfa/
 │       ├─ 32-accessmanager/
-│       ├─ 33-emailguard/
+│       ├─ 33-emaildefender/
 │       ├─ 34-phoneverify/
 │       ├─ 35-contactscore/
 │       ├─ 36-geofence/

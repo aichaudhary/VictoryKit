@@ -5,7 +5,7 @@
 > **🚫 STRICT POLICY**: All 50 security tools are finalized in `/backend/tools/`
 > **❌ NEVER CREATE NEW TOOLS** - Only update existing tools (01-50)
 > **🔍 CHECK MASTER INVENTORY**: `docs/TOOLS-MASTER-INVENTORY.md`
-> **📋 TOOL NUMBERS**: 01-fraudguard through 50-bugbountyai
+> **📋 TOOL NUMBERS**: 01-fraudguard through 50-iso27001
 > **💻 VIOLATION**: New tool creation = immediate removal + developer warning
 
 **Recent Cleanup**: Removed duplicates 31-cloudsecure, 32-apishield (Jan 2, 2026)
@@ -19,9 +19,9 @@ backend/
 ├── shared/              # Shared utilities & services
 ├── tools/               # 50 Security Tools (01-50)
 │   ├── 01-fraudguard/
-│   ├── 02-intelliscout/
+│   ├── 02-darkwebmonitor/
 │   ├── ...
-│   ├── 50-bugbountyai/
+│   ├── 50-iso27001/
 │   └── WARNING.md        # ⚠️ READ THIS FIRST
 ├── central-grid/        # API Gateway & Auth Service
 └── shared-services/     # Common microservices

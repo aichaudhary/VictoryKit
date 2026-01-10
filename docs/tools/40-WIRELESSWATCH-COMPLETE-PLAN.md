@@ -1,18 +1,18 @@
-# 🔐 WirelessWatch (Tool #40) - Complete Implementation Plan
+# 🔐 WirelessHunter (Tool #40) - Complete Implementation Plan
 ## Wireless Network Security Monitoring & Protection
 
-**Domain:** wirelesswatch.maula.ai  
-**AI Assistant:** wirelesswatch.maula.ai/maula/ai  
+**Domain:** wirelesshunter.maula.ai  
+**AI Assistant:** wirelesshunter.maula.ai/maula/ai  
 **Status:** 50% Complete - Starting Full Implementation  
 **Ports:** Frontend: 3040 | API: 4040 | ML: 8040  
-**Branch:** tool-40-wirelesswatch-complete-implementation  
+**Branch:** tool-40-wirelesshunter-complete-implementation  
 **Date:** January 6, 2026
 
 ---
 
 ## 📋 EXECUTIVE SUMMARY
 
-**WirelessWatch** is an enterprise-grade wireless network security platform that provides real-time monitoring, threat detection, and protection for WiFi networks, access points, and wireless devices. It combines AI/ML-powered anomaly detection with comprehensive wireless security best practices to protect organizations from rogue access points, unauthorized devices, wireless attacks, and data breaches.
+**WirelessHunter** is an enterprise-grade wireless network security platform that provides real-time monitoring, threat detection, and protection for WiFi networks, access points, and wireless devices. It combines AI/ML-powered anomaly detection with comprehensive wireless security best practices to protect organizations from rogue access points, unauthorized devices, wireless attacks, and data breaches.
 
 ---
 
@@ -132,8 +132,8 @@
 ### Domain Structure
 ```
 Main Platform:     maula.ai
-Tool Access:       wirelesswatch.maula.ai
-AI Assistant:      wirelesswatch.maula.ai/maula/ai
+Tool Access:       wirelesshunter.maula.ai
+AI Assistant:      wirelesshunter.maula.ai/maula/ai
 ```
 
 ### UI/UX Architecture
@@ -310,58 +310,58 @@ AI Assistant:      wirelesswatch.maula.ai/maula/ai
 
 #### Network Scanning
 ```
-POST   /api/v1/wirelesswatch/scan/start
-POST   /api/v1/wirelesswatch/scan/stop
-GET    /api/v1/wirelesswatch/scan/status
-GET    /api/v1/wirelesswatch/scan/results
+POST   /api/v1/wirelesshunter/scan/start
+POST   /api/v1/wirelesshunter/scan/stop
+GET    /api/v1/wirelesshunter/scan/status
+GET    /api/v1/wirelesshunter/scan/results
 ```
 
 #### Access Points
 ```
-GET    /api/v1/wirelesswatch/access-points
-GET    /api/v1/wirelesswatch/access-points/:id
-POST   /api/v1/wirelesswatch/access-points/authorize
-POST   /api/v1/wirelesswatch/access-points/block
-GET    /api/v1/wirelesswatch/access-points/rogue
+GET    /api/v1/wirelesshunter/access-points
+GET    /api/v1/wirelesshunter/access-points/:id
+POST   /api/v1/wirelesshunter/access-points/authorize
+POST   /api/v1/wirelesshunter/access-points/block
+GET    /api/v1/wirelesshunter/access-points/rogue
 ```
 
 #### Devices
 ```
-GET    /api/v1/wirelesswatch/devices
-GET    /api/v1/wirelesswatch/devices/:id
-POST   /api/v1/wirelesswatch/devices/authorize
-POST   /api/v1/wirelesswatch/devices/block
-GET    /api/v1/wirelesswatch/devices/profile/:mac
+GET    /api/v1/wirelesshunter/devices
+GET    /api/v1/wirelesshunter/devices/:id
+POST   /api/v1/wirelesshunter/devices/authorize
+POST   /api/v1/wirelesshunter/devices/block
+GET    /api/v1/wirelesshunter/devices/profile/:mac
 ```
 
 #### Security
 ```
-GET    /api/v1/wirelesswatch/security/score
-GET    /api/v1/wirelesswatch/security/assessment
-GET    /api/v1/wirelesswatch/security/vulnerabilities
-POST   /api/v1/wirelesswatch/security/audit
+GET    /api/v1/wirelesshunter/security/score
+GET    /api/v1/wirelesshunter/security/assessment
+GET    /api/v1/wirelesshunter/security/vulnerabilities
+POST   /api/v1/wirelesshunter/security/audit
 ```
 
 #### Threats
 ```
-GET    /api/v1/wirelesswatch/threats
-GET    /api/v1/wirelesswatch/threats/:id
-POST   /api/v1/wirelesswatch/threats/respond
-GET    /api/v1/wirelesswatch/threats/history
+GET    /api/v1/wirelesshunter/threats
+GET    /api/v1/wirelesshunter/threats/:id
+POST   /api/v1/wirelesshunter/threats/respond
+GET    /api/v1/wirelesshunter/threats/history
 ```
 
 #### Compliance
 ```
-GET    /api/v1/wirelesswatch/compliance/status
-GET    /api/v1/wirelesswatch/compliance/:framework
-POST   /api/v1/wirelesswatch/compliance/report
+GET    /api/v1/wirelesshunter/compliance/status
+GET    /api/v1/wirelesshunter/compliance/:framework
+POST   /api/v1/wirelesshunter/compliance/report
 ```
 
 #### Analytics
 ```
-GET    /api/v1/wirelesswatch/analytics/dashboard
-GET    /api/v1/wirelesswatch/analytics/trends
-POST   /api/v1/wirelesswatch/analytics/query
+GET    /api/v1/wirelesshunter/analytics/dashboard
+GET    /api/v1/wirelesshunter/analytics/trends
+POST   /api/v1/wirelesshunter/analytics/query
 ```
 
 ---

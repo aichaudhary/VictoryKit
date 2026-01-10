@@ -12,7 +12,7 @@ const {
   Scan,
   ScanSchedule,
   Patch,
-  ComplianceCheck,
+  RuntimeGuard,
   RemediationPlan,
   VulnReport
 } = require('../models');
@@ -67,7 +67,7 @@ const getDashboard = async (req, res) => {
       Vulnerability.getStatistics(),
       Scan.getStatistics(),
       Patch.getStatistics(),
-      ComplianceCheck.getStatistics(),
+      RuntimeGuard.getStatistics(),
       RemediationPlan.getStatistics()
     ]);
     
@@ -768,9 +768,9 @@ const getCriticalPatches = async (req, res) => {
  * POST /api/vulnscan/compliance
  * Create compliance check
  */
-const createComplianceCheck = async (req, res) => {
+const createRuntimeGuard = async (req, res) => {
   try {
-    const check = new ComplianceCheck(req.body);
+    const check = new RuntimeGuard(req.body);
     await check.save();
     res.status(201).json(check);
   } catch (error) {
@@ -782,7 +782,7 @@ const createComplianceCheck = async (req, res) => {
  * GET /api/vulnscan/compliance
  * Get all compliance checks
  */
-const getComplianceChecks = async (req, res) => {
+const getRuntimeGuards = async (req, res) => {
   try {
     const { framework, status } = req.query;
     
@@ -790,7 +790,7 @@ const getComplianceChecks = async (req, res) => {
     if (framework) query['framework.name'] = framework;
     if (status) query.status = status;
     
-    const checks = await ComplianceCheck.find(query)
+    const checks = await RuntimeGuard.find(query)
       .sort({ 'timing.started': -1 });
     
     res.json({ checks });
@@ -803,9 +803,9 @@ const getComplianceChecks = async (req, res) => {
  * GET /api/vulnscan/compliance/:id
  * Get compliance check by ID
  */
-const getComplianceCheckById = async (req, res) => {
+const getRuntimeGuardById = async (req, res) => {
   try {
-    const check = await ComplianceCheck.findById(req.params.id)
+    const check = await RuntimeGuard.findById(req.params.id)
       .populate('scope.assets');
     
     if (!check) {
@@ -822,9 +822,9 @@ const getComplianceCheckById = async (req, res) => {
  * POST /api/vulnscan/compliance/:id/complete
  * Complete compliance check
  */
-const completeComplianceCheck = async (req, res) => {
+const completeRuntimeGuard = async (req, res) => {
   try {
-    const check = await ComplianceCheck.findById(req.params.id);
+    const check = await RuntimeGuard.findById(req.params.id);
     
     if (!check) {
       return res.status(404).json({ error: 'Compliance check not found' });
@@ -1052,10 +1052,10 @@ module.exports = {
   getCriticalPatches,
   
   // Compliance Management
-  createComplianceCheck,
-  getComplianceChecks,
-  getComplianceCheckById,
-  completeComplianceCheck,
+  createRuntimeGuard,
+  getRuntimeGuards,
+  getRuntimeGuardById,
+  completeRuntimeGuard,
   
   // Remediation Management
   createRemediationPlan,

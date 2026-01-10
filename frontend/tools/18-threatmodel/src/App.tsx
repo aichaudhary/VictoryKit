@@ -1,15 +1,12 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import ThreatModelTool from './components/ThreatModelTool';
-import NeuralLinkInterface from "./components/NeuralLinkInterface";
-import LandingPage from "./pages/LandingPage";
+import { Routes, Route, Navigate } from "react-router-dom";
+import ThreatModelTool from "./components/ThreatModelTool";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/maula" element={<ThreatModelTool />} />
-      <Route path="/maula/ai" element={<NeuralLinkInterface />} />
+      <Route path="/" element={<ThreatModelTool />} />
+      <Route path="/*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

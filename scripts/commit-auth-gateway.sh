@@ -47,8 +47,8 @@ API Gateway (Port 4000):
 
 Tool Routes:
 - /api/v1/fraudguard/* → Port 4001
-- /api/v1/intelliscout/* → Port 4002
-- /api/v1/threatradar/* → Port 4003
+- /api/v1/darkwebmonitor/* → Port 4002
+- /api/v1/zerodaydetect/* → Port 4003
 ... (all 50 tools)
 - /api/v1/cyberthreatmap/* → Port 4050
 

@@ -72,6 +72,6 @@ router.post('/sync/logs', requireRole(['admin', 'firewall_admin']), firewallCont
 router.post('/integrate', requireRole(['admin', 'firewall_admin']), firewallController.integrateWithSecurityStack);
 
 // Audit Trail
-router.get('/audit', requireRole(['admin', 'firewall_admin']), firewallController.getAuditTrail);
+router.get('/audit', requireRole(['admin', 'firewall_admin']), firewallController.getAuditTrailPro);
 
 module.exports = router;

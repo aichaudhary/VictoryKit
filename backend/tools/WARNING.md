@@ -4,7 +4,7 @@
 
 ### ❌ **NEVER CREATE NEW TOOLS**
 - All 50 security tools are already created and finalized
-- Tool numbers: 01-fraudguard through 50-bugbountyai
+- Tool numbers: 01-fraudguard through 50-iso27001
 - **DO NOT create new directories or tools**
 
 ### ✅ **ONLY UPDATE EXISTING TOOLS**
@@ -24,7 +24,7 @@
 
 ### 📋 **RECENT INCIDENTS**
 - **Jan 2, 2026**: Removed duplicates `31-cloudsecure` and `32-apishield`
-- **Kept originals**: `31-audittracker` and `32-zerotrustai`
+- **Kept originals**: `31-cloudposture` and `32-zerotrust`
 
 ### � **Tools to Use**
 - **Check duplicates**: Run `../scripts/check-duplicates.sh`

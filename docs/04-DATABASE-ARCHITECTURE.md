@@ -72,7 +72,7 @@ MongoDB Atlas Cluster
 ├─ captchaplus-db                    # Tool 30
 ├─ adaptivemfa-db                    # Tool 31
 ├─ accessmanager-db                  # Tool 32
-├─ emailguard-db                     # Tool 33
+├─ emaildefender-db                     # Tool 33
 ├─ phoneverify-db                    # Tool 34
 ├─ contactscore-db                   # Tool 35
 ├─ geofence-db                       # Tool 36

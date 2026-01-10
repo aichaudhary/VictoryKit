@@ -8,9 +8,9 @@
 | Tool | Name | Port | DB | Status | Priority |
 |------|------|------|-----|--------|----------|
 | 21 | WAFManager | 4021 | victorykit_wafmanager | 📝 Planned | P2 |
-| 22 | APIGuard | 4022 | victorykit_apiguard | 📝 Planned | P2 |
-| 23 | BotDefender | 4023 | victorykit_botdefender | 📝 Planned | P2 |
-| 24 | DDoSShield | 4024 | victorykit_ddosshield | 📝 Planned | P2 |
+| 22 | APIGuard | 4022 | victorykit_apishield | 📝 Planned | P2 |
+| 23 | BotMitigation | 4023 | victorykit_botmitigation | 📝 Planned | P2 |
+| 24 | DDoSShield | 4024 | victorykit_ddosdefender | 📝 Planned | P2 |
 | 25 | SSLMonitor | 4025 | victorykit_sslmonitor | 📝 Planned | P2 |
 
 ---
@@ -269,7 +269,7 @@ Comprehensive API security platform for discovering, testing, and protecting API
 
 #### Directory Structure
 ```
-backend/tools/22-apiguard/
+backend/tools/22-apishield/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -456,31 +456,31 @@ backend/tools/22-apiguard/
 
 #### API Endpoints
 ```
-POST   /api/v1/apiguard/apis                        # Register API
-GET    /api/v1/apiguard/apis                        # List APIs
-GET    /api/v1/apiguard/apis/:id                    # Get API details
-PUT    /api/v1/apiguard/apis/:id                    # Update API
-DELETE /api/v1/apiguard/apis/:id                    # Delete API
-POST   /api/v1/apiguard/apis/discover               # Discover APIs
-POST   /api/v1/apiguard/apis/:id/import-spec        # Import OpenAPI spec
+POST   /api/v1/apishield/apis                        # Register API
+GET    /api/v1/apishield/apis                        # List APIs
+GET    /api/v1/apishield/apis/:id                    # Get API details
+PUT    /api/v1/apishield/apis/:id                    # Update API
+DELETE /api/v1/apishield/apis/:id                    # Delete API
+POST   /api/v1/apishield/apis/discover               # Discover APIs
+POST   /api/v1/apishield/apis/:id/import-spec        # Import OpenAPI spec
 
-POST   /api/v1/apiguard/tests                       # Start security test
-GET    /api/v1/apiguard/tests                       # List tests
-GET    /api/v1/apiguard/tests/:id                   # Get test results
-DELETE /api/v1/apiguard/tests/:id                   # Delete test
+POST   /api/v1/apishield/tests                       # Start security test
+GET    /api/v1/apishield/tests                       # List tests
+GET    /api/v1/apishield/tests/:id                   # Get test results
+DELETE /api/v1/apishield/tests/:id                   # Delete test
 
-POST   /api/v1/apiguard/policies                    # Create policy
-GET    /api/v1/apiguard/policies                    # List policies
-PUT    /api/v1/apiguard/policies/:id                # Update policy
-DELETE /api/v1/apiguard/policies/:id                # Delete policy
-POST   /api/v1/apiguard/policies/:id/apply          # Apply policy
+POST   /api/v1/apishield/policies                    # Create policy
+GET    /api/v1/apishield/policies                    # List policies
+PUT    /api/v1/apishield/policies/:id                # Update policy
+DELETE /api/v1/apishield/policies/:id                # Delete policy
+POST   /api/v1/apishield/policies/:id/apply          # Apply policy
 
-GET    /api/v1/apiguard/anomalies                   # List anomalies
-GET    /api/v1/apiguard/anomalies/:id               # Get anomaly details
-PATCH  /api/v1/apiguard/anomalies/:id               # Update anomaly status
+GET    /api/v1/apishield/anomalies                   # List anomalies
+GET    /api/v1/apishield/anomalies/:id               # Get anomaly details
+PATCH  /api/v1/apishield/anomalies/:id               # Update anomaly status
 
-GET    /api/v1/apiguard/dashboard                   # Dashboard
-GET    /api/v1/apiguard/analytics                   # API analytics
+GET    /api/v1/apishield/dashboard                   # Dashboard
+GET    /api/v1/apishield/analytics                   # API analytics
 GET    /health                                       # Health check
 ```
 
@@ -489,7 +489,7 @@ GET    /health                                       # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── apiguard/
+│       └── apishield/
 │           ├── APIDashboard.tsx             # Main dashboard
 │           ├── APIInventory.tsx             # API list
 │           ├── APIDetail.tsx                # API details
@@ -499,7 +499,7 @@ frontend/src/
 │           ├── AnomalyViewer.tsx            # Anomaly list
 │           └── SchemaEditor.tsx             # OpenAPI editor
 ├── components/
-│   └── apiguard/
+│   └── apishield/
 │       ├── EndpointTree.tsx                 # Endpoint hierarchy
 │       ├── SchemaViewer.tsx                 # Schema display
 │       ├── TestRunner.tsx                   # Test execution
@@ -513,7 +513,7 @@ frontend/src/
 
 ---
 
-## 🤖 Tool 23: BotDefender
+## 🤖 Tool 23: BotMitigation
 ### Bot Detection & Mitigation Platform
 
 #### Purpose
@@ -527,7 +527,7 @@ Advanced bot detection and mitigation using machine learning, behavioral analysi
 
 #### Directory Structure
 ```
-backend/tools/23-botdefender/
+backend/tools/23-botmitigation/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -697,31 +697,31 @@ backend/tools/23-botdefender/
 
 #### API Endpoints
 ```
-POST   /api/v1/botdefender/analyze                  # Analyze request
-GET    /api/v1/botdefender/analyze/:sessionId       # Get session analysis
+POST   /api/v1/botmitigation/analyze                  # Analyze request
+GET    /api/v1/botmitigation/analyze/:sessionId       # Get session analysis
 
-GET    /api/v1/botdefender/signatures               # List signatures
-POST   /api/v1/botdefender/signatures               # Create signature
-PUT    /api/v1/botdefender/signatures/:id           # Update signature
-DELETE /api/v1/botdefender/signatures/:id           # Delete signature
+GET    /api/v1/botmitigation/signatures               # List signatures
+POST   /api/v1/botmitigation/signatures               # Create signature
+PUT    /api/v1/botmitigation/signatures/:id           # Update signature
+DELETE /api/v1/botmitigation/signatures/:id           # Delete signature
 
-GET    /api/v1/botdefender/sessions                 # List sessions
-GET    /api/v1/botdefender/sessions/:id             # Get session details
-PATCH  /api/v1/botdefender/sessions/:id             # Update session status
-GET    /api/v1/botdefender/sessions/bots            # List detected bots
+GET    /api/v1/botmitigation/sessions                 # List sessions
+GET    /api/v1/botmitigation/sessions/:id             # Get session details
+PATCH  /api/v1/botmitigation/sessions/:id             # Update session status
+GET    /api/v1/botmitigation/sessions/bots            # List detected bots
 
-POST   /api/v1/botdefender/challenges               # Create challenge
-GET    /api/v1/botdefender/challenges               # List challenges
-PUT    /api/v1/botdefender/challenges/:id           # Update challenge
-POST   /api/v1/botdefender/challenges/verify        # Verify challenge response
+POST   /api/v1/botmitigation/challenges               # Create challenge
+GET    /api/v1/botmitigation/challenges               # List challenges
+PUT    /api/v1/botmitigation/challenges/:id           # Update challenge
+POST   /api/v1/botmitigation/challenges/verify        # Verify challenge response
 
-POST   /api/v1/botdefender/policies                 # Create policy
-GET    /api/v1/botdefender/policies                 # List policies
-PUT    /api/v1/botdefender/policies/:id             # Update policy
-DELETE /api/v1/botdefender/policies/:id             # Delete policy
+POST   /api/v1/botmitigation/policies                 # Create policy
+GET    /api/v1/botmitigation/policies                 # List policies
+PUT    /api/v1/botmitigation/policies/:id             # Update policy
+DELETE /api/v1/botmitigation/policies/:id             # Delete policy
 
-GET    /api/v1/botdefender/dashboard                # Dashboard
-GET    /api/v1/botdefender/analytics                # Bot analytics
+GET    /api/v1/botmitigation/dashboard                # Dashboard
+GET    /api/v1/botmitigation/analytics                # Bot analytics
 GET    /health                                       # Health check
 ```
 
@@ -730,7 +730,7 @@ GET    /health                                       # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── botdefender/
+│       └── botmitigation/
 │           ├── BotDashboard.tsx             # Main dashboard
 │           ├── SessionViewer.tsx            # Session analysis
 │           ├── SignatureManager.tsx         # Signature management
@@ -739,7 +739,7 @@ frontend/src/
 │           ├── BotTraffic.tsx               # Traffic analysis
 │           └── Reputation.tsx               # Reputation scores
 ├── components/
-│   └── botdefender/
+│   └── botmitigation/
 │       ├── BotScoreGauge.tsx                # Bot score display
 │       ├── FingerprintViewer.tsx            # Fingerprint details
 │       ├── BehaviorChart.tsx                # Behavior patterns
@@ -748,7 +748,7 @@ frontend/src/
 │       ├── BotTypeChart.tsx                 # Bot type distribution
 │       └── GeoBlockMap.tsx                  # Geo distribution
 └── hooks/
-    └── useBotDefender.ts                    # API hooks
+    └── useBotMitigation.ts                    # API hooks
 ```
 
 ---
@@ -767,7 +767,7 @@ Real-time DDoS attack detection and mitigation with traffic analysis, automatic 
 
 #### Directory Structure
 ```
-backend/tools/24-ddosshield/
+backend/tools/24-ddosdefender/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -942,28 +942,28 @@ backend/tools/24-ddosshield/
 
 #### API Endpoints
 ```
-POST   /api/v1/ddosshield/resources                 # Add protected resource
-GET    /api/v1/ddosshield/resources                 # List resources
-GET    /api/v1/ddosshield/resources/:id             # Get resource details
-PUT    /api/v1/ddosshield/resources/:id             # Update resource
-DELETE /api/v1/ddosshield/resources/:id             # Remove resource
-GET    /api/v1/ddosshield/resources/:id/traffic     # Get traffic data
-POST   /api/v1/ddosshield/resources/:id/baseline    # Calculate baseline
+POST   /api/v1/ddosdefender/resources                 # Add protected resource
+GET    /api/v1/ddosdefender/resources                 # List resources
+GET    /api/v1/ddosdefender/resources/:id             # Get resource details
+PUT    /api/v1/ddosdefender/resources/:id             # Update resource
+DELETE /api/v1/ddosdefender/resources/:id             # Remove resource
+GET    /api/v1/ddosdefender/resources/:id/traffic     # Get traffic data
+POST   /api/v1/ddosdefender/resources/:id/baseline    # Calculate baseline
 
-GET    /api/v1/ddosshield/attacks                   # List attacks
-GET    /api/v1/ddosshield/attacks/:id               # Get attack details
-GET    /api/v1/ddosshield/attacks/:id/timeline      # Get attack timeline
-GET    /api/v1/ddosshield/attacks/active            # Get active attacks
+GET    /api/v1/ddosdefender/attacks                   # List attacks
+GET    /api/v1/ddosdefender/attacks/:id               # Get attack details
+GET    /api/v1/ddosdefender/attacks/:id/timeline      # Get attack timeline
+GET    /api/v1/ddosdefender/attacks/active            # Get active attacks
 
-POST   /api/v1/ddosshield/rules                     # Create mitigation rule
-GET    /api/v1/ddosshield/rules                     # List rules
-PUT    /api/v1/ddosshield/rules/:id                 # Update rule
-DELETE /api/v1/ddosshield/rules/:id                 # Delete rule
-POST   /api/v1/ddosshield/rules/:id/activate        # Activate rule
+POST   /api/v1/ddosdefender/rules                     # Create mitigation rule
+GET    /api/v1/ddosdefender/rules                     # List rules
+PUT    /api/v1/ddosdefender/rules/:id                 # Update rule
+DELETE /api/v1/ddosdefender/rules/:id                 # Delete rule
+POST   /api/v1/ddosdefender/rules/:id/activate        # Activate rule
 
-GET    /api/v1/ddosshield/dashboard                 # Dashboard
-GET    /api/v1/ddosshield/analytics                 # Traffic analytics
-POST   /api/v1/ddosshield/simulate                  # Simulate attack (testing)
+GET    /api/v1/ddosdefender/dashboard                 # Dashboard
+GET    /api/v1/ddosdefender/analytics                 # Traffic analytics
+POST   /api/v1/ddosdefender/simulate                  # Simulate attack (testing)
 GET    /health                                       # Health check
 ```
 
@@ -972,7 +972,7 @@ GET    /health                                       # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── ddosshield/
+│       └── ddosdefender/
 │           ├── DDoSDashboard.tsx            # Main dashboard
 │           ├── ResourceManager.tsx          # Resource management
 │           ├── AttackCenter.tsx             # Attack monitoring
@@ -981,7 +981,7 @@ frontend/src/
 │           ├── TrafficAnalytics.tsx         # Traffic analysis
 │           └── BaselineConfig.tsx           # Baseline setup
 ├── components/
-│   └── ddosshield/
+│   └── ddosdefender/
 │       ├── TrafficGauge.tsx                 # Real-time traffic
 │       ├── AttackTimeline.tsx               # Attack timeline
 │       ├── SourceMap.tsx                    # Attack source map
@@ -1250,7 +1250,7 @@ frontend/src/
 │       ├── TLSVersionBadge.tsx              # TLS version
 │       ├── VulnerabilityList.tsx            # Vulnerabilities
 │       ├── CipherTable.tsx                  # Cipher suites
-│       └── ComplianceCheck.tsx              # Compliance status
+│       └── RuntimeGuard.tsx              # Compliance status
 └── hooks/
     └── useSSLMonitor.ts                     # API hooks
 ```

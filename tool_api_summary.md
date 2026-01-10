@@ -65,12 +65,12 @@ No API-specific env vars detected.
 - INCIDENTRESPONSE_VIRUSTOTAL_API_KEY
 - INCIDENTRESPONSE_XSOAR_API_KEY
 ## Tool 12
-### backend/tools/12-loganalyzer/api/.env.example
+### backend/tools/12-xdrplatform/api/.env.example
 - GEMINI_API_KEY
 ## Tool 13
 No API-specific env vars detected.
 ## Tool 14
-### backend/tools/14-encryptionmanager/api/.env.example
+### backend/tools/14-secretvault/api/.env.example
 - ENCRYPTIONMANAGER_1PASSWORD_TOKEN
 - ENCRYPTIONMANAGER_AWS_ACCESS_KEY_ID
 - ENCRYPTIONMANAGER_AWS_KMS_KEY_ID
@@ -93,7 +93,7 @@ No API-specific env vars detected.
 - ENCRYPTIONMANAGER_SPLUNK_HEC_TOKEN
 - ENCRYPTIONMANAGER_VAULT_TOKEN
 ## Tool 15
-### backend/tools/15-cryptovault/ai-assistant/.env.example
+### backend/tools/15-privilegeguard/ai-assistant/.env.example
 - ANTHROPIC_API_KEY
 - GEMINI_API_KEY
 - MISTRAL_API_KEY
@@ -101,12 +101,12 @@ No API-specific env vars detected.
 - TOGETHER_API_KEY
 - XAI_API_KEY
 ## Tool 16
-### backend/tools/16-networkmonitor/api/.env.example
+### backend/tools/16-networkforensics/api/.env.example
 - CLAUDE_API_KEY
 - GEMINI_API_KEY
 - OPENAI_API_KEY
 ## Tool 17
-### backend/tools/17-audittrail/api/.env.example
+### backend/tools/17-audittrailpropro/api/.env.example
 - SLACK_WEBHOOK_URL
 ## Tool 18
 No API-specific env vars detected.
@@ -119,7 +119,7 @@ No API-specific env vars detected.
 ## Tool 22
 No API-specific env vars detected.
 ## Tool 23
-### backend/tools/23-botdefender/api/.env.example
+### backend/tools/23-botmitigation/api/.env.example
 - ABUSEIPDB_API_KEY
 - ALERT_WEBHOOK_URL
 - BOTD_API_KEY
@@ -134,7 +134,7 @@ No API-specific env vars detected.
 - SLACK_WEBHOOK_URL
 - TURNSTILE_SECRET_KEY
 ## Tool 24
-### backend/tools/24-ddosshield/api/.env.example
+### backend/tools/24-ddosdefender/api/.env.example
 - AKAMAI_ACCESS_TOKEN
 - AKAMAI_CLIENT_SECRET
 - AKAMAI_CLIENT_TOKEN
@@ -173,12 +173,12 @@ No API-specific env vars detected.
 ## Tool 31
 No API-specific env vars detected.
 ## Tool 32
-### frontend/tools/32-zerotrustai/.env.example
+### frontend/tools/32-zerotrust/.env.example
 - VITE_ANTHROPIC_API_KEY
 - VITE_GEMINI_API_KEY
 - VITE_OPENAI_API_KEY
 ## Tool 33
-### backend/tools/33-passwordvault/api/.env.example
+### backend/tools/33-kubearmor/api/.env.example
 - ANTHROPIC_API_KEY
 - AUTH0_CLIENT_ID
 - AUTH0_CLIENT_SECRET
@@ -203,7 +203,7 @@ No API-specific env vars detected.
 - TWILIO_AUTH_TOKEN
 - VIRUSTOTAL_API_KEY
 ## Tool 34
-### backend/tools/34-biometricai/api/.env.example
+### backend/tools/34-containerscan/api/.env.example
 - ABUSEIPDB_API_KEY
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
@@ -283,7 +283,7 @@ No API-specific env vars detected.
 - YUBIKEY_CLIENT_ID
 - YUBIKEY_SECRET_KEY
 ## Tool 35
-### backend/tools/35-emailguard/api/.env.example
+### backend/tools/35-emaildefender/api/.env.example
 - EMAILGUARD_ABUSEIPDB_API_KEY
 - EMAILGUARD_ACRONIS_CLIENT_ID
 - EMAILGUARD_ACRONIS_CLIENT_SECRET
@@ -322,7 +322,7 @@ No API-specific env vars detected.
 - EMAILGUARD_VIRUSTOTAL_API_KEY
 - EMAILGUARD_ZIX_API_KEY
 ## Tool 36
-### backend/tools/36-webfilter/api/.env.example
+### backend/tools/36-browserisolation/api/.env.example
 - WEBFILTER_ABUSEIPDB_DOMAIN_API_KEY
 - WEBFILTER_AKAMAI_API_KEY
 - WEBFILTER_AKAMAI_CLIENT_SECRET
@@ -357,7 +357,7 @@ No API-specific env vars detected.
 - WEBFILTER_WEBSHRINKER_API_KEY
 - WEBFILTER_ZAPIER_API_KEY
 ## Tool 37
-### backend/tools/37-dnsshield/api/.env.example
+### backend/tools/37-dnsfirewall/api/.env.example
 - DNSSHIELD_ABUSEIPDB_DOMAIN_API_KEY
 - DNSSHIELD_AKAMAI_API_KEY
 - DNSSHIELD_ALIENVAULT_OTX_API_KEY
@@ -459,7 +459,7 @@ No API-specific env vars detected.
 ## Tool 40
 No API-specific env vars detected.
 ## Tool 41
-### backend/tools/41-datalossprevention/api/.env.example
+### backend/tools/41-dlpadvanced/api/.env.example
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
 - AZURE_AD_CLIENT_ID
@@ -485,7 +485,7 @@ No API-specific env vars detected.
 - TEAMS_WEBHOOK_URL
 - VIRUSTOTAL_API_KEY
 ## Tool 42
-### backend/tools/42-iotsecure/api/.env.example
+### backend/tools/42-iotsentinel/api/.env.example
 - ANTHROPIC_API_KEY
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY

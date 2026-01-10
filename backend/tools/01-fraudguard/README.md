@@ -290,8 +290,8 @@ FraudGuard uses a 0-100 risk score system:
 
 ### With Other VictoryKit Tools
 FraudGuard integrates with:
-- **ThreatRadar** (#03) - Threat intelligence correlation
-- **PhishGuard** (#05) - Phishing attack detection
+- **ZeroDayDetect** (#03) - Threat intelligence correlation
+- **PhishNetAI** (#05) - Phishing attack detection
 - **IdentityShield** (#12) - Identity verification
 
 ### External Integrations

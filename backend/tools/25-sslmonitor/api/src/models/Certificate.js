@@ -380,7 +380,7 @@ certificateSchema.methods.isExpiringSoon = function(days = 30) {
     return this.daysUntilExpiry <= days && this.daysUntilExpiry > 0;
 };
 
-certificateSchema.methods.getSecurityScore = function() {
+certificateSchema.methods.getSecurityDashboard = function() {
     // Calculate security score based on various factors
     let score = 0;
 

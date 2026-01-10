@@ -1,5 +1,5 @@
 const {
-  RiskAssessment,
+  RiskQuantifyment,
   PHIDiscovery,
   Breach,
   BAA,
@@ -10,9 +10,9 @@ const {
 
 // ===== Risk Assessment Endpoints =====
 
-exports.createRiskAssessment = async (req, res) => {
+exports.createRiskQuantifyment = async (req, res) => {
   try {
-    const assessment = new RiskAssessment(req.body);
+    const assessment = new RiskQuantifyment(req.body);
     await assessment.save();
     res.status(201).json({ success: true, data: assessment });
   } catch (error) {
@@ -20,7 +20,7 @@ exports.createRiskAssessment = async (req, res) => {
   }
 };
 
-exports.getRiskAssessments = async (req, res) => {
+exports.getRiskQuantifyments = async (req, res) => {
   try {
     const { status, assessmentType, startDate, endDate } = req.query;
     const filter = {};
@@ -31,16 +31,16 @@ exports.getRiskAssessments = async (req, res) => {
       if (startDate) filter.assessmentDate.$gte = new Date(startDate);
       if (endDate) filter.assessmentDate.$lte = new Date(endDate);
     }
-    const assessments = await RiskAssessment.find(filter).sort({ assessmentDate: -1 });
+    const assessments = await RiskQuantifyment.find(filter).sort({ assessmentDate: -1 });
     res.json({ success: true, data: assessments });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
-exports.getRiskAssessmentById = async (req, res) => {
+exports.getRiskQuantifymentById = async (req, res) => {
   try {
-    const assessment = await RiskAssessment.findOne({ assessmentId: req.params.id });
+    const assessment = await RiskQuantifyment.findOne({ assessmentId: req.params.id });
     if (!assessment) {
       return res.status(404).json({ success: false, error: 'Risk assessment not found' });
     }
@@ -50,9 +50,9 @@ exports.getRiskAssessmentById = async (req, res) => {
   }
 };
 
-exports.updateRiskAssessment = async (req, res) => {
+exports.updateRiskQuantifyment = async (req, res) => {
   try {
-    const assessment = await RiskAssessment.findOneAndUpdate(
+    const assessment = await RiskQuantifyment.findOneAndUpdate(
       { assessmentId: req.params.id },
       req.body,
       { new: true, runValidators: true }
@@ -66,9 +66,9 @@ exports.updateRiskAssessment = async (req, res) => {
   }
 };
 
-exports.deleteRiskAssessment = async (req, res) => {
+exports.deleteRiskQuantifyment = async (req, res) => {
   try {
-    const assessment = await RiskAssessment.findOneAndDelete({ assessmentId: req.params.id });
+    const assessment = await RiskQuantifyment.findOneAndDelete({ assessmentId: req.params.id });
     if (!assessment) {
       return res.status(404).json({ success: false, error: 'Risk assessment not found' });
     }
@@ -547,7 +547,7 @@ exports.getDashboardData = async (req, res) => {
       overdueTrainings,
       suspiciousLogs
     ] = await Promise.all([
-      RiskAssessment.countDocuments(),
+      RiskQuantifyment.countDocuments(),
       Breach.countDocuments({ status: { $ne: 'resolved' } }),
       BAA.countDocuments({ status: 'active' }),
       Training.countDocuments({ status: 'expired' }),
@@ -559,7 +559,7 @@ exports.getDashboardData = async (req, res) => {
       .limit(5)
       .select('breachId breachType severity status incidentDate affectedIndividuals');
 
-    const latestAssessment = await RiskAssessment.findOne()
+    const latestAssessment = await RiskQuantifyment.findOne()
       .sort({ assessmentDate: -1 })
       .select('assessmentId overallRiskScore safeguardScores ruleCompliance status');
 
@@ -584,7 +584,7 @@ exports.getDashboardData = async (req, res) => {
 
 exports.getComplianceOverview = async (req, res) => {
   try {
-    const latestAssessment = await RiskAssessment.findOne()
+    const latestAssessment = await RiskQuantifyment.findOne()
       .sort({ assessmentDate: -1 });
 
     const breachStats = await Breach.aggregate([

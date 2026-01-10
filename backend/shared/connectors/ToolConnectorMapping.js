@@ -46,8 +46,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 02-intelliscout
-  intelliscout: {
+  // 02-darkwebmonitor
+  darkwebmonitor: {
     connectors: ['sentinel', 'cortexXSOAR', 'opencti', 'crowdstrike'],
     actions: {
       sentinel: { ingestEvents: true, createIncidents: true },
@@ -57,8 +57,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 03-threatradar
-  threatradar: {
+  // 03-zerodaydetect
+  zerodaydetect: {
     connectors: ['sentinel', 'cortexXSOAR', 'cloudflare', 'crowdstrike', 'opencti'],
     actions: {
       sentinel: { ingestEvents: true, createIncidents: true, queryThreats: true },
@@ -69,8 +69,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 04-malwarehunter
-  malwarehunter: {
+  // 04-ransomshield
+  ransomshield: {
     connectors: ['sentinel', 'cortexXSOAR', 'crowdstrike', 'opencti', 'capeSandbox'],
     actions: {
       sentinel: { ingestEvents: true, createIncidents: true },
@@ -81,8 +81,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 05-phishguard
-  phishguard: {
+  // 05-phishnetai
+  phishnetai: {
     connectors: ['sentinel', 'cortexXSOAR', 'cloudflare', 'okta', 'opencti'],
     actions: {
       sentinel: { ingestEvents: true, createIncidents: true },
@@ -115,8 +115,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 08-securecode
-  securecode: {
+  // 08-codesentinel
+  codesentinel: {
     connectors: ['sentinel', 'cortexXSOAR', 'opencti'],
     actions: {
       sentinel: { ingestEvents: true },
@@ -125,8 +125,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 09-compliancecheck
-  compliancecheck: {
+  // 09-runtimeguard
+  runtimeguard: {
     connectors: ['sentinel', 'vanta', 'wiz'],
     actions: {
       sentinel: { ingestEvents: true },
@@ -156,8 +156,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 12-loganalyzer
-  loganalyzer: {
+  // 12-xdrplatform
+  xdrplatform: {
     connectors: ['sentinel', 'redpanda', 'cortexXSOAR'],
     actions: {
       sentinel: { ingestEvents: true, queryLogs: true },
@@ -166,8 +166,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 13-accesscontrol
-  accesscontrol: {
+  // 13-identityforge
+  identityforge: {
     connectors: ['okta', 'sentinel', 'cortexXSOAR'],
     actions: {
       okta: { manageUsers: true, riskAssessment: true },
@@ -176,8 +176,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 14-encryptionmanager
-  encryptionmanager: {
+  // 14-secretvault
+  secretvault: {
     connectors: ['sentinel', 'cortexXSOAR'],
     actions: {
       sentinel: { ingestEvents: true },
@@ -194,8 +194,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 16-networkmonitor
-  networkmonitor: {
+  // 16-networkforensics
+  networkforensics: {
     connectors: ['sentinel', 'cloudflare', 'zeek', 'suricata'],
     actions: {
       sentinel: { ingestEvents: true, createIncidents: true },
@@ -256,8 +256,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 22-apiguard
-  apiguard: {
+  // 22-apishield
+  apishield: {
     connectors: ['kong', 'sentinel', 'cortexXSOAR', 'cloudflare'],
     actions: {
       kong: { rateLimit: true, blockRequests: true },
@@ -267,8 +267,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 23-botdefender
-  botdefender: {
+  // 23-botmitigation
+  botmitigation: {
     connectors: ['cloudflare', 'sentinel', 'cortexXSOAR'],
     actions: {
       cloudflare: { createBotRules: true, blockIPs: true, challenge: true },
@@ -277,8 +277,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 24-ddosshield
-  ddosshield: {
+  // 24-ddosdefender
+  ddosdefender: {
     connectors: ['cloudflare', 'sentinel', 'cortexXSOAR'],
     actions: {
       cloudflare: { ddosProtection: true, blockIPs: true, rateLimit: true },
@@ -328,8 +328,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 29-riskscoreai
-  riskscoreai: {
+  // 29-behavioranalytics
+  behavioranalytics: {
     connectors: ['sentinel', 'cortexXSOAR', 'okta', 'cloudflare'],
     actions: {
       sentinel: { ingestEvents: true },
@@ -349,8 +349,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 41-iotsecure
-  iotsecure: {
+  // 41-iotsentinel
+  iotsentinel: {
     connectors: ['sentinel', 'cortexXSOAR', 'crowdstrike'],
     actions: {
       sentinel: { ingestEvents: true, createIncidents: true },
@@ -359,8 +359,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 42-mobiledefend
-  mobiledefend: {
+  // 42-mobileshield
+  mobileshield: {
     connectors: ['crowdstrike', 'sentinel', 'cortexXSOAR', 'okta'],
     actions: {
       crowdstrike: { mobileProtection: true },
@@ -370,8 +370,8 @@ const ToolConnectorMapping = {
     }
   },
 
-  // 43-backupguard
-  backupguard: {
+  // 43-supplychainai
+  supplychainai: {
     connectors: ['sentinel', 'cortexXSOAR'],
     actions: {
       sentinel: { ingestEvents: true },

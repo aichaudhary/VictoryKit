@@ -36,7 +36,7 @@
          ┌───────────────┼───────────────┬─────────────┐
          ▼               ▼               ▼             ▼
 ┌──────────────┐ ┌──────────────┐ ┌──────────┐ ... ┌──────────┐
-│ FraudGuard   │ │ IntelliScout │ │ VulnScan │     │ ThreatMap│
+│ FraudGuard   │ │ DarkWebMonitor │ │ VulnScan │     │ ThreatMap│
 │ API (4001)   │ │ API (4002)   │ │ API (4006)│     │ API (4050)│
 └──────┬───────┘ └──────┬───────┘ └────┬─────┘     └────┬─────┘
        │                │               │                 │
@@ -128,7 +128,7 @@ backend/
     │       ├── Dockerfile
     │       └── .env.example
     │
-    ├── 02-intelliscout/
+    ├── 02-darkwebmonitor/
     │   └── api/ (same structure)
     │
     └── ... (48 more tools)
@@ -555,14 +555,14 @@ module.exports = new MLService();
 
 Implement full backend APIs for:
 - 01-FraudGuard
-- 02-IntelliScout
-- 03-ThreatRadar
-- 04-MalwareHunter
-- 05-PhishGuard
+- 02-DarkWebMonitor
+- 03-ZeroDayDetect
+- 04-RansomShield
+- 05-PhishNetAI
 - 06-VulnScan
 - 07-PenTestAI
-- 08-SecureCode
-- 09-ComplianceCheck
+- 08-CodeSentinel
+- 09-RuntimeGuard
 - 10-DataGuardian
 
 ### Batch 3: Tools 11-20 (Week 1-2)

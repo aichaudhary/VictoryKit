@@ -7,19 +7,19 @@
 - [ ] After completing a tool: Create new branch, commit, push, merge to main, checkout main
 - [ ] Repeat cycle for each tool (one tool at a time, 360-degree completion)
 
-## Tool Development Process (Tool 16: NetworkMonitor)
+## Tool Development Process (Tool 16: NetworkForensics)
 ### Phase 1: Preparation and Cleanup
-- [ ] Identify tool 16: NetworkMonitor (16-networkmonitor)
-- [ ] Check real-world usage of NetworkMonitor tools
+- [ ] Identify tool 16: NetworkForensics (16-networkforensics)
+- [ ] Check real-world usage of NetworkForensics tools
 - [ ] Analyze how to design frontend for world-class premium VVIP experience
 - [ ] Delete unnecessary parts from copied fguard structure
-- [ ] Update/upgrade code according to NetworkMonitor's specific nature and usage
-- [ ] Delete any neural-link-interface/ folders in frontend/tools/16-networkmonitor/
+- [ ] Update/upgrade code according to NetworkForensics's specific nature and usage
+- [ ] Delete any neural-link-interface/ folders in frontend/tools/16-networkforensics/
 - [ ] Remove legacy/duplicate/copy/unused/extra files and folders
 - [ ] Ensure clean, optimized structure
 
 ### Phase 2: Backend Development
-- [ ] Implement backend API for NetworkMonitor
+- [ ] Implement backend API for NetworkForensics
 - [ ] Set up database models (MongoDB) for network monitoring data
 - [ ] Implement network traffic analysis services
 - [ ] Add authentication and authorization middleware
@@ -29,7 +29,7 @@
 - [ ] Test backend functionality
 
 ### Phase 3: Frontend Development
-- [ ] Design world-class UI/UX for NetworkMonitor
+- [ ] Design world-class UI/UX for NetworkForensics
 - [ ] Implement network traffic monitoring interface
 - [ ] Add real-time traffic analysis and visualization tools
 - [ ] Integrate AI assistance features
@@ -39,7 +39,7 @@
 - [ ] Test frontend functionality
 
 ### Phase 4: Database (MongoDB) Setup
-- [ ] Design MongoDB schema for NetworkMonitor
+- [ ] Design MongoDB schema for NetworkForensics
 - [ ] Set up collections for traffic logs, network devices, alerts
 - [ ] Implement data validation and indexing
 - [ ] Add database connection and configuration
@@ -53,13 +53,13 @@
 
 ### Phase 6: Domain and URL Structure
 - [ ] Configure domain: maula.ai (home page)
-- [ ] Set up subdomain: networkmonitor.maula.ai
+- [ ] Set up subdomain: networkforensics.maula.ai
 - [ ] Implement neural-link-interface as AI realtime live streaming
-- [ ] Add LIVE AI Assistance option: networkmonitor.maula.ai/maula/ai
+- [ ] Add LIVE AI Assistance option: networkforensics.maula.ai/maula/ai
 - [ ] Ensure URL pattern: [tool-name].maula.ai/maula/ai consistent across tools
 
 ### Phase 7: Documentation and README
-- [ ] Create README.md in backend/tools/16-networkmonitor/
+- [ ] Create README.md in backend/tools/16-networkforensics/
 - [ ] Document backend structure and API details
 - [ ] Document frontend architecture and components
 - [ ] Document database schema and models
@@ -74,13 +74,13 @@
 - [ ] Performance optimization
 
 ### Phase 9: Branching and Deployment
-- [ ] Create new branch: feature/tool-16-networkmonitor
+- [ ] Create new branch: feature/tool-16-networkforensics
 - [ ] Commit all changes
 - [ ] Push branch to remote
 - [ ] Create pull request
 - [ ] Merge to main branch
 - [ ] Checkout main branch
-- [ ] Repeat process for next tool (17-audittrail)
+- [ ] Repeat process for next tool (17-audittrailpropro)
 
 ## General Requirements
 - [ ] Ensure 4 groups follow same workflow

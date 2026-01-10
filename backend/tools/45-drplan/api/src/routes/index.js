@@ -112,7 +112,7 @@ router.get('/reports/test-history', controller.getTestHistoryReport);
 router.get('/reports/incident-summary', controller.getIncidentSummaryReport);
 router.post('/reports/generate', controller.generateReport);
 router.get('/analytics/trends', controller.getTrends);
-router.get('/analytics/risk-assessment', controller.getRiskAssessment);
+router.get('/analytics/risk-assessment', controller.getRiskQuantifyment);
 
 // ==================== NOTIFICATIONS ====================
 router.post('/notifications/send', controller.sendNotification);

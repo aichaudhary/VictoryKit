@@ -101,7 +101,7 @@ MAULA.AI ECOSYSTEM
 32. AccessManager
 
 ### 🛡️ Email & Phone Verification (3)
-33. EmailGuard
+33. EmailDefender
 34. PhoneVerify
 35. ContactScore
 

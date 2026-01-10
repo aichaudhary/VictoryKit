@@ -1,10 +1,10 @@
-# VictoryKit Tool Development Workflow - Todos for Tool 13: AccessControl
+# VictoryKit Tool Development Workflow - Todos for Tool 13: IdentityForge
 
 ## 🎯 **PHASE 1: PREPARATION & RESEARCH**
 - [ ] **Research Real-World Access Control Usage**: Analyze industry-leading access control systems (Okta, Azure AD, AWS IAM, Google Cloud IAM) for best practices, user workflows, and advanced features
 - [ ] **Model Recommendations**: Use Claude Opus/Sonnet 4.5 for intelligent feature suggestions based on current cybersecurity trends and user needs
 - [ ] **User Experience Design**: Design premium VIP-level interface with intuitive RBAC management, real-time policy visualization, and AI-assisted permission recommendations
-- [ ] **Domain Configuration**: Ensure accesscontrol.maula.ai subdomain setup and routing
+- [ ] **Domain Configuration**: Ensure identityforge.maula.ai subdomain setup and routing
 - [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula/ai path with LIVE AI Assistance option
 
 ## 🗄️ **PHASE 2: DATABASE DESIGN (MongoDB)**
@@ -59,7 +59,7 @@
 - [ ] **Compliance Automation**: AI-assisted compliance checks and remediation suggestions
 
 ## 🔗 **PHASE 6: NEURAL-LINK INTERFACE INTEGRATION**
-- [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/13-accesscontrol/
+- [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/13-identityforge/
 - [ ] **AI Streaming Setup**: Implement real-time AI conversation streaming
 - [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula/ai interface
 - [ ] **Context Awareness**: AI understands current tool context and user actions
@@ -69,7 +69,7 @@
 - [ ] **Privacy Controls**: User consent and data handling for AI interactions
 
 ## 📚 **PHASE 7: DOCUMENTATION & TESTING**
-- [ ] **README.md Creation**: Create comprehensive README in backend/tools/13-accesscontrol/ with:
+- [ ] **README.md Creation**: Create comprehensive README in backend/tools/13-identityforge/ with:
   - [ ] Backend architecture overview
   - [ ] API endpoints documentation
   - [ ] Database schema details
@@ -89,7 +89,7 @@
 - [ ] **Docker Containerization**: Create Dockerfile for backend API
 - [ ] **Frontend Build**: Optimize build for production deployment
 - [ ] **Database Migration**: Ensure MongoDB production setup with backups
-- [ ] **SSL/TLS Setup**: Configure certificates for accesscontrol.maula.ai
+- [ ] **SSL/TLS Setup**: Configure certificates for identityforge.maula.ai
 - [ ] **Load Balancing**: Set up nginx reverse proxy with load balancing
 - [ ] **Monitoring Setup**: Implement application and infrastructure monitoring
 - [ ] **Backup Strategy**: Automated database and configuration backups
@@ -97,8 +97,8 @@
 
 ## 🔄 **PHASE 9: GIT WORKFLOW & INTEGRATION** - NEXT STEPS
 - [ ] **Commit Changes**: Ensure all changes are committed on main branch
-- [ ] **Create Feature Branch**: `git checkout -b tool-13-accesscontrol-complete`
-- [ ] **Push Branch**: `git push origin tool-13-accesscontrol-complete`
+- [ ] **Create Feature Branch**: `git checkout -b tool-13-identityforge-complete`
+- [ ] **Push Branch**: `git push origin tool-13-identityforge-complete`
 - [ ] **Create Pull Request**: Open PR for merging to main
 - [ ] **Code Review**: Ensure peer review and approval
 - [ ] **Merge to Main**: Merge PR and checkout main branch
@@ -118,7 +118,7 @@
 - [ ] All copied code from fguard removed or repurposed
 - [ ] No legacy/duplicate/unused files remaining
 - [ ] README.md added with complete backend/frontend/database details
-- [ ] Domain accesscontrol.maula.ai configured
+- [ ] Domain identityforge.maula.ai configured
 - [ ] /maula/ai path integrated for AI assistance
 - [ ] Claude Opus/Sonnet 4.5 optimally utilized for intelligence
 - [ ] Premium VIP-level user experience achieved

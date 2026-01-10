@@ -8,7 +8,7 @@ const Vulnerability = require('./Vulnerability');
 const Scan = require('./Scan');
 const ScanSchedule = require('./ScanSchedule');
 const Patch = require('./Patch');
-const ComplianceCheck = require('./ComplianceCheck');
+const RuntimeGuard = require('./RuntimeGuard');
 const RemediationPlan = require('./RemediationPlan');
 const VulnReport = require('./VulnReport');
 
@@ -18,7 +18,7 @@ module.exports = {
   Scan,
   ScanSchedule,
   Patch,
-  ComplianceCheck,
+  RuntimeGuard,
   RemediationPlan,
   VulnReport
 };

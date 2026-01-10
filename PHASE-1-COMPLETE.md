@@ -88,10 +88,10 @@ GET    /health                 - Health check
 
 **All 50 Tools Included:**
 1. FraudGuard - fguard.maula.ai
-2. IntelliScout - iscout.maula.ai
-3. ThreatRadar - tradar.maula.ai
-4. MalwareHunter - mhunter.maula.ai
-5. PhishGuard - pguard.maula.ai
+2. DarkWebMonitor - iscout.maula.ai
+3. ZeroDayDetect - tradar.maula.ai
+4. RansomShield - mhunter.maula.ai
+5. PhishNetAI - pguard.maula.ai
 ... (and 45 more - all configured!)
 
 ---

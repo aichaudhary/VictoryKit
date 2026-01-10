@@ -1,7 +1,7 @@
 #!/bin/bash
 # Clean ALL legacy files from Tool #44 BackupGuard
 
-cd /workspaces/VictoryKit/frontend/tools/44-backupguard
+cd /workspaces/VictoryKit/frontend/tools/44-supplychainai
 
 echo "🧹 Cleaning Tool #44 BackupGuard legacy files..."
 

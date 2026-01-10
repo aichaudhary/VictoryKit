@@ -11,7 +11,7 @@
 | 12 | NetworkGuard | 4012 | victorykit_networkguard | 📝 Planned | P1 |
 | 13 | CloudArmor | 4013 | victorykit_cloudarmor | 📝 Planned | P1 |
 | 14 | IdentityShield | 4014 | victorykit_identityshield | 📝 Planned | P1 |
-| 15 | CryptoVault | 4015 | victorykit_cryptovault | 📝 Planned | P1 |
+| 15 | PrivilegeGuard | 4015 | victorykit_privilegeguard | 📝 Planned | P1 |
 
 ---
 
@@ -1012,7 +1012,7 @@ frontend/src/
 
 ---
 
-## 🔐 Tool 15: CryptoVault
+## 🔐 Tool 15: PrivilegeGuard
 ### Cryptographic Key & Secrets Management
 
 #### Purpose
@@ -1026,7 +1026,7 @@ Enterprise secrets management platform for cryptographic keys, certificates, API
 
 #### Directory Structure
 ```
-backend/tools/15-cryptovault/
+backend/tools/15-privilegeguard/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -1218,32 +1218,32 @@ backend/tools/15-cryptovault/
 
 #### API Endpoints
 ```
-POST   /api/v1/cryptovault/secrets                  # Create secret
-GET    /api/v1/cryptovault/secrets                  # List secrets
-GET    /api/v1/cryptovault/secrets/:id              # Get secret (value)
-PUT    /api/v1/cryptovault/secrets/:id              # Update secret
-DELETE /api/v1/cryptovault/secrets/:id              # Delete secret
-POST   /api/v1/cryptovault/secrets/:id/rotate       # Rotate secret
-GET    /api/v1/cryptovault/secrets/:id/versions     # Version history
+POST   /api/v1/privilegeguard/secrets                  # Create secret
+GET    /api/v1/privilegeguard/secrets                  # List secrets
+GET    /api/v1/privilegeguard/secrets/:id              # Get secret (value)
+PUT    /api/v1/privilegeguard/secrets/:id              # Update secret
+DELETE /api/v1/privilegeguard/secrets/:id              # Delete secret
+POST   /api/v1/privilegeguard/secrets/:id/rotate       # Rotate secret
+GET    /api/v1/privilegeguard/secrets/:id/versions     # Version history
 
-POST   /api/v1/cryptovault/keys                     # Generate key
-GET    /api/v1/cryptovault/keys                     # List keys
-GET    /api/v1/cryptovault/keys/:id                 # Get key metadata
-POST   /api/v1/cryptovault/keys/:id/rotate          # Rotate key
-POST   /api/v1/cryptovault/keys/:id/encrypt         # Encrypt data
-POST   /api/v1/cryptovault/keys/:id/decrypt         # Decrypt data
-POST   /api/v1/cryptovault/keys/:id/sign            # Sign data
-POST   /api/v1/cryptovault/keys/:id/verify          # Verify signature
+POST   /api/v1/privilegeguard/keys                     # Generate key
+GET    /api/v1/privilegeguard/keys                     # List keys
+GET    /api/v1/privilegeguard/keys/:id                 # Get key metadata
+POST   /api/v1/privilegeguard/keys/:id/rotate          # Rotate key
+POST   /api/v1/privilegeguard/keys/:id/encrypt         # Encrypt data
+POST   /api/v1/privilegeguard/keys/:id/decrypt         # Decrypt data
+POST   /api/v1/privilegeguard/keys/:id/sign            # Sign data
+POST   /api/v1/privilegeguard/keys/:id/verify          # Verify signature
 
-POST   /api/v1/cryptovault/certificates             # Import certificate
-GET    /api/v1/cryptovault/certificates             # List certificates
-GET    /api/v1/cryptovault/certificates/:id         # Get certificate
-POST   /api/v1/cryptovault/certificates/generate    # Generate CSR
-POST   /api/v1/cryptovault/certificates/:id/renew   # Renew certificate
-GET    /api/v1/cryptovault/certificates/expiring    # Expiring certs
+POST   /api/v1/privilegeguard/certificates             # Import certificate
+GET    /api/v1/privilegeguard/certificates             # List certificates
+GET    /api/v1/privilegeguard/certificates/:id         # Get certificate
+POST   /api/v1/privilegeguard/certificates/generate    # Generate CSR
+POST   /api/v1/privilegeguard/certificates/:id/renew   # Renew certificate
+GET    /api/v1/privilegeguard/certificates/expiring    # Expiring certs
 
-GET    /api/v1/cryptovault/audit                    # Audit logs
-GET    /api/v1/cryptovault/dashboard                # Dashboard
+GET    /api/v1/privilegeguard/audit                    # Audit logs
+GET    /api/v1/privilegeguard/dashboard                # Dashboard
 GET    /health                                       # Health check
 ```
 
@@ -1252,7 +1252,7 @@ GET    /health                                       # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── cryptovault/
+│       └── privilegeguard/
 │           ├── VaultDashboard.tsx           # Main dashboard
 │           ├── SecretManager.tsx            # Secret management
 │           ├── SecretDetail.tsx             # Secret details
@@ -1262,7 +1262,7 @@ frontend/src/
 │           ├── RotationPolicy.tsx           # Rotation policies
 │           └── AuditViewer.tsx              # Audit logs
 ├── components/
-│   └── cryptovault/
+│   └── privilegeguard/
 │       ├── SecretCard.tsx                   # Secret display
 │       ├── KeyStrengthMeter.tsx             # Key strength
 │       ├── CertExpiryBadge.tsx              # Expiry indicator
@@ -1271,7 +1271,7 @@ frontend/src/
 │       ├── AuditTimeline.tsx                # Audit history
 │       └── SecretValueCopy.tsx              # Secure copy
 └── hooks/
-    └── useCryptoVault.ts                    # API hooks
+    └── usePrivilegeGuard.ts                    # API hooks
 ```
 
 ---
@@ -1381,7 +1381,7 @@ frontend/src/
 - [ ] Test health endpoint
 - [ ] Deploy to EC2
 
-### Tool 15 - CryptoVault
+### Tool 15 - PrivilegeGuard
 - [ ] Create directory structure
 - [ ] Implement Secret model
 - [ ] Implement Key model

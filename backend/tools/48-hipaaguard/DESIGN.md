@@ -472,7 +472,7 @@
 - `GET /api/v1/hipaaguard/compliance-overview` - Get compliance overview
 
 ### Database Schema
-- **RiskAssessment:** Comprehensive risk assessment records with safeguard and rule compliance scores
+- **RiskQuantifyment:** Comprehensive risk assessment records with safeguard and rule compliance scores
 - **PHIDiscovery:** PHI scanning results with location mapping and encryption status
 - **Breach:** Breach incident tracking with notification workflow and remediation
 - **BAA:** Business associate agreement management with lifecycle tracking

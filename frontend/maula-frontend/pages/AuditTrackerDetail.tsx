@@ -1,16 +1,16 @@
 import React from 'react';
 import ToolDetailTemplate from '../components/ToolDetailTemplate';
 
-const AuditTrackerDetail: React.FC = () => {
+const CloudPostureDetail: React.FC = () => {
   return (
     <ToolDetailTemplate
       toolId={17}
-      toolName="AuditTrail"
-      subdomain="audittrail"
+      toolName="AuditTrailPro"
+      subdomain="audittrailpro"
       color="#3B82F6"
       description="Comprehensive audit logging and tracking. Maintain complete visibility into all system activities."
     />
   );
 };
 
-export default AuditTrackerDetail;
+export default CloudPostureDetail;

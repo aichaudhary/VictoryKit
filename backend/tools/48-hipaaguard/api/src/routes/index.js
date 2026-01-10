@@ -3,11 +3,11 @@ const router = express.Router();
 const controller = require('../controllers');
 
 // ===== Risk Assessment Routes =====
-router.post('/risk-assessments', controller.createRiskAssessment);
-router.get('/risk-assessments', controller.getRiskAssessments);
-router.get('/risk-assessments/:id', controller.getRiskAssessmentById);
-router.put('/risk-assessments/:id', controller.updateRiskAssessment);
-router.delete('/risk-assessments/:id', controller.deleteRiskAssessment);
+router.post('/risk-assessments', controller.createRiskQuantifyment);
+router.get('/risk-assessments', controller.getRiskQuantifyments);
+router.get('/risk-assessments/:id', controller.getRiskQuantifymentById);
+router.put('/risk-assessments/:id', controller.updateRiskQuantifyment);
+router.delete('/risk-assessments/:id', controller.deleteRiskQuantifyment);
 
 // ===== PHI Discovery Routes =====
 router.post('/phi-scans', controller.createPHIScan);

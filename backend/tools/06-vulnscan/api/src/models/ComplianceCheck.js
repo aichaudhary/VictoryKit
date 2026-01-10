@@ -1,5 +1,5 @@
 /**
- * ComplianceCheck Model
+ * RuntimeGuard Model
  * Security Compliance Assessment & Tracking
  * 
  * Manages compliance assessments across multiple frameworks
@@ -280,7 +280,7 @@ const complianceCheckSchema = new Schema({
   
   // Previous Assessments (for trend analysis)
   previousAssessments: [{
-    assessmentId: { type: Schema.Types.ObjectId, ref: 'ComplianceCheck' },
+    assessmentId: { type: Schema.Types.ObjectId, ref: 'RuntimeGuard' },
     date: Date,
     score: Number,
     complianceLevel: String
@@ -328,7 +328,7 @@ const complianceCheckSchema = new Schema({
   metadata: { type: Map, of: Schema.Types.Mixed }
 }, {
   timestamps: true,
-  collection: 'compliancechecks'
+  collection: 'runtimeguards'
 });
 
 // Indexes
@@ -605,6 +605,6 @@ complianceCheckSchema.pre('save', function(next) {
   next();
 });
 
-const ComplianceCheck = mongoose.model('ComplianceCheck', complianceCheckSchema);
+const RuntimeGuard = mongoose.model('RuntimeGuard', complianceCheckSchema);
 
-module.exports = ComplianceCheck;
+module.exports = RuntimeGuard;

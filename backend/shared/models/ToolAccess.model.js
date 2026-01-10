@@ -12,15 +12,15 @@ const toolAccessSchema = new mongoose.Schema({
     required: true,
     index: true,
     enum: [
-      'fraudguard', 'intelliscout', 'threatradar', 'malwarehunter', 'phishguard',
-      'vulnscan', 'pentestai', 'securecode', 'compliancecheck', 'dataguardian',
+      'fraudguard', 'darkwebmonitor', 'zerodaydetect', 'ransomshield', 'phishnetai',
+      'vulnscan', 'pentestai', 'codesentinel', 'runtimeguard', 'dataguardian',
       'cryptoshield', 'iamcontrol', 'logintel', 'netdefender', 'endpointshield',
-      'cloudsecure', 'apiguardian', 'containerwatch', 'devsecops', 'incidentcommand',
+      'cloudsecure', 'apishieldian', 'containerwatch', 'devsecops', 'incidentcommand',
       'forensicslab', 'threathunt', 'ransomdefend', 'zerotrustnet', 'privacyshield',
-      'socautomation', 'threatintelhub', 'assetdiscovery', 'patchmanager', 'backupguardian',
+      'socautomation', 'threatintelhub', 'assetdiscovery', 'patchmanager', 'supplychainaiian',
       'disasterrecovery', 'emailsecure', 'webappfirewall', 'botdefense', 'ddosmitigator',
-      'securegateway', 'mobilesecurity', 'iotsecure', 'supplychainsec', 'brandprotect',
-      'datalossprevention', 'userbehavioranalytics', 'threatmodeling', 'redteamsim',
+      'securegateway', 'mobilesecurity', 'iotsentinel', 'supplychainsec', 'brandprotect',
+      'dlpadvanced', 'userbehavioranalytics', 'threatmodeling', 'redteamsim',
       'blueteamops', 'purpleteamhub', 'cyberinsurance', 'securityawareness', 'vendorriskmgmt',
       'cyberthreatmap'
     ]

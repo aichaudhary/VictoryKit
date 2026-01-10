@@ -1,6 +1,6 @@
 const Policy = require('../models/Policy');
 const PolicyVersion = require('../models/PolicyVersion');
-const ComplianceCheck = require('../models/ComplianceCheck');
+const RuntimeGuard = require('../models/RuntimeGuard');
 const PolicyException = require('../models/PolicyException');
 const FrameworkMapping = require('../models/FrameworkMapping');
 const { v4: uuidv4 } = require('uuid');
@@ -303,7 +303,7 @@ class PolicyController {
       
       const checkId = `check_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
-      const complianceCheck = new ComplianceCheck({
+      const complianceCheck = new RuntimeGuard({
         checkId,
         policyId: policy_id,
         policyName: policy.policyName,
@@ -354,7 +354,7 @@ class PolicyController {
     }
   }
   
-  async getComplianceChecks(req, res) {
+  async getRuntimeGuards(req, res) {
     try {
       const { policy_id, scope, status, page = 1, limit = 20 } = req.query;
       
@@ -364,12 +364,12 @@ class PolicyController {
       if (status) query.status = status;
       
       const skip = (page - 1) * limit;
-      const checks = await ComplianceCheck.find(query)
+      const checks = await RuntimeGuard.find(query)
         .sort({ 'execution.startTime': -1 })
         .skip(skip)
         .limit(parseInt(limit));
       
-      const total = await ComplianceCheck.countDocuments(query);
+      const total = await RuntimeGuard.countDocuments(query);
       
       res.json({
         success: true,
@@ -608,12 +608,12 @@ class PolicyController {
         PolicyException.countDocuments(),
         PolicyException.countDocuments({ status: 'pending' }),
         PolicyException.countDocuments({ status: 'approved' }),
-        ComplianceCheck.countDocuments(),
-        ComplianceCheck.find().sort({ 'execution.startTime': -1 }).limit(5)
+        RuntimeGuard.countDocuments(),
+        RuntimeGuard.find().sort({ 'execution.startTime': -1 }).limit(5)
       ]);
       
       // Calculate average compliance
-      const checks = await ComplianceCheck.find({ status: 'completed' });
+      const checks = await RuntimeGuard.find({ status: 'completed' });
       const avgCompliance = checks.length > 0
         ? Math.round(checks.reduce((sum, c) => sum + (c.result.complianceScore || 0), 0) / checks.length)
         : 0;

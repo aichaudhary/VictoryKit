@@ -1,10 +1,10 @@
-# VictoryKit Tool Development Workflow - Todos for Tool 20: SecurityScore
+# VictoryKit Tool Development Workflow - Todos for Tool 20: SecurityDashboard
 
 ## 🎯 **PHASE 1: PREPARATION & RESEARCH**
 - [ ] **Research Real-World Security Scoring**: Analyze industry-leading security posture scoring systems (NIST Cybersecurity Framework, CIS Controls, MITRE ATT&CK, OWASP Risk Rating Methodology) for best practices and scoring methodologies
 - [ ] **Model Recommendations**: Use Claude Opus/Sonnet 4.5 for intelligent security scoring suggestions based on current threat landscape and compliance requirements
 - [ ] **User Experience Design**: Design premium VIP-level interface with intuitive security dashboards, risk visualizations, and AI-assisted remediation recommendations
-- [ ] **Domain Configuration**: Ensure securityscore.maula.ai subdomain setup and routing
+- [ ] **Domain Configuration**: Ensure securitydashboard.maula.ai subdomain setup and routing
 - [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula/ai path with LIVE AI Assistance option for security analysis
 
 ## 🗄️ **PHASE 2: DATABASE DESIGN (MongoDB)**
@@ -58,7 +58,7 @@
 - [ ] **Executive Insights**: AI-generated executive summaries and strategic recommendations
 
 ## 🔗 **PHASE 6: NEURAL-LINK INTERFACE INTEGRATION**
-- [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/20-securityscore/
+- [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/20-securitydashboard/
 - [ ] **AI Streaming Setup**: Implement real-time AI conversation streaming for security analysis
 - [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula/ai interface
 - [ ] **Context Awareness**: AI understands current security assessment context and scoring
@@ -68,7 +68,7 @@
 - [ ] **Privacy Controls**: User consent and data handling for AI interactions
 
 ## 📚 **PHASE 7: DOCUMENTATION & TESTING**
-- [ ] **README.md Creation**: Create comprehensive README in backend/tools/20-securityscore/ with:
+- [ ] **README.md Creation**: Create comprehensive README in backend/tools/20-securitydashboard/ with:
   - [ ] Backend architecture overview
   - [ ] API endpoints documentation
   - [ ] Database schema details
@@ -88,7 +88,7 @@
 - [ ] **Docker Containerization**: Create Dockerfile for backend API
 - [ ] **Frontend Build**: Optimize build for production deployment
 - [ ] **Database Migration**: Ensure MongoDB production setup with backups
-- [ ] **SSL/TLS Setup**: Configure certificates for securityscore.maula.ai
+- [ ] **SSL/TLS Setup**: Configure certificates for securitydashboard.maula.ai
 - [ ] **Load Balancing**: Set up nginx reverse proxy with load balancing
 - [ ] **Monitoring Setup**: Implement application and infrastructure monitoring
 - [ ] **Backup Strategy**: Automated database and configuration backups
@@ -96,8 +96,8 @@
 
 ## 🔄 **PHASE 9: GIT WORKFLOW & INTEGRATION**
 - [ ] **Commit Changes**: Ensure all changes are committed on main branch
-- [ ] **Create Feature Branch**: `git checkout -b tool-20-securityscore-complete`
-- [ ] **Push Branch**: `git push origin tool-20-securityscore-complete`
+- [ ] **Create Feature Branch**: `git checkout -b tool-20-securitydashboard-complete`
+- [ ] **Push Branch**: `git push origin tool-20-securitydashboard-complete`
 - [ ] **Create Pull Request**: Open PR for merging to main
 - [ ] **Code Review**: Ensure peer review and approval
 - [ ] **Merge to Main**: Merge PR and checkout main branch
@@ -117,7 +117,7 @@
 - [ ] All copied code from previous tools removed or repurposed
 - [ ] No legacy/duplicate/unused files remaining
 - [ ] README.md added with complete backend/frontend/database details
-- [ ] Domain securityscore.maula.ai configured
+- [ ] Domain securitydashboard.maula.ai configured
 - [ ] /maula/ai path integrated for AI assistance
 - [ ] Claude Opus/Sonnet 4.5 optimally utilized for intelligence
 - [ ] Premium VIP-level user experience achieved

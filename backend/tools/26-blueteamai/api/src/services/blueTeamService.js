@@ -201,7 +201,7 @@ class BlueTeamAIService {
       // Okta - Risk assessment and adaptive access policies
       if (connectors.okta && data.userRisk) {
         integrationPromises.push(
-          connectors.okta.updateRiskAssessment({
+          connectors.okta.updateRiskQuantifyment({
             userId: data.userId,
             riskLevel: data.riskScore > 70 ? 'high' : data.riskScore > 40 ? 'medium' : 'low',
             factors: data.threats?.map(t => t.type) || [],

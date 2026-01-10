@@ -19,33 +19,33 @@ const path = require('path');
 const tools = [
   {
     id: '03',
-    name: 'threatradar',
+    name: 'zerodaydetect',
     displayName: 'ThreatRadar',
     description: 'Real-time Threat Detection API',
     port: 4003,
-    db: 'threatradar_db',
+    db: 'zerodaydetect_db',
     mlPort: 8003,
     // Models already created: Threat, Detection, Report
     controllersNeeded: ['threat', 'detection', 'report']
   },
   {
     id: '04',
-    name: 'malwarehunter',
+    name: 'ransomshield',
     displayName: 'MalwareHunter',
     description: 'Malware Analysis & Detection API',
     port: 4004,
-    db: 'malwarehunter_db',
+    db: 'ransomshield_db',
     mlPort: 8004,
     models: ['Sample', 'Analysis', 'Report'],
     controllers: ['sample', 'analysis', 'report']
   },
   {
     id: '05',
-    name: 'phishguard',
+    name: 'phishnetai',
     displayName: 'PhishGuard',
     description: 'Phishing Detection & Prevention API',
     port: 4005,
-    db: 'phishguard_db',
+    db: 'phishnetai_db',
     mlPort: 8005,
     models: ['URL', 'Analysis', 'Report'],
     controllers: ['url', 'analysis', 'report']
@@ -74,22 +74,22 @@ const tools = [
   },
   {
     id: '08',
-    name: 'securecode',
+    name: 'codesentinel',
     displayName: 'SecureCode',
     description: 'Code Security Analysis API',
     port: 4008,
-    db: 'securecode_db',
+    db: 'codesentinel_db',
     mlPort: 8008,
     models: ['CodeScan', 'Issue', 'Report'],
     controllers: ['codescan', 'issue', 'report']
   },
   {
     id: '09',
-    name: 'compliancecheck',
+    name: 'runtimeguard',
     displayName: 'ComplianceCheck',
     description: 'Security Compliance Auditing API',
     port: 4009,
-    db: 'compliancecheck_db',
+    db: 'runtimeguard_db',
     mlPort: 8009,
     models: ['Audit', 'Violation', 'Report'],
     controllers: ['audit', 'violation', 'report']

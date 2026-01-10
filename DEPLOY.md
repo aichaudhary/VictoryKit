@@ -48,13 +48,13 @@ scp -i victorykit.pem .env ubuntu@ec2-18-140-156-40.ap-southeast-1.compute.amazo
 ```bash
 ssh -i victorykit.pem ubuntu@ec2-18-140-156-40.ap-southeast-1.compute.amazonaws.com
 cd ~/victorykit/backend/shared && npm install
-cd ~/victorykit/backend/tools/04-malwarehunter/api && npm install
-cd ~/victorykit/backend/tools/05-phishguard/api && npm install
+cd ~/victorykit/backend/tools/04-ransomshield/api && npm install
+cd ~/victorykit/backend/tools/05-phishnetai/api && npm install
 cd ~/victorykit/backend/tools/06-vulnscan/api && npm install
 
 # Start with PM2
-pm2 start backend/tools/04-malwarehunter/api/src/server.js --name malwarehunter
-pm2 start backend/tools/05-phishguard/api/src/server.js --name phishguard
+pm2 start backend/tools/04-ransomshield/api/src/server.js --name ransomshield
+pm2 start backend/tools/05-phishnetai/api/src/server.js --name phishnetai
 pm2 start backend/tools/06-vulnscan/api/src/server.js --name vulnscan
 pm2 save
 ```
@@ -65,8 +65,8 @@ pm2 save
 
 | Tool | URL |
 |------|-----|
-| MalwareHunter | `https://api.maula.ai/api/v1/malwarehunter` |
-| PhishGuard | `https://api.maula.ai/api/v1/phishguard` |
+| RansomShield | `https://api.maula.ai/api/v1/ransomshield` |
+| PhishNetAI | `https://api.maula.ai/api/v1/phishnetai` |
 | VulnScan | `https://api.maula.ai/api/v1/vulnscan` |
 | Health Check | `https://api.maula.ai/health` |
 
@@ -74,7 +74,7 @@ pm2 save
 
 ```bash
 curl https://api.maula.ai/health
-curl https://api.maula.ai/api/v1/malwarehunter/health
+curl https://api.maula.ai/api/v1/ransomshield/health
 ```
 
 ---

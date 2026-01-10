@@ -207,7 +207,7 @@ Data Protection Impact Assessment (Article 35).
 - `dpoOpinion` - Article 35(2)
 - `supervisoryConsultation` - Article 36 (if high residual risk)
 - `decision` (proceed, conditions, approval)
-- `residualRiskAssessment` (acceptable, justification)
+- `residualRiskQuantifyment` (acceptable, justification)
 
 **Virtuals**:
 - `isHighRisk` - critical/high overall risk

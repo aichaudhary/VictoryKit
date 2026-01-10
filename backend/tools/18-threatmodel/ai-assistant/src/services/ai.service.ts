@@ -121,7 +121,7 @@ export class AIService {
   /**
    * Perform risk assessment and scoring
    */
-  async performRiskAssessment(
+  async performRiskQuantifyment(
     threats: Threat[],
     mitigations: Mitigation[],
     component: Component
@@ -131,13 +131,13 @@ export class AIService {
     recommendations: string[];
   }> {
     try {
-      const prompt = this.buildRiskAssessmentPrompt(threats, mitigations, component);
+      const prompt = this.buildRiskQuantifymentPrompt(threats, mitigations, component);
 
       const response = await this.client.messages.create({
         model: process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022',
         max_tokens: parseInt(process.env.MAX_TOKENS || '4096'),
         temperature: parseFloat(process.env.TEMPERATURE || '0.7'),
-        system: this.getRiskAssessmentSystemPrompt(),
+        system: this.getRiskQuantifymentSystemPrompt(),
         messages: [
           {
             role: 'user',
@@ -146,7 +146,7 @@ export class AIService {
         ]
       });
 
-      const assessment = this.parseRiskAssessmentResponse(response.content[0].type === 'text' ? response.content[0].text : '');
+      const assessment = this.parseRiskQuantifymentResponse(response.content[0].type === 'text' ? response.content[0].text : '');
 
       this.logger.info('Risk assessment completed', {
         componentId: component.id,
@@ -339,7 +339,7 @@ Format your response as a JSON array of mitigation objects:
 `;
   }
 
-  private buildRiskAssessmentPrompt(threats: Threat[], mitigations: Mitigation[], component: Component): string {
+  private buildRiskQuantifymentPrompt(threats: Threat[], mitigations: Mitigation[], component: Component): string {
     return `
 Perform a comprehensive risk assessment for the following component:
 
@@ -426,7 +426,7 @@ Format your response as JSON:
     return `You are a cybersecurity mitigation specialist. Provide practical, implementable mitigation strategies that balance security with business requirements. Include cost-benefit analysis and consider operational impact.`;
   }
 
-  private getRiskAssessmentSystemPrompt(): string {
+  private getRiskQuantifymentSystemPrompt(): string {
     return `You are a risk assessment expert. Calculate risk scores using industry-standard methodologies, considering likelihood, impact, and existing controls. Provide clear risk metrics and actionable recommendations.`;
   }
 
@@ -472,7 +472,7 @@ Format your response as JSON:
     }
   }
 
-  private parseRiskAssessmentResponse(response: string): any {
+  private parseRiskQuantifymentResponse(response: string): any {
     try {
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {

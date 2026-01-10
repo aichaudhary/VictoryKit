@@ -25,7 +25,7 @@ SUBDOMAINS=(
     "secretvault"
     "privilegeguard"
     "networkforensics"
-    "audittrailpro"
+    "audittrailpropro"
     "threatmodel"
     "riskquantify"
     "securitydashboard"

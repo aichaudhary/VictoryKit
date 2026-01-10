@@ -1,9 +1,9 @@
-# WirelessWatch (Tool #40) - Implementation Summary
+# WirelessHunter (Tool #40) - Implementation Summary
 
 ## ✅ COMPLETED COMPONENTS
 
 ### 1. Database Layer (MongoDB Schemas) ✅
-**Location:** `/backend/tools/40-wirelesswatch/api/src/models/`
+**Location:** `/backend/tools/40-wirelesshunter/api/src/models/`
 
 - ✅ **Device.js** - Complete device tracking with risk scoring
 - ✅ **Threat.js** - Comprehensive threat management
@@ -15,10 +15,10 @@
 - ✅ **models/index.js** - Updated with all new models
 
 ### 2. Backend API Layer ✅
-**Location:** `/backend/tools/40-wirelesswatch/api/src/`
+**Location:** `/backend/tools/40-wirelesshunter/api/src/`
 
 #### Controllers
-- ✅ **wirelesswatchController.js** - 500+ lines of comprehensive API logic
+- ✅ **wirelesshunterController.js** - 500+ lines of comprehensive API logic
   - Device Management (authorize, block, profile, risk score)
   - Scan Management (start, stop, status, results)
   - Threat Management (respond, resolve, escalate)
@@ -34,7 +34,7 @@
   - `/compliance/*` - Compliance reporting endpoints
 
 ### 3. ML Engine Layer ✅
-**Location:** `/backend/tools/40-wirelesswatch/ml-engine/`
+**Location:** `/backend/tools/40-wirelesshunter/ml-engine/`
 
 - ✅ **main.py** - Enhanced ML engine (500+ lines)
   - **Rogue AP Classifier** - `/classify/rogue-ap`
@@ -46,7 +46,7 @@
 - ✅ **requirements.txt** - Updated with scikit-learn, numpy, pandas
 
 ### 4. Frontend Layer (Partial) ✅
-**Location:** `/frontend/tools/40-wirelesswatch/src/components/`
+**Location:** `/frontend/tools/40-wirelesshunter/src/components/`
 
 - ✅ **SecurityDashboard.tsx** - Main dashboard with metrics, charts, threats
 - ✅ **ThreatsPage.tsx** - Comprehensive threat management interface
@@ -162,7 +162,7 @@
 ## 🏗️ ARCHITECTURE OVERVIEW
 
 ```
-WirelessWatch Architecture
+WirelessHunter Architecture
 ├── Frontend (React + TypeScript) - Port 3040
 │   ├── Dashboard & Monitoring
 │   ├── Threat Management
@@ -208,8 +208,8 @@ WirelessWatch Architecture
 
 ### 2. Deployment Configuration (Estimated: 1 day)
 - [ ] Update Dockerfiles for all 3 services
-- [ ] Create docker-compose.wirelesswatch.yml
-- [ ] Configure Nginx for wirelesswatch.maula.ai
+- [ ] Create docker-compose.wirelesshunter.yml
+- [ ] Configure Nginx for wirelesshunter.maula.ai
 - [ ] SSL certificate setup
 - [ ] Environment variables configuration
 - [ ] Health checks and monitoring
@@ -245,28 +245,28 @@ WirelessWatch Architecture
 
 ### Backend API
 ```bash
-cd /workspaces/VictoryKit/backend/tools/40-wirelesswatch/api
+cd /workspaces/VictoryKit/backend/tools/40-wirelesshunter/api
 npm install
 npm run dev  # Starts on port 4040
 ```
 
 ### ML Engine
 ```bash
-cd /workspaces/VictoryKit/backend/tools/40-wirelesswatch/ml-engine
+cd /workspaces/VictoryKit/backend/tools/40-wirelesshunter/ml-engine
 pip install -r requirements.txt
 python main.py  # Starts on port 8040
 ```
 
 ### Frontend
 ```bash
-cd /workspaces/VictoryKit/frontend/tools/40-wirelesswatch
+cd /workspaces/VictoryKit/frontend/tools/40-wirelesshunter
 npm install
 npm run dev  # Starts on port 3040
 ```
 
 ### MongoDB
 Ensure MongoDB is running and accessible at:
-`mongodb://localhost:27017/wirelesswatch_db`
+`mongodb://localhost:27017/wirelesshunter_db`
 
 ---
 
@@ -274,8 +274,8 @@ Ensure MongoDB is running and accessible at:
 
 1. **Domain Structure:**
    - Main platform: `maula.ai`
-   - Tool access: `wirelesswatch.maula.ai`
-   - AI assistant: `wirelesswatch.maula.ai/maula/ai`
+   - Tool access: `wirelesshunter.maula.ai`
+   - AI assistant: `wirelesshunter.maula.ai/maula/ai`
 
 2. **Port Allocation:**
    - Frontend: 3040

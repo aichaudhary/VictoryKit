@@ -4,7 +4,7 @@ const FirewallPolicy = require('../models/FirewallPolicy');
 const TrafficLog = require('../models/TrafficLog');
 const Alert = require('../models/Alert');
 const Analytics = require('../models/Analytics');
-const AuditTrail = require('../models/AuditTrail');
+const AuditTrailPro = require('../models/AuditTrailPro');
 
 class FirewallController {
   // Firewall Rules Management
@@ -110,7 +110,7 @@ class FirewallController {
       }
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `rule-create-${rule._id}-${Date.now()}`,
         action: 'create',
         category: 'configuration',
@@ -178,7 +178,7 @@ class FirewallController {
       }
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `rule-update-${id}-${Date.now()}`,
         action: 'update',
         category: 'configuration',
@@ -236,7 +236,7 @@ class FirewallController {
       await FirewallRule.findByIdAndDelete(id);
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `rule-delete-${id}-${Date.now()}`,
         action: 'delete',
         category: 'configuration',
@@ -297,7 +297,7 @@ class FirewallController {
       }
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `rule-enable-${id}-${Date.now()}`,
         action: 'enable',
         category: 'configuration',
@@ -359,7 +359,7 @@ class FirewallController {
       }
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `rule-disable-${id}-${Date.now()}`,
         action: 'disable',
         category: 'configuration',
@@ -473,7 +473,7 @@ class FirewallController {
       await policy.save();
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `policy-create-${policy._id}-${Date.now()}`,
         action: 'create',
         category: 'configuration',
@@ -527,7 +527,7 @@ class FirewallController {
       ).populate('rules');
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `policy-update-${id}-${Date.now()}`,
         action: 'update',
         category: 'configuration',
@@ -572,7 +572,7 @@ class FirewallController {
       await FirewallPolicy.findByIdAndDelete(id);
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `policy-delete-${id}-${Date.now()}`,
         action: 'delete',
         category: 'configuration',
@@ -1119,7 +1119,7 @@ class FirewallController {
   }
 
   // Audit Trail
-  async getAuditTrail(req, res) {
+  async getAuditTrailPro(req, res) {
     try {
       const {
         userId,
@@ -1141,12 +1141,12 @@ class FirewallController {
         if (endTime) query.timestamp.$lte = new Date(endTime);
       }
 
-      const auditEntries = await AuditTrail.find(query)
+      const auditEntries = await AuditTrailPro.find(query)
         .sort({ timestamp: -1 })
         .limit(limit * 1)
         .skip((page - 1) * limit);
 
-      const total = await AuditTrail.countDocuments(query);
+      const total = await AuditTrailPro.countDocuments(query);
 
       res.json({
         success: true,

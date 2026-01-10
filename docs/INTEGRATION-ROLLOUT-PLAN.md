@@ -31,7 +31,7 @@ This plan implements deep integrations between VictoryKit's 50 security tools an
 - **Cortex XSOAR**: Incident management, playbook execution
 - **CrowdStrike**: Device queries, basic containment
 
-### Tools to Integrate: 16-networkmonitor, 21-wafmanager, 22-apiguard, 13-accesscontrol
+### Tools to Integrate: 16-networkforensics, 21-wafmanager, 22-apishield, 13-identityforge
 
 ---
 
@@ -56,7 +56,7 @@ This plan implements deep integrations between VictoryKit's 50 security tools an
 - **Kong**: API authorization, JWT validation
 - **Cloudflare**: Identity-aware proxy rules
 
-### Tools to Integrate: 17-endpointprotection, 18-identitymanagement, 13-accesscontrol, 29-riskscoreai
+### Tools to Integrate: 17-endpointprotection, 18-identitymanagement, 13-identityforge, 29-behavioranalytics
 
 ---
 
@@ -81,7 +81,7 @@ This plan implements deep integrations between VictoryKit's 50 security tools an
 - **Cloudflare**: Application firewall, API protection
 - **Cortex XSOAR**: Application security incident response
 
-### Tools to Integrate: 16-networkmonitor, 21-wafmanager, 22-apiguard, 23-botdefender, 24-ddosshield
+### Tools to Integrate: 16-networkforensics, 21-wafmanager, 22-apishield, 23-botmitigation, 24-ddosdefender
 
 ---
 
@@ -106,7 +106,7 @@ This plan implements deep integrations between VictoryKit's 50 security tools an
 - **Microsoft Sentinel**: Vulnerability correlation
 - **Cortex XSOAR**: Vulnerability remediation workflows
 
-### Tools to Integrate: 04-malwarehunter, 05-phishguard, 06-vulnscan, 02-intelliscout, 03-threatradar, 20-threatintelligence
+### Tools to Integrate: 04-ransomshield, 05-phishnetai, 06-vulnscan, 02-darkwebmonitor, 03-zerodaydetect, 20-threatintelligence
 
 ---
 
@@ -131,7 +131,7 @@ This plan implements deep integrations between VictoryKit's 50 security tools an
 - **Wiz**: Configuration compliance scanning
 - **Microsoft Sentinel**: Audit log analysis
 
-### Tools to Integrate: 10-dataguardian, 09-compliancecheck, 19-auditcompliance, 45-privacyshield, 43-backupguard
+### Tools to Integrate: 10-dataguardian, 09-runtimeguard, 19-auditcompliance, 45-privacyshield, 43-supplychainai
 
 ---
 
@@ -181,7 +181,7 @@ This plan implements deep integrations between VictoryKit's 50 security tools an
 - **CrowdStrike**: Behavioral analytics
 - **Cloudflare**: Risk-based access controls
 
-### Tools to Integrate: 29-riskscoreai, 01-fraudguard, 07-pentestai, 08-securecode
+### Tools to Integrate: 29-behavioranalytics, 01-fraudguard, 07-pentestai, 08-codesentinel
 
 ---
 
@@ -206,7 +206,7 @@ This plan implements deep integrations between VictoryKit's 50 security tools an
 - **Alerting**: PagerDuty/Opsgenie integration
 - **Logging**: Centralized log aggregation
 
-### Tools to Integrate: 12-loganalyzer, 14-encryptionmanager, 25-sslmonitor, 44-drplan
+### Tools to Integrate: 12-xdrplatform, 14-secretvault, 25-sslmonitor, 44-drplan
 
 ---
 

@@ -49,7 +49,7 @@ class MLService {
       }, { timeout: 30000 });
       return response.data;
     } catch (error) {
-      return this.fallbackRiskAssessment(asset);
+      return this.fallbackRiskQuantifyment(asset);
     }
   }
 
@@ -130,7 +130,7 @@ class MLService {
     };
   }
 
-  fallbackRiskAssessment(asset) {
+  fallbackRiskQuantifyment(asset) {
     let riskScore = 30;
 
     // Increase risk based on data types

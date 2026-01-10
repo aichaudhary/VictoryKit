@@ -67,9 +67,9 @@ const Compliance: React.FC = () => {
     }
   };
 
-  const runComplianceCheck = async (standardId: string) => {
+  const runRuntimeGuard = async (standardId: string) => {
     try {
-      await complianceAPI.runComplianceCheck(standardId);
+      await complianceAPI.runRuntimeGuard(standardId);
       loadComplianceData(); // Refresh data
     } catch (err) {
       console.error('Error running compliance check:', err);
@@ -300,7 +300,7 @@ const Compliance: React.FC = () => {
               <div className="standard-actions">
                 <button
                   className="btn btn-outline-primary btn-sm"
-                  onClick={() => runComplianceCheck(standard.id)}
+                  onClick={() => runRuntimeGuard(standard.id)}
                 >
                   <i className="fas fa-play"></i> Run Check
                 </button>
@@ -476,7 +476,7 @@ const Compliance: React.FC = () => {
               </button>
               <button
                 className="btn btn-primary"
-                onClick={() => runComplianceCheck(selectedStandard.id)}
+                onClick={() => runRuntimeGuard(selectedStandard.id)}
               >
                 Run Compliance Check
               </button>

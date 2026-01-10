@@ -47,7 +47,7 @@ export class ThreatAnalysisService {
           results = await this.identifyThreats(request);
           break;
         case 'risk_assessment':
-          results = await this.performRiskAssessment(request);
+          results = await this.performRiskQuantifyment(request);
           break;
         case 'mitigation_suggestions':
           results = await this.suggestMitigations(request);
@@ -152,7 +152,7 @@ export class ThreatAnalysisService {
   /**
    * Perform risk assessment
    */
-  private async performRiskAssessment(request: ThreatAnalysisRequest): Promise<any[]> {
+  private async performRiskQuantifyment(request: ThreatAnalysisRequest): Promise<any[]> {
     const session = await this.sessionService.getSession(request.sessionId);
     const context = session?.context || {};
 
@@ -171,7 +171,7 @@ export class ThreatAnalysisService {
           componentThreats.some((t: Threat) => t.id === m.threatId)
         );
 
-        const assessment = await this.aiService.performRiskAssessment(
+        const assessment = await this.aiService.performRiskQuantifyment(
           componentThreats,
           componentMitigations,
           component
@@ -359,7 +359,7 @@ export class ThreatAnalysisService {
         componentThreats.some(t => t.id === m.threatId)
       );
 
-      const assessment = await this.aiService.performRiskAssessment(
+      const assessment = await this.aiService.performRiskQuantifyment(
         componentThreats,
         componentMitigations,
         component

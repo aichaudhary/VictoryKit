@@ -33,14 +33,14 @@ module.exports = {
         
         // Tools (can be expanded)
         'fraudguard',
-        'intelliscout',
-        'threatradar',
-        'malwarehunter',
-        'phishguard',
+        'darkwebmonitor',
+        'zerodaydetect',
+        'ransomshield',
+        'phishnetai',
         'vulnscan',
         'pentestai',
-        'securecode',
-        'compliancecheck',
+        'codesentinel',
+        'runtimeguard',
         'dataguardian',
         
         // Frontend

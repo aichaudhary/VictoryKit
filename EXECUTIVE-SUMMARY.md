@@ -77,7 +77,7 @@
 32. **AccessManager** - Identity access management
 
 ### 🛡️ Email & Phone Verification (3 tools)
-33. **EmailGuard** - Email validation
+33. **EmailDefender** - Email validation
 34. **PhoneVerify** - Phone number verification
 35. **ContactScore** - Contact reputation scoring
 

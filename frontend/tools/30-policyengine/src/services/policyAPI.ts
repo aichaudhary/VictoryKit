@@ -83,7 +83,7 @@ export interface Policy {
   updatedAt: Date;
 }
 
-export interface ComplianceCheck {
+export interface RuntimeGuard {
   checkId: string;
   policyId: string;
   policyName: string;
@@ -181,7 +181,7 @@ export interface DashboardStats {
   compliance: {
     totalChecks: number;
     averageScore: number;
-    recentChecks: ComplianceCheck[];
+    recentChecks: RuntimeGuard[];
   };
 }
 
@@ -295,13 +295,13 @@ class PolicyAPI {
     return response.json();
   }
   
-  async getComplianceChecks(filters?: {
+  async getRuntimeGuards(filters?: {
     policy_id?: string;
     scope?: string;
     status?: string;
     page?: number;
     limit?: number;
-  }): Promise<{ success: boolean; data: ComplianceCheck[]; pagination: any }> {
+  }): Promise<{ success: boolean; data: RuntimeGuard[]; pagination: any }> {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {

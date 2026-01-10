@@ -1,5 +1,5 @@
 module.exports = {
-  RiskAssessment: require('./RiskAssessment'),
+  RiskQuantifyment: require('./RiskQuantifyment'),
   PHIDiscovery: require('./PHIDiscovery'),
   Breach: require('./Breach'),
   BAA: require('./BAA'),

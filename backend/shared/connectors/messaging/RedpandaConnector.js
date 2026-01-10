@@ -49,14 +49,14 @@ const Topics = {
   
   // Scan results by tool
   SCAN_FRAUDGUARD: 'victorykit.scan.fraudguard',
-  SCAN_INTELLISCOUT: 'victorykit.scan.intelliscout',
-  SCAN_THREATRADAR: 'victorykit.scan.threatradar',
-  SCAN_MALWAREHUNTER: 'victorykit.scan.malwarehunter',
-  SCAN_PHISHGUARD: 'victorykit.scan.phishguard',
+  SCAN_INTELLISCOUT: 'victorykit.scan.darkwebmonitor',
+  SCAN_THREATRADAR: 'victorykit.scan.zerodaydetect',
+  SCAN_MALWAREHUNTER: 'victorykit.scan.ransomshield',
+  SCAN_PHISHGUARD: 'victorykit.scan.phishnetai',
   SCAN_VULNSCAN: 'victorykit.scan.vulnscan',
   SCAN_PENTESTAI: 'victorykit.scan.pentestai',
-  SCAN_SECURECODE: 'victorykit.scan.securecode',
-  SCAN_COMPLIANCECHECK: 'victorykit.scan.compliancecheck',
+  SCAN_SECURECODE: 'victorykit.scan.codesentinel',
+  SCAN_COMPLIANCECHECK: 'victorykit.scan.runtimeguard',
   SCAN_DATAGUARDIAN: 'victorykit.scan.dataguardian',
   
   // Compliance

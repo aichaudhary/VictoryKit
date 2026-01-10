@@ -173,7 +173,7 @@ VictoryKit/
 │   ├─ main-dashboard/            # Main site (maula.ai)
 │   └─ tools/                     # All 50 tool frontends
 │       ├─ 01-fraudguard/
-│       ├─ 02-intelliscout/
+│       ├─ 02-darkwebmonitor/
 │       └─ ... (50 total)
 │
 ├─ backend/

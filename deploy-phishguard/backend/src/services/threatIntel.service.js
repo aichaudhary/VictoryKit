@@ -1,5 +1,5 @@
 /**
- * PhishGuard Threat Intelligence Service
+ * PhishNetAI Threat Intelligence Service
  * Integrates 35+ APIs for comprehensive phishing detection
  * 
  * FREE APIs:
@@ -225,7 +225,7 @@ class ThreatIntelService {
       const response = await axios.post(
         `https://safebrowsing.googleapis.com/v4/threatMatches:find?key=${apiKey}`,
         {
-          client: { clientId: 'phishguard', clientVersion: '1.0.0' },
+          client: { clientId: 'phishnetai', clientVersion: '1.0.0' },
           threatInfo: {
             threatTypes: ['MALWARE', 'SOCIAL_ENGINEERING', 'UNWANTED_SOFTWARE', 'POTENTIALLY_HARMFUL_APPLICATION'],
             platformTypes: ['ANY_PLATFORM'],

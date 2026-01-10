@@ -1,10 +1,10 @@
-# VictoryKit Tool Development Workflow - Todos for Tool 19: RiskAssess
+# VictoryKit Tool Development Workflow - Todos for Tool 19: RiskQuantify
 
 ## 🎯 **PHASE 1: PREPARATION & RESEARCH**
 - [ ] **Research Real-World Risk Assessment**: Analyze industry-leading risk assessment methodologies (NIST SP 800-30, ISO 31000, FAIR, OCTAVE, CRAMM) for best practices and quantitative risk analysis
 - [ ] **Model Recommendations**: Use Claude Opus/Sonnet 4.5 for intelligent risk modeling suggestions based on current threat landscapes and business impact analysis
 - [ ] **User Experience Design**: Design premium VIP-level interface with intuitive risk heatmaps, scenario modeling, and AI-assisted risk mitigation recommendations
-- [ ] **Domain Configuration**: Ensure riskassess.maula.ai subdomain setup and routing
+- [ ] **Domain Configuration**: Ensure riskquantify.maula.ai subdomain setup and routing
 - [ ] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula/ai path with LIVE AI Assistance option for risk analysis
 
 ## 🗄️ **PHASE 2: DATABASE DESIGN (MongoDB)**
@@ -58,7 +58,7 @@
 - [ ] **Executive Insights**: AI-generated executive risk summaries and strategic recommendations
 
 ## 🔗 **PHASE 6: NEURAL-LINK INTERFACE INTEGRATION**
-- [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/19-riskassess/
+- [ ] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/19-riskquantify/
 - [ ] **AI Streaming Setup**: Implement real-time AI conversation streaming for risk analysis
 - [ ] **LIVE AI Assistance Button**: Add prominent button for accessing /maula/ai interface
 - [ ] **Context Awareness**: AI understands current risk assessment context and scenarios
@@ -68,7 +68,7 @@
 - [ ] **Privacy Controls**: User consent and data handling for AI interactions
 
 ## 📚 **PHASE 7: DOCUMENTATION & TESTING**
-- [ ] **README.md Creation**: Create comprehensive README in backend/tools/19-riskassess/ with:
+- [ ] **README.md Creation**: Create comprehensive README in backend/tools/19-riskquantify/ with:
   - [ ] Backend architecture overview
   - [ ] API endpoints documentation
   - [ ] Database schema details
@@ -88,7 +88,7 @@
 - [ ] **Docker Containerization**: Create Dockerfile for backend API
 - [ ] **Frontend Build**: Optimize build for production deployment
 - [ ] **Database Migration**: Ensure MongoDB production setup with backups
-- [ ] **SSL/TLS Setup**: Configure certificates for riskassess.maula.ai
+- [ ] **SSL/TLS Setup**: Configure certificates for riskquantify.maula.ai
 - [ ] **Load Balancing**: Set up nginx reverse proxy with load balancing
 - [ ] **Monitoring Setup**: Implement application and infrastructure monitoring
 - [ ] **Backup Strategy**: Automated database and configuration backups
@@ -96,8 +96,8 @@
 
 ## 🔄 **PHASE 9: GIT WORKFLOW & INTEGRATION**
 - [ ] **Commit Changes**: Ensure all changes are committed on main branch
-- [ ] **Create Feature Branch**: `git checkout -b tool-19-riskassess-complete`
-- [ ] **Push Branch**: `git push origin tool-19-riskassess-complete`
+- [ ] **Create Feature Branch**: `git checkout -b tool-19-riskquantify-complete`
+- [ ] **Push Branch**: `git push origin tool-19-riskquantify-complete`
 - [ ] **Create Pull Request**: Open PR for merging to main
 - [ ] **Code Review**: Ensure peer review and approval
 - [ ] **Merge to Main**: Merge PR and checkout main branch
@@ -117,7 +117,7 @@
 - [ ] All copied code from previous tools removed or repurposed
 - [ ] No legacy/duplicate/unused files remaining
 - [ ] README.md added with complete backend/frontend/database details
-- [ ] Domain riskassess.maula.ai configured
+- [ ] Domain riskquantify.maula.ai configured
 - [ ] /maula/ai path integrated for AI assistance
 - [ ] Claude Opus/Sonnet 4.5 optimally utilized for intelligence
 - [ ] Premium VIP-level user experience achieved

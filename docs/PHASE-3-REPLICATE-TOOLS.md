@@ -21,14 +21,14 @@ Replicate FraudGuard pattern to create:
 ## 🛠️ Tool List (All 49 Tools)
 
 ```
-02 - IntelliScout        (iscout.maula.ai)     - Intelligence Gathering
-03 - ThreatRadar         (tradar.maula.ai)     - Threat Detection
-04 - MalwareHunter       (mhunter.maula.ai)    - Malware Analysis
-05 - PhishGuard          (pguard.maula.ai)     - Phishing Detection
+02 - DarkWebMonitor        (iscout.maula.ai)     - Intelligence Gathering
+03 - ZeroDayDetect         (tradar.maula.ai)     - Threat Detection
+04 - RansomShield       (mhunter.maula.ai)    - Malware Analysis
+05 - PhishNetAI          (pguard.maula.ai)     - Phishing Detection
 06 - VulnScan            (vscan.maula.ai)      - Vulnerability Scanner
 07 - PenTestAI           (pentest.maula.ai)    - Penetration Testing
-08 - SecureCode          (scode.maula.ai)      - Code Security Audit
-09 - ComplianceCheck     (compliance.maula.ai) - Compliance Monitoring
+08 - CodeSentinel          (scode.maula.ai)      - Code Security Audit
+09 - RuntimeGuard     (compliance.maula.ai) - Compliance Monitoring
 10 - DataGuardian        (dguardian.maula.ai)  - Data Protection
 11 - CryptoShield        (cshield.maula.ai)    - Cryptography Tools
 12 - IAMControl          (iamctrl.maula.ai)    - Identity & Access
@@ -48,27 +48,27 @@ Replicate FraudGuard pattern to create:
 26 - BlueTeamAI          (blueteam.maula.ai)   - Blue Team Tools
 27 - SIEMCommander       (siem.maula.ai)       - SIEM Integration
 28 - SOAREngine          (soar.maula.ai)       - Security Orchestration
-29 - RiskScoreAI         (riskscore.maula.ai)  - Risk Assessment
+29 - BehaviorAnalytics         (riskscore.maula.ai)  - Risk Assessment
 30 - PolicyEngine        (policy.maula.ai)     - Policy Management
-31 - AuditTracker        (audit.maula.ai)      - Audit Management
-32 - ZeroTrustAI         (zerotrust.maula.ai)  - Zero Trust Security
-33 - PasswordVault       (pvault.maula.ai)     - Password Security
-34 - BiometricAI         (biometric.maula.ai)  - Biometric Security
-35 - EmailGuard          (emailguard.maula.ai) - Email Security
-36 - WebFilter           (webfilter.maula.ai)  - Web Filtering
-37 - DNSShield           (dnsshield.maula.ai)  - DNS Security
+31 - CloudPosture        (audit.maula.ai)      - Audit Management
+32 - ZeroTrust         (zerotrust.maula.ai)  - Zero Trust Security
+33 - KubeArmor       (pvault.maula.ai)     - Password Security
+34 - ContainerScan         (biometric.maula.ai)  - Biometric Security
+35 - EmailDefender          (emaildefender.maula.ai) - Email Security
+36 - BrowserIsolation           (browserisolation.maula.ai)  - Web Filtering
+37 - DNSShield           (dnsfirewall.maula.ai)  - DNS Security
 38 - FirewallAI          (firewall.maula.ai)   - Firewall Management
 39 - VPNGuardian         (vpnguard.maula.ai)   - VPN Security
-40 - WirelessWatch       (wireless.maula.ai)   - Wireless Security
-41 - IoTSecure           (iotsecure.maula.ai)  - IoT Security
-42 - MobileDefend        (mdefend.maula.ai)    - Mobile Security
-43 - BackupGuard         (backup.maula.ai)     - Backup Security
+40 - WirelessHunter       (wireless.maula.ai)   - Wireless Security
+41 - IoTSentinel           (iotsentinel.maula.ai)  - IoT Security
+42 - MobileShield        (mdefend.maula.ai)    - Mobile Security
+43 - SupplyChainAI         (backup.maula.ai)     - Backup Security
 44 - DRPlan              (drplan.maula.ai)     - Disaster Recovery
 45 - PrivacyShield       (privacy.maula.ai)    - Privacy Protection
 46 - GDPRCompliance      (gdpr.maula.ai)       - GDPR Compliance
 47 - HIPAAGuard          (hipaa.maula.ai)      - HIPAA Compliance
 48 - PCI-DSS             (pcidss.maula.ai)     - PCI-DSS Compliance
-49 - BugBountyAI         (bugbounty.maula.ai)  - Bug Bounty Platform
+49 - ISO27001         (bugbounty.maula.ai)  - Bug Bounty Platform
 50 - CyberEduAI          (cyberedu.maula.ai)   - Cybersecurity Training
 ```
 
@@ -87,11 +87,11 @@ Replicate FraudGuard pattern to create:
 # MAULA.AI - Tool Generator
 # ===========================
 # Usage: ./create-tool.sh <tool-number> <tool-name> <subdomain>
-# Example: ./create-tool.sh 02 IntelliScout iscout
+# Example: ./create-tool.sh 02 DarkWebMonitor iscout
 
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <tool-number> <tool-name> <subdomain>"
-    echo "Example: $0 02 IntelliScout iscout"
+    echo "Example: $0 02 DarkWebMonitor iscout"
     exit 1
 fi
 
@@ -528,14 +528,14 @@ Use this checklist for each of the 49 tools:
 
 ```bash
 # Intelligence & Detection Tools
-./scripts/create-tool.sh 02 IntelliScout iscout
-./scripts/create-tool.sh 03 ThreatRadar tradar
-./scripts/create-tool.sh 04 MalwareHunter mhunter
-./scripts/create-tool.sh 05 PhishGuard pguard
+./scripts/create-tool.sh 02 DarkWebMonitor iscout
+./scripts/create-tool.sh 03 ZeroDayDetect tradar
+./scripts/create-tool.sh 04 RansomShield mhunter
+./scripts/create-tool.sh 05 PhishNetAI pguard
 ./scripts/create-tool.sh 06 VulnScan vscan
 ./scripts/create-tool.sh 07 PenTestAI pentest
-./scripts/create-tool.sh 08 SecureCode scode
-./scripts/create-tool.sh 09 ComplianceCheck compliance
+./scripts/create-tool.sh 08 CodeSentinel scode
+./scripts/create-tool.sh 09 RuntimeGuard compliance
 ./scripts/create-tool.sh 10 DataGuardian dguardian
 ./scripts/create-tool.sh 11 CryptoShield cshield
 
@@ -569,39 +569,39 @@ Use this checklist for each of the 49 tools:
 ./scripts/create-tool.sh 26 BlueTeamAI blueteam
 ./scripts/create-tool.sh 27 SIEMCommander siem
 ./scripts/create-tool.sh 28 SOAREngine soar
-./scripts/create-tool.sh 29 RiskScoreAI riskscore
+./scripts/create-tool.sh 29 BehaviorAnalytics riskscore
 ./scripts/create-tool.sh 30 PolicyEngine policy
-./scripts/create-tool.sh 31 AuditTracker audit
+./scripts/create-tool.sh 31 CloudPosture audit
 ```
 
 ### Week 7-8: Batch 4 (Tools 32-41) - 10 tools
 
 ```bash
 # Advanced Security & Infrastructure
-./scripts/create-tool.sh 32 ZeroTrustAI zerotrust
-./scripts/create-tool.sh 33 PasswordVault pvault
-./scripts/create-tool.sh 34 BiometricAI biometric
-./scripts/create-tool.sh 35 EmailGuard emailguard
-./scripts/create-tool.sh 36 WebFilter webfilter
-./scripts/create-tool.sh 37 DNSShield dnsshield
+./scripts/create-tool.sh 32 ZeroTrust zerotrust
+./scripts/create-tool.sh 33 KubeArmor pvault
+./scripts/create-tool.sh 34 ContainerScan biometric
+./scripts/create-tool.sh 35 EmailDefender emaildefender
+./scripts/create-tool.sh 36 BrowserIsolation browserisolation
+./scripts/create-tool.sh 37 DNSShield dnsfirewall
 ./scripts/create-tool.sh 38 FirewallAI firewall
 ./scripts/create-tool.sh 39 VPNGuardian vpnguard
-./scripts/create-tool.sh 40 WirelessWatch wireless
-./scripts/create-tool.sh 41 IoTSecure iotsecure
+./scripts/create-tool.sh 40 WirelessHunter wireless
+./scripts/create-tool.sh 41 IoTSentinel iotsentinel
 ```
 
 ### Week 9-10: Batch 5 (Tools 42-50) - 9 tools
 
 ```bash
 # Mobile, Backup & Compliance
-./scripts/create-tool.sh 42 MobileDefend mdefend
-./scripts/create-tool.sh 43 BackupGuard backup
+./scripts/create-tool.sh 42 MobileShield mdefend
+./scripts/create-tool.sh 43 SupplyChainAI backup
 ./scripts/create-tool.sh 44 DRPlan drplan
 ./scripts/create-tool.sh 45 PrivacyShield privacy
 ./scripts/create-tool.sh 46 GDPRCompliance gdpr
 ./scripts/create-tool.sh 47 HIPAAGuard hipaa
 ./scripts/create-tool.sh 48 PCI-DSS pcidss
-./scripts/create-tool.sh 49 BugBountyAI bugbounty
+./scripts/create-tool.sh 49 ISO27001 bugbounty
 ./scripts/create-tool.sh 50 CyberEduAI cyberedu
 ```
 
@@ -614,9 +614,9 @@ Use this spreadsheet format to track progress:
 ```
 | # | Tool Name        | Skeleton | Config | UI | API | ML | AI | Deploy | Status |
 |---|------------------|----------|--------|----|----|----|----|--------|--------|
-| 02| IntelliScout     | ✅       | ✅     | ✅ | ✅ | ✅ | ✅ | ✅     | ✅     |
-| 03| ThreatRadar      | ✅       | ✅     | ⏳ | ⏳ | ⏳ | ⏳ | ⏳     | 🔄     |
-| 04| MalwareHunter    | ✅       | ⏳     | ⏳ | ⏳ | ⏳ | ⏳ | ⏳     | ⏳     |
+| 02| DarkWebMonitor     | ✅       | ✅     | ✅ | ✅ | ✅ | ✅ | ✅     | ✅     |
+| 03| ZeroDayDetect      | ✅       | ✅     | ⏳ | ⏳ | ⏳ | ⏳ | ⏳     | 🔄     |
+| 04| RansomShield    | ✅       | ⏳     | ⏳ | ⏳ | ⏳ | ⏳ | ⏳     | ⏳     |
 ...
 ```
 

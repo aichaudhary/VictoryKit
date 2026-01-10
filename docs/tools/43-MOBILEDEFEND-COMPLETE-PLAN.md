@@ -1,11 +1,11 @@
-# Tool #43 - MobileDefend: Complete Implementation Plan
+# Tool #43 - MobileShield: Complete Implementation Plan
 
 ## 🔐 Overview
 
-**MobileDefend** is an enterprise mobile application security platform that protects iOS and Android apps from security vulnerabilities, malware, and runtime threats. The platform provides comprehensive SAST/DAST scanning, runtime app protection (RASP), mobile device management (MDM) integration, and real-time mobile threat defense.
+**MobileShield** is an enterprise mobile application security platform that protects iOS and Android apps from security vulnerabilities, malware, and runtime threats. The platform provides comprehensive SAST/DAST scanning, runtime app protection (RASP), mobile device management (MDM) integration, and real-time mobile threat defense.
 
-**Domain:** `mobiledefend.maula.ai`  
-**AI Assistant:** `mobiledefend.maula.ai/maula/ai`  
+**Domain:** `mobileshield.maula.ai`  
+**AI Assistant:** `mobileshield.maula.ai/maula/ai`  
 **Ports:** Frontend 3043, API 4043, ML 8043
 
 ---

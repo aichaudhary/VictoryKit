@@ -1,10 +1,10 @@
-# VictoryKit Tool Development Workflow - Todos for Tool 14: EncryptionManager
+# VictoryKit Tool Development Workflow - Todos for Tool 14: SecretVault
 
 ## 🎯 **PHASE 1: PREPARATION & RESEARCH**
 - [x] **Research Real-World Encryption Management**: Analyze industry-leading encryption systems (AWS KMS, Azure Key Vault, HashiCorp Vault, Google Cloud KMS) for best practices, key lifecycle management, and advanced features
 - [x] **Model Recommendations**: Use Claude Opus/Sonnet 4.5 for intelligent key management suggestions based on current cryptography trends and security needs
 - [x] **User Experience Design**: Design premium VIP-level interface with intuitive key management, real-time encryption monitoring, and AI-assisted security recommendations
-- [x] **Domain Configuration**: Ensure encryptionmanager.maula.ai subdomain setup and routing
+- [x] **Domain Configuration**: Ensure secretvault.maula.ai subdomain setup and routing
 - [x] **Neural-Link Integration Planning**: Design AI realtime live streaming interface for /maula/ai path with LIVE AI Assistance option
 
 ## 🗄️ **PHASE 2: DATABASE DESIGN (MongoDB)**
@@ -60,7 +60,7 @@
 - [x] **Compliance Automation**: AI-assisted encryption compliance checks and remediation
 
 ## 🔗 **PHASE 6: NEURAL-LINK INTERFACE INTEGRATION**
-- [x] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/14-encryptionmanager/
+- [x] **Delete Legacy Folders**: Remove any existing neural-link-interface folders from frontend/tools/14-secretvault/
 - [x] **AI Streaming Setup**: Implement real-time AI conversation streaming
 - [x] **LIVE AI Assistance Button**: Add prominent button for accessing /maula/ai interface
 - [x] **Context Awareness**: AI understands current encryption tool context and operations
@@ -70,7 +70,7 @@
 - [x] **Privacy Controls**: User consent and data handling for AI interactions
 
 ## 📚 **PHASE 7: DOCUMENTATION & TESTING**
-- [x] **README.md Creation**: Create comprehensive README in backend/tools/14-encryptionmanager/ with:
+- [x] **README.md Creation**: Create comprehensive README in backend/tools/14-secretvault/ with:
   - [x] Backend architecture overview
   - [x] API endpoints documentation
   - [x] Database schema details
@@ -90,7 +90,7 @@
 - [ ] **Docker Containerization**: Create Dockerfile for backend API
 - [ ] **Frontend Build**: Optimize build for production deployment
 - [ ] **Database Migration**: Ensure MongoDB production setup with backups
-- [ ] **SSL/TLS Setup**: Configure certificates for encryptionmanager.maula.ai
+- [ ] **SSL/TLS Setup**: Configure certificates for secretvault.maula.ai
 - [ ] **Load Balancing**: Set up nginx reverse proxy with load balancing
 - [ ] **Monitoring Setup**: Implement application and infrastructure monitoring
 - [ ] **Backup Strategy**: Automated database and configuration backups
@@ -98,8 +98,8 @@
 
 ## 🔄 **PHASE 9: GIT WORKFLOW & INTEGRATION**
 - [ ] **Commit Changes**: Ensure all changes are committed on main branch
-- [ ] **Create Feature Branch**: `git checkout -b tool-14-encryptionmanager-complete`
-- [ ] **Push Branch**: `git push origin tool-14-encryptionmanager-complete`
+- [ ] **Create Feature Branch**: `git checkout -b tool-14-secretvault-complete`
+- [ ] **Push Branch**: `git push origin tool-14-secretvault-complete`
 - [ ] **Create Pull Request**: Open PR for merging to main
 - [ ] **Code Review**: Ensure peer review and approval
 - [ ] **Merge to Main**: Merge PR and checkout main branch
@@ -119,7 +119,7 @@
 - [x] All copied code from fguard removed or repurposed
 - [x] No legacy/duplicate/unused files remaining
 - [x] README.md added with complete backend/frontend/database details
-- [x] Domain encryptionmanager.maula.ai configured
+- [x] Domain secretvault.maula.ai configured
 - [x] /maula/ai path integrated for AI assistance
 - [x] Claude Opus/Sonnet 4.5 optimally utilized for intelligence
 - [x] Premium VIP-level user experience achieved
@@ -132,13 +132,13 @@
 
 ### Phase 6: Domain and URL Structure
 - [x] Configure domain: maula.ai (home page)
-- [x] Set up subdomain: encryptionmanager.maula.ai
+- [x] Set up subdomain: secretvault.maula.ai
 - [x] Implement neural-link-interface as AI realtime live streaming
-- [x] Add LIVE AI Assistance option: encryptionmanager.maula.ai/maula/ai
+- [x] Add LIVE AI Assistance option: secretvault.maula.ai/maula/ai
 - [x] Ensure URL pattern: [tool-name].maula.ai/maula/ai consistent across tools
 
 ### Phase 7: Documentation and README
-- [x] Create README.md in backend/tools/14-encryptionmanager/
+- [x] Create README.md in backend/tools/14-secretvault/
 - [x] Document backend structure and API details
 - [x] Document frontend architecture and components
 - [x] Document database schema and models
@@ -153,13 +153,13 @@
 - [ ] Performance optimization
 
 ### Phase 9: Branching and Deployment
-- [x] Create new branch: feature/tool-14-encryptionmanager
+- [x] Create new branch: feature/tool-14-secretvault
 - [x] Commit all changes
 - [x] Push branch to remote
 - [x] Create pull request
 - [x] Merge to main branch
 - [x] Checkout main branch
-- [ ] Repeat process for next tool (15-cryptovault)
+- [ ] Repeat process for next tool (15-privilegeguard)
 
 ## General Requirements
 - [ ] Ensure 4 groups follow same workflow

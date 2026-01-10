@@ -850,7 +850,7 @@ npm run test:e2e
 | **#47 GDPRCompliance** | Shares ROPA, DPIA data | Unified GDPR compliance |
 | **#48 HIPAAGuard** | PII detection for PHI | Healthcare data protection |
 | **#45 SOCCompliance** | Audit trail sharing | SOC 2 compliance |
-| **#44 DataLossPrevention** | PII alert forwarding | Data leak prevention |
+| **#44 DLPAdvanced** | PII alert forwarding | Data leak prevention |
 
 ---
 

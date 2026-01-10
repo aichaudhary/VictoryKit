@@ -152,14 +152,14 @@ const securityTools = {
         .describe("Perform deep analysis including page content"),
     }),
     func: async ({ url, deepScan }) => {
-      // Integration point for PhishGuard API
+      // Integration point for PhishNetAI API
       logger.info({ url, deepScan }, "URL scan requested");
       return JSON.stringify({
         url,
         status: "scanned",
         riskScore: 0,
         threats: [],
-        note: "Connect to PhishGuard API for real results",
+        note: "Connect to PhishNetAI API for real results",
       });
     },
   }),
@@ -179,7 +179,7 @@ const securityTools = {
         .describe("Hash algorithm type"),
     }),
     func: async ({ hash, hashType }) => {
-      // Integration point for MalwareHunter API
+      // Integration point for RansomShield API
       logger.info({ hash, hashType }, "Hash analysis requested");
       return JSON.stringify({
         hash,
@@ -187,7 +187,7 @@ const securityTools = {
         status: "analyzed",
         malwareFamily: null,
         detections: 0,
-        note: "Connect to MalwareHunter API for real results",
+        note: "Connect to RansomShield API for real results",
       });
     },
   }),
@@ -230,14 +230,14 @@ const securityTools = {
       language: z.string().describe("Programming language"),
     }),
     func: async ({ code, language }) => {
-      // Integration point for SecureCode API
+      // Integration point for CodeSentinel API
       logger.info({ language, codeLength: code.length }, "Code scan requested");
       return JSON.stringify({
         language,
         scanned: true,
         vulnerabilities: [],
         suggestions: [],
-        note: "Connect to SecureCode API for real results",
+        note: "Connect to CodeSentinel API for real results",
       });
     },
   }),
@@ -256,14 +256,14 @@ const securityTools = {
       context: z.string().describe("Context or data to check"),
     }),
     func: async ({ framework, context }) => {
-      // Integration point for ComplianceCheck API
+      // Integration point for RuntimeGuard API
       logger.info({ framework }, "Compliance check requested");
       return JSON.stringify({
         framework,
         status: "checked",
         findings: [],
         score: 0,
-        note: "Connect to ComplianceCheck API for real results",
+        note: "Connect to RuntimeGuard API for real results",
       });
     },
   }),

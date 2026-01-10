@@ -74,7 +74,7 @@
 32. AccessManager
 
 ### Contact Verification (3)
-33. EmailGuard
+33. EmailDefender
 34. PhoneVerify
 35. ContactScore
 

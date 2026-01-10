@@ -9,8 +9,8 @@
 |------|------|------|-----|--------|----------|
 | 06 | VulnScan | 4006 | victorykit_vulnscan | 🔄 Deployed | P0 |
 | 07 | PenTestAI | 4007 | victorykit_pentestai | 🔄 Deployed | P0 |
-| 08 | SecureCode | 4008 | victorykit_securecode | ✅ Working | P0 |
-| 09 | ComplianceCheck | 4009 | victorykit_compliancecheck | ✅ Working | P0 |
+| 08 | CodeSentinel | 4008 | victorykit_codesentinel | ✅ Working | P0 |
+| 09 | RuntimeGuard | 4009 | victorykit_runtimeguard | ✅ Working | P0 |
 | 10 | DataGuardian | 4010 | victorykit_dataguardian | ✅ Working | P0 |
 
 ---
@@ -378,7 +378,7 @@ frontend/src/
 
 ---
 
-## 🔐 Tool 08: SecureCode
+## 🔐 Tool 08: CodeSentinel
 ### AI-Powered Code Security Analysis
 
 #### Purpose
@@ -392,7 +392,7 @@ Static and dynamic code analysis to identify security vulnerabilities, code qual
 
 #### Directory Structure
 ```
-backend/tools/08-securecode/
+backend/tools/08-codesentinel/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -527,23 +527,23 @@ backend/tools/08-securecode/
 
 #### API Endpoints
 ```
-POST   /api/v1/securecode/codebases              # Add codebase
-GET    /api/v1/securecode/codebases              # List codebases
-GET    /api/v1/securecode/codebases/:id          # Get codebase details
-PUT    /api/v1/securecode/codebases/:id          # Update codebase
-DELETE /api/v1/securecode/codebases/:id          # Delete codebase
-POST   /api/v1/securecode/codebases/:id/sync     # Sync with repository
+POST   /api/v1/codesentinel/codebases              # Add codebase
+GET    /api/v1/codesentinel/codebases              # List codebases
+GET    /api/v1/codesentinel/codebases/:id          # Get codebase details
+PUT    /api/v1/codesentinel/codebases/:id          # Update codebase
+DELETE /api/v1/codesentinel/codebases/:id          # Delete codebase
+POST   /api/v1/codesentinel/codebases/:id/sync     # Sync with repository
 
-POST   /api/v1/securecode/scans                  # Start scan
-GET    /api/v1/securecode/scans                  # List scans
-GET    /api/v1/securecode/scans/:id              # Get scan details
-POST   /api/v1/securecode/scans/:id/cancel       # Cancel scan
+POST   /api/v1/codesentinel/scans                  # Start scan
+GET    /api/v1/codesentinel/scans                  # List scans
+GET    /api/v1/codesentinel/scans/:id              # Get scan details
+POST   /api/v1/codesentinel/scans/:id/cancel       # Cancel scan
 
-GET    /api/v1/securecode/issues                 # List issues
-GET    /api/v1/securecode/issues/:id             # Get issue details
-PATCH  /api/v1/securecode/issues/:id             # Update issue
-POST   /api/v1/securecode/issues/:id/suggest-fix # AI fix suggestion
-GET    /api/v1/securecode/issues/stats           # Issue statistics
+GET    /api/v1/codesentinel/issues                 # List issues
+GET    /api/v1/codesentinel/issues/:id             # Get issue details
+PATCH  /api/v1/codesentinel/issues/:id             # Update issue
+POST   /api/v1/codesentinel/issues/:id/suggest-fix # AI fix suggestion
+GET    /api/v1/codesentinel/issues/stats           # Issue statistics
 
 GET    /health                                    # Health check
 ```
@@ -553,8 +553,8 @@ GET    /health                                    # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── securecode/
-│           ├── SecureCodeDashboard.tsx      # Main dashboard
+│       └── codesentinel/
+│           ├── CodeSentinelDashboard.tsx      # Main dashboard
 │           ├── CodebaseList.tsx             # Codebase list
 │           ├── AddCodebase.tsx              # Add repository
 │           ├── ScanResults.tsx              # Scan results
@@ -562,7 +562,7 @@ frontend/src/
 │           ├── IssueDetail.tsx              # Issue details
 │           └── CodeViewer.tsx               # Code with issues
 ├── components/
-│   └── securecode/
+│   └── codesentinel/
 │       ├── LanguageChart.tsx                # Language distribution
 │       ├── IssueTimeline.tsx                # Issue trend
 │       ├── CodeHighlighter.tsx              # Syntax highlighting
@@ -570,12 +570,12 @@ frontend/src/
 │       ├── FixSuggestion.tsx                # AI fix display
 │       └── SeverityBadge.tsx                # Severity indicator
 └── hooks/
-    └── useSecureCode.ts                     # API hooks
+    └── useCodeSentinel.ts                     # API hooks
 ```
 
 ---
 
-## ✅ Tool 09: ComplianceCheck
+## ✅ Tool 09: RuntimeGuard
 ### Automated Compliance Auditing Platform
 
 #### Purpose
@@ -589,7 +589,7 @@ Automated compliance assessment against security frameworks (SOC2, PCI-DSS, HIPA
 
 #### Directory Structure
 ```
-backend/tools/09-compliancecheck/
+backend/tools/09-runtimeguard/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -712,24 +712,24 @@ backend/tools/09-compliancecheck/
 
 #### API Endpoints
 ```
-GET    /api/v1/compliancecheck/frameworks        # List frameworks
-GET    /api/v1/compliancecheck/frameworks/:id    # Get framework details
-POST   /api/v1/compliancecheck/frameworks        # Create custom framework
+GET    /api/v1/runtimeguard/frameworks        # List frameworks
+GET    /api/v1/runtimeguard/frameworks/:id    # Get framework details
+POST   /api/v1/runtimeguard/frameworks        # Create custom framework
 
-POST   /api/v1/compliancecheck/audits            # Create audit
-GET    /api/v1/compliancecheck/audits            # List audits
-GET    /api/v1/compliancecheck/audits/:id        # Get audit details
-PUT    /api/v1/compliancecheck/audits/:id        # Update audit
-DELETE /api/v1/compliancecheck/audits/:id        # Delete audit
-POST   /api/v1/compliancecheck/audits/:id/complete # Complete audit
-GET    /api/v1/compliancecheck/audits/:id/report # Generate report
+POST   /api/v1/runtimeguard/audits            # Create audit
+GET    /api/v1/runtimeguard/audits            # List audits
+GET    /api/v1/runtimeguard/audits/:id        # Get audit details
+PUT    /api/v1/runtimeguard/audits/:id        # Update audit
+DELETE /api/v1/runtimeguard/audits/:id        # Delete audit
+POST   /api/v1/runtimeguard/audits/:id/complete # Complete audit
+GET    /api/v1/runtimeguard/audits/:id/report # Generate report
 
-GET    /api/v1/compliancecheck/controls          # List controls
-GET    /api/v1/compliancecheck/controls/:id      # Get control details
-PATCH  /api/v1/compliancecheck/controls/:id      # Update control status
-POST   /api/v1/compliancecheck/controls/:id/evidence # Upload evidence
-POST   /api/v1/compliancecheck/controls/:id/assess   # Assess control
-GET    /api/v1/compliancecheck/controls/stats    # Control statistics
+GET    /api/v1/runtimeguard/controls          # List controls
+GET    /api/v1/runtimeguard/controls/:id      # Get control details
+PATCH  /api/v1/runtimeguard/controls/:id      # Update control status
+POST   /api/v1/runtimeguard/controls/:id/evidence # Upload evidence
+POST   /api/v1/runtimeguard/controls/:id/assess   # Assess control
+GET    /api/v1/runtimeguard/controls/stats    # Control statistics
 
 GET    /health                                    # Health check
 ```
@@ -739,7 +739,7 @@ GET    /health                                    # Health check
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── compliancecheck/
+│       └── runtimeguard/
 │           ├── ComplianceDashboard.tsx      # Main dashboard
 │           ├── FrameworkSelector.tsx        # Framework selection
 │           ├── AuditList.tsx                # Audit list
@@ -748,7 +748,7 @@ frontend/src/
 │           ├── EvidenceManager.tsx          # Evidence upload
 │           └── GapAnalysis.tsx              # Gap analysis
 ├── components/
-│   └── compliancecheck/
+│   └── runtimeguard/
 │       ├── ComplianceScore.tsx              # Score gauge
 │       ├── ControlMatrix.tsx                # Control status matrix
 │       ├── ProgressTracker.tsx              # Audit progress
@@ -756,7 +756,7 @@ frontend/src/
 │       ├── GapChart.tsx                     # Gap visualization
 │       └── RemediationPlan.tsx              # Remediation tracking
 └── hooks/
-    └── useComplianceCheck.ts                # API hooks
+    └── useRuntimeGuard.ts                # API hooks
 ```
 
 ---
@@ -1001,7 +1001,7 @@ frontend/src/
 ┌─────────────────────────────────────────────────────────────────┐
 │                    MONGODB ATLAS CLUSTER                        │
 │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐            │
-│  │ vulnscan     │ │ pentestai    │ │ securecode   │ ...        │
+│  │ vulnscan     │ │ pentestai    │ │ codesentinel   │ ...        │
 │  └──────────────┘ └──────────────┘ └──────────────┘            │
 └─────────────────────────────────────────────────────────────────┘
         │           │           │           │           │
@@ -1039,7 +1039,7 @@ frontend/src/
   - [ ] Frontend components
   - ⚠️ Status: Debugging path issues
 
-- [x] **Tool 08 - SecureCode** (Port 4008)
+- [x] **Tool 08 - CodeSentinel** (Port 4008)
   - [x] Backend API complete
   - [x] Database models
   - [x] Controllers & routes
@@ -1048,7 +1048,7 @@ frontend/src/
   - [ ] Frontend components
   - ✅ Status: **WORKING**
 
-- [x] **Tool 09 - ComplianceCheck** (Port 4009)
+- [x] **Tool 09 - RuntimeGuard** (Port 4009)
   - [x] Backend API complete
   - [x] Database models
   - [x] Controllers & routes
@@ -1074,20 +1074,20 @@ frontend/src/
 # Health checks - EC2 Direct
 curl http://localhost:4006/health  # VulnScan
 curl http://localhost:4007/health  # PenTestAI
-curl http://localhost:4008/health  # SecureCode ✅
-curl http://localhost:4009/health  # ComplianceCheck ✅
+curl http://localhost:4008/health  # CodeSentinel ✅
+curl http://localhost:4009/health  # RuntimeGuard ✅
 curl http://localhost:4010/health  # DataGuardian ✅
 
 # Via Nginx (if configured)
 curl http://api.maula.ai/vulnscan/health
 curl http://api.maula.ai/pentestai/health
-curl http://api.maula.ai/securecode/health
-curl http://api.maula.ai/compliancecheck/health
+curl http://api.maula.ai/codesentinel/health
+curl http://api.maula.ai/runtimeguard/health
 curl http://api.maula.ai/dataguardian/health
 
 # PM2 Status
 pm2 status
-pm2 logs securecode-api --lines 20 --nostream
+pm2 logs codesentinel-api --lines 20 --nostream
 ```
 
 ---

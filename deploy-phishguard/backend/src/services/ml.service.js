@@ -92,7 +92,7 @@ class MLService {
               AnalysisType: analysisData.analysisType,
               TimeRange: analysisData.timeRange,
               Timestamp: new Date().toISOString(),
-              Source: 'PhishGuard'
+              Source: 'PhishNetAI'
             }
           }).catch(err => logger.warn('Sentinel integration failed:', err.message))
         );
@@ -156,10 +156,10 @@ class MLService {
       }
 
       await Promise.allSettled(integrationPromises);
-      logger.info('PhishGuard security stack integration completed');
+      logger.info('PhishNetAI security stack integration completed');
 
     } catch (error) {
-      logger.error('PhishGuard integration error:', error);
+      logger.error('PhishNetAI integration error:', error);
     }
   }
 }

@@ -12,7 +12,7 @@ const FirewallPolicy = require('../models/FirewallPolicy');
 const TrafficLog = require('../models/TrafficLog');
 const Alert = require('../models/Alert');
 const Analytics = require('../models/Analytics');
-const AuditTrail = require('../models/AuditTrail');
+const AuditTrailPro = require('../models/AuditTrailPro');
 
 const ML_ENGINE_URL = process.env.ML_ENGINE_URL || 'http://localhost:8038';
 
@@ -210,7 +210,7 @@ class FirewallService {
       const response = await axios({ method, url, data: normalizedRule, headers, timeout: 15000 });
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `rule-create-${Date.now()}`,
         action: 'create',
         category: 'configuration',
@@ -296,7 +296,7 @@ class FirewallService {
       const response = await axios({ method, url, data: normalizedRule, headers, timeout: 15000 });
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `rule-update-${Date.now()}`,
         action: 'update',
         category: 'configuration',
@@ -378,7 +378,7 @@ class FirewallService {
       await axios.delete(url, { headers, timeout: 15000 });
 
       // Create audit trail
-      await AuditTrail.create({
+      await AuditTrailPro.create({
         auditId: `rule-delete-${Date.now()}`,
         action: 'delete',
         category: 'configuration',

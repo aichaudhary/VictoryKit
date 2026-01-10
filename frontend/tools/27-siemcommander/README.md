@@ -254,10 +254,10 @@ npm run lint     # Run ESLint
 |------|------|-------------|
 | CentralGrid | 3001 | Central management dashboard |
 | FraudGuard | 3001 | Fraud detection |
-| ThreatRadar | 3003 | Threat monitoring |
+| ZeroDayDetect | 3003 | Threat monitoring |
 | VulnScan | 3006 | Vulnerability scanning |
 | **SIEMCommander** | **3027** | **SIEM platform** |
-| MalwareHunter | 3028 | Malware analysis |
+| RansomShield | 3028 | Malware analysis |
 | DataSecurityHub | 3029 | Data protection |
 
 ---

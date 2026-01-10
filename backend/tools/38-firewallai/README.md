@@ -270,10 +270,10 @@ docker-compose -f docker-compose.prod.yml up firewallai-ai
 
 ## Related Tools
 
-- **Tool #36** - WebFilter (Web content filtering)
+- **Tool #36** - BrowserIsolation (Web content filtering)
 - **Tool #37** - DNSShield (DNS security)
 - **Tool #39** - VPNGuardian (VPN security)
-- **Tool #40** - WirelessWatch (Wireless security)
+- **Tool #40** - WirelessHunter (Wireless security)
 
 ## License
 

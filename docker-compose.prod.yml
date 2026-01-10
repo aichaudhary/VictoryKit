@@ -159,11 +159,11 @@ services:
   # Security Tools (Sample - extend as needed)
   # ===========================================
 
-  malwarehunter:
+  ransomshield:
     build:
-      context: ./backend/tools/04-malwarehunter/api
+      context: ./backend/tools/04-ransomshield/api
       dockerfile: Dockerfile
-    container_name: victorykit-malwarehunter
+    container_name: victorykit-ransomshield
     restart: unless-stopped
     ports:
       - "4004:4004"
@@ -179,11 +179,11 @@ services:
     networks:
       - victorykit-network
 
-  phishguard:
+  phishnetai:
     build:
-      context: ./backend/tools/05-phishguard/api
+      context: ./backend/tools/05-phishnetai/api
       dockerfile: Dockerfile
-    container_name: victorykit-phishguard
+    container_name: victorykit-phishnetai
     restart: unless-stopped
     ports:
       - "4005:4005"
@@ -218,11 +218,11 @@ services:
     networks:
       - victorykit-network
 
-  securecode:
+  codesentinel:
     build:
-      context: ./backend/tools/08-securecode/api
+      context: ./backend/tools/08-codesentinel/api
       dockerfile: Dockerfile
-    container_name: victorykit-securecode
+    container_name: victorykit-codesentinel
     restart: unless-stopped
     ports:
       - "4008:4008"

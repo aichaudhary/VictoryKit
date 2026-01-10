@@ -1,0 +1,324 @@
+import React, { useEffect, useState } from 'react';
+import {
+  Bug,
+  Shield,
+  FileSearch,
+  AlertTriangle,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  TrendingUp,
+  Upload,
+  Activity,
+  ArrowUpRight,
+  Zap,
+  Database
+} from 'lucide-react';
+import { ransomShieldAPI } from '../services/api';
+
+interface DashboardStats {
+  totalScans: number;
+  threatsDetected: number;
+  threatsBlocked: number;
+  quarantinedFiles: number;
+  cleanFiles: number;
+  scanningNow: number;
+  detectionRate: number;
+  lastScanTime: string;
+}
+
+interface RecentDetection {
+  _id: string;
+  fileName: string;
+  fileHash: string;
+  malwareType: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  status: string;
+  detectedAt: string;
+  engine: string;
+}
+
+interface MalwareFamily {
+  name: string;
+  count: number;
+  trend: 'up' | 'down' | 'stable';
+  percentage: number;
+}
+
+const Dashboard: React.FC = () => {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [detections, setDetections] = useState<RecentDetection[]>([]);
+  const [families, setFamilies] = useState<MalwareFamily[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadDashboardData();
+    const interval = setInterval(loadDashboardData, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      const [statsData, detectionsData, familiesData] = await Promise.all([
+        ransomShieldAPI.dashboard.getStats(),
+        ransomShieldAPI.detections.list({ limit: 5, status: 'detected' }),
+        ransomShieldAPI.analytics.getMalwareFamilies()
+      ]);
+
+      setStats(statsData.data);
+      setDetections(detectionsData.data.detections || []);
+      setFamilies(familiesData.data.families || []);
+    } catch (error) {
+      console.error('Error loading dashboard:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getSeverityColor = (severity: string): string => {
+    const colors: Record<string, string> = {
+      critical: 'text-red-500 bg-red-500/10',
+      high: 'text-orange-500 bg-orange-500/10',
+      medium: 'text-yellow-500 bg-yellow-500/10',
+      low: 'text-green-500 bg-green-500/10'
+    };
+    return colors[severity] || 'text-gray-500 bg-gray-500/10';
+  };
+
+  const getSeverityBadge = (severity: string): string => {
+    const colors: Record<string, string> = {
+      critical: 'bg-red-500',
+      high: 'bg-orange-500',
+      medium: 'bg-yellow-500',
+      low: 'bg-green-500'
+    };
+    return colors[severity] || 'bg-gray-500';
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="relative">
+          <Bug className="w-16 h-16 text-malware-primary animate-virus-scan" />
+          <div className="absolute inset-0 rounded-full border-2 border-malware-primary/30 animate-ping"></div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-8 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">RansomShield</h1>
+          <p className="text-gray-400">AI-powered malware detection & analysis</p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 text-sm text-gray-400">
+            <Clock className="w-4 h-4" />
+            <span>Last scan: {stats?.lastScanTime ? new Date(stats.lastScanTime).toLocaleTimeString() : 'Never'}</span>
+          </div>
+          <button className="px-4 py-2 bg-malware-gradient text-white rounded-lg font-medium hover:shadow-lg hover:shadow-malware-primary/30 transition-all flex items-center space-x-2 animate-glow">
+            <Upload className="w-4 h-4" />
+            <span>Upload File</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Threats Detected */}
+        <div className="bg-gradient-to-br from-malware-dark to-malware-darker p-6 rounded-2xl border border-red-500/20 hover:border-red-500/40 transition-all group">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-danger-gradient rounded-xl flex items-center justify-center shadow-glow-danger group-hover:animate-malware-pulse">
+              <Bug className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xs text-gray-400">THREATS</span>
+          </div>
+          <h3 className="text-2xl font-bold text-white">{stats?.threatsDetected || 0}</h3>
+          <p className="text-sm text-gray-400">Detected today</p>
+          <div className="mt-3 flex items-center text-xs text-red-500">
+            <AlertTriangle className="w-4 h-4 mr-1" />
+            {stats?.scanningNow || 0} scanning now
+          </div>
+        </div>
+
+        {/* Threats Blocked */}
+        <div className="bg-gradient-to-br from-malware-dark to-malware-darker p-6 rounded-2xl border border-green-500/20 hover:border-green-500/40 transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/20">
+              <Shield className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xs text-gray-400">BLOCKED</span>
+          </div>
+          <h3 className="text-2xl font-bold text-white">{stats?.threatsBlocked || 0}</h3>
+          <p className="text-sm text-gray-400">Auto-blocked</p>
+          <div className="mt-3 flex items-center text-xs text-green-500">
+            <CheckCircle2 className="w-4 h-4 mr-1" />
+            Real-time protection
+          </div>
+        </div>
+
+        {/* Quarantine */}
+        <div className="bg-gradient-to-br from-malware-dark to-malware-darker p-6 rounded-2xl border border-yellow-500/20 hover:border-yellow-500/40 transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-500/20">
+              <Database className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xs text-gray-400">QUARANTINE</span>
+          </div>
+          <h3 className="text-2xl font-bold text-white">{stats?.quarantinedFiles || 0}</h3>
+          <p className="text-sm text-gray-400">Files isolated</p>
+          <div className="mt-3 flex items-center text-xs text-yellow-500">
+            <AlertTriangle className="w-4 h-4 mr-1" />
+            Review recommended
+          </div>
+        </div>
+
+        {/* Detection Rate */}
+        <div className="bg-gradient-to-br from-malware-dark to-malware-darker p-6 rounded-2xl border border-malware-primary/20 hover:border-malware-primary/40 transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-malware-gradient rounded-xl flex items-center justify-center shadow-glow-purple">
+              <TrendingUp className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-xs text-gray-400">ACCURACY</span>
+          </div>
+          <h3 className="text-2xl font-bold text-white">{stats?.detectionRate || 99.7}%</h3>
+          <p className="text-sm text-gray-400">Detection rate</p>
+          <div className="mt-3 w-full bg-malware-darker h-2 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-malware-gradient"
+              style={{ width: `${stats?.detectionRate || 99.7}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Detections & Malware Families */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Detections */}
+        <div className="bg-gradient-to-br from-malware-dark to-malware-darker p-6 rounded-2xl border border-malware-primary/20">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-white">Recent Detections</h2>
+            <a href="/detections" className="text-sm text-malware-primary hover:text-malware-accent flex items-center">
+              View all
+              <ArrowUpRight className="w-4 h-4 ml-1" />
+            </a>
+          </div>
+          <div className="space-y-4">
+            {detections.map((detection) => (
+              <div key={detection._id} className="p-4 bg-malware-darker rounded-xl border border-malware-primary/10 hover:border-malware-primary/30 transition-all group">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center space-x-3">
+                    <span className={`w-3 h-3 rounded-full ${getSeverityBadge(detection.severity)} animate-pulse`}></span>
+                    <h3 className="font-medium text-white truncate max-w-[200px] group-hover:text-malware-accent transition-colors">
+                      {detection.fileName}
+                    </h3>
+                  </div>
+                  <span className={`px-2 py-1 text-xs rounded-full ${getSeverityColor(detection.severity)}`}>
+                    {detection.severity.toUpperCase()}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm text-gray-400">
+                  <span className="text-malware-accent">{detection.malwareType}</span>
+                  <span>{new Date(detection.detectedAt).toLocaleString()}</span>
+                </div>
+              </div>
+            ))}
+            {detections.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                <Shield className="w-12 h-12 mx-auto mb-2 text-green-500" />
+                <p>No threats detected</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Malware Families */}
+        <div className="bg-gradient-to-br from-malware-dark to-malware-darker p-6 rounded-2xl border border-malware-primary/20">
+          <h2 className="text-xl font-bold text-white mb-6">Top Malware Families</h2>
+          <div className="space-y-4">
+            {families.length > 0 ? families.map((family, index) => (
+              <div key={index} className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-300">{family.name}</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-white font-medium">{family.count}</span>
+                    <span className={`text-xs ${
+                      family.trend === 'up' ? 'text-red-500' : 
+                      family.trend === 'down' ? 'text-green-500' : 'text-gray-500'
+                    }`}>
+                      {family.trend === 'up' ? '↑' : family.trend === 'down' ? '↓' : '→'}
+                    </span>
+                  </div>
+                </div>
+                <div className="w-full bg-malware-darker h-2 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-malware-gradient transition-all duration-500"
+                    style={{ width: `${family.percentage}%` }}
+                  />
+                </div>
+              </div>
+            )) : (
+              <div className="space-y-4">
+                {['Ransomware', 'Trojan', 'Worm', 'Spyware', 'Adware'].map((name, i) => (
+                  <div key={name} className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-300">{name}</span>
+                      <span className="text-white font-medium">{Math.floor(Math.random() * 100) + 20}</span>
+                    </div>
+                    <div className="w-full bg-malware-darker h-2 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-malware-gradient"
+                        style={{ width: `${90 - i * 15}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-gradient-to-br from-malware-dark to-malware-darker p-6 rounded-2xl border border-malware-primary/20">
+        <h2 className="text-xl font-bold text-white mb-6">Quick Actions</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <button className="p-4 bg-malware-gradient text-white rounded-xl font-medium hover:shadow-lg hover:shadow-malware-primary/30 transition-all flex flex-col items-center space-y-2">
+            <FileSearch className="w-6 h-6" />
+            <span>Quick Scan</span>
+          </button>
+          <button className="p-4 bg-malware-primary/10 text-malware-primary border border-malware-primary/20 rounded-xl font-medium hover:bg-malware-primary/20 transition-all flex flex-col items-center space-y-2">
+            <Upload className="w-6 h-6" />
+            <span>Upload File</span>
+          </button>
+          <button className="p-4 bg-malware-primary/10 text-malware-primary border border-malware-primary/20 rounded-xl font-medium hover:bg-malware-primary/20 transition-all flex flex-col items-center space-y-2">
+            <Database className="w-6 h-6" />
+            <span>Sandbox Analysis</span>
+          </button>
+          <button className="p-4 bg-malware-primary/10 text-malware-primary border border-malware-primary/20 rounded-xl font-medium hover:bg-malware-primary/20 transition-all flex flex-col items-center space-y-2">
+            <Zap className="w-6 h-6" />
+            <span>Full System Scan</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Real-time Protection Status */}
+      <div className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-xl p-4 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-green-500 font-medium">Real-time Protection Active</span>
+        </div>
+        <div className="flex items-center space-x-4 text-sm text-gray-400">
+          <span>{stats?.totalScans || 0} files scanned today</span>
+          <span>•</span>
+          <span>{stats?.cleanFiles || 0} clean</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

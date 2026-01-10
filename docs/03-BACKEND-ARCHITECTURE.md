@@ -197,7 +197,7 @@ backend/
 │   ├─ 30-captchaplus/                # Tool 30
 │   ├─ 31-adaptivemfa/                # Tool 31
 │   ├─ 32-accessmanager/              # Tool 32
-│   ├─ 33-emailguard/                 # Tool 33
+│   ├─ 33-emaildefender/                 # Tool 33
 │   ├─ 34-phoneverify/                # Tool 34
 │   ├─ 35-contactscore/               # Tool 35
 │   ├─ 36-geofence/                   # Tool 36
