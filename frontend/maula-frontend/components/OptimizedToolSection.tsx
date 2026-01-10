@@ -149,20 +149,21 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
       return;
     }
     
+    // 2026 Rebranded route names matching subdomains
     const routeMap: Record<number, string> = {
-      1: 'fraud-guard', 2: 'intelli-scout', 3: 'threat-radar', 4: 'malware-hunter',
-      5: 'phish-guard', 6: 'vuln-scan', 7: 'pen-test-ai', 8: 'secure-code',
-      9: 'compliance-check', 10: 'data-guardian', 11: 'crypto-shield',
-      12: 'iam-control', 13: 'log-intel', 14: 'net-defender', 15: 'endpoint-shield',
-      16: 'cloud-secure', 17: 'api-guardian', 18: 'container-watch', 19: 'devsecops',
-      20: 'incident-command', 21: 'forensics-lab', 22: 'threat-intel', 23: 'behavior-watch',
-      24: 'anomaly-detect', 25: 'red-team-ai', 26: 'blue-team-ai', 27: 'siem-commander',
-      28: 'soar-engine', 29: 'risk-score-ai', 30: 'policy-engine', 31: 'audit-tracker',
-      32: 'zero-trust-ai', 33: 'password-vault', 34: 'biometric-ai', 35: 'email-guard',
-      36: 'web-filter', 37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian',
-      40: 'wireless-watch', 41: 'iot-secure', 42: 'mobile-defend', 43: 'backup-guard',
-      44: 'dr-plan', 45: 'privacy-shield', 46: 'gdpr-compliance', 47: 'hipaa-guard',
-      48: 'pcidss-guard', 49: 'bug-bounty-ai', 50: 'cyber-edu-ai'
+      1: 'fraudguard', 2: 'darkwebmonitor', 3: 'zerodaydetect', 4: 'ransomshield',
+      5: 'phishnetai', 6: 'vulnscan', 7: 'pentestai', 8: 'codesentinel',
+      9: 'runtimeguard', 10: 'dataguardian', 11: 'incidentresponse', 12: 'xdrplatform',
+      13: 'identityforge', 14: 'secretvault', 15: 'privilegeguard', 16: 'networkforensics',
+      17: 'audittrailpro', 18: 'threatmodel', 19: 'riskquantify', 20: 'securitydashboard',
+      21: 'wafmanager', 22: 'apishield', 23: 'botmitigation', 24: 'ddosdefender',
+      25: 'sslmonitor', 26: 'blueteamai', 27: 'siemcommander', 28: 'soarengine',
+      29: 'behavioranalytics', 30: 'policyengine', 31: 'cloudposture', 32: 'zerotrust',
+      33: 'kubearmor', 34: 'containerscan', 35: 'emaildefender', 36: 'browserisolation',
+      37: 'dnsfirewall', 38: 'firewallai', 39: 'vpnanalyzer', 40: 'wirelesshunter',
+      41: 'dlpadvanced', 42: 'iotsentinel', 43: 'mobileshield', 44: 'supplychainai',
+      45: 'drplan', 46: 'privacyshield', 47: 'gdprcompliance', 48: 'hipaaguard',
+      49: 'soc2automator', 50: 'iso27001'
     };
     
     if (routeMap[tool.id]) {
