@@ -20,7 +20,7 @@ export interface SecurityTool {
 
 export type ViewState = 
   | 'home' 
-  | 'fraud-guard' | 'dark-web-monitor' | 'threat-radar' | 'malware-hunter' | 'phish-guard'
+  | 'fraud-guard' | 'dark-web-monitor' | 'zero-day-detect' | 'malware-hunter' | 'phish-guard'
   | 'vuln-scan' | 'pen-test-ai' | 'secure-code' | 'compliance-check' | 'data-guardian' | 'crypto-shield'
   | 'iam-control' | 'log-intel' | 'net-defender' | 'endpoint-shield' | 'cloud-secure'
   | 'api-guardian' | 'container-watch' | 'devsecops' | 'incident-command' | 'forensics-lab'
