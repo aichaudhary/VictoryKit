@@ -21,6 +21,7 @@ import {
   Moon,
   Sun,
   Command,
+  Scan,
 } from "lucide-react";
 import TransactionForm from "./TransactionForm";
 import { AnimatedFraudScoreCard } from "./AnimatedFraudScoreCard";
@@ -31,13 +32,14 @@ import AlertsPanel from "./AlertsPanel";
 import RealTimeDashboard from "./RealTimeDashboard";
 import ThreatIntelPanel from "./ThreatIntelPanel";
 import InvestigationCenter from "./InvestigationCenter";
+import PublicScanner from "./PublicScanner";
 import { transactionAPI, alertsAPI, healthAPI } from "../services/fraudguardAPI";
 import { Transaction, Alert, FraudScore, SystemHealth } from "../types";
 
-type ViewType = "analyze" | "history" | "alerts" | "analytics" | "dashboard" | "threat-intel" | "investigations";
+type ViewType = "scanner" | "analyze" | "history" | "alerts" | "analytics" | "dashboard" | "threat-intel" | "investigations";
 
 const FraudGuardTool: React.FC = () => {
-  const [currentView, setCurrentView] = useState<ViewType>("dashboard");
+  const [currentView, setCurrentView] = useState<ViewType>("scanner");
   const [lastAnalysis, setLastAnalysis] = useState<FraudScore | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -260,6 +262,7 @@ const FraudGuardTool: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex space-x-1 overflow-x-auto">
             {[
+              { id: "scanner", label: "Security Scanner", icon: Scan },
               { id: "dashboard", label: "Dashboard", icon: BarChart3 },
               { id: "analyze", label: "Live Analysis", icon: Zap },
               { id: "history", label: "Transactions", icon: Activity },
@@ -297,6 +300,9 @@ const FraudGuardTool: React.FC = () => {
 
       {/* Main Content */}
       <main className="relative max-w-7xl mx-auto p-6">
+        {/* Public Scanner View */}
+        {currentView === "scanner" && <PublicScanner />}
+
         {/* Dashboard View */}
         {currentView === "dashboard" && (
           <RealTimeDashboard

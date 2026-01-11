@@ -15,6 +15,7 @@ import analyticsRoutes from './routes/analyticsRoutes.js';
 import mlRoutes from './routes/mlRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
+import publicScanRoutes from './routes/publicScanRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -43,6 +44,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(limiter);
 
 // API Routes
+app.use('/api/scan', publicScanRoutes);  // Public scanner routes (URL, Email, Phone, IP)
 app.use('/transactions', transactionRoutes);
 app.use('/fraud-scores', fraudScoreRoutes);
 app.use('/alerts', alertRoutes);
@@ -58,6 +60,15 @@ app.get('/', (req: Request, res: Response) => {
     version: '1.0.0',
     status: 'operational',
     endpoints: {
+      publicScanners: {
+        scanURL: 'POST /api/scan/url',
+        checkEmail: 'POST /api/scan/email',
+        validatePhone: 'POST /api/scan/phone',
+        checkIP: 'POST /api/scan/ip',
+        checkPassword: 'POST /api/scan/password',
+        scanHistory: 'GET /api/scan/history',
+        scanStats: 'GET /api/scan/stats/summary',
+      },
       transactions: '/transactions',
       fraudScores: '/fraud-scores',
       alerts: '/alerts',
