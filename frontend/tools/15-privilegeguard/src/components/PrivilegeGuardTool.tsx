@@ -3,6 +3,7 @@
  */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { cryptoVaultApi, simulatedData, type Secret, type VaultDashboard } from '../api/privilegeguard.api';
 
 type TabType = 'dashboard' | 'secrets' | 'create';
@@ -67,7 +68,7 @@ export default function PrivilegeGuardTool() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-emerald-950 text-white">
       <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center">🔒</div><div><h1 className="text-xl font-bold">PrivilegeGuard</h1><p className="text-gray-400 text-sm">Secure Secrets Management</p></div></div><div className="flex items-center gap-3">{usingSimulated && <span className="px-3 py-1 bg-yellow-900/30 border border-yellow-500/30 text-yellow-400 rounded-full text-sm">🔄 Simulation Mode</span>}<button onClick={() => navigate('/maula/ai')} className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg"><span>✨</span>AI Assistant</button></div></div>
+          <div className="flex items-center justify-between"><div className="flex items-center gap-3"><a href="https://maula.ai" className="flex items-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-all"><ArrowLeft className="w-4 h-4" /><span className="text-sm">Back</span></a><div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center">🔒</div><div><h1 className="text-xl font-bold">PrivilegeGuard</h1><p className="text-gray-400 text-sm">Secure Secrets Management</p></div></div><div className="flex items-center gap-3">{usingSimulated && <span className="px-3 py-1 bg-yellow-900/30 border border-yellow-500/30 text-yellow-400 rounded-full text-sm">🔄 Simulation Mode</span>}<button onClick={() => navigate('/maula/ai')} className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg"><span>✨</span>AI Assistant</button></div></div>
           <nav className="flex gap-2 mt-4">{tabs.map(tab => (<button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-4 py-2 rounded-lg ${activeTab === tab.id ? 'bg-emerald-600 text-white' : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800'}`}><span className="mr-2">{tab.icon}</span>{tab.label}</button>))}</nav>
         </div>
       </header>
