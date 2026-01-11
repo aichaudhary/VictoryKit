@@ -25,19 +25,19 @@ interface RealTimeActivityFeedProps {
 
 const eventMessages: Record<string, (data: WebSocketEvent) => { message: string; severity: ActivityItem['severity'] }> = {
   'incident:created': (data) => ({
-    message: `New incident created: ${data.incident?.title || data.incidentId}`,
-    severity: data.incident?.severity === 'critical' ? 'error' : 'warning',
+    message: `New incident created: ${(data.incident as { title?: string })?.title || data.incidentId}`,
+    severity: (data.incident as { severity?: string })?.severity === 'critical' ? 'error' : 'warning',
   }),
   'incident:updated': (data) => ({
     message: `Incident ${data.incidentId} updated`,
     severity: 'info',
   }),
   'incident:timeline': (data) => ({
-    message: `Timeline event: ${data.event?.event || 'New activity'}`,
+    message: `Timeline event: ${(data.event as { event?: string })?.event || 'New activity'}`,
     severity: 'info',
   }),
   'incident:enrichment': (data) => ({
-    message: `IOC enrichment complete: ${data.results?.enrichedCount || 0} indicators analyzed`,
+    message: `IOC enrichment complete: ${(data.results as { enrichedCount?: number })?.enrichedCount || 0} indicators analyzed`,
     severity: 'success',
   }),
   'incident:siem': (data) => ({
@@ -46,11 +46,11 @@ const eventMessages: Record<string, (data: WebSocketEvent) => { message: string;
   }),
   'incident:edr': (data) => ({
     message: `EDR scan complete: ${data.matchCount || 0} matches, ${data.endpointsAffected || 0} endpoints`,
-    severity: data.matchCount > 0 ? 'warning' : 'success',
+    severity: (data.matchCount as number) > 0 ? 'warning' : 'success',
   }),
   'incident:analysis': (data) => ({
     message: `AI analysis complete (${data.provider || 'AI'}): Risk score ${data.riskScore || 'N/A'}`,
-    severity: data.riskScore > 70 ? 'error' : 'info',
+    severity: (data.riskScore as number) > 70 ? 'error' : 'info',
   }),
   'incident:notification': (data) => ({
     message: `Notifications sent via ${(data.channels as string[])?.join(', ') || 'channels'}`,
