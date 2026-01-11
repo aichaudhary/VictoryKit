@@ -44,7 +44,7 @@ const IoTSentinelDetail: React.FC = () => {
                 IoT device security platform with firmware analysis, network segmentation, and anomaly detection for connected devices.
               </p>
               <div className="flex gap-6 pt-4">
-                 <div className="px-8 py-4 bg-emerald-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-emerald-500/20">Secure IoT</div>
+                 <a href="https://iotsentinel.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-emerald-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-emerald-500/20">Secure IoT</a>
                  <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">50+ Protocols</div>
               </div>
            </div>
