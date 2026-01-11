@@ -11,6 +11,7 @@ import {
   Globe,
   AlertTriangle,
   RefreshCw,
+  ArrowLeft,
 } from "lucide-react";
 import VulnScanForm, { ScanFormData } from "./VulnScanForm";
 import LiveScanPanel, {
@@ -861,6 +862,13 @@ const VulnScanTool: React.FC = () => {
         <div className="max-w-[1800px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              <a 
+                href="https://maula.ai" 
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-white hover:border-purple-500/50 transition-all group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span className="text-sm font-medium">MAULA.AI</span>
+              </a>
               <div className="relative">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/25">
                   <Search className="w-6 h-6 text-white" />
