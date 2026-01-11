@@ -36,7 +36,7 @@ import { useWAFStore } from '../stores/wafStore';
 import { formatDistanceToNow } from 'date-fns';
 import clsx from 'clsx';
 
-const BASE_PATH = '/maula';
+const BASE_PATH = '';
 
 const COLORS = {
   critical: '#dc2626',

@@ -27,8 +27,8 @@ import { useWAFStore } from '../stores/wafStore';
 import { wsService } from '../services/websocket';
 import clsx from 'clsx';
 
-const BASE_PATH = '/maula';
-const resolvePath = (path: string) => (path === '/' ? BASE_PATH : `${BASE_PATH}${path}`);
+const BASE_PATH = '';
+const resolvePath = (path: string) => path;
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -86,6 +86,9 @@ export default function Layout() {
       >
         {/* Logo */}
         <div className="p-6 flex items-center gap-3 border-b border-waf-border">
+          <a href="https://maula.ai" className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Back to MAULA.AI">
+            <ChevronLeft className="w-6 h-6 text-gray-400 hover:text-white" />
+          </a>
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-waf-primary to-waf-secondary flex items-center justify-center">
             <Shield className="w-6 h-6 text-white" />
           </div>
@@ -98,7 +101,7 @@ export default function Layout() {
                 transition={{ duration: 0.2 }}
               >
                 <h1 className="text-lg font-bold text-white">WAFManager</h1>
-                <p className="text-xs text-waf-muted">VictoryKit Security</p>
+                <p className="text-xs text-waf-muted">MAULA.AI Security</p>
               </motion.div>
             )}
           </AnimatePresence>
