@@ -36,7 +36,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          charts: ['recharts'],
           ui: ['lucide-react'],
         },
       },
@@ -53,13 +52,13 @@ export default defineConfig({
   },
 
   define: {
-    'import.meta.env.VITE_APP_NAME': JSON.stringify('FraudGuard'),
+    'import.meta.env.VITE_APP_NAME': JSON.stringify('WirelessHunter'),
     'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:4001'),
     'import.meta.env.VITE_WS_URL': JSON.stringify('ws://localhost:6001'),
     'import.meta.env.VITE_ML_URL': JSON.stringify('http://localhost:8001'),
   },
 
   optimizeDeps: {
-    include: ['react', 'react-dom', 'recharts', 'lucide-react', 'date-fns'],
+    include: ['react', 'react-dom', 'lucide-react', 'date-fns'],
   },
 });

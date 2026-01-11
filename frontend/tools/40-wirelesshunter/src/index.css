@@ -1,10 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* FraudGuard Custom Styles */
+/* WirelessHunter Custom Styles */
 :root {
-  --fg-primary: #EF4444;
+  --fg-primary: #EC4899;
   --fg-secondary: #EC4899;
   --fg-accent: #06B6D4;
   --fg-bg-dark: #0F172A;
