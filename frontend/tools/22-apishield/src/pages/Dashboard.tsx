@@ -13,6 +13,7 @@ import {
   CheckCircle,
   XCircle,
   ArrowRight,
+  ArrowLeft,
   RefreshCw,
   BarChart3,
   Eye,
@@ -142,9 +143,18 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-white">API Security Dashboard</h2>
-          <p className="text-api-muted mt-1">Monitor and protect your API ecosystem</p>
+        <div className="flex items-center gap-4">
+          <a
+            href="https://maula.ai"
+            className="p-2 bg-api-card hover:bg-api-card-hover border border-api-border rounded-lg transition-all duration-200 group"
+            title="Back to MAULA.AI"
+          >
+            <ArrowLeft className="w-5 h-5 text-api-muted group-hover:text-white transition-colors" />
+          </a>
+          <div>
+            <h2 className="text-2xl font-bold text-white">API Security Dashboard</h2>
+            <p className="text-api-muted mt-1">Monitor and protect your API ecosystem</p>
+          </div>
         </div>
         <button
           onClick={() => {

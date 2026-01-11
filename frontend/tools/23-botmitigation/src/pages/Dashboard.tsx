@@ -11,6 +11,7 @@ import {
   Eye,
   Ban,
   CheckCircle,
+  ArrowLeft,
 } from 'lucide-react';
 import {
   AreaChart,
@@ -107,9 +108,18 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-          <p className="text-slate-400 mt-1">Real-time bot detection overview</p>
+        <div className="flex items-center gap-4">
+          <a
+            href="https://maula.ai"
+            className="p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg transition-all duration-200 group"
+            title="Back to MAULA.AI"
+          >
+            <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+          </a>
+          <div>
+            <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+            <p className="text-slate-400 mt-1">Real-time bot detection overview</p>
+          </div>
         </div>
         <div className="flex items-center space-x-4">
           <div className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
