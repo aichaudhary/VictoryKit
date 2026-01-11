@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
 import DataGuardianForm, { DataGuardianConfig } from "./DataGuardianForm";
 import LiveDataGuardianPanel from "./LiveDataGuardianPanel";
 import AnimatedDataGuardianResult from "./AnimatedDataGuardianResult";
@@ -815,18 +816,29 @@ const DataGuardianTool: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-green-950 via-green-900 to-emerald-950 grid-pattern">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <header className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-green-100 mb-2">
-            🛡️ DataGuardian
-          </h1>
-          <p className="text-green-400/70">
-            AI-Powered Data Privacy & Protection Platform
-          </p>
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <span className={`w-2 h-2 rounded-full ${apiConnected ? 'bg-green-400' : 'bg-yellow-400'}`}></span>
-            <span className="text-xs text-green-500">
-              {apiConnected ? 'API Connected' : 'Simulation Mode'}
-            </span>
+        <header className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <a
+              href="https://maula.ai"
+              className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-green-400 hover:text-white bg-green-900/50 hover:bg-green-800/50 rounded-lg transition-all"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              MAULA.AI
+            </a>
+            <div className="flex items-center gap-2">
+              <span className={`w-2 h-2 rounded-full ${apiConnected ? 'bg-green-400' : 'bg-yellow-400'}`}></span>
+              <span className="text-xs text-green-500">
+                {apiConnected ? 'API Connected' : 'Simulation Mode'}
+              </span>
+            </div>
+          </div>
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-green-100 mb-2">
+              🛡️ DataGuardian
+            </h1>
+            <p className="text-green-400/70">
+              AI-Powered Data Privacy & Protection Platform
+            </p>
           </div>
         </header>
 
