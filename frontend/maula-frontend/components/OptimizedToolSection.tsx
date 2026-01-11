@@ -143,8 +143,8 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
       9: 'compliance-check', 10: 'data-guardian', 11: 'crypto-shield',
       12: 'iam-control', 13: 'log-intel', 14: 'net-defender', 15: 'endpoint-shield',
       16: 'cloud-secure', 17: 'api-guardian', 18: 'container-watch', 19: 'devsecops',
-      20: 'incident-command', 21: 'forensics-lab', 22: 'threat-intel', 23: 'behavior-watch',
-      24: 'anomaly-detect', 25: 'red-team-ai', 26: 'blue-team-ai', 27: 'siem-commander',
+      20: 'incident-command', 21: 'waf-manager', 22: 'api-shield', 23: 'bot-mitigation',
+      24: 'ddos-defender', 25: 'ssl-monitor', 26: 'blue-team-ai', 27: 'siem-commander',
       28: 'soar-engine', 29: 'risk-score-ai', 30: 'policy-engine', 31: 'audit-tracker',
       32: 'zero-trust-ai', 33: 'password-vault', 34: 'biometric-ai', 35: 'email-guard',
       36: 'web-filter', 37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian',
@@ -166,7 +166,8 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
 
   return (
     <div 
-      ref={containerRef} 
+      ref={containerRef}
+      id={`tool-section-${tool.id}`}
       className="relative h-[120vh] w-full transition-colors duration-1000 ease-in-out overflow-hidden perspective-2500"
       style={{ 
         backgroundColor: tool.theme.bgStop,

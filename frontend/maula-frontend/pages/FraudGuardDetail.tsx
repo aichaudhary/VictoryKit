@@ -71,9 +71,9 @@ const FraudGuardDetail: React.FC = () => {
                 The industry standard for real-time transaction integrity. Leveraging proprietary behavioral biometrics and decentralized neural verification to halt fraud at the edge.
               </p>
               <div className="flex gap-6 pt-4">
-                 <div className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20">
+                 <a href="https://fraudguard.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20">
                     Live Status: Optimal
-                 </div>
+                 </a>
                  <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">
                     Latency: 14ms
                  </div>
@@ -167,11 +167,14 @@ const FraudGuardDetail: React.FC = () => {
            >
               Return Home
            </button>
-           <button 
+           <a 
+              href="https://fraudguard.maula.ai"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full md:w-auto px-16 py-8 bg-red-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 hover:shadow-[0_20px_60px_rgba(239,68,68,0.4)] transition-all flex items-center justify-center gap-4"
            >
               Launch Tool <Zap className="w-5 h-5 fill-current" />
-           </button>
+           </a>
         </div>
       </div>
     </div>

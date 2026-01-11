@@ -11,7 +11,41 @@ export const ScrollProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isScrolling, setIsScrolling] = useState(false);
   const [view, setViewInternal] = useState<ViewState>('home');
   const [activeToolId, setActiveToolId] = useState<number | null>(null);
+  const [pendingScrollToTool, setPendingScrollToTool] = useState<number | null>(null);
   const scrollTimeoutRef = useRef<number | null>(null);
+
+  // Check for hash on initial load to scroll to specific tool
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#tool-')) {
+      const toolNum = parseInt(hash.replace('#tool-', ''), 10);
+      if (!isNaN(toolNum) && toolNum >= 1 && toolNum <= 50) {
+        setPendingScrollToTool(toolNum);
+        // Clear the hash without triggering navigation
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    }
+  }, []);
+
+  // Scroll to pending tool after page loads
+  useEffect(() => {
+    if (pendingScrollToTool !== null && view === 'home') {
+      // Wait for DOM to be ready
+      const timer = setTimeout(() => {
+        const toolElement = document.getElementById(`tool-section-${pendingScrollToTool}`);
+        if (toolElement) {
+          toolElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          // Fallback: calculate approximate scroll position based on tool index
+          // Each tool section is approximately 120vh
+          const approximatePosition = (pendingScrollToTool - 1) * window.innerHeight * 1.2;
+          window.scrollTo({ top: approximatePosition, behavior: 'smooth' });
+        }
+        setPendingScrollToTool(null);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [pendingScrollToTool, view]);
 
   useEffect(() => {
     if (view !== 'home') {

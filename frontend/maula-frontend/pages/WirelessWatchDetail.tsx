@@ -44,7 +44,7 @@ const WirelessHunterDetail: React.FC = () => {
                 Rogue wireless device detection and evil twin AP prevention with RF fingerprinting and spectrum analysis.
               </p>
               <div className="flex gap-6 pt-4">
-                 <div className="px-8 py-4 bg-emerald-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-emerald-500/20">Hunt Rogues</div>
+                 <a href="https://wirelesshunter.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-emerald-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-emerald-500/20">Hunt Rogues</a>
                  <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">All 802.11</div>
               </div>
            </div>
@@ -80,7 +80,7 @@ const WirelessHunterDetail: React.FC = () => {
         </div>
         <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-white/10">
            <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">Return Home</button>
-           <button className="px-16 py-8 bg-emerald-500 text-black rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Start Hunt <Zap className="w-5 h-5 fill-current" /></button>
+           <a href="https://wirelesshunter.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-emerald-500 text-black rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Start Hunt <Zap className="w-5 h-5 fill-current" /></a>
         </div>
       </div>
     </div>

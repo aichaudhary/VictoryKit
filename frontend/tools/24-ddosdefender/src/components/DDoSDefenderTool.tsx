@@ -49,7 +49,7 @@ const DDoSDefenderTool: React.FC = () => {
       <header className="border-b border-red-500/20 bg-black/30 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <a href="https://maula.ai" className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Back to MAULA.AI">
+            <a href="https://maula.ai/#tool-24" className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Back to MAULA.AI">
               <ArrowLeft className="w-6 h-6 text-gray-400 hover:text-white" />
             </a>
             <div className="p-2 bg-red-500/20 rounded-lg">

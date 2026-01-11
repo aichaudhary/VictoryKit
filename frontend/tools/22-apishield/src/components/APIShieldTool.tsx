@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Shield, Activity, AlertTriangle, RefreshCw, Settings, 
   Lock, Eye, Zap, TrendingUp, Search, Download,
-  Play, Pause, Bell, Terminal, Key, Code, Database
+  Play, Pause, Bell, Terminal, Key, Code, Database, ArrowLeft
 } from 'lucide-react';
 
 interface Stats {
@@ -72,6 +72,9 @@ const APIShieldTool: React.FC = () => {
       <header className="border-b border-purple-500/20 bg-black/30 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <a href="https://maula.ai/#tool-22" className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Back to MAULA.AI">
+              <ArrowLeft className="w-6 h-6 text-gray-400 hover:text-white" />
+            </a>
             <div className="p-2 bg-purple-500/20 rounded-lg">
               <Lock className="w-8 h-8 text-purple-400" />
             </div>

@@ -413,10 +413,10 @@ export default function PolicyEditor() {
           {/* Scope */}
           <div className="api-card p-5">
             <h3 className="text-sm font-semibold text-white mb-4">Apply To</h3>
-                <Link
-                  to={policiesPath}
-                  className="api-btn api-btn-secondary"
-                >
+            
+            <div className="space-y-3">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
                   type="checkbox"
                   checked={applyToAll}
                   onChange={(e) => {
