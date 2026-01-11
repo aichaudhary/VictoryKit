@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { ChartBarIcon, TrendingUpIcon, ClockIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { ChartBarIcon, ArrowTrendingUpIcon, ClockIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 
 const API_BASE_URL = 'http://localhost:4017/api';
 
@@ -107,7 +107,7 @@ const Analytics: React.FC = () => {
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <TrendingUpIcon className="h-6 w-6 text-red-400" />
+                <ArrowTrendingUpIcon className="h-6 w-6 text-red-400" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
@@ -180,7 +180,7 @@ const Analytics: React.FC = () => {
       <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Event Types Distribution</h3>
         <div className="space-y-4">
-          {eventTypes.slice(0, 10).map((eventType, index) => {
+          {eventTypes.slice(0, 10).map((eventType, _index) => {
             const percentage = overview?.totalLogs
               ? ((eventType.count / overview.totalLogs) * 100).toFixed(1)
               : '0';

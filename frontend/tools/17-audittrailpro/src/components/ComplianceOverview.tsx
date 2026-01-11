@@ -39,7 +39,7 @@ const ComplianceOverview: React.FC = () => {
     return 'text-red-600 bg-red-100';
   };
 
-  const getFrameworkIcon = (framework: string) => {
+  const getFrameworkIcon = (_framework: string) => {
     return ShieldCheckIcon; // Could be customized per framework
   };
 

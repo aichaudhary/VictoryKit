@@ -3,7 +3,8 @@
  * Enhanced with real-time updates, advanced search, and compliance reporting
  */
 import { useState, useEffect, useRef } from 'react';
-import { auditTrailApi, simulatedData } from '../api/audittrailpropropro.api';
+import { ArrowLeft } from 'lucide-react';
+import { auditTrailApi, simulatedData } from '../api/audittrail.api';
 
 type TabType = 'dashboard' | 'events' | 'search' | 'reports' | 'alerts' | 'integrity';
 
@@ -572,8 +573,9 @@ export default function AuditTrailProProProTool() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
+              <a href="https://maula.ai" className="flex items-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-all"><ArrowLeft className="w-4 h-4" /><span className="text-sm">Back</span></a>
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-600 to-purple-600 flex items-center justify-center text-xl">📋</div>
-              <div><h1 className="text-xl font-bold">AuditTrailProProPro</h1><p className="text-gray-400 text-sm">Compliance Audit Logging</p></div>
+              <div><h1 className="text-xl font-bold">AuditTrailPro</h1><p className="text-gray-400 text-sm">Compliance Audit Logging</p></div>
             </div>
             <div className="flex items-center gap-3">
               {usingSimulated && <span className="px-3 py-1 bg-yellow-900/30 border border-yellow-500/30 text-yellow-400 rounded-full text-sm">🔄 Simulation Mode</span>}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cog6ToothIcon, ShieldCheckIcon, DatabaseIcon, BellIcon } from '@heroicons/react/24/outline';
+import { Cog6ToothIcon, ShieldCheckIcon, CircleStackIcon, BellIcon } from '@heroicons/react/24/outline';
 
 const Settings: React.FC = () => {
   const [settings, setSettings] = useState({
@@ -114,7 +114,7 @@ const Settings: React.FC = () => {
       <div className="bg-white shadow rounded-lg">
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex items-center">
-            <DatabaseIcon className="h-5 w-5 text-gray-400 mr-3" />
+            <CircleStackIcon className="h-5 w-5 text-gray-400 mr-3" />
             <h3 className="text-lg font-medium text-gray-900">Data Management</h3>
           </div>
         </div>
