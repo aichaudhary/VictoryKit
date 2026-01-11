@@ -44,7 +44,7 @@ const SupplyChainAIDetail: React.FC = () => {
                 Supply chain security with vendor risk assessment and SBOM analysis for complete visibility.
               </p>
               <div className="flex gap-6 pt-4">
-                 <div className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20">Scan Supply Chain</div>
+                 <a href="https://supplychainai.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20">Scan Supply Chain</a>
                  <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">SBOM Ready</div>
               </div>
            </div>
