@@ -5,7 +5,8 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { accessControlApi, simulatedData, type User, type Role, type AccessDashboard } from '../api/identityforge.api';
+import { ArrowLeft } from 'lucide-react';
+import { accessControlApi, simulatedData, type User, type Role, type AccessDashboard } from '../api/accesscontrol.api';
 
 type TabType = 'dashboard' | 'users' | 'roles' | 'policies';
 
@@ -13,7 +14,7 @@ interface IdentityForgeToolProps {
   onShowNeuralLink?: () => void;
 }
 
-export default function IdentityForgeTool({ onShowNeuralLink }: IdentityForgeToolProps) {
+export default function IdentityForgeTool({ onShowNeuralLink: _onShowNeuralLink }: IdentityForgeToolProps) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<AccessDashboard | null>(null);
@@ -142,7 +143,10 @@ export default function IdentityForgeTool({ onShowNeuralLink }: IdentityForgeToo
       <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">🔐</div><div><h1 className="text-xl font-bold">IdentityForge</h1><p className="text-gray-400 text-sm">RBAC & Permission Management</p></div></div>
+            <div className="flex items-center gap-3">
+              <a href="https://maula.ai" className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 rounded-lg transition-all"><ArrowLeft className="w-4 h-4" />MAULA.AI</a>
+              <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">🔐</div><div><h1 className="text-xl font-bold">IdentityForge</h1><p className="text-gray-400 text-sm">RBAC & Permission Management</p></div>
+            </div>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate('/maula/ai')}
