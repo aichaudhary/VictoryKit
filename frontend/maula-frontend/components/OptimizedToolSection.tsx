@@ -137,20 +137,21 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
   }, [index, pattern]); // setCurrentSection is stable, no need in deps
 
   const handleDeploy = () => {
+    // Route names match official tool names from tools.ts (ID 1-50)
     const routeMap: Record<number, string> = {
-      1: 'fraud-guard', 2: 'dark-web-monitor', 3: 'zero-day-detect', 4: 'malware-hunter',
-      5: 'phish-guard', 6: 'vuln-scan', 7: 'pen-test-ai', 8: 'secure-code',
-      9: 'compliance-check', 10: 'data-guardian', 11: 'crypto-shield',
-      12: 'iam-control', 13: 'log-intel', 14: 'net-defender', 15: 'endpoint-shield',
-      16: 'cloud-secure', 17: 'api-guardian', 18: 'container-watch', 19: 'devsecops',
-      20: 'incident-command', 21: 'forensics-lab', 22: 'threat-intel', 23: 'behavior-watch',
-      24: 'anomaly-detect', 25: 'red-team-ai', 26: 'blue-team-ai', 27: 'siem-commander',
-      28: 'soar-engine', 29: 'risk-score-ai', 30: 'policy-engine', 31: 'audit-tracker',
-      32: 'zero-trust-ai', 33: 'password-vault', 34: 'biometric-ai', 35: 'email-guard',
-      36: 'web-filter', 37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian',
-      40: 'wireless-watch', 41: 'iot-secure', 42: 'mobile-defend', 43: 'backup-guard',
-      44: 'dr-plan', 45: 'privacy-shield', 46: 'gdpr-compliance', 47: 'hipaa-guard',
-      48: 'pcidss-guard', 49: 'bug-bounty-ai', 50: 'cyber-edu-ai'
+      1: 'fraud-guard', 2: 'dark-web-monitor', 3: 'zero-day-detect', 4: 'ransom-shield',
+      5: 'phish-net-ai', 6: 'vuln-scan', 7: 'pen-test-ai', 8: 'code-sentinel',
+      9: 'runtime-guard', 10: 'data-guardian', 11: 'incident-response', 12: 'xdr-platform',
+      13: 'identity-forge', 14: 'secret-vault', 15: 'privilege-guard', 16: 'network-forensics',
+      17: 'audit-trail-pro', 18: 'threat-model', 19: 'risk-quantify', 20: 'security-dashboard',
+      21: 'waf-manager', 22: 'api-shield', 23: 'bot-mitigation', 24: 'ddos-defender',
+      25: 'ssl-monitor', 26: 'blue-team-ai', 27: 'siem-commander', 28: 'soar-engine',
+      29: 'behavior-analytics', 30: 'policy-engine', 31: 'cloud-posture', 32: 'zero-trust',
+      33: 'kube-armor', 34: 'container-scan', 35: 'email-defender', 36: 'browser-isolation',
+      37: 'dns-firewall', 38: 'firewall-ai', 39: 'vpn-analyzer', 40: 'wireless-hunter',
+      41: 'dlp-advanced', 42: 'iot-sentinel', 43: 'mobile-shield', 44: 'supply-chain-ai',
+      45: 'dr-plan', 46: 'privacy-shield', 47: 'gdpr-compliance', 48: 'hipaa-guard',
+      49: 'soc2-automator', 50: 'iso-27001'
     };
     
     if (routeMap[tool.id]) {

@@ -18,18 +18,24 @@ export interface SecurityTool {
   };
 }
 
+// Routes match official tool names from tools.ts (ID 1-50)
 export type ViewState = 
   | 'home' 
-  | 'fraud-guard' | 'dark-web-monitor' | 'zero-day-detect' | 'malware-hunter' | 'phish-guard'
-  | 'vuln-scan' | 'pen-test-ai' | 'secure-code' | 'compliance-check' | 'data-guardian' | 'crypto-shield'
-  | 'iam-control' | 'log-intel' | 'net-defender' | 'endpoint-shield' | 'cloud-secure'
-  | 'api-guardian' | 'container-watch' | 'devsecops' | 'incident-command' | 'forensics-lab'
-  | 'threat-intel' | 'behavior-watch' | 'anomaly-detect' | 'red-team-ai' | 'blue-team-ai'
-  | 'siem-commander' | 'soar-engine' | 'risk-score-ai' | 'policy-engine' | 'audit-tracker'
-  | 'zero-trust-ai' | 'password-vault' | 'biometric-ai' | 'email-guard' | 'web-filter'
-  | 'dns-shield' | 'firewall-ai' | 'vpn-guardian' | 'wireless-watch' | 'iot-secure'
-  | 'mobile-defend' | 'backup-guard' | 'dr-plan' | 'privacy-shield' | 'gdpr-compliance'
-  | 'hipaa-guard' | 'pcidss-guard' | 'bug-bounty-ai' | 'cyber-edu-ai'
+  // Tools 1-10
+  | 'fraud-guard' | 'dark-web-monitor' | 'zero-day-detect' | 'ransom-shield' | 'phish-net-ai'
+  | 'vuln-scan' | 'pen-test-ai' | 'code-sentinel' | 'runtime-guard' | 'data-guardian'
+  // Tools 11-20
+  | 'incident-response' | 'xdr-platform' | 'identity-forge' | 'secret-vault' | 'privilege-guard'
+  | 'network-forensics' | 'audit-trail-pro' | 'threat-model' | 'risk-quantify' | 'security-dashboard'
+  // Tools 21-30
+  | 'waf-manager' | 'api-shield' | 'bot-mitigation' | 'ddos-defender' | 'ssl-monitor'
+  | 'blue-team-ai' | 'siem-commander' | 'soar-engine' | 'behavior-analytics' | 'policy-engine'
+  // Tools 31-40
+  | 'cloud-posture' | 'zero-trust' | 'kube-armor' | 'container-scan' | 'email-defender'
+  | 'browser-isolation' | 'dns-firewall' | 'firewall-ai' | 'vpn-analyzer' | 'wireless-hunter'
+  // Tools 41-50
+  | 'dlp-advanced' | 'iot-sentinel' | 'mobile-shield' | 'supply-chain-ai' | 'dr-plan'
+  | 'privacy-shield' | 'gdpr-compliance' | 'hipaa-guard' | 'soc2-automator' | 'iso-27001'
   | 'products' | 'solutions' | 'docs' | 'pricing'
   | 'about-us' | 'careers' | 'press-kit' | 'contact'
   | 'privacy-policy' | 'terms-of-service' | 'security-disclosure' | 'global-shield-detail'

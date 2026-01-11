@@ -15,57 +15,57 @@ import SignUp from './components/Auth/SignUp';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import ResetPassword from './components/Auth/ResetPassword';
 
-// Tools 1-50
+// Tools 1-50 (names match official tool names from tools.ts)
 import FraudGuardDetail from './pages/FraudGuardDetail';
 import DarkWebMonitorDetail from './pages/DarkWebMonitorDetail';
 import ZeroDayDetectDetail from './pages/ZeroDayDetectDetail';
-import MalwareHunterDetail from './pages/MalwareHunterDetail';
-import PhishGuardDetail from './pages/PhishGuardDetail';
+import RansomShieldDetail from './pages/RansomShieldDetail';
+import PhishNetAIDetail from './pages/PhishNetAIDetail';
 import VulnScanDetail from './pages/VulnScanDetail';
 import PenTestAIDetail from './pages/PenTestAIDetail';
-import SecureCodeDetail from './pages/SecureCodeDetail';
-import ComplianceCheckDetail from './pages/ComplianceCheckDetail';
+import CodeSentinelDetail from './pages/CodeSentinelDetail';
+import RuntimeGuardDetail from './pages/RuntimeGuardDetail';
 import DataGuardianDetail from './pages/DataGuardianDetail';
-import CryptoShieldDetail from './pages/CryptoShieldDetail';
-import IAMControlDetail from './pages/IAMControlDetail';
-import LogIntelDetail from './pages/LogIntelDetail';
-import NetDefenderDetail from './pages/NetDefenderDetail';
-import EndpointShieldDetail from './pages/EndpointShieldDetail';
-import CloudSecureDetail from './pages/CloudSecureDetail';
-import APIGuardianDetail from './pages/APIGuardianDetail';
-import ContainerWatchDetail from './pages/ContainerWatchDetail';
-import DevSecOpsDetail from './pages/DevSecOpsDetail';
-import IncidentCommandDetail from './pages/IncidentCommandDetail';
-import ForensicsLabDetail from './pages/ForensicsLabDetail';
-import ThreatIntelDetail from './pages/ThreatIntelDetail';
-import BehaviorWatchDetail from './pages/BehaviorWatchDetail';
-import AnomalyDetectDetail from './pages/AnomalyDetectDetail';
-import RedTeamAIDetail from './pages/RedTeamAIDetail';
+import IncidentResponseDetail from './pages/IncidentResponseDetail';
+import XDRPlatformDetail from './pages/XDRPlatformDetail';
+import IdentityForgeDetail from './pages/IdentityForgeDetail';
+import SecretVaultDetail from './pages/SecretVaultDetail';
+import PrivilegeGuardDetail from './pages/PrivilegeGuardDetail';
+import NetworkForensicsDetail from './pages/NetworkForensicsDetail';
+import AuditTrailProDetail from './pages/AuditTrailProDetail';
+import ThreatModelDetail from './pages/ThreatModelDetail';
+import RiskQuantifyDetail from './pages/RiskQuantifyDetail';
+import SecurityDashboardDetail from './pages/SecurityDashboardDetail';
+import WAFManagerDetail from './pages/WAFManagerDetail';
+import APIShieldDetail from './pages/APIShieldDetail';
+import BotMitigationDetail from './pages/BotMitigationDetail';
+import DDoSDefenderDetail from './pages/DDoSDefenderDetail';
+import SSLMonitorDetail from './pages/SSLMonitorDetail';
 import BlueTeamAIDetail from './pages/BlueTeamAIDetail';
 import SIEMCommanderDetail from './pages/SIEMCommanderDetail';
 import SOAREngineDetail from './pages/SOAREngineDetail';
-import RiskScoreAIDetail from './pages/RiskScoreAIDetail';
+import BehaviorAnalyticsDetail from './pages/BehaviorAnalyticsDetail';
 import PolicyEngineDetail from './pages/PolicyEngineDetail';
-import AuditTrackerDetail from './pages/AuditTrackerDetail';
-import ZeroTrustAIDetail from './pages/ZeroTrustAIDetail';
-import PasswordVaultDetail from './pages/PasswordVaultDetail';
-import BiometricAIDetail from './pages/BiometricAIDetail';
-import EmailGuardDetail from './pages/EmailGuardDetail';
-import WebFilterDetail from './pages/WebFilterDetail';
-import DNSShieldDetail from './pages/DNSShieldDetail';
+import CloudPostureDetail from './pages/CloudPostureDetail';
+import ZeroTrustDetail from './pages/ZeroTrustDetail';
+import KubeArmorDetail from './pages/KubeArmorDetail';
+import ContainerScanDetail from './pages/ContainerScanDetail';
+import EmailDefenderDetail from './pages/EmailDefenderDetail';
+import BrowserIsolationDetail from './pages/BrowserIsolationDetail';
+import DNSFirewallDetail from './pages/DNSFirewallDetail';
 import FirewallAIDetail from './pages/FirewallAIDetail';
-import VPNGuardianDetail from './pages/VPNGuardianDetail';
-import WirelessWatchDetail from './pages/WirelessWatchDetail';
-import IoTSecureDetail from './pages/IoTSecureDetail';
-import MobileDefendDetail from './pages/MobileDefendDetail';
-import BackupGuardDetail from './pages/BackupGuardDetail';
+import VPNAnalyzerDetail from './pages/VPNAnalyzerDetail';
+import WirelessHunterDetail from './pages/WirelessHunterDetail';
+import DLPAdvancedDetail from './pages/DLPAdvancedDetail';
+import IoTSentinelDetail from './pages/IoTSentinelDetail';
+import MobileShieldDetail from './pages/MobileShieldDetail';
+import SupplyChainAIDetail from './pages/SupplyChainAIDetail';
 import DRPlanDetail from './pages/DRPlanDetail';
 import PrivacyShieldDetail from './pages/PrivacyShieldDetail';
 import GDPRComplianceDetail from './pages/GDPRComplianceDetail';
 import HIPAAGuardDetail from './pages/HIPAAGuardDetail';
-import PCIDSSDetail from './pages/PCIDSSDetail';
-import BugBountyAIDetail from './pages/BugBountyAIDetail';
-import CyberEduAIDetail from './pages/CyberEduAIDetail';
+import SOC2AutomatorDetail from './pages/SOC2AutomatorDetail';
+import ISO27001Detail from './pages/ISO27001Detail';
 
 // Organizational Pages
 import ProductsPage from './pages/ProductsPage';
@@ -101,21 +101,29 @@ const MainContent: React.FC = () => {
     if (!mainRef.current) return;
 
     let nextColor = '#02000a';
-    if (['iam-control', 'zero-trust-ai', 'password-vault', 'biometric-ai'].includes(view)) {
+    // Identity & Access themed views (purple)
+    if (['identity-forge', 'zero-trust', 'kube-armor', 'container-scan', 'privilege-guard', 'secret-vault'].includes(view)) {
       nextColor = '#040412';
-    } else if (['log-intel', 'incident-command', 'forensics-lab', 'behavior-watch', 'anomaly-detect', 'dr-plan', 'cyber-edu-ai'].includes(view)) {
+    // Incident Response themed views (orange)
+    } else if (['incident-response', 'security-dashboard', 'waf-manager', 'behavior-analytics', 'ddos-defender', 'dr-plan', 'iso-27001'].includes(view)) {
       nextColor = '#0d0503';
-    } else if (['net-defender', 'email-guard', 'web-filter', 'dns-shield', 'firewall-ai', 'vpn-guardian', 'wireless-watch', 'mobile-defend'].includes(view)) {
+    // Network Security themed views (green)
+    } else if (['network-forensics', 'email-defender', 'browser-isolation', 'dns-firewall', 'firewall-ai', 'vpn-analyzer', 'wireless-hunter', 'mobile-shield'].includes(view)) {
       nextColor = '#040d0a';
-    } else if (['fraud-guard', 'dark-web-monitor', 'zero-day-detect', 'malware-hunter', 'phish-guard', 'endpoint-shield', 'threat-intel'].includes(view)) {
+    // Threat Detection themed views (red)
+    } else if (['fraud-guard', 'dark-web-monitor', 'zero-day-detect', 'ransom-shield', 'phish-net-ai', 'xdr-platform', 'threat-model'].includes(view)) {
       nextColor = '#0d0404';
-    } else if (['cloud-secure', 'api-guardian', 'container-watch', 'devsecops', 'iot-secure', 'secure-code'].includes(view)) {
+    // Cloud Security themed views (cyan)
+    } else if (['cloud-posture', 'api-shield', 'bot-mitigation', 'supply-chain-ai', 'iot-sentinel', 'code-sentinel', 'runtime-guard'].includes(view)) {
       nextColor = '#040d12';
-    } else if (['red-team-ai', 'blue-team-ai', 'siem-commander', 'soar-engine', 'risk-score-ai', 'bug-bounty-ai', 'pen-test-ai'].includes(view)) {
+    // AI-Powered themed views (purple)
+    } else if (['ssl-monitor', 'blue-team-ai', 'siem-commander', 'soar-engine', 'risk-quantify', 'soc2-automator', 'pen-test-ai'].includes(view)) {
       nextColor = '#08040d';
-    } else if (['policy-engine', 'audit-tracker', 'gdpr-compliance', 'hipaa-guard', 'pcidss-guard', 'compliance-check', 'vuln-scan'].includes(view)) {
+    // Compliance themed views (amber)
+    } else if (['policy-engine', 'audit-trail-pro', 'gdpr-compliance', 'hipaa-guard', 'dlp-advanced', 'vuln-scan'].includes(view)) {
       nextColor = '#0d0a04';
-    } else if (['backup-guard', 'privacy-shield', 'data-guardian', 'crypto-shield'].includes(view)) {
+    // Data Protection themed views (blue)
+    } else if (['privacy-shield', 'data-guardian'].includes(view)) {
       nextColor = '#04080d';
     } else if (view === 'dashboard-api-keys') {
       nextColor = '#02001a';
@@ -174,53 +182,53 @@ const MainContent: React.FC = () => {
       case 'fraud-guard': return <FraudGuardDetail />;
       case 'dark-web-monitor': return <DarkWebMonitorDetail />;
       case 'zero-day-detect': return <ZeroDayDetectDetail />;
-      case 'malware-hunter': return <MalwareHunterDetail />;
-      case 'phish-guard': return <PhishGuardDetail />;
+      case 'ransom-shield': return <RansomShieldDetail />;
+      case 'phish-net-ai': return <PhishNetAIDetail />;
       case 'vuln-scan': return <VulnScanDetail />;
       case 'pen-test-ai': return <PenTestAIDetail />;
-      case 'secure-code': return <SecureCodeDetail />;
-      case 'compliance-check': return <ComplianceCheckDetail />;
+      case 'code-sentinel': return <CodeSentinelDetail />;
+      case 'runtime-guard': return <RuntimeGuardDetail />;
       case 'data-guardian': return <DataGuardianDetail />;
-      case 'crypto-shield': return <CryptoShieldDetail />;
-      case 'iam-control': return <IAMControlDetail />;
-      case 'log-intel': return <LogIntelDetail />;
-      case 'net-defender': return <NetDefenderDetail />;
-      case 'endpoint-shield': return <EndpointShieldDetail />;
-      case 'cloud-secure': return <CloudSecureDetail />;
-      case 'api-guardian': return <APIGuardianDetail />;
-      case 'container-watch': return <ContainerWatchDetail />;
-      case 'devsecops': return <DevSecOpsDetail />;
-      case 'incident-command': return <IncidentCommandDetail />;
-      case 'forensics-lab': return <ForensicsLabDetail />;
-      case 'threat-intel': return <ThreatIntelDetail />;
-      case 'behavior-watch': return <BehaviorWatchDetail />;
-      case 'anomaly-detect': return <AnomalyDetectDetail />;
-      case 'red-team-ai': return <RedTeamAIDetail />;
+      case 'incident-response': return <IncidentResponseDetail />;
+      case 'xdr-platform': return <XDRPlatformDetail />;
+      case 'identity-forge': return <IdentityForgeDetail />;
+      case 'secret-vault': return <SecretVaultDetail />;
+      case 'privilege-guard': return <PrivilegeGuardDetail />;
+      case 'network-forensics': return <NetworkForensicsDetail />;
+      case 'audit-trail-pro': return <AuditTrailProDetail />;
+      case 'threat-model': return <ThreatModelDetail />;
+      case 'risk-quantify': return <RiskQuantifyDetail />;
+      case 'security-dashboard': return <SecurityDashboardDetail />;
+      case 'waf-manager': return <WAFManagerDetail />;
+      case 'api-shield': return <APIShieldDetail />;
+      case 'bot-mitigation': return <BotMitigationDetail />;
+      case 'ddos-defender': return <DDoSDefenderDetail />;
+      case 'ssl-monitor': return <SSLMonitorDetail />;
       case 'blue-team-ai': return <BlueTeamAIDetail />;
       case 'siem-commander': return <SIEMCommanderDetail />;
       case 'soar-engine': return <SOAREngineDetail />;
-      case 'risk-score-ai': return <RiskScoreAIDetail />;
+      case 'behavior-analytics': return <BehaviorAnalyticsDetail />;
       case 'policy-engine': return <PolicyEngineDetail />;
-      case 'audit-tracker': return <AuditTrackerDetail />;
-      case 'zero-trust-ai': return <ZeroTrustAIDetail />;
-      case 'password-vault': return <PasswordVaultDetail />;
-      case 'biometric-ai': return <BiometricAIDetail />;
-      case 'email-guard': return <EmailGuardDetail />;
-      case 'web-filter': return <WebFilterDetail />;
-      case 'dns-shield': return <DNSShieldDetail />;
+      case 'cloud-posture': return <CloudPostureDetail />;
+      case 'zero-trust': return <ZeroTrustDetail />;
+      case 'kube-armor': return <KubeArmorDetail />;
+      case 'container-scan': return <ContainerScanDetail />;
+      case 'email-defender': return <EmailDefenderDetail />;
+      case 'browser-isolation': return <BrowserIsolationDetail />;
+      case 'dns-firewall': return <DNSFirewallDetail />;
       case 'firewall-ai': return <FirewallAIDetail />;
-      case 'vpn-guardian': return <VPNGuardianDetail />;
-      case 'wireless-watch': return <WirelessWatchDetail />;
-      case 'iot-secure': return <IoTSecureDetail />;
-      case 'mobile-defend': return <MobileDefendDetail />;
-      case 'backup-guard': return <BackupGuardDetail />;
+      case 'vpn-analyzer': return <VPNAnalyzerDetail />;
+      case 'wireless-hunter': return <WirelessHunterDetail />;
+      case 'dlp-advanced': return <DLPAdvancedDetail />;
+      case 'iot-sentinel': return <IoTSentinelDetail />;
+      case 'mobile-shield': return <MobileShieldDetail />;
+      case 'supply-chain-ai': return <SupplyChainAIDetail />;
       case 'dr-plan': return <DRPlanDetail />;
       case 'privacy-shield': return <PrivacyShieldDetail />;
       case 'gdpr-compliance': return <GDPRComplianceDetail />;
       case 'hipaa-guard': return <HIPAAGuardDetail />;
-      case 'pcidss-guard': return <PCIDSSDetail />;
-      case 'bug-bounty-ai': return <BugBountyAIDetail />;
-      case 'cyber-edu-ai': return <CyberEduAIDetail />;
+      case 'soc2-automator': return <SOC2AutomatorDetail />;
+      case 'iso-27001': return <ISO27001Detail />;
       default: return null;
     }
   };
