@@ -2,9 +2,9 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
-import { ArrowLeft, Zap, Lock, Shield, Bell, FileCheck } from 'lucide-react';
+import { ArrowLeft, Zap, Shield, Globe, Filter, AlertTriangle } from 'lucide-react';
 
-const SSLMonitorDetail: React.FC = () => {
+const WAFManagerDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -29,62 +29,62 @@ const SSLMonitorDetail: React.FC = () => {
           <button onClick={() => setView('home')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Ecosystem
           </button>
-          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">SSLMonitor v8.1</span>
+          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">WAFManager v5.0</span>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center mb-40">
            <div ref={heroTextRef} className="space-y-10">
               <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-emerald-500/20 backdrop-blur-3xl">
-                <Lock className="w-4 h-4 text-emerald-500" />
-                <span className="text-[10px] font-black tracking-[0.4em] uppercase text-emerald-500">Certificate Intelligence</span>
+                <Shield className="w-4 h-4 text-emerald-500" />
+                <span className="text-[10px] font-black tracking-[0.4em] uppercase text-emerald-500">Web App Firewall Control</span>
               </div>
               <h1 className="text-8xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase">
-                SSL <span className="text-emerald-500">MONITOR</span>
+                WAF <span className="text-emerald-500">MANAGER</span>
               </h1>
               <p className="text-xl md:text-2xl text-white/60 font-medium leading-relaxed max-w-xl">
-                SSL/TLS certificate monitoring with expiration alerts, chain validation, and automated renewal workflows for zero downtime.
+                Centralized web application firewall management with ML-based rule optimization and real-time attack mitigation.
               </p>
               <div className="flex gap-6 pt-4">
-                 <div className="px-8 py-4 bg-emerald-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-emerald-500/20">Monitor Certs</div>
-                 <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">Uptime: 100%</div>
+                 <div className="px-8 py-4 bg-emerald-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-emerald-500/20">Configure WAF</div>
+                 <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">Blocked: 99.9%</div>
               </div>
            </div>
            <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-white/10 shadow-2xl">
-              <img src="https://picsum.photos/seed/sslmonitor/1200/1200" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100" alt="Tool Visual" />
+              <img src="https://picsum.photos/seed/wafmanager/1200/1200" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100" alt="Tool Visual" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
            </div>
         </div>
         <div ref={contentRef} className="space-y-40 mb-40">
            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-white/10 text-center">
-              <div><div className="text-5xl font-black text-emerald-500">100K+</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Certs Monitored</div></div>
-              <div><div className="text-5xl font-black text-white">30 Days</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Early Alerts</div></div>
-              <div><div className="text-5xl font-black text-white">Auto</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Renewal</div></div>
-              <div><div className="text-5xl font-black text-white">TLS 1.3</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Compliance</div></div>
+              <div><div className="text-5xl font-black text-emerald-500">10K+</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Rule Sets</div></div>
+              <div><div className="text-5xl font-black text-white">ML</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Optimization</div></div>
+              <div><div className="text-5xl font-black text-white">1ms</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Latency</div></div>
+              <div><div className="text-5xl font-black text-white">OWASP</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Top 10 Protected</div></div>
            </div>
            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
               <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-emerald-500/20 transition-all group">
-                 <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500"><Bell className="w-8 h-8" /></div>
-                 <h3 className="text-3xl font-bold">Expiry Alerts</h3>
-                 <p className="text-white/50 leading-relaxed">Multi-channel notifications 90, 60, 30, 14, and 7 days before certificate expiration.</p>
+                 <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500"><Globe className="w-8 h-8" /></div>
+                 <h3 className="text-3xl font-bold">Global CDN</h3>
+                 <p className="text-white/50 leading-relaxed">Edge-deployed WAF protection across global CDN nodes for minimal latency and maximum coverage.</p>
               </div>
               <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-emerald-500/20 transition-all group">
-                 <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500"><Shield className="w-8 h-8" /></div>
-                 <h3 className="text-3xl font-bold">Chain Validation</h3>
-                 <p className="text-white/50 leading-relaxed">Complete certificate chain analysis detecting weak ciphers, missing intermediates, and revoked CAs.</p>
+                 <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500"><Filter className="w-8 h-8" /></div>
+                 <h3 className="text-3xl font-bold">Smart Rules</h3>
+                 <p className="text-white/50 leading-relaxed">ML-optimized rule sets that adapt to traffic patterns and reduce false positives automatically.</p>
               </div>
               <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-emerald-500/20 transition-all group">
-                 <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500"><FileCheck className="w-8 h-8" /></div>
-                 <h3 className="text-3xl font-bold">Auto Renewal</h3>
-                 <p className="text-white/50 leading-relaxed">ACME protocol integration for automated Let's Encrypt and enterprise CA certificate renewals.</p>
+                 <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500"><AlertTriangle className="w-8 h-8" /></div>
+                 <h3 className="text-3xl font-bold">Attack Blocking</h3>
+                 <p className="text-white/50 leading-relaxed">Real-time blocking of SQL injection, XSS, CSRF, and OWASP Top 10 vulnerabilities.</p>
               </div>
            </div>
         </div>
         <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-white/10">
            <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">Return Home</button>
-           <a href="https://sslmonitor.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-emerald-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Check Certs <Zap className="w-5 h-5 fill-current" /></a>
+           <a href="https://wafmanager.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-emerald-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Manage Rules <Zap className="w-5 h-5 fill-current" /></a>
         </div>
       </div>
     </div>
   );
 };
 
-export default SSLMonitorDetail;
+export default WAFManagerDetail;

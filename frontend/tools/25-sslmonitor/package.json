@@ -6,7 +6,7 @@
   "description": "SSL/TLS Certificate Monitoring Platform",
   "scripts": {
     "dev": "vite --port 3025",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview --port 3025"
   },
