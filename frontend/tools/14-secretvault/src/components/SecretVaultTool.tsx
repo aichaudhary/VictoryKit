@@ -5,8 +5,9 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { encryptionManagerApi, simulatedData, type EncryptionKey, type EncryptionDashboard, type KeyStatus, type AuditLog, type KeyType, type KeyAlgorithm } from '../api/secretvault.api';
-import NeuralLinkInterface from './NeuralLinkInterface';
+import { ArrowLeft } from 'lucide-react';
+import { encryptionManagerApi, simulatedData, type EncryptionKey, type EncryptionDashboard, type KeyStatus, type AuditLog, type KeyType, type KeyAlgorithm } from '../api/encryptionmanager.api';
+// NeuralLinkInterface removed - not available
 
 const statusColors: Record<KeyStatus, string> = { active: 'bg-green-600', inactive: 'bg-gray-600', expired: 'bg-red-600', compromised: 'bg-red-800', 'pending-deletion': 'bg-yellow-600' };
 type TabType = 'dashboard' | 'keys' | 'encrypt' | 'certificates' | 'audit';
@@ -227,7 +228,7 @@ export default function SecretVaultTool() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-purple-950 text-white">
       <header className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center">🔐</div><div><h1 className="text-xl font-bold">SecretVault</h1><p className="text-gray-400 text-sm">Key Management & Data Encryption</p></div></div><div className="flex items-center gap-3">{usingSimulated && <span className="px-3 py-1 bg-yellow-900/30 border border-yellow-500/30 text-yellow-400 rounded-full text-sm">🔄 Simulation Mode</span>}<button onClick={() => navigate('/maula/ai')} className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 flex items-center gap-2 shadow-lg"><span>✨</span>AI Assistant</button></div></div>
+          <div className="flex items-center justify-between"><div className="flex items-center gap-3"><a href="https://maula.ai" className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 rounded-lg transition-all"><ArrowLeft className="w-4 h-4" />MAULA.AI</a><div className="w-10 h-10 rounded-xl bg-purple-600 flex items-center justify-center">🔐</div><div><h1 className="text-xl font-bold">SecretVault</h1><p className="text-gray-400 text-sm">Key Management & Data Encryption</p></div></div><div className="flex items-center gap-3">{usingSimulated && <span className="px-3 py-1 bg-yellow-900/30 border border-yellow-500/30 text-yellow-400 rounded-full text-sm">🔄 Simulation Mode</span>}<button onClick={() => navigate('/maula/ai')} className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 flex items-center gap-2 shadow-lg"><span>✨</span>AI Assistant</button></div></div>
           <nav className="flex gap-2 mt-4 overflow-x-auto">{tabs.map(tab => (<button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors ${activeTab === tab.id ? 'bg-purple-600 text-white' : 'bg-gray-800/50 text-gray-400 hover:bg-gray-800'}`}><span className="mr-2">{tab.icon}</span>{tab.label}</button>))}</nav>
         </div>
       </header>
@@ -239,7 +240,6 @@ export default function SecretVaultTool() {
         {!loading && activeTab === 'audit' && renderAudit()}
       </main>
       <footer className="border-t border-gray-800 py-4 mt-12"><div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">SecretVault Tool 14 • VictoryKit Security Platform</div></footer>
-      {showNeuralLink && <NeuralLinkInterface onClose={() => setShowNeuralLink(false)} />}
     </div>
   );
 }
