@@ -13,6 +13,7 @@ import {
   Satellite,
   Network,
   Radar,
+  ArrowLeft,
 } from "lucide-react";
 import ThreatScanForm, { ScanConfig } from "./ThreatScanForm";
 import LiveDetectionPanel, {
@@ -322,6 +323,15 @@ const ZeroDayDetectTool: React.FC = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
+        {/* Back Button */}
+        <a 
+          href="https://maula.ai" 
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-6 group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm font-medium">Back to MAULA.AI</span>
+        </a>
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-6">
