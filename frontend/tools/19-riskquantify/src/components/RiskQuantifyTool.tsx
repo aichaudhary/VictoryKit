@@ -4,7 +4,8 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { riskAssessApi, simulatedData, type Risk, type RiskDashboard } from '../api/riskquantify.api';
+import { ArrowLeft } from 'lucide-react';
+import { riskAssessApi, simulatedData, type Risk, type RiskDashboard } from '../api/riskassess.api';
 
 type TabType = 'dashboard' | 'risks' | 'matrix' | 'ai-analysis' | 'threat-intel' | 'compliance' | 'reports' | 'analytics' | 'collaboration';
 
@@ -624,6 +625,7 @@ export default function RiskQuantifyTool() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
+              <a href="https://maula.ai" className="flex items-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg transition-all"><ArrowLeft className="w-4 h-4" /><span className="text-sm">Back</span></a>
               <div className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center">📊</div>
               <div>
                 <h1 className="text-xl font-bold">RiskQuantify Pro</h1>
