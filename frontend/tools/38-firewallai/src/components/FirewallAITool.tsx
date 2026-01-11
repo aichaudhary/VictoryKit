@@ -3,7 +3,7 @@ import {
   Shield, Activity, AlertTriangle, RefreshCw, Settings, 
   Lock, Eye, Zap, TrendingUp, Search, Download,
   Play, Pause, Bell, Terminal, Server, Database, Globe,
-  Network, FileText, Users, Key, Code, Cpu, HardDrive
+  Network, FileText, Users, Key, Code, Cpu, HardDrive, ArrowLeft
 } from 'lucide-react';
 
 interface Stats { total: number; active: number; blocked: number; pending: number; }
@@ -48,7 +48,10 @@ const FirewallAITool: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-orange-900/20 to-gray-900 text-white">
       <header className="border-b border-orange-500/20 bg-black/30 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            <a href="https://maula.ai" className="p-2 hover:bg-white/10 rounded-lg transition-colors" title="Back to MAULA.AI">
+              <ArrowLeft className="w-6 h-6 text-orange-400" />
+            </a>
             <div className="p-2 bg-orange-500/20 rounded-lg">
               <Shield className="w-8 h-8 text-orange-400" />
             </div>
