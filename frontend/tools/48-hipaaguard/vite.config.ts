@@ -36,7 +36,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          charts: ['recharts'],
           ui: ['lucide-react'],
         },
       },
@@ -60,6 +59,6 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    include: ['react', 'react-dom', 'recharts', 'lucide-react', 'date-fns'],
+    include: ['react', 'react-dom', 'lucide-react', 'date-fns'],
   },
 });

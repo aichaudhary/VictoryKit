@@ -2,9 +2,9 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
-import { ArrowLeft, Globe, Zap, FileText, Shield, Search, BookOpen, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Heart, Zap, Shield, Search, Lock, ShieldCheck } from 'lucide-react';
 
-const GDPRComplianceDetail: React.FC = () => {
+const HIPAAGuardDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -19,9 +19,9 @@ const GDPRComplianceDetail: React.FC = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-[#0d0a04] text-white selection:bg-amber-500/30 font-sans">
+    <div ref={containerRef} className="min-h-screen bg-[#0d0a04] text-white selection:bg-teal-500/30 font-sans">
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-amber-600/10 blur-[150px] rounded-full" />
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-teal-600/10 blur-[150px] rounded-full" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
       </div>
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12">
@@ -29,62 +29,62 @@ const GDPRComplianceDetail: React.FC = () => {
           <button onClick={() => setView('home')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Ecosystem
           </button>
-          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">GDPRCompliance v4.0</span>
+          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">HIPAAGuard v3.0</span>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center mb-40">
            <div ref={heroTextRef} className="space-y-10">
-              <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-amber-500/20 backdrop-blur-3xl">
-                <Globe className="w-4 h-4 text-amber-500" />
-                <span className="text-[10px] font-black tracking-[0.4em] uppercase text-amber-500">GDPR Compliance</span>
+              <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-teal-500/20 backdrop-blur-3xl">
+                <Heart className="w-4 h-4 text-teal-500" />
+                <span className="text-[10px] font-black tracking-[0.4em] uppercase text-teal-500">Healthcare Compliance</span>
               </div>
               <h1 className="text-8xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase">
-                GDPR <span className="text-amber-500">COMPLIANCE</span>
+                HIPAA <span className="text-teal-500">GUARD</span>
               </h1>
               <p className="text-xl md:text-2xl text-white/60 font-medium leading-relaxed max-w-xl">
-                GDPR compliance automation with data mapping and breach notification management.
+                HIPAA compliance with PHI protection and healthcare security controls.
               </p>
               <div className="flex gap-6 pt-4">
-                 <div className="px-8 py-4 bg-amber-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-amber-500/20">Assess Compliance</div>
-                 <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">All 99 Articles</div>
+                 <a href="https://hipaaguard.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-teal-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-teal-500/20">Audit PHI</a>
+                 <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">BAA Ready</div>
               </div>
            </div>
            <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-white/10 shadow-2xl">
-              <img src="https://picsum.photos/seed/gdpr47/1200/1200" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100" alt="Tool Visual" />
+              <img src="https://picsum.photos/seed/hipaa48/1200/1200" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100" alt="Tool Visual" />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
            </div>
         </div>
         <div ref={contentRef} className="space-y-40 mb-40">
            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-white/10 text-center">
-              <div><div className="text-5xl font-black text-amber-500">ALL 99</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Articles Covered</div></div>
-              <div><div className="text-5xl font-black text-white">100%</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Data Mapping</div></div>
-              <div><div className="text-5xl font-black text-white">72hr</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Breach Response</div></div>
-              <div><div className="text-5xl font-black text-white">AUTO</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">DPIA Generation</div></div>
+              <div><div className="text-5xl font-black text-teal-500">100%</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">PHI Coverage</div></div>
+              <div><div className="text-5xl font-black text-white">ALL</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">HIPAA Rules</div></div>
+              <div><div className="text-5xl font-black text-white">24/7</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Access Audit</div></div>
+              <div><div className="text-5xl font-black text-white">AUTO</div><div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">Risk Assessment</div></div>
            </div>
            <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-              <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-amber-500/20 transition-all group">
-                 <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500"><Search className="w-8 h-8" /></div>
-                 <h3 className="text-3xl font-bold">Data Mapping</h3>
-                 <p className="text-white/50 leading-relaxed">Automated discovery and mapping of personal data across all systems for Article 30 compliance.</p>
+              <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-teal-500/20 transition-all group">
+                 <div className="w-16 h-16 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-500"><Search className="w-8 h-8" /></div>
+                 <h3 className="text-3xl font-bold">PHI Discovery</h3>
+                 <p className="text-white/50 leading-relaxed">Automated discovery and classification of protected health information across all systems.</p>
               </div>
-              <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-amber-500/20 transition-all group">
-                 <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500"><BookOpen className="w-8 h-8" /></div>
-                 <h3 className="text-3xl font-bold">DPIA Generator</h3>
-                 <p className="text-white/50 leading-relaxed">Automated Data Protection Impact Assessments with risk scoring and mitigation recommendations.</p>
+              <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-teal-500/20 transition-all group">
+                 <div className="w-16 h-16 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-500"><Lock className="w-8 h-8" /></div>
+                 <h3 className="text-3xl font-bold">Access Controls</h3>
+                 <p className="text-white/50 leading-relaxed">Role-based access enforcement with detailed audit trails for all PHI access events.</p>
               </div>
-              <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-amber-500/20 transition-all group">
-                 <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500"><ShieldCheck className="w-8 h-8" /></div>
-                 <h3 className="text-3xl font-bold">Breach Workflow</h3>
-                 <p className="text-white/50 leading-relaxed">72-hour breach notification workflow with supervisory authority templates and tracking.</p>
+              <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-teal-500/20 transition-all group">
+                 <div className="w-16 h-16 rounded-2xl bg-teal-500/10 flex items-center justify-center text-teal-500"><ShieldCheck className="w-8 h-8" /></div>
+                 <h3 className="text-3xl font-bold">Risk Analysis</h3>
+                 <p className="text-white/50 leading-relaxed">Continuous risk assessment with remediation tracking and security rule compliance.</p>
               </div>
            </div>
         </div>
         <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-white/10">
            <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">Return Home</button>
-           <button className="px-16 py-8 bg-amber-500 text-black rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Run Assessment <Zap className="w-5 h-5 fill-current" /></button>
+           <a href="https://hipaaguard.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-teal-500 text-black rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Run Audit <Zap className="w-5 h-5 fill-current" /></a>
         </div>
       </div>
     </div>
   );
 };
 
-export default GDPRComplianceDetail;
+export default HIPAAGuardDetail;
