@@ -134,7 +134,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
     });
 
     return () => ctx.revert();
-  }, [index, pattern, setCurrentSection]);
+  }, [index, pattern]); // setCurrentSection is stable, no need in deps
 
   const handleDeploy = () => {
     const routeMap: Record<number, string> = {

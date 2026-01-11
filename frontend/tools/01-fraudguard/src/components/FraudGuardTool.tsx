@@ -21,6 +21,8 @@ import {
   Moon,
   Sun,
   Command,
+  ArrowLeft,
+  Home,
 } from "lucide-react";
 import TransactionForm from "./TransactionForm";
 import { AnimatedFraudScoreCard } from "./AnimatedFraudScoreCard";
@@ -95,6 +97,21 @@ const FraudGuardTool: React.FC = () => {
     };
   }, []);
 
+  // Demo data for when API is unavailable
+  const demoTransactions: Transaction[] = [
+    { id: 'TXN-001', amount: 2499.99, currency: 'USD', merchant: 'TechCorp International', merchant_category: 'Electronics', card_type: 'credit', card_last_four: '4532', ip_address: '192.168.1.100', device_fingerprint: 'fp_abc123', geo_location: 'New York, US', fraud_score: 0.15, risk_level: 'low', status: 'approved', timestamp: new Date().toISOString() },
+    { id: 'TXN-002', amount: 8750.00, currency: 'USD', merchant: 'CryptoExchange Pro', merchant_category: 'Cryptocurrency', card_type: 'debit', card_last_four: '8821', ip_address: '45.33.21.15', device_fingerprint: 'fp_xyz789', geo_location: 'Unknown VPN', fraud_score: 0.87, risk_level: 'critical', status: 'review', timestamp: new Date(Date.now() - 3600000).toISOString() },
+    { id: 'TXN-003', amount: 156.50, currency: 'USD', merchant: 'Amazon Marketplace', merchant_category: 'Retail', card_type: 'credit', card_last_four: '1234', ip_address: '72.21.91.42', device_fingerprint: 'fp_def456', geo_location: 'Seattle, US', fraud_score: 0.05, risk_level: 'low', status: 'approved', timestamp: new Date(Date.now() - 7200000).toISOString() },
+    { id: 'TXN-004', amount: 4200.00, currency: 'EUR', merchant: 'Luxury Goods Ltd', merchant_category: 'Luxury', card_type: 'credit', card_last_four: '9876', ip_address: '185.22.33.44', device_fingerprint: 'fp_ghi012', geo_location: 'Paris, FR', fraud_score: 0.45, risk_level: 'medium', status: 'review', timestamp: new Date(Date.now() - 10800000).toISOString() },
+    { id: 'TXN-005', amount: 99.99, currency: 'USD', merchant: 'Netflix Inc', merchant_category: 'Streaming', card_type: 'credit', card_last_four: '5555', ip_address: '142.250.80.46', device_fingerprint: 'fp_jkl345', geo_location: 'Los Angeles, US', fraud_score: 0.02, risk_level: 'low', status: 'approved', timestamp: new Date(Date.now() - 14400000).toISOString() },
+  ];
+
+  const demoAlerts: Alert[] = [
+    { id: 'ALT-001', name: 'High-Value Transaction Alert', type: 'threshold', condition: 'amount > 5000', threshold: 5000, active: true, created_at: new Date().toISOString(), triggered_count: 15 },
+    { id: 'ALT-002', name: 'VPN Detection', type: 'pattern', condition: 'geo_location contains VPN', threshold: 0, active: true, created_at: new Date().toISOString(), triggered_count: 8 },
+    { id: 'ALT-003', name: 'Critical Risk Score', type: 'threshold', condition: 'fraud_score > 0.8', threshold: 0.8, active: true, created_at: new Date().toISOString(), triggered_count: 3 },
+  ];
+
   // Load initial data
   useEffect(() => {
     loadTransactions();
@@ -107,7 +124,8 @@ const FraudGuardTool: React.FC = () => {
       const response = await transactionAPI.getAll({ limit: 50 });
       setTransactions(response.transactions);
     } catch (error) {
-      console.error("Failed to load transactions:", error);
+      console.error("Failed to load transactions, using demo data:", error);
+      setTransactions(demoTransactions);
     } finally {
       setLoading(false);
     }
@@ -118,7 +136,8 @@ const FraudGuardTool: React.FC = () => {
       const alertsData = await alertsAPI.getAll();
       setAlerts(alertsData);
     } catch (error) {
-      console.error("Failed to load alerts:", error);
+      console.error("Failed to load alerts, using demo data:", error);
+      setAlerts(demoAlerts);
     }
   };
 
@@ -192,6 +211,14 @@ const FraudGuardTool: React.FC = () => {
       <header className="relative bg-slate-900/80 backdrop-blur-xl border-b border-red-500/30 p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
+            {/* Back to MAULA.AI button */}
+            <a
+              href="https://maula.ai"
+              className="flex items-center gap-2 px-3 py-2 bg-slate-800/80 hover:bg-slate-700/80 rounded-lg border border-slate-600/50 text-gray-300 hover:text-white transition-all text-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">MAULA.AI</span>
+            </a>
             <div className="relative">
               <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center shadow-lg shadow-red-500/30">
                 <Shield className="w-7 h-7 text-white" />
@@ -245,13 +272,13 @@ const FraudGuardTool: React.FC = () => {
           </div>
 
           {/* Live Assistant Button */}
-          <a
-            href="/maula/ai/"
-            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
+          <div
+            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl cursor-pointer hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
+            title="AI Assistant (Coming Soon)"
           >
             <Sparkles className="w-5 h-5" />
-            <span className="font-medium">AI Assistant</span>
-          </a>
+            <span className="font-medium hidden sm:inline">AI Assistant</span>
+          </div>
         </div>
       </header>
 

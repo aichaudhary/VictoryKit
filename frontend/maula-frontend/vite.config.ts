@@ -17,6 +17,9 @@ export default defineConfig(({ mode }) => {
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '.'),
+          // Force React to resolve from local node_modules to avoid version conflicts
+          'react': path.resolve(__dirname, 'node_modules/react'),
+          'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
         }
       }
     };
