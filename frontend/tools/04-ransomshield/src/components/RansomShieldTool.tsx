@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from "react";
 import {
+  ArrowLeft,
   Bug,
   Shield,
   Activity,
@@ -340,6 +341,15 @@ const RansomShieldTool: React.FC = () => {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
+        {/* Back to MAULA.AI Button */}
+        <a
+          href="https://maula.ai"
+          className="inline-flex items-center gap-2 mb-6 px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          <span>Back to MAULA.AI</span>
+        </a>
+
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-6">
