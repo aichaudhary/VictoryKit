@@ -1,4 +1,4 @@
-import configData from '../../zerotrust-config.json';
+// ZeroTrust Configuration Service
 
 export interface ZeroTrustConfig {
   tool_id: number;
@@ -17,25 +17,33 @@ export interface ZeroTrustConfig {
     secondary: string;
     accent: string;
   };
-  ai_assistant: {
-    model: string;
-    temperature: number;
-    max_tokens: number;
-    system_prompt: string;
-    functions: any[];
-  };
-  navigation: any[];
-  zero_trust_principles: any[];
-  trust_factors: any[];
-  authentication_methods: any[];
-  policy_frameworks: any[];
 }
+
+// Default configuration
+const defaultConfig: ZeroTrustConfig = {
+  tool_id: 32,
+  tool_name: "ZeroTrust",
+  ports: {
+    frontend: 3032,
+    api: 4032,
+    ml: 8032,
+    ai: 6032
+  },
+  database: "zerotrust_db",
+  domain: "zerotrust.maula.ai",
+  ai_path: "/ws/zerotrust",
+  theme: {
+    primary: "#8b5cf6",
+    secondary: "#a78bfa",
+    accent: "#c4b5fd"
+  }
+};
 
 class ConfigService {
   private config: ZeroTrustConfig;
   
   constructor() {
-    this.config = configData as ZeroTrustConfig;
+    this.config = defaultConfig;
   }
   
   getConfig(): ZeroTrustConfig {
@@ -51,7 +59,7 @@ class ConfigService {
   }
   
   getAPIUrl(): string {
-    return `http://localhost:${this.config.ports.api}/api/v1/zerotrust`;
+    return import.meta.env.VITE_API_URL || `http://localhost:${this.config.ports.api}/api/v1/zerotrust`;
   }
   
   getWSUrl(): string {
@@ -60,30 +68,6 @@ class ConfigService {
   
   getTheme() {
     return this.config.theme;
-  }
-  
-  getAIFunctions() {
-    return this.config.ai_assistant.functions;
-  }
-  
-  getNavigation() {
-    return this.config.navigation;
-  }
-  
-  getZeroTrustPrinciples() {
-    return this.config.zero_trust_principles;
-  }
-  
-  getTrustFactors() {
-    return this.config.trust_factors;
-  }
-  
-  getAuthenticationMethods() {
-    return this.config.authentication_methods;
-  }
-  
-  getPolicyFrameworks() {
-    return this.config.policy_frameworks;
   }
 }
 

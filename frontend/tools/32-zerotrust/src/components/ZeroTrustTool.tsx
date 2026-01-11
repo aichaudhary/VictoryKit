@@ -3,7 +3,7 @@ import {
   Shield, Activity, AlertTriangle, RefreshCw, Settings, 
   Lock, Eye, Zap, TrendingUp, Search, Download,
   Play, Pause, Bell, Terminal, Server, Database, Globe,
-  Network, FileText, Users, Key, Code, Cpu, HardDrive
+  Network, FileText, Users, Key, Code, Cpu, HardDrive, ArrowLeft, Bot
 } from 'lucide-react';
 
 interface Stats { total: number; active: number; blocked: number; pending: number; }
@@ -48,6 +48,15 @@ const ZeroTrustTool: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900/20 to-gray-900 text-white">
       <header className="border-b border-slate-500/20 bg-black/30 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          {/* Back Button */}
+          <a
+            href="https://maula.ai"
+            className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg hover:bg-slate-700/50 hover:border-purple-500/30 transition-all text-gray-300 hover:text-white"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">MAULA.AI</span>
+          </a>
+
           <div className="flex items-center gap-3">
             <div className="p-2 bg-slate-500/20 rounded-lg">
               <Lock className="w-8 h-8 text-slate-400" />
@@ -57,7 +66,16 @@ const ZeroTrustTool: React.FC = () => {
               <p className="text-sm text-gray-400">Zero Trust Network Access</p>
             </div>
           </div>
+
           <div className="flex items-center gap-4">
+            {/* AI Assistant - Coming Soon */}
+            <div
+              className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg cursor-not-allowed opacity-60"
+              title="Coming Soon"
+            >
+              <Bot className="w-5 h-5 text-gray-400" />
+              <span className="font-medium text-gray-400">AI Assistant</span>
+            </div>
             <button onClick={() => setIsActive(!isActive)} className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isActive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
               {isActive ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
               {isActive ? 'Active' : 'Paused'}

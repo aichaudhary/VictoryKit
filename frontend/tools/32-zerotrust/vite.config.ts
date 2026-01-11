@@ -6,6 +6,9 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   
+  // Production base path for subdomain deployment
+  base: "/",
+
   server: {
     port: 3001,
     host: true,
@@ -53,10 +56,10 @@ export default defineConfig({
   },
 
   define: {
-    'import.meta.env.VITE_APP_NAME': JSON.stringify('FraudGuard'),
-    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:4001'),
-    'import.meta.env.VITE_WS_URL': JSON.stringify('ws://localhost:6001'),
-    'import.meta.env.VITE_ML_URL': JSON.stringify('http://localhost:8001'),
+    'import.meta.env.VITE_APP_NAME': JSON.stringify('ZeroTrust'),
+    'import.meta.env.VITE_API_URL': JSON.stringify('http://localhost:4032'),
+    'import.meta.env.VITE_WS_URL': JSON.stringify('ws://localhost:6032'),
+    'import.meta.env.VITE_ML_URL': JSON.stringify('http://localhost:8032'),
   },
 
   optimizeDeps: {

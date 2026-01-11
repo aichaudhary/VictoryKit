@@ -26,16 +26,17 @@ export interface ChatSession {
 
 export type NeuralTool = 
   | 'none' 
-  | 'fraud_analysis'
-  | 'risk_visualization'
-  | 'transaction_history'
-  | 'alerts'
+  | 'access_control'
+  | 'identity_verification'
+  | 'device_trust'
+  | 'policies'
+  | 'audit_trail'
   | 'reports'
   | 'web_search'
   | 'canvas'
   | 'browser';
 
-export type WorkspaceMode = 'CHAT' | 'PORTAL' | 'CANVAS' | 'FRAUD_DASHBOARD';
+export type WorkspaceMode = 'CHAT' | 'PORTAL' | 'CANVAS' | 'ZEROTRUST_DASHBOARD';
 
 export interface CanvasState {
   content: string;
@@ -64,64 +65,107 @@ export interface NavItem {
   description: string;
 }
 
-// FraudGuard Specific Types
-export interface Transaction {
+// ZeroTrust Specific Types
+export interface AccessRequest {
   id: string;
-  transaction_id: string;
-  amount: number;
-  currency: string;
-  user_ip?: string;
-  device_fingerprint?: string;
-  email?: string;
-  card_last4?: string;
-  merchant_id?: string;
+  request_id: string;
+  user_id: string;
+  resource_id: string;
+  resource_type: 'application' | 'network' | 'data' | 'service';
+  action: 'read' | 'write' | 'execute' | 'admin';
   timestamp: string;
-  status: 'pending' | 'approved' | 'declined' | 'flagged';
-  fraud_score?: number;
-  risk_level?: 'low' | 'medium' | 'high';
+  status: 'pending' | 'approved' | 'denied' | 'escalated';
+  trust_score?: number;
+  risk_level?: 'low' | 'medium' | 'high' | 'critical';
+  decision_reason?: string;
 }
 
-export interface FraudScore {
-  transaction_id: string;
-  score: number;
-  risk_level: 'low' | 'medium' | 'high';
-  confidence: number;
-  indicators: FraudIndicator[];
-  recommendation: string;
-  ml_model_version: string;
-  analyzed_at: string;
+export interface DeviceTrust {
+  device_id: string;
+  device_type: 'laptop' | 'desktop' | 'mobile' | 'tablet' | 'server';
+  os_type: string;
+  os_version: string;
+  is_managed: boolean;
+  is_compliant: boolean;
+  trust_score: number;
+  last_verified: string;
+  compliance_violations: string[];
+  security_posture: {
+    antivirus: boolean;
+    firewall: boolean;
+    encryption: boolean;
+    patched: boolean;
+  };
 }
 
-export interface FraudIndicator {
-  type: string;
-  severity: 'low' | 'medium' | 'high';
-  description: string;
-  weight: number;
+export interface UserIdentity {
+  user_id: string;
+  username: string;
+  email: string;
+  role: string;
+  clearance_level: 'public' | 'internal' | 'confidential' | 'secret';
+  groups: string[];
+  mfa_enabled: boolean;
+  last_login: string;
+  trust_score: number;
+  authentication_factors: string[];
 }
 
-export interface Alert {
+export interface ZeroTrustPolicy {
   id: string;
-  alert_type: 'high_risk_transaction' | 'suspicious_pattern' | 'velocity_breach' | 'unusual_location';
-  threshold: number;
-  notification_channels: ('email' | 'webhook' | 'sms' | 'slack')[];
-  active: boolean;
+  name: string;
+  description: string;
+  status: 'active' | 'inactive' | 'draft';
+  priority: number;
+  category: 'access' | 'identity' | 'device' | 'network' | 'data';
+  conditions: PolicyCondition[];
+  actions: PolicyAction[];
   created_at: string;
-  triggered_count: number;
+  updated_at: string;
 }
 
-export interface AnalyticsData {
-  total_transactions: number;
-  flagged_transactions: number;
-  average_fraud_score: number;
-  high_risk_percentage: number;
-  transactions_by_day: { date: string; count: number; flagged: number }[];
-  risk_distribution: { level: string; count: number }[];
-  top_fraud_indicators: { indicator: string; count: number }[];
+export interface PolicyCondition {
+  type: 'user' | 'device' | 'location' | 'time' | 'risk';
+  operator: 'equals' | 'not_equals' | 'contains' | 'greater_than' | 'less_than';
+  value: string | number | boolean;
+}
+
+export interface PolicyAction {
+  type: 'allow' | 'deny' | 'require_mfa' | 'escalate' | 'log';
+  parameters?: Record<string, any>;
+}
+
+export interface AuditEntry {
+  id: string;
+  timestamp: string;
+  event_type: 'access_request' | 'policy_change' | 'identity_verification' | 'device_check';
+  user_id: string;
+  resource_id?: string;
+  action: string;
+  result: 'success' | 'failure' | 'blocked';
+  details: Record<string, any>;
+}
+
+export interface TrustScore {
+  overall: number;
+  identity: number;
+  device: number;
+  network: number;
+  context: number;
+  factors: TrustFactor[];
+}
+
+export interface TrustFactor {
+  name: string;
+  weight: number;
+  score: number;
+  status: 'passed' | 'failed' | 'warning';
+  details: string;
 }
 
 export interface Tab {
   id: string;
-  type: 'chat' | 'web' | 'code' | 'chart' | 'transaction' | 'report';
+  type: 'chat' | 'web' | 'code' | 'chart' | 'access' | 'report';
   title: string;
   content: any;
   status: 'loading' | 'active' | 'complete' | 'error';
