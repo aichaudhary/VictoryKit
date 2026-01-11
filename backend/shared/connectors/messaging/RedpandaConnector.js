@@ -50,7 +50,7 @@ const Topics = {
   // Scan results by tool
   SCAN_FRAUDGUARD: 'victorykit.scan.fraudguard',
   SCAN_DARKWEBMONITOR: 'victorykit.scan.darkwebmonitor',
-  SCAN_THREATRADAR: 'victorykit.scan.zerodaydetect',
+  SCAN_ZERODAYDETECT: 'victorykit.scan.zerodaydetect',
   SCAN_MALWAREHUNTER: 'victorykit.scan.ransomshield',
   SCAN_PHISHGUARD: 'victorykit.scan.phishnetai',
   SCAN_VULNSCAN: 'victorykit.scan.vulnscan',

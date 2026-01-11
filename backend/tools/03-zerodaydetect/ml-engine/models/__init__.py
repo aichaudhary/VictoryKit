@@ -1,5 +1,5 @@
 """
-ThreatRadar ML Models Package
+ZeroDayDetect ML Models Package
 """
 
 from .threat_detector import ThreatDetector

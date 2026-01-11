@@ -1,6 +1,6 @@
 """
-ThreatRadar ML Engine - Threat Detector Model
-Real-time network and endpoint threat detection
+ZeroDayDetect ML Engine - Threat Detector Model
+Zero-day threat and exploit detection
 """
 
 import numpy as np

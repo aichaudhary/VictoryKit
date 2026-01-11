@@ -1,5 +1,5 @@
 """
-ThreatRadar ML Engine - Behavior Analyzer Model
+ZeroDayDetect ML Engine - Behavior Analyzer Model
 Behavioral analysis for detecting anomalous patterns
 """
 

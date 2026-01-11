@@ -1,6 +1,6 @@
 """
-ThreatRadar ML Engine - Main FastAPI Application
-Real-time Threat Detection & Behavioral Analysis
+ZeroDayDetect ML Engine - Main FastAPI Application
+Zero-Day Threat Detection & Vulnerability Analysis
 """
 
 from fastapi import FastAPI, HTTPException
@@ -23,8 +23,8 @@ logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="ThreatRadar ML Engine",
-    description="Machine Learning Engine for Real-time Threat Detection",
+    title="ZeroDayDetect ML Engine",
+    description="Machine Learning Engine for Zero-Day Threat Detection",
     version="1.0.0",
 )
 
@@ -107,7 +107,7 @@ class ModelInfo(BaseModel):
 async def health_check():
     return {
         "status": "healthy",
-        "service": "ThreatRadar ML Engine",
+        "service": "ZeroDayDetect ML Engine",
         "version": "1.0.0",
         "models_loaded": {
             "threat_detector": threat_detector.is_loaded,

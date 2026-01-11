@@ -1,5 +1,5 @@
 """
-ThreatRadar ML Engine - Anomaly Detector Model
+ZeroDayDetect ML Engine - Anomaly Detector Model
 Statistical anomaly detection for network events
 """
 

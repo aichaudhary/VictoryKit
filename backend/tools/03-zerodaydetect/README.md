@@ -104,7 +104,7 @@ ZeroDayDetect provides:
 
 ```javascript
 // Automatic threat classification
-const threatAnalysis = await threatRadar.analyze({
+const threatAnalysis = await zeroDayDetect.analyze({
   indicator: '185.234.219.100',
   type: 'ip',
   context: {

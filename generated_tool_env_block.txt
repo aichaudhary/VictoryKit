@@ -32,9 +32,9 @@ XAI_API_KEY=your-fraudguard-xai-api-key
 # No external API keys defined yet. Document any future integrations in the tool spec.
 
 # ===================
-# Tool 03 - ThreatRadar
-# https://victorykit.com/tools/03-threatradar
-# Docs: docs/tools/TOOL-03-THREATRADAR.md
+# Tool 03 - ZeroDayDetect
+# https://victorykit.com/tools/03-zerodaydetect
+# Docs: docs/tools/TOOL-03-ZERODAYDETECT.md
 # No external API keys defined yet. Document any future integrations in the tool spec.
 
 # ===================

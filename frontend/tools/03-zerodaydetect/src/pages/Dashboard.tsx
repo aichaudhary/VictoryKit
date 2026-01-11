@@ -113,8 +113,8 @@ const Dashboard: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Threat Radar</h1>
-          <p className="text-gray-400">Real-time threat detection and intelligence</p>
+          <h1 className="text-3xl font-bold text-white mb-2">ZeroDayDetect</h1>
+          <p className="text-gray-400">Zero-day threat detection and vulnerability protection</p>
         </div>
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2 text-sm text-gray-400">
