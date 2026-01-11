@@ -14,6 +14,7 @@ import {
   Share2,
   Cloud,
   CloudOff,
+  ArrowLeft,
 } from "lucide-react";
 import CodeAnalysisForm, { CodeAnalysisFormData } from "./CodeAnalysisForm";
 import LiveCodePanel, {
@@ -505,6 +506,13 @@ const CodeSentinelTool: React.FC = () => {
         <div className="max-w-[1800px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              <a 
+                href="https://maula.ai" 
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-white hover:border-green-500/50 transition-all group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span className="text-sm font-medium">MAULA.AI</span>
+              </a>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/20">
                 <Code className="w-6 h-6 text-white" />
               </div>
