@@ -44,6 +44,7 @@ import {
   Calendar,
   User,
   Building2,
+  ArrowLeft,
 } from "lucide-react";
 
 // Types for PhishNetAI
@@ -608,6 +609,13 @@ const PhishNetAITool: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              <a 
+                href="https://maula.ai" 
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-white hover:border-orange-500/50 transition-all group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span className="text-sm font-medium">MAULA.AI</span>
+              </a>
               <div className="relative">
                 <div className="p-3 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl shadow-lg shadow-orange-500/25">
                   <ShieldAlert className="w-7 h-7 text-white" />
