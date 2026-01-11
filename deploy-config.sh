@@ -1,6 +1,6 @@
 # AWS EC2 Configuration
 EC2_HOST="ubuntu@ec2-18-140-156-40.ap-southeast-1.compute.amazonaws.com"
-EC2_KEY="./victorykit.pem"
+EC2_KEY="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/victorykit.pem"
 
 # Git Configuration
 REPO_URL="https://github.com/aichaudhary/VictoryKit.git"

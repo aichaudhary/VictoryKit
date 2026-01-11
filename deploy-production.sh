@@ -416,65 +416,30 @@ main() {
     # Deploy Cloudflare SSL certificates first
     deploy_cloudflare_ssl
 
-    # Deploy main dashboard
-    log_info "Deploying main dashboard..."
-    if [ -d "frontend/main-dashboard" ]; then
-        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "
-            set -e
-            export NVM_DIR=\"/home/ubuntu/.nvm\"
-            [ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\"
-            
-            # First, ensure the base directory and repo exist
-            sudo mkdir -p /var/www/maula.ai/repo
-            sudo chown -R ubuntu:ubuntu /var/www/maula.ai
-            
-            # Sync the project files using scp + tar
-            echo "Syncing project files to EC2..."
-            # Create tar locally
-            tar -czf /tmp/victorykit-deploy.tar.gz --exclude='.git' --exclude='node_modules' --exclude='*.log' --exclude='.pm2' .
-
-            # Transfer tar file
-            scp -i "$EC2_KEY" -o StrictHostKeyChecking=no /tmp/victorykit-deploy.tar.gz "$EC2_HOST:/tmp/"
-
-            # Extract on remote server
-            ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "
-                sudo mkdir -p /var/www/maula.ai/repo
-                sudo tar -xzf /tmp/victorykit-deploy.tar.gz -C /var/www/maula.ai/repo
-                sudo chown -R ubuntu:ubuntu /var/www/maula.ai/repo
-                rm /tmp/victorykit-deploy.tar.gz
-            "
-
-            # Cleanup local tar
-            rm -f /tmp/victorykit-deploy.tar.gz
-
-            # Now, build the dashboard
-            cd /var/www/maula.ai/repo/frontend/main-dashboard
-            npm install
-            npm run build
-            
-            # Copy build output to serving directory
-            sudo mkdir -p /var/www/maula.ai/live
-            sudo cp -r out/. /var/www/maula.ai/live/
-        "
+    # Deploy home page (maula.ai)
+    log_info "Deploying home page..."
+    if [ -d "frontend/maula-frontend" ]; then
+        # Build locally
+        cd "$PROJECT_ROOT/frontend/maula-frontend"
+        npm install
+        npm run build
+        cd "$PROJECT_ROOT"
         
-        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo tee /etc/systemd/system/dashboard.service > /dev/null <<EOF
-[Unit]
-Description=MAULA.AI Dashboard
-After=network.target
-
-[Service]
-Type=simple
-User=ubuntu
-WorkingDirectory=/var/www/maula.ai/live
-ExecStart=/usr/bin/serve -s . -l 3000
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF"
-
-        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo systemctl enable dashboard && sudo systemctl restart dashboard"
-        log_success "Main dashboard deployed"
+        # Create remote directory
+        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo mkdir -p /var/www/maula.ai/live && sudo chown -R ubuntu:ubuntu /var/www/maula.ai"
+        
+        # Copy built files to server
+        scp -i "$EC2_KEY" -o StrictHostKeyChecking=no -r "$PROJECT_ROOT/frontend/maula-frontend/dist/"* "$EC2_HOST:/var/www/maula.ai/live/"
+        
+        # Set permissions
+        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo chown -R www-data:www-data /var/www/maula.ai/live"
+        
+        # Reload nginx
+        ssh -i "$EC2_KEY" -o StrictHostKeyChecking=no "$EC2_HOST" "sudo systemctl reload nginx"
+        
+        log_success "Home page deployed to https://maula.ai"
+    else
+        log_warning "frontend/maula-frontend directory not found - skipping home page deployment"
     fi
 
     # Deploy tools
