@@ -5,7 +5,8 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logAnalyzerApi, simulatedData, type LogEntry, type LogDashboard, type LogAnalysisResult, type LogLevel, type LogSource } from '../api/xdrplatform.api';
+import { ArrowLeft } from 'lucide-react';
+import { logAnalyzerApi, simulatedData, type LogEntry, type LogDashboard, type LogAnalysisResult, type LogLevel, type LogSource } from '../api/loganalyzer.api';
 
 const levelColors: Record<LogLevel, { bg: string; text: string }> = {
   debug: { bg: 'bg-gray-600', text: 'text-gray-300' },
@@ -251,6 +252,13 @@ export default function XDRPlatformTool() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
+              <a
+                href="https://maula.ai"
+                className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-700/50 rounded-lg transition-all"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                MAULA.AI
+              </a>
               <div className="w-10 h-10 rounded-xl bg-green-600 flex items-center justify-center">📜</div>
               <div><h1 className="text-xl font-bold">XDRPlatform</h1><p className="text-gray-400 text-sm">AI-Powered Log Analysis</p></div>
             </div>
