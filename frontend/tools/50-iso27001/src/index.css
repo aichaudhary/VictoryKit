@@ -1,8 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* FraudGuard Custom Styles */
+/* ISO27001 Custom Styles */
 :root {
   --fg-primary: #EF4444;
   --fg-secondary: #EC4899;
