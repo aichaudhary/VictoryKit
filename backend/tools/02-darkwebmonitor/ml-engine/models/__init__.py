@@ -1,5 +1,5 @@
 """
-IntelliScout ML Models Package
+DarkWebMonitor ML Models Package
 """
 
 from .threat_classifier import ThreatClassifier

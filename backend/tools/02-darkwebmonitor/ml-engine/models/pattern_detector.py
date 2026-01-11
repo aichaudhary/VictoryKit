@@ -1,5 +1,5 @@
 """
-IntelliScout ML Engine - Pattern Detector Model
+DarkWebMonitor ML Engine - Pattern Detector Model
 Detects patterns and relationships between IOCs
 """
 

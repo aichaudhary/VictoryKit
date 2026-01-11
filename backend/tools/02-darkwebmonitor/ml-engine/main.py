@@ -1,5 +1,5 @@
 """
-IntelliScout ML Engine - Main FastAPI Application
+DarkWebMonitor ML Engine - Main FastAPI Application
 Threat Intelligence Analysis & Correlation
 """
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="IntelliScout ML Engine",
+    title="DarkWebMonitor ML Engine",
     description="Machine Learning Engine for Threat Intelligence Analysis",
     version="1.0.0",
 )
@@ -96,7 +96,7 @@ class ModelInfo(BaseModel):
 async def health_check():
     return {
         "status": "healthy",
-        "service": "IntelliScout ML Engine",
+        "service": "DarkWebMonitor ML Engine",
         "version": "1.0.0",
         "models_loaded": {
             "threat_classifier": threat_classifier.is_loaded,

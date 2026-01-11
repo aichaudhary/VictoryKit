@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* IntelliScout Custom Styles */
+/* DarkWebMonitor Custom Styles */
 :root {
   --is-primary: #22c55e;
   --is-secondary: #10b981;

@@ -1,5 +1,5 @@
 """
-IntelliScout ML Engine - Correlation Engine
+DarkWebMonitor ML Engine - Correlation Engine
 Correlates threats based on shared IOCs, TTPs, and patterns
 """
 

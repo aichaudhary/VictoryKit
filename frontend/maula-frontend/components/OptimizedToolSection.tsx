@@ -138,7 +138,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
 
   const handleDeploy = () => {
     const routeMap: Record<number, string> = {
-      1: 'fraud-guard', 2: 'intelli-scout', 3: 'threat-radar', 4: 'malware-hunter',
+      1: 'fraud-guard', 2: 'dark-web-monitor', 3: 'threat-radar', 4: 'malware-hunter',
       5: 'phish-guard', 6: 'vuln-scan', 7: 'pen-test-ai', 8: 'secure-code',
       9: 'compliance-check', 10: 'data-guardian', 11: 'crypto-shield',
       12: 'iam-control', 13: 'log-intel', 14: 'net-defender', 15: 'endpoint-shield',

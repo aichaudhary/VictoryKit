@@ -1,5 +1,5 @@
 """
-IntelliScout ML Engine - Threat Classifier Model
+DarkWebMonitor ML Engine - Threat Classifier Model
 Classifies threats based on IOCs, TTPs, and behavioral patterns
 """
 

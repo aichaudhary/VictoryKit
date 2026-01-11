@@ -17,7 +17,7 @@ import ResetPassword from './components/Auth/ResetPassword';
 
 // Tools 1-50
 import FraudGuardDetail from './pages/FraudGuardDetail';
-import IntelliScoutDetail from './pages/IntelliScoutDetail';
+import DarkWebMonitorDetail from './pages/DarkWebMonitorDetail';
 import ThreatRadarDetail from './pages/ThreatRadarDetail';
 import MalwareHunterDetail from './pages/MalwareHunterDetail';
 import PhishGuardDetail from './pages/PhishGuardDetail';
@@ -107,7 +107,7 @@ const MainContent: React.FC = () => {
       nextColor = '#0d0503';
     } else if (['net-defender', 'email-guard', 'web-filter', 'dns-shield', 'firewall-ai', 'vpn-guardian', 'wireless-watch', 'mobile-defend'].includes(view)) {
       nextColor = '#040d0a';
-    } else if (['fraud-guard', 'intelli-scout', 'threat-radar', 'malware-hunter', 'phish-guard', 'endpoint-shield', 'threat-intel'].includes(view)) {
+    } else if (['fraud-guard', 'dark-web-monitor', 'threat-radar', 'malware-hunter', 'phish-guard', 'endpoint-shield', 'threat-intel'].includes(view)) {
       nextColor = '#0d0404';
     } else if (['cloud-secure', 'api-guardian', 'container-watch', 'devsecops', 'iot-secure', 'secure-code'].includes(view)) {
       nextColor = '#040d12';
@@ -172,7 +172,7 @@ const MainContent: React.FC = () => {
       case 'security-disclosure': return <LegalPage title="Security Disclosure" />;
       case 'global-shield-detail': return <GlobalShieldDetail />;
       case 'fraud-guard': return <FraudGuardDetail />;
-      case 'intelli-scout': return <IntelliScoutDetail />;
+      case 'dark-web-monitor': return <DarkWebMonitorDetail />;
       case 'threat-radar': return <ThreatRadarDetail />;
       case 'malware-hunter': return <MalwareHunterDetail />;
       case 'phish-guard': return <PhishGuardDetail />;

@@ -26,9 +26,9 @@ TOGETHER_API_KEY=your-fraudguard-together-api-key
 XAI_API_KEY=your-fraudguard-xai-api-key
 
 # ===================
-# Tool 02 - IntelliScout
-# https://victorykit.com/tools/02-intelliscout
-# Docs: docs/tools/TOOL-02-INTELLISCOUT.md
+# Tool 02 - DarkWebMonitor
+# https://victorykit.com/tools/02-darkwebmonitor
+# Docs: docs/tools/TOOL-02-DARKWEBMONITOR.md
 # No external API keys defined yet. Document any future integrations in the tool spec.
 
 # ===================
