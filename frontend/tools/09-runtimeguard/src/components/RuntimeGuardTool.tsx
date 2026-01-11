@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
+  ArrowLeft,
   ClipboardCheck,
   Shield,
   FileText,
@@ -693,6 +694,13 @@ const RuntimeGuardTool: React.FC = () => {
         <div className="max-w-[1800px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              <a
+                href="https://maula.ai"
+                className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-gray-400 hover:text-white bg-slate-800/50 hover:bg-slate-700/50 rounded-lg transition-all"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                MAULA.AI
+              </a>
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <ClipboardCheck className="w-6 h-6 text-white" />
               </div>
