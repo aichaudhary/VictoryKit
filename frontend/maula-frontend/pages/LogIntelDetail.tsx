@@ -79,7 +79,7 @@ const IdentityForgeDetail: React.FC = () => {
             </p>
             <div className="flex gap-6 pt-4">
               <a
-                href="https://incidentcommand.maula.ai"
+                href="https://identityforge.maula.ai"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-8 py-4 bg-purple-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-purple-500/20"
@@ -168,7 +168,7 @@ const IdentityForgeDetail: React.FC = () => {
             Return Home
           </button>
           <a
-            href="https://incidentcommand.maula.ai"
+            href="https://identityforge.maula.ai"
             target="_blank"
             rel="noopener noreferrer"
             className="px-16 py-8 bg-purple-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center"

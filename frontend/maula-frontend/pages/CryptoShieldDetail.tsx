@@ -13,7 +13,7 @@ import {
   Bell,
 } from 'lucide-react';
 
-const incidentcommandDetail: React.FC = () => {
+const IncidentResponseDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -59,7 +59,7 @@ const incidentcommandDetail: React.FC = () => {
             to Ecosystem
           </button>
           <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">
-            incidentcommand v2.0
+            IncidentResponse v2.0
           </span>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center mb-40">
@@ -79,7 +79,7 @@ const incidentcommandDetail: React.FC = () => {
             </p>
             <div className="flex gap-6 pt-4">
               <a
-                href="https://secretvault.maula.ai"
+                href="https://incidentresponse.maula.ai"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20"
@@ -93,9 +93,9 @@ const incidentcommandDetail: React.FC = () => {
           </div>
           <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-white/10 shadow-2xl">
             <img
-              src="https://picsum.photos/seed/incidentcommand/1200/1200"
+              src="https://picsum.photos/seed/incidentresponse/1200/1200"
               className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-105 group-hover:scale-100"
-              alt="incidentcommand Visual"
+              alt="IncidentResponse Visual"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
           </div>
@@ -168,7 +168,7 @@ const incidentcommandDetail: React.FC = () => {
             Return Home
           </button>
           <a
-            href="https://secretvault.maula.ai"
+            href="https://incidentresponse.maula.ai"
             target="_blank"
             rel="noopener noreferrer"
             className="px-16 py-8 bg-red-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center"
@@ -181,4 +181,4 @@ const incidentcommandDetail: React.FC = () => {
   );
 };
 
-export default incidentcommandDetail;
+export default IncidentResponseDetail;

@@ -222,12 +222,12 @@ export const tools: SecurityTool[] = [
   },
   {
     id: 11,
-    name: 'incidentcommand',
+    name: 'IncidentResponse',
     description:
       'Respond faster, recover stronger. Comprehensive incident response platform with automated playbooks, team collaboration, and forensic capabilities.',
     category: 'Incident Response',
     stats: { threatsBlocked: '60% MTTR', uptime: '100+ Playbk', accuracy: '50+ Integr' },
-    imageUrl: 'https://picsum.photos/seed/incidentcommand/1200/800',
+    imageUrl: 'https://picsum.photos/seed/incidentresponse/1200/800',
     theme: categoryThemes['Incident Response'],
   },
   {
