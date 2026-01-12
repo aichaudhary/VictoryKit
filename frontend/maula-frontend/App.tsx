@@ -14,57 +14,57 @@ import SignUp from './components/Auth/SignUp';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import ResetPassword from './components/Auth/ResetPassword';
 
-// Tools 1-50
-import FraudGuardDetail from './pages/FraudGuardDetail';
-import DarkWebMonitorDetail from './pages/DarkWebMonitorDetail';
-import ThreatRadarDetail from './pages/ThreatRadarDetail';
-import RansomShieldDetail from './pages/RansomShieldDetail';
-import PhishGuardDetail from './pages/PhishGuardDetail';
-import VulnScanDetail from './pages/VulnScanDetail';
-import PenTestAIDetail from './pages/PenTestAIDetail';
-import SecureCodeDetail from './pages/SecureCodeDetail';
-import ComplianceCheckDetail from './pages/ComplianceCheckDetail';
-import DataGuardianDetail from './pages/DataGuardianDetail';
-import CryptoShieldDetail from './pages/CryptoShieldDetail';
-import xdrplatformDetail from './pages/xdrplatformDetail';
-import LogIntelDetail from './pages/LogIntelDetail';
-import NetDefenderDetail from './pages/NetDefenderDetail';
-import EndpointShieldDetail from './pages/EndpointShieldDetail';
-import CloudSecureDetail from './pages/CloudSecureDetail';
-import APIGuardianDetail from './pages/APIGuardianDetail';
-import ContainerWatchDetail from './pages/ContainerWatchDetail';
-import DevSecOpsDetail from './pages/DevSecOpsDetail';
-import IncidentCommandDetail from './pages/IncidentCommandDetail';
-import WAFManagerDetail from './pages/WAFManagerDetail';
-import ThreatIntelDetail from './pages/ThreatIntelDetail';
-import BehaviorWatchDetail from './pages/BehaviorWatchDetail';
-import AnomalyDetectDetail from './pages/AnomalyDetectDetail';
-import RedTeamAIDetail from './pages/RedTeamAIDetail';
-import BlueTeamAIDetail from './pages/BlueTeamAIDetail';
-import SIEMCommanderDetail from './pages/SIEMCommanderDetail';
-import SOAREngineDetail from './pages/SOAREngineDetail';
-import RiskScoreAIDetail from './pages/RiskScoreAIDetail';
-import PolicyEngineDetail from './pages/PolicyEngineDetail';
-import AuditTrackerDetail from './pages/AuditTrackerDetail';
-import ZeroTrustAIDetail from './pages/ZeroTrustAIDetail';
-import PasswordVaultDetail from './pages/PasswordVaultDetail';
-import BiometricAIDetail from './pages/BiometricAIDetail';
-import EmailGuardDetail from './pages/EmailGuardDetail';
-import BrowserIsolationDetail from './pages/BrowserIsolationDetail';
-import DNSShieldDetail from './pages/DNSShieldDetail';
-import FirewallAIDetail from './pages/FirewallAIDetail';
-import VPNGuardianDetail from './pages/VPNGuardianDetail';
-import WirelessWatchDetail from './pages/WirelessWatchDetail';
-import IoTSecureDetail from './pages/IoTSecureDetail';
-import MobileDefendDetail from './pages/MobileDefendDetail';
-import BackupGuardDetail from './pages/BackupGuardDetail';
-import DRPlanDetail from './pages/DRPlanDetail';
-import PrivacyShieldDetail from './pages/PrivacyShieldDetail';
-import GDPRComplianceDetail from './pages/GDPRComplianceDetail';
-import HIPAAGuardDetail from './pages/HIPAAGuardDetail';
-import PCIDSSDetail from './pages/PCIDSSDetail';
-import BugBountyAIDetail from './pages/BugBountyAIDetail';
-import CyberEduAIDetail from './pages/CyberEduAIDetail';
+// Tools 1-50 (numbered for consistency with backend/frontend tool folders)
+import FraudGuardDetail from './pages/01-FraudGuardDetail';
+import DarkWebMonitorDetail from './pages/02-DarkWebMonitorDetail';
+import ZeroDayDetectDetail from './pages/03-ZeroDayDetectDetail';
+import RansomShieldDetail from './pages/04-RansomShieldDetail';
+import PhishNetAIDetail from './pages/05-PhishNetAIDetail';
+import VulnScanDetail from './pages/06-VulnScanDetail';
+import PenTestAIDetail from './pages/07-PenTestAIDetail';
+import CodeSentinelDetail from './pages/08-CodeSentinelDetail';
+import RuntimeGuardDetail from './pages/09-RuntimeGuardDetail';
+import DataGuardianDetail from './pages/10-DataGuardianDetail';
+import IncidentResponseDetail from './pages/11-IncidentResponseDetail';
+import XDRPlatformDetail from './pages/12-XDRPlatformDetail';
+import IdentityForgeDetail from './pages/13-IdentityForgeDetail';
+import SecretVaultDetail from './pages/14-SecretVaultDetail';
+import PrivilegeGuardDetail from './pages/15-PrivilegeGuardDetail';
+import NetworkForensicsDetail from './pages/16-NetworkForensicsDetail';
+import AuditTrailProDetail from './pages/17-AuditTrailProDetail';
+import ThreatModelDetail from './pages/18-ThreatModelDetail';
+import RiskQuantifyDetail from './pages/19-RiskQuantifyDetail';
+import SecurityDashboardDetail from './pages/20-SecurityDashboardDetail';
+import WAFManagerDetail from './pages/21-WAFManagerDetail';
+import APIShieldDetail from './pages/22-APIShieldDetail';
+import BotMitigationDetail from './pages/23-BotMitigationDetail';
+import DDoSDefenderDetail from './pages/24-DDoSDefenderDetail';
+import SSLMonitorDetail from './pages/25-SSLMonitorDetail';
+import BlueTeamAIDetail from './pages/26-BlueTeamAIDetail';
+import SIEMCommanderDetail from './pages/27-SIEMCommanderDetail';
+import SOAREngineDetail from './pages/28-SOAREngineDetail';
+import BehaviorAnalyticsDetail from './pages/29-BehaviorAnalyticsDetail';
+import PolicyEngineDetail from './pages/30-PolicyEngineDetail';
+import CloudPostureDetail from './pages/31-CloudPostureDetail';
+import ZeroTrustDetail from './pages/32-ZeroTrustDetail';
+import KubeArmorDetail from './pages/33-KubeArmorDetail';
+import ContainerScanDetail from './pages/34-ContainerScanDetail';
+import EmailDefenderDetail from './pages/35-EmailDefenderDetail';
+import BrowserIsolationDetail from './pages/36-BrowserIsolationDetail';
+import DNSFirewallDetail from './pages/37-DNSFirewallDetail';
+import FirewallAIDetail from './pages/38-FirewallAIDetail';
+import VPNAnalyzerDetail from './pages/39-VPNAnalyzerDetail';
+import WirelessHunterDetail from './pages/40-WirelessHunterDetail';
+import DLPAdvancedDetail from './pages/41-DLPAdvancedDetail';
+import IoTSentinelDetail from './pages/42-IoTSentinelDetail';
+import MobileShieldDetail from './pages/43-MobileShieldDetail';
+import SupplyChainAIDetail from './pages/44-SupplyChainAIDetail';
+import DRPlanDetail from './pages/45-DRPlanDetail';
+import PrivacyShieldDetail from './pages/46-PrivacyShieldDetail';
+import GDPRComplianceDetail from './pages/47-GDPRComplianceDetail';
+import HIPAAGuardDetail from './pages/48-HIPAAGuardDetail';
+import SOC2AutomatorDetail from './pages/49-SOC2AutomatorDetail';
+import ISO27001Detail from './pages/50-ISO27001Detail';
 
 // Organizational Pages
 import ProductsPage from './pages/ProductsPage';
@@ -260,59 +260,59 @@ const MainContent: React.FC = () => {
       case 'dark-web-monitor':
         return <DarkWebMonitorDetail />;
       case 'threat-radar':
-        return <ThreatRadarDetail />;
+        return <ZeroDayDetectDetail />;
       case 'ransom-shield':
         return <RansomShieldDetail />;
       case 'phish-guard':
-        return <PhishGuardDetail />;
+        return <PhishNetAIDetail />;
       case 'vuln-scan':
         return <VulnScanDetail />;
       case 'pen-test-ai':
         return <PenTestAIDetail />;
       case 'secure-code':
-        return <SecureCodeDetail />;
+        return <CodeSentinelDetail />;
       case 'compliance-check':
-        return <ComplianceCheckDetail />;
+        return <RuntimeGuardDetail />;
       case 'data-guardian':
         return <DataGuardianDetail />;
       case 'crypto-shield':
-        return <CryptoShieldDetail />;
+        return <IncidentResponseDetail />;
       case 'iam-control':
-        return <xdrplatformDetail />;
+        return <XDRPlatformDetail />;
       case 'log-intel':
-        return <LogIntelDetail />;
+        return <IdentityForgeDetail />;
       case 'net-defender':
-        return <NetDefenderDetail />;
+        return <SecretVaultDetail />;
       case 'endpoint-shield':
-        return <EndpointShieldDetail />;
+        return <PrivilegeGuardDetail />;
       case 'cloud-secure':
-        return <CloudSecureDetail />;
+        return <NetworkForensicsDetail />;
       case 'api-guardian':
-        return <APIGuardianDetail />;
+        return <AuditTrailProDetail />;
       case 'container-watch':
-        return <ContainerWatchDetail />;
+        return <ThreatModelDetail />;
       case 'devsecops':
-        return <DevSecOpsDetail />;
+        return <RiskQuantifyDetail />;
       case 'incident-command':
-        return <IncidentCommandDetail />;
+        return <SecurityDashboardDetail />;
       case 'waf-manager':
         return <WAFManagerDetail />;
       case 'threat-intel':
-        return <ThreatIntelDetail />;
+        return <APIShieldDetail />;
       case 'api-shield':
-        return <ThreatIntelDetail />;
+        return <APIShieldDetail />;
       case 'behavior-watch':
-        return <BehaviorWatchDetail />;
+        return <BotMitigationDetail />;
       case 'bot-mitigation':
-        return <BehaviorWatchDetail />;
+        return <BotMitigationDetail />;
       case 'anomaly-detect':
-        return <AnomalyDetectDetail />;
+        return <DDoSDefenderDetail />;
       case 'ddos-defender':
-        return <AnomalyDetectDetail />;
+        return <DDoSDefenderDetail />;
       case 'red-team-ai':
-        return <RedTeamAIDetail />;
+        return <SSLMonitorDetail />;
       case 'ssl-monitor':
-        return <RedTeamAIDetail />;
+        return <SSLMonitorDetail />;
       case 'blue-team-ai':
         return <BlueTeamAIDetail />;
       case 'siem-commander':
@@ -320,35 +320,35 @@ const MainContent: React.FC = () => {
       case 'soar-engine':
         return <SOAREngineDetail />;
       case 'risk-score-ai':
-        return <RiskScoreAIDetail />;
+        return <BehaviorAnalyticsDetail />;
       case 'policy-engine':
         return <PolicyEngineDetail />;
       case 'audit-tracker':
-        return <AuditTrackerDetail />;
+        return <CloudPostureDetail />;
       case 'zero-trust-ai':
-        return <ZeroTrustAIDetail />;
+        return <ZeroTrustDetail />;
       case 'password-vault':
-        return <PasswordVaultDetail />;
+        return <KubeArmorDetail />;
       case 'biometric-ai':
-        return <BiometricAIDetail />;
+        return <ContainerScanDetail />;
       case 'email-guard':
-        return <EmailGuardDetail />;
+        return <EmailDefenderDetail />;
       case 'browser-isolation':
         return <BrowserIsolationDetail />;
       case 'dns-shield':
-        return <DNSShieldDetail />;
+        return <DNSFirewallDetail />;
       case 'firewall-ai':
         return <FirewallAIDetail />;
       case 'vpn-guardian':
-        return <VPNGuardianDetail />;
+        return <VPNAnalyzerDetail />;
       case 'wireless-watch':
-        return <WirelessWatchDetail />;
+        return <WirelessHunterDetail />;
       case 'iot-secure':
-        return <IoTSecureDetail />;
+        return <DLPAdvancedDetail />;
       case 'mobile-defend':
-        return <MobileDefendDetail />;
+        return <IoTSentinelDetail />;
       case 'backup-guard':
-        return <BackupGuardDetail />;
+        return <MobileShieldDetail />;
       case 'dr-plan':
         return <DRPlanDetail />;
       case 'privacy-shield':
@@ -358,11 +358,11 @@ const MainContent: React.FC = () => {
       case 'hipaa-guard':
         return <HIPAAGuardDetail />;
       case 'pcidss-guard':
-        return <PCIDSSDetail />;
+        return <SOC2AutomatorDetail />;
       case 'bug-bounty-ai':
-        return <BugBountyAIDetail />;
+        return <SOC2AutomatorDetail />;
       case 'cyber-edu-ai':
-        return <CyberEduAIDetail />;
+        return <ISO27001Detail />;
       default:
         return null;
     }
