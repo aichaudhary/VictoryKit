@@ -12,7 +12,7 @@ type TabType = 'dashboard' | 'risks' | 'matrix' | 'ai-analysis' | 'threat-intel'
 
 interface WebSocketMessage {
   type: string;
-  data: unknown;
+  data: { message?: string; [key: string]: unknown };
   userId?: string;
   timestamp: string;
 }
