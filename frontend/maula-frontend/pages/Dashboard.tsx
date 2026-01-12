@@ -351,7 +351,7 @@ const OverviewTab = ({ toggleTab, fleetCount }: { toggleTab: any; fleetCount: nu
               time: '14m ago',
             },
             {
-              node: 'IAMControl',
+              node: 'xdrplatform',
               msg: 'Admin MFA verification success',
               level: 'Info',
               time: '1h ago',

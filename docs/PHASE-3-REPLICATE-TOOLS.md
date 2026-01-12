@@ -1,6 +1,7 @@
 # 🔄 PHASE 3: Replicate to 49 Remaining Tools
 
-**Goal:** Use FraudGuard as template to rapidly build all 49 remaining AI tools  
+**Goal:** Use FraudGuard as template to rapidly build all 49 remaining AI
+tools  
 **Duration:** 4-5 months  
 **Strategy:** Automation script + Customization per tool  
 **Deliverables:** 49 complete AI tools deployed with Neural Link Interface
@@ -10,6 +11,7 @@
 ## 📋 What You'll Build in Phase 3
 
 Replicate FraudGuard pattern to create:
+
 - **49 Frontend Applications** (ports 3002-3050)
 - **49 API Services** (ports 4002-4050)
 - **49 ML Engines** (ports 8002-8050)
@@ -31,7 +33,7 @@ Replicate FraudGuard pattern to create:
 09 - RuntimeGuard     (compliance.maula.ai) - Compliance Monitoring
 10 - DataGuardian        (dguardian.maula.ai)  - Data Protection
 11 - CryptoShield        (cshield.maula.ai)    - Cryptography Tools
-12 - IAMControl          (iamctrl.maula.ai)    - Identity & Access
+12 - xdrplatform          (iamctrl.maula.ai)    - Identity & Access
 13 - LogIntel            (logintel.maula.ai)   - Log Analysis
 14 - NetDefender         (ndefender.maula.ai)  - Network Security
 15 - EndpointShield      (eshield.maula.ai)    - Endpoint Protection
@@ -180,9 +182,9 @@ cat > "frontend/tools/${TOOL_NUM}-${SUBDOMAIN}/${SUBDOMAIN}-config.json" <<EOF
   "mlPort": $ML_PORT,
   "aiPort": $AI_PORT,
   "databaseName": "$DB_NAME",
-  
+
   "systemPrompt": "You are ${TOOL_NAME} AI, an expert in [CUSTOMIZE THIS]. You help users [CUSTOMIZE CAPABILITIES].",
-  
+
   "functions": [
     {
       "name": "example_function",
@@ -199,7 +201,7 @@ cat > "frontend/tools/${TOOL_NUM}-${SUBDOMAIN}/${SUBDOMAIN}-config.json" <<EOF
       }
     }
   ],
-  
+
   "colorTheme": {
     "primary": "#ff0055",
     "secondary": "#00d4ff",
@@ -208,7 +210,7 @@ cat > "frontend/tools/${TOOL_NUM}-${SUBDOMAIN}/${SUBDOMAIN}-config.json" <<EOF
     "surface": "#1a1f3a",
     "text": "#ffffff"
   },
-  
+
   "navigationItems": [
     {
       "label": "Dashboard",
@@ -463,11 +465,13 @@ Use this checklist for each of the 49 tools:
 
 ### 2. AI Functions (4-10 per tool)
 
-- [ ] Define primary tool function (e.g., `scan_vulnerability`, `analyze_malware`)
+- [ ] Define primary tool function (e.g., `scan_vulnerability`,
+      `analyze_malware`)
 - [ ] Add data retrieval functions (e.g., `get_scan_results`, `get_history`)
 - [ ] Add visualization functions (e.g., `open_results_chart`, `show_heatmap`)
 - [ ] Add export/reporting functions (e.g., `export_report`, `generate_pdf`)
-- [ ] Add alert/notification functions (e.g., `create_alert`, `send_notification`)
+- [ ] Add alert/notification functions (e.g., `create_alert`,
+      `send_notification`)
 - [ ] Implement all function handlers in `${tool}Functions.ts`
 - [ ] Test function calling with edge cases
 
@@ -546,7 +550,7 @@ Use this checklist for each of the 49 tools:
 
 ```bash
 # Security Controls & Monitoring
-./scripts/create-tool.sh 12 IAMControl iamctrl
+./scripts/create-tool.sh 12 xdrplatform iamctrl
 ./scripts/create-tool.sh 13 LogIntel logintel
 ./scripts/create-tool.sh 14 NetDefender ndefender
 ./scripts/create-tool.sh 15 EndpointShield eshield

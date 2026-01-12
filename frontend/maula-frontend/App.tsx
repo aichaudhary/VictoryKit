@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
@@ -27,7 +26,7 @@ import SecureCodeDetail from './pages/SecureCodeDetail';
 import ComplianceCheckDetail from './pages/ComplianceCheckDetail';
 import DataGuardianDetail from './pages/DataGuardianDetail';
 import CryptoShieldDetail from './pages/CryptoShieldDetail';
-import IAMControlDetail from './pages/IAMControlDetail';
+import xdrplatformDetail from './pages/xdrplatformDetail';
 import LogIntelDetail from './pages/LogIntelDetail';
 import NetDefenderDetail from './pages/NetDefenderDetail';
 import EndpointShieldDetail from './pages/EndpointShieldDetail';
@@ -72,7 +71,13 @@ import ProductsPage from './pages/ProductsPage';
 import SolutionsPage from './pages/SolutionsPage';
 import DocsPage from './pages/DocsPage';
 import PricingPage from './pages/PricingPage';
-import { AboutUs, Careers, Contact, GlobalShieldDetail, LegalPage } from './pages/StaticDetailPages';
+import {
+  AboutUs,
+  Careers,
+  Contact,
+  GlobalShieldDetail,
+  LegalPage,
+} from './pages/StaticDetailPages';
 
 // Dashboard
 import Dashboard from './pages/Dashboard';
@@ -94,7 +99,9 @@ const MainContent: React.FC = () => {
   useEffect(() => {
     ScrollTrigger.config({ ignoreMobileResize: true });
     gsap.defaults({ ease: 'power3.out', duration: 1.2 });
-    window.onload = () => { ScrollTrigger.refresh(); };
+    window.onload = () => {
+      ScrollTrigger.refresh();
+    };
   }, []);
 
   useEffect(() => {
@@ -103,19 +110,81 @@ const MainContent: React.FC = () => {
     let nextColor = '#02000a';
     if (['iam-control', 'zero-trust-ai', 'password-vault', 'biometric-ai'].includes(view)) {
       nextColor = '#040412';
-    } else if (['log-intel', 'incident-command', 'forensics-lab', 'behavior-watch', 'anomaly-detect', 'dr-plan', 'cyber-edu-ai'].includes(view)) {
+    } else if (
+      [
+        'log-intel',
+        'incident-command',
+        'forensics-lab',
+        'behavior-watch',
+        'anomaly-detect',
+        'dr-plan',
+        'cyber-edu-ai',
+      ].includes(view)
+    ) {
       nextColor = '#0d0503';
-    } else if (['net-defender', 'email-guard', 'browser-isolation', 'dns-shield', 'firewall-ai', 'vpn-guardian', 'wireless-watch', 'mobile-defend'].includes(view)) {
+    } else if (
+      [
+        'net-defender',
+        'email-guard',
+        'browser-isolation',
+        'dns-shield',
+        'firewall-ai',
+        'vpn-guardian',
+        'wireless-watch',
+        'mobile-defend',
+      ].includes(view)
+    ) {
       nextColor = '#040d0a';
-    } else if (['fraud-guard', 'dark-web-monitor', 'threat-radar', 'malware-hunter', 'phish-guard', 'endpoint-shield', 'threat-intel'].includes(view)) {
+    } else if (
+      [
+        'fraud-guard',
+        'dark-web-monitor',
+        'threat-radar',
+        'malware-hunter',
+        'phish-guard',
+        'endpoint-shield',
+        'threat-intel',
+      ].includes(view)
+    ) {
       nextColor = '#0d0404';
-    } else if (['cloud-secure', 'api-guardian', 'container-watch', 'devsecops', 'iot-secure', 'secure-code'].includes(view)) {
+    } else if (
+      [
+        'cloud-secure',
+        'api-guardian',
+        'container-watch',
+        'devsecops',
+        'iot-secure',
+        'secure-code',
+      ].includes(view)
+    ) {
       nextColor = '#040d12';
-    } else if (['red-team-ai', 'blue-team-ai', 'siem-commander', 'soar-engine', 'risk-score-ai', 'bug-bounty-ai', 'pen-test-ai'].includes(view)) {
+    } else if (
+      [
+        'red-team-ai',
+        'blue-team-ai',
+        'siem-commander',
+        'soar-engine',
+        'risk-score-ai',
+        'bug-bounty-ai',
+        'pen-test-ai',
+      ].includes(view)
+    ) {
       nextColor = '#08040d';
-    } else if (['policy-engine', 'audit-tracker', 'gdpr-compliance', 'hipaa-guard', 'pcidss-guard', 'compliance-check', 'vuln-scan'].includes(view)) {
+    } else if (
+      [
+        'policy-engine',
+        'audit-tracker',
+        'gdpr-compliance',
+        'hipaa-guard',
+        'pcidss-guard',
+        'compliance-check',
+        'vuln-scan',
+      ].includes(view)
+    ) {
       nextColor = '#0d0a04';
-    } else if (['backup-guard', 'privacy-shield', 'data-guardian', 'crypto-shield'].includes(view)) {
+    } else if (
+      ['backup-guard', 'privacy-shield', 'data-guardian', 'crypto-shield'].includes(view)
+    ) {
       nextColor = '#04080d';
     } else if (view === 'dashboard-api-keys') {
       nextColor = '#02001a';
@@ -133,7 +202,7 @@ const MainContent: React.FC = () => {
       backgroundColor: nextColor,
       duration: 1,
       ease: 'sine.inOut',
-      overwrite: 'auto'
+      overwrite: 'auto',
     });
   }, [currentSection, view]);
 
@@ -156,76 +225,146 @@ const MainContent: React.FC = () => {
       case 'dashboard-settings':
       case 'dashboard-logs':
         return <Dashboard />;
-      case 'dashboard-api-keys': return <APIAccessKeys />;
-      case 'dashboard-admin-hierarchy': return <AdminHierarchy />;
-      case 'dashboard-sovereignty': return <SovereigntyNodes />;
-      case 'products': return <ProductsPage />;
-      case 'solutions': return <SolutionsPage />;
-      case 'docs': return <DocsPage />;
-      case 'pricing': return <PricingPage />;
-      case 'about-us': return <AboutUs />;
-      case 'careers': return <Careers />;
-      case 'press-kit': return <LegalPage title="Press Kit" />;
-      case 'contact': return <Contact />;
-      case 'privacy-policy': return <LegalPage title="Privacy Policy" />;
-      case 'terms-of-service': return <LegalPage title="Terms of Service" />;
-      case 'security-disclosure': return <LegalPage title="Security Disclosure" />;
-      case 'global-shield-detail': return <GlobalShieldDetail />;
-      case 'fraud-guard': return <FraudGuardDetail />;
-      case 'dark-web-monitor': return <DarkWebMonitorDetail />;
-      case 'threat-radar': return <ThreatRadarDetail />;
-      case 'ransom-shield': return <RansomShieldDetail />;
-      case 'phish-guard': return <PhishGuardDetail />;
-      case 'vuln-scan': return <VulnScanDetail />;
-      case 'pen-test-ai': return <PenTestAIDetail />;
-      case 'secure-code': return <SecureCodeDetail />;
-      case 'compliance-check': return <ComplianceCheckDetail />;
-      case 'data-guardian': return <DataGuardianDetail />;
-      case 'crypto-shield': return <CryptoShieldDetail />;
-      case 'iam-control': return <IAMControlDetail />;
-      case 'log-intel': return <LogIntelDetail />;
-      case 'net-defender': return <NetDefenderDetail />;
-      case 'endpoint-shield': return <EndpointShieldDetail />;
-      case 'cloud-secure': return <CloudSecureDetail />;
-      case 'api-guardian': return <APIGuardianDetail />;
-      case 'container-watch': return <ContainerWatchDetail />;
-      case 'devsecops': return <DevSecOpsDetail />;
-      case 'incident-command': return <IncidentCommandDetail />;
-      case 'waf-manager': return <WAFManagerDetail />;
-      case 'threat-intel': return <ThreatIntelDetail />;
-      case 'api-shield': return <ThreatIntelDetail />;
-      case 'behavior-watch': return <BehaviorWatchDetail />;
-      case 'bot-mitigation': return <BehaviorWatchDetail />;
-      case 'anomaly-detect': return <AnomalyDetectDetail />;
-      case 'ddos-defender': return <AnomalyDetectDetail />;
-      case 'red-team-ai': return <RedTeamAIDetail />;
-      case 'ssl-monitor': return <RedTeamAIDetail />;
-      case 'blue-team-ai': return <BlueTeamAIDetail />;
-      case 'siem-commander': return <SIEMCommanderDetail />;
-      case 'soar-engine': return <SOAREngineDetail />;
-      case 'risk-score-ai': return <RiskScoreAIDetail />;
-      case 'policy-engine': return <PolicyEngineDetail />;
-      case 'audit-tracker': return <AuditTrackerDetail />;
-      case 'zero-trust-ai': return <ZeroTrustAIDetail />;
-      case 'password-vault': return <PasswordVaultDetail />;
-      case 'biometric-ai': return <BiometricAIDetail />;
-      case 'email-guard': return <EmailGuardDetail />;
-      case 'browser-isolation': return <BrowserIsolationDetail />;
-      case 'dns-shield': return <DNSShieldDetail />;
-      case 'firewall-ai': return <FirewallAIDetail />;
-      case 'vpn-guardian': return <VPNGuardianDetail />;
-      case 'wireless-watch': return <WirelessWatchDetail />;
-      case 'iot-secure': return <IoTSecureDetail />;
-      case 'mobile-defend': return <MobileDefendDetail />;
-      case 'backup-guard': return <BackupGuardDetail />;
-      case 'dr-plan': return <DRPlanDetail />;
-      case 'privacy-shield': return <PrivacyShieldDetail />;
-      case 'gdpr-compliance': return <GDPRComplianceDetail />;
-      case 'hipaa-guard': return <HIPAAGuardDetail />;
-      case 'pcidss-guard': return <PCIDSSDetail />;
-      case 'bug-bounty-ai': return <BugBountyAIDetail />;
-      case 'cyber-edu-ai': return <CyberEduAIDetail />;
-      default: return null;
+      case 'dashboard-api-keys':
+        return <APIAccessKeys />;
+      case 'dashboard-admin-hierarchy':
+        return <AdminHierarchy />;
+      case 'dashboard-sovereignty':
+        return <SovereigntyNodes />;
+      case 'products':
+        return <ProductsPage />;
+      case 'solutions':
+        return <SolutionsPage />;
+      case 'docs':
+        return <DocsPage />;
+      case 'pricing':
+        return <PricingPage />;
+      case 'about-us':
+        return <AboutUs />;
+      case 'careers':
+        return <Careers />;
+      case 'press-kit':
+        return <LegalPage title="Press Kit" />;
+      case 'contact':
+        return <Contact />;
+      case 'privacy-policy':
+        return <LegalPage title="Privacy Policy" />;
+      case 'terms-of-service':
+        return <LegalPage title="Terms of Service" />;
+      case 'security-disclosure':
+        return <LegalPage title="Security Disclosure" />;
+      case 'global-shield-detail':
+        return <GlobalShieldDetail />;
+      case 'fraud-guard':
+        return <FraudGuardDetail />;
+      case 'dark-web-monitor':
+        return <DarkWebMonitorDetail />;
+      case 'threat-radar':
+        return <ThreatRadarDetail />;
+      case 'ransom-shield':
+        return <RansomShieldDetail />;
+      case 'phish-guard':
+        return <PhishGuardDetail />;
+      case 'vuln-scan':
+        return <VulnScanDetail />;
+      case 'pen-test-ai':
+        return <PenTestAIDetail />;
+      case 'secure-code':
+        return <SecureCodeDetail />;
+      case 'compliance-check':
+        return <ComplianceCheckDetail />;
+      case 'data-guardian':
+        return <DataGuardianDetail />;
+      case 'crypto-shield':
+        return <CryptoShieldDetail />;
+      case 'iam-control':
+        return <xdrplatformDetail />;
+      case 'log-intel':
+        return <LogIntelDetail />;
+      case 'net-defender':
+        return <NetDefenderDetail />;
+      case 'endpoint-shield':
+        return <EndpointShieldDetail />;
+      case 'cloud-secure':
+        return <CloudSecureDetail />;
+      case 'api-guardian':
+        return <APIGuardianDetail />;
+      case 'container-watch':
+        return <ContainerWatchDetail />;
+      case 'devsecops':
+        return <DevSecOpsDetail />;
+      case 'incident-command':
+        return <IncidentCommandDetail />;
+      case 'waf-manager':
+        return <WAFManagerDetail />;
+      case 'threat-intel':
+        return <ThreatIntelDetail />;
+      case 'api-shield':
+        return <ThreatIntelDetail />;
+      case 'behavior-watch':
+        return <BehaviorWatchDetail />;
+      case 'bot-mitigation':
+        return <BehaviorWatchDetail />;
+      case 'anomaly-detect':
+        return <AnomalyDetectDetail />;
+      case 'ddos-defender':
+        return <AnomalyDetectDetail />;
+      case 'red-team-ai':
+        return <RedTeamAIDetail />;
+      case 'ssl-monitor':
+        return <RedTeamAIDetail />;
+      case 'blue-team-ai':
+        return <BlueTeamAIDetail />;
+      case 'siem-commander':
+        return <SIEMCommanderDetail />;
+      case 'soar-engine':
+        return <SOAREngineDetail />;
+      case 'risk-score-ai':
+        return <RiskScoreAIDetail />;
+      case 'policy-engine':
+        return <PolicyEngineDetail />;
+      case 'audit-tracker':
+        return <AuditTrackerDetail />;
+      case 'zero-trust-ai':
+        return <ZeroTrustAIDetail />;
+      case 'password-vault':
+        return <PasswordVaultDetail />;
+      case 'biometric-ai':
+        return <BiometricAIDetail />;
+      case 'email-guard':
+        return <EmailGuardDetail />;
+      case 'browser-isolation':
+        return <BrowserIsolationDetail />;
+      case 'dns-shield':
+        return <DNSShieldDetail />;
+      case 'firewall-ai':
+        return <FirewallAIDetail />;
+      case 'vpn-guardian':
+        return <VPNGuardianDetail />;
+      case 'wireless-watch':
+        return <WirelessWatchDetail />;
+      case 'iot-secure':
+        return <IoTSecureDetail />;
+      case 'mobile-defend':
+        return <MobileDefendDetail />;
+      case 'backup-guard':
+        return <BackupGuardDetail />;
+      case 'dr-plan':
+        return <DRPlanDetail />;
+      case 'privacy-shield':
+        return <PrivacyShieldDetail />;
+      case 'gdpr-compliance':
+        return <GDPRComplianceDetail />;
+      case 'hipaa-guard':
+        return <HIPAAGuardDetail />;
+      case 'pcidss-guard':
+        return <PCIDSSDetail />;
+      case 'bug-bounty-ai':
+        return <BugBountyAIDetail />;
+      case 'cyber-edu-ai':
+        return <CyberEduAIDetail />;
+      default:
+        return null;
     }
   };
 
@@ -233,7 +372,7 @@ const MainContent: React.FC = () => {
   if (activeView) return activeView;
 
   return (
-    <div 
+    <div
       ref={mainRef}
       className="text-white selection:bg-white/10 relative min-h-screen transition-none"
       style={{ backgroundColor: '#02000a' }}
@@ -243,23 +382,19 @@ const MainContent: React.FC = () => {
 
       <Header />
       <SideNavigation />
-      
+
       <AIInterface onUpdateImage={() => {}} />
       <AtmosphericTransition />
-      
+
       <main className="relative z-10">
         <HeroSection />
         <div className="space-y-0">
           {tools.map((tool, index) => (
-            <OptimizedToolSection 
-              key={tool.id} 
-              tool={tool} 
-              index={index} 
-            />
+            <OptimizedToolSection key={tool.id} tool={tool} index={index} />
           ))}
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

@@ -58,7 +58,7 @@ Batch 2 - Security Operations (07-11):
 • CryptoShield (cshield.maula.ai) - Cryptography
 
 Batch 3 - Infrastructure Security (12-21):
-• IAMControl (iamcontrol.maula.ai) - IAM Management
+• xdrplatform (xdrplatform.maula.ai) - IAM Management
 • LogIntel (logintel.maula.ai) - Log Analysis
 • NetDefender (netdefender.maula.ai) - Network Defense
 • EndpointShield (endpointshield.maula.ai) - Endpoint Protection
