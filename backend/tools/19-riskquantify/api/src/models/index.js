@@ -1,57 +1,41 @@
 /**
- * RiskQuantify Pro - Models Index
- * ================================
- * Centralized model exports for the Enterprise Risk Quantification Platform
- * 
+ * RiskQuantify - Models Index
+ * ===========================
+ * Centralized model exports for IP Risk Scanner & Payment Sandbox Platform
+ *
  * Models:
- * - Risk: Core risk entities with FAIR framework support
- * - RiskAssessment: Assessment workflows and sessions
- * - RiskRegister: Risk register snapshots and reporting
- * - Threat: Threat intelligence catalog
- * - Asset: Asset inventory for risk mapping
- * - Control: Control library and effectiveness tracking
- * - Assessment: Assessment templates and configurations
- * 
+ * - IPLookup: IP address analysis results and caching
+ * - DeviceFingerprint: Device fingerprint tracking and trust scores
+ * - PaymentSimulation: Payment sandbox simulation results
+ * - BlacklistCache: Cached blacklist check results
+ *
  * @module models
- * @version 19.0.0
+ * @version 19.1.0
  */
 
-const Risk = require('./Risk');
-const RiskAssessment = require('./RiskAssessment');
-const RiskRegister = require('./RiskRegister');
-const Threat = require('./Threat');
-const Asset = require('./Asset');
-const Control = require('./Control');
-const Assessment = require('./Assessment');
+const IPLookup = require('./IPLookup');
+const DeviceFingerprint = require('./DeviceFingerprint');
+const PaymentSimulation = require('./PaymentSimulation');
+const BlacklistCache = require('./BlacklistCache');
 
 module.exports = {
-  // Primary Risk Models
-  Risk,
-  RiskAssessment,
-  RiskRegister,
-  
-  // Supporting Models
-  Threat,
-  Asset,
-  Control,
-  Assessment,
-  
+  // Primary Models
+  IPLookup,
+  DeviceFingerprint,
+  PaymentSimulation,
+  BlacklistCache,
+
   // Aliases for consistency
-  RiskModel: Risk,
-  AssessmentModel: RiskAssessment,
-  RegisterModel: RiskRegister,
-  ThreatModel: Threat,
-  AssetModel: Asset,
-  ControlModel: Control,
-  
+  IPLookupModel: IPLookup,
+  DeviceModel: DeviceFingerprint,
+  PaymentModel: PaymentSimulation,
+  BlacklistModel: BlacklistCache,
+
   // Model names for dynamic loading
   modelNames: [
-    'Risk',
-    'RiskAssessment',
-    'RiskRegister',
-    'Threat',
-    'Asset',
-    'Control',
-    'Assessment'
-  ]
+    'IPLookup',
+    'DeviceFingerprint',
+    'PaymentSimulation',
+    'BlacklistCache',
+  ],
 };

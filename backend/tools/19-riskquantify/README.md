@@ -1,13 +1,15 @@
-# 📊 RiskQuantify Pro - Enterprise Risk Quantification Platform
+# 🛡️ RiskQuantify - IP Risk Scanner & Payment Sandbox
 
-![RiskQuantify Logo](https://img.shields.io/badge/RiskQuantify-Risk%20Intelligence-8b5cf6?style=for-the-badge&logo=chart-line&logoColor=white)
+![RiskQuantify Logo](https://img.shields.io/badge/RiskQuantify-IP%20Risk%20Scanner-8b5cf6?style=for-the-badge&logo=shield&logoColor=white)
 
-[![Version](https://img.shields.io/badge/version-19.0.0-8b5cf6.svg)](https://github.com/VM07B/VictoryKit)
+[![Version](https://img.shields.io/badge/version-19.1.0-8b5cf6.svg)](https://github.com/aichaudhary/VictoryKit)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933.svg)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248.svg)](https://mongodb.com/)
 
-**Enterprise-Grade Risk Quantification, FAIR Framework, and Monte Carlo Simulation Platform**
+**Real-time IP Risk Analysis, Device Fingerprinting & Payment Simulation Platform**
+
+🌐 **Live:** https://riskquantify.maula.ai
 
 ---
 
@@ -20,170 +22,234 @@
 5. [Installation](#-installation)
 6. [API Reference](#-api-reference)
 7. [Database Schema](#-database-schema)
-8. [ML Models](#-ml-models)
+8. [Third-Party APIs](#-third-party-apis)
 9. [Deployment](#-deployment)
 
 ---
 
 ## 🎯 Overview
 
-**RiskQuantify Pro** is a cutting-edge enterprise risk quantification platform that transforms traditional qualitative risk assessments into data-driven, quantitative insights. Using the FAIR (Factor Analysis of Information Risk) framework, Monte Carlo simulations, and AI-powered analysis, it provides actionable financial risk metrics for informed decision-making.
+**RiskQuantify** is a user-facing IP risk scanner and payment sandbox platform. Similar to ip-score.com, it allows users to check their IP reputation, risk scores, blacklist status, and simulate payment scenarios to understand potential payment declines.
 
-### Why RiskQuantify Pro?
+### Why RiskQuantify?
 
-- **FAIR Framework**: Industry-standard risk quantification methodology
-- **Monte Carlo Simulation**: 10,000+ iterations for statistical confidence
-- **AI-Powered Analysis**: Multi-LLM ensemble for intelligent recommendations
-- **Real-time Collaboration**: WebSocket-based team collaboration
-- **Compliance Mapping**: 7+ frameworks (ISO 31000, NIST, COSO, COBIT, SOX, GDPR, HIPAA)
-- **Executive Reporting**: Board-ready risk reports with VaR/CVaR metrics
+- **Auto IP Detection**: Automatically detects visitor's IP on page load
+- **Real-time Risk Scoring**: Risk, Fraud, and Abuse scores (0-100)
+- **Blacklist Checking**: 10+ major blacklist databases
+- **Device Fingerprinting**: Browser, OS, canvas, WebGL fingerprints
+- **Payment Sandbox**: Test payment scenarios with different configurations
+- **VPN/Proxy Detection**: Identifies VPN, Proxy, Tor, Datacenter IPs
 
 ### Use Cases
 
 | Use Case | Description |
 |----------|-------------|
-| **Risk Quantification** | Convert qualitative risks to financial values |
-| **FAIR Analysis** | Factor Analysis of Information Risk |
-| **Monte Carlo** | Probabilistic risk simulation |
-| **Compliance** | Multi-framework compliance mapping |
-| **Board Reporting** | Executive risk dashboards |
-| **Third-Party Risk** | Vendor risk quantification |
+| **IP Risk Check** | Users check their own IP reputation |
+| **Payment Troubleshooting** | Understand why payments get declined |
+| **VPN Detection** | Check if VPN/Proxy is detected |
+| **Blacklist Lookup** | See if IP is on any blacklists |
+| **Device Trust** | Analyze device fingerprint trust score |
+| **Payment Testing** | Simulate payments before real transactions |
 
 ---
 
 ## ✨ Key Features
 
-### 📈 Risk Quantification Engine
+### 🔍 Tab 1: My IP Scanner (Auto-Detection)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                RISK QUANTIFICATION PIPELINE                      │
+│                    AUTO IP DETECTION                             │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│   │  Risk        │  │   FAIR       │  │  Monte       │         │
-│   │  Input       │──▶│  Framework   │──▶│  Carlo       │         │
-│   └──────────────┘  └──────────────┘  └──────────────┘         │
-│          │                                    │                  │
-│          │         ┌──────────────┐          │                  │
-│          │         │  AI Engine   │          │                  │
-│          └────────▶│  (Analysis)  │◀─────────┘                  │
-│                    └──────┬───────┘                             │
-│                           │                                      │
-│          ┌────────────────┼────────────────┐                    │
-│          ▼                ▼                ▼                    │
-│   ┌──────────────┐ ┌──────────────┐ ┌──────────────┐           │
-│   │  Financial   │ │   Risk       │ │   Mitigat-   │           │
-│   │  Impact ($)  │ │   Metrics    │ │   ion Plan   │           │
-│   └──────────────┘ └──────────────┘ └──────────────┘           │
+│   ┌──────────────┐     ┌──────────────┐     ┌──────────────┐   │
+│   │  Visitor     │     │  IP Risk     │     │  Device      │   │
+│   │  IP Detect   │────▶│  Analysis    │────▶│  Fingerprint │   │
+│   └──────────────┘     └──────────────┘     └──────────────┘   │
+│                                                                  │
+│   Outputs:                                                       │
+│   • Risk Score (0-100)      • VPN/Proxy Detection               │
+│   • Fraud Score (0-100)     • Tor Exit Node Check               │
+│   • Abuse Score (0-100)     • Datacenter IP Detection           │
+│   • Blacklist Status        • Bot/Crawler Detection             │
+│   • Reputation Level        • Device Trust Score                │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 🎯 FAIR Framework Implementation
+**Risk Scores:**
+- **Risk Score**: Overall IP risk (0-100)
+- **Fraud Score**: Likelihood of fraudulent activity
+- **Abuse Score**: History of abuse reports
 
-- **Threat Event Frequency (TEF)**: Contact frequency × Probability of action
-- **Vulnerability**: Threat capability vs. resistance strength
-- **Loss Event Frequency (LEF)**: TEF × Vulnerability
-- **Primary Loss**: Productivity, response, replacement, fines, competitive advantage, reputation
-- **Secondary Loss**: Notification, credit monitoring, legal, regulatory
-- **Annual Loss Expectancy (ALE)**: Full probability distribution
+**Detection Flags:**
+| Flag | Description |
+|------|-------------|
+| VPN | Virtual Private Network detected |
+| Proxy | HTTP/SOCKS proxy detected |
+| Tor | Tor exit node detected |
+| Datacenter | Cloud/hosting provider IP |
+| Bot | Automated traffic detected |
+| Relay | Mail/open relay detected |
 
-### 🎲 Monte Carlo Simulation
+**Reputation Levels:**
+- 🟢 **Excellent** (0-10 risk)
+- 🟢 **Good** (10-20 risk)
+- ⚪ **Neutral** (20-40 risk)
+- 🟡 **Suspicious** (40-60 risk)
+- 🟠 **Bad** (60-80 risk)
+- 🔴 **Critical** (80-100 risk)
 
-- **10,000+ Iterations**: Statistical significance
-- **Multiple Distributions**: PERT, triangular, normal, lognormal, uniform
-- **VaR/CVaR Metrics**: Value at Risk and Conditional VaR
-- **Percentile Outputs**: 5th, 25th, 50th, 75th, 95th, 99th
-- **Histogram Visualization**: Loss distribution curves
-- **Sensitivity Analysis**: Tornado diagrams
+### 🌐 Tab 2: IP Lookup (Manual)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MANUAL IP LOOKUP                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   Enter any IP ──▶ [192.168.1.1] ──▶ [Analyze]                 │
+│                                                                  │
+│   Quick Examples: 8.8.8.8 | 1.1.1.1 | 185.220.101.1            │
+│                                                                  │
+│   Returns same analysis as auto-detection:                       │
+│   • Risk/Fraud/Abuse Scores                                      │
+│   • Detection Flags (VPN, Proxy, Tor, etc.)                     │
+│   • Location (Country, City, Region, Timezone)                  │
+│   • Network Info (ISP, Organization, ASN)                       │
+│   • Blacklist Status (10 databases)                             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 🎮 Tab 3: Payment Sandbox (Playground)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   PAYMENT SANDBOX                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   Configuration:                                                 │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│   │  Amount      │  │  Currency    │  │  Region      │         │
+│   │  [$100]      │  │  [USD ▼]     │  │  [US ▼]      │         │
+│   └──────────────┘  └──────────────┘  └──────────────┘         │
+│                                                                  │
+│   ┌──────────────┐                                              │
+│   │  Method      │  [💳 Card ▼]                                 │
+│   └──────────────┘                                              │
+│                                                                  │
+│   Quick Scenarios:                                               │
+│   • Small Purchase ($25 USD)                                    │
+│   • Medium Purchase ($150 EUR)                                  │
+│   • Large Purchase ($1500 USD)                                  │
+│   • High Risk Region ($100 RU)                                  │
+│                                                                  │
+│   [🚀 Simulate Payment]                                         │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Payment Simulation Checks:**
+| Check | Description |
+|-------|-------------|
+| IP Reputation | IP risk score threshold |
+| VPN/Proxy Check | VPN/Proxy detection |
+| Datacenter IP | Cloud provider detection |
+| Device Trust | Device fingerprint score |
+| Blacklist Check | IP blacklist status |
+| Geographic Risk | High-risk region detection |
+| Amount Check | Transaction amount threshold |
+| Tor Network | Tor exit node detection |
+
+**Result Statuses:**
+- ✅ **Approved** - Payment would succeed
+- 🔄 **Pending** - Additional verification needed
+- ⚠️ **Review** - Manual review required
+- ❌ **Declined** - Payment blocked with reason
 
 ---
 
 ## 🏗️ Architecture
 
-### System Architecture
-
 ```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                         RISKQUANTIFY PLATFORM                               │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │                         FRONTEND LAYER                               │   │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌────────────┐ │   │
-│  │  │  Risk       │  │   FAIR      │  │   Monte     │  │  Reports   │ │   │
-│  │  │  Dashboard  │  │   Wizard    │  │   Carlo     │  │  Builder   │ │   │
-│  │  └─────────────┘  └─────────────┘  └─────────────┘  └────────────┘ │   │
-│  │                         Port: 3019                                   │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                    │                                        │
-│                                    ▼                                        │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │                          API GATEWAY                                 │   │
-│  │              Authentication │ Rate Limiting │ Routing                │   │
-│  │                         Port: 4000                                   │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                    │                                        │
-│                    ┌───────────────┼───────────────┐                       │
-│                    ▼               ▼               ▼                       │
-│  ┌──────────────────────┐ ┌──────────────────┐ ┌──────────────────────┐   │
-│  │    BACKEND API       │ │   AI ASSISTANT   │ │   ML ENGINE          │   │
-│  │    Node.js/Express   │ │   WebSocket      │ │   Python/FastAPI     │   │
-│  │    Port: 4019        │ │   Port: 4119     │ │   Port: 8019         │   │
-│  └──────────────────────┘ └──────────────────┘ └──────────────────────┘   │
-│           │                       │                       │                │
-│           └───────────────────────┼───────────────────────┘                │
-│                                   ▼                                        │
-│  ┌─────────────────────────────────────────────────────────────────────┐   │
-│  │                        DATA LAYER                                    │   │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌────────────┐ │   │
-│  │  │   MongoDB   │  │    Redis    │  │   MinIO     │  │   Kafka    │ │   │
-│  │  │   Primary   │  │   Cache     │  │   Reports   │  │   Events   │ │   │
-│  │  └─────────────┘  └─────────────┘  └─────────────┘  └────────────┘ │   │
-│  └─────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-└────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                    RISKQUANTIFY ARCHITECTURE                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   FRONTEND (React + Vite)           Port: 3019                  │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐  │   │
+│   │  │ Scanner  │  │ Lookup   │  │ Payment Playground   │  │   │
+│   │  │ Tab      │  │ Tab      │  │ Tab                  │  │   │
+│   │  └──────────┘  └──────────┘  └──────────────────────┘  │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                              │                                   │
+│                              ▼                                   │
+│   BACKEND API (Node.js + Express)   Port: 4019                  │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │   │
+│   │  │ IP Analysis  │  │ Device       │  │ Payment      │  │   │
+│   │  │ Service      │  │ Fingerprint  │  │ Simulator    │  │   │
+│   │  └──────────────┘  └──────────────┘  └──────────────┘  │   │
+│   │                                                         │   │
+│   │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │   │
+│   │  │ Blacklist    │  │ GeoIP        │  │ Reputation   │  │   │
+│   │  │ Checker      │  │ Service      │  │ Service      │  │   │
+│   │  └──────────────┘  └──────────────┘  └──────────────┘  │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                              │                                   │
+│                              ▼                                   │
+│   EXTERNAL APIS                                                  │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │  • ipify.org (IP detection)                             │   │
+│   │  • IP-API (Geolocation)                                 │   │
+│   │  • AbuseIPDB (Abuse reports)                            │   │
+│   │  • IPQualityScore (Fraud scoring)                       │   │
+│   │  • Shodan (Network intelligence)                        │   │
+│   │  • MaxMind GeoIP2 (Premium geolocation)                 │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                              │                                   │
+│                              ▼                                   │
+│   DATABASE (MongoDB)                                             │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │  • ip_lookups (lookup history & caching)                │   │
+│   │  • device_fingerprints (device tracking)                │   │
+│   │  • payment_simulations (sandbox results)                │   │
+│   │  • blacklist_cache (cached blacklist data)              │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
-
-### Component Breakdown
-
-| Component | Technology | Port | Purpose |
-|-----------|------------|------|---------|
-| Frontend | React 19 + TypeScript | 3019 | User interface |
-| API Gateway | Express.js | 4000 | Authentication and routing |
-| Backend API | Node.js + Express | 4019 | Business logic |
-| AI Assistant | Node.js + WebSocket | 4119 | Real-time collaboration |
-| ML Engine | Python + FastAPI | 8019 | Monte Carlo and ML |
-| Database | MongoDB 7.0 | 27017 | Data persistence |
-| Cache | Redis 7.0 | 6379 | Session and caching |
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Backend Technologies
+### Frontend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| React | 18.x | UI framework |
+| TypeScript | 5.x | Type safety |
+| Vite | 6.x | Build tool |
+| TailwindCSS | 3.x | Styling |
 
-| Category | Technology | Version | Purpose |
-|----------|------------|---------|---------|
-| **Runtime** | Node.js | 18+ | Server runtime |
-| **Framework** | Express.js | 4.18 | REST API framework |
-| **Language** | TypeScript | 5.3 | Type safety |
-| **Database** | MongoDB | 7.0 | Document storage |
-| **ODM** | Mongoose | 8.0 | MongoDB modeling |
-| **WebSocket** | Socket.io | 4.7 | Real-time communication |
-| **Queue** | Bull + Redis | 5.0 | Job processing |
+### Backend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Node.js | 18+ | Runtime |
+| Express | 4.x | API framework |
+| MongoDB | 7.0 | Database |
+| Redis | 7.x | Caching |
 
-### ML Engine Technologies
-
-| Category | Technology | Version | Purpose |
-|----------|------------|---------|---------|
-| **Runtime** | Python | 3.11 | ML runtime |
-| **Framework** | FastAPI | 0.109 | Async API |
-| **Simulation** | NumPy/SciPy | 1.26 | Monte Carlo |
-| **ML** | scikit-learn | 1.4 | Risk models |
-| **Statistics** | statsmodels | 0.14 | Time series |
-| **Visualization** | Matplotlib | 3.8 | Chart generation |
+### External APIs
+| Service | Purpose |
+|---------|---------|
+| ipify.org | IP detection |
+| IP-API | Geolocation |
+| AbuseIPDB | Abuse reports |
+| IPQualityScore | Fraud scoring |
+| Shodan | Network intel |
+| MaxMind | Premium GeoIP |
 
 ---
 
@@ -191,105 +257,107 @@
 
 ### Prerequisites
 
-```bash
-# Required software
-Node.js >= 18.0.0
-Python >= 3.11
-MongoDB >= 7.0
-Redis >= 7.0
-```
+- Node.js 18+
+- MongoDB 7.0+
+- Redis 7.x (optional, for caching)
+- API keys for external services
 
 ### Quick Start
 
 ```bash
 # Clone repository
-git clone https://github.com/VM07B/VictoryKit.git
-cd VictoryKit
+git clone https://github.com/aichaudhary/VictoryKit.git
+cd VictoryKit/backend/tools/19-riskquantify
 
-# Install backend dependencies
-cd backend/tools/19-riskquantify/api
-npm install
+# Install dependencies
+cd api && npm install
 
-# Install ML engine dependencies
-cd ../ml-engine
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# Install frontend dependencies
-cd ../../../../frontend/tools/19-riskquantify
-npm install
-
-# Setup environment variables
+# Configure environment
 cp .env.example .env
+# Edit .env with your API keys
 
-# Start development servers
+# Start development server
+npm run dev
+
+# Frontend (separate terminal)
+cd ../../frontend/tools/19-riskquantify
+npm install
 npm run dev
 ```
 
 ---
 
-## 📚 API Reference
+## 📡 API Reference
 
-### Base URL
+### IP Analysis
 
-```
-Production: https://riskquantify.maula.ai/api/v1
-Development: http://localhost:4019/api/v1
-```
-
-### Risk Management
-
-#### Create Risk
-
-```http
-POST /api/v1/riskquantify/risks
-Authorization: Bearer {token}
-Content-Type: application/json
-```
+#### GET /api/v1/ip/analyze
+Analyze an IP address for risk factors.
 
 **Request:**
+```bash
+GET /api/v1/ip/analyze?ip=192.168.1.1
+```
+
+**Response:**
 ```json
 {
-  "name": "Data Breach - Customer PII",
-  "category": "cyber",
-  "description": "Unauthorized access to customer database",
-  "assessment": {
-    "probability": 0.15,
-    "impact": 8,
-    "velocity": "weeks"
-  },
-  "fair": {
-    "lef": {
-      "threatEventFrequency": 12,
-      "vulnerability": 0.3
+  "success": true,
+  "data": {
+    "ip": "192.168.1.1",
+    "riskScore": 25,
+    "fraudScore": 30,
+    "abuseScore": 15,
+    "flags": {
+      "isVpn": false,
+      "isProxy": false,
+      "isTor": false,
+      "isDatacenter": false,
+      "isBot": false,
+      "isRelay": false
     },
-    "lm": {
-      "primaryLoss": {
-        "productivity": 50000,
-        "response": 200000,
-        "finesJudgments": 500000,
-        "reputation": 1000000
-      }
-    }
+    "location": {
+      "country": "United States",
+      "countryCode": "US",
+      "city": "New York",
+      "region": "New York",
+      "timezone": "America/New_York"
+    },
+    "network": {
+      "isp": "Comcast Cable",
+      "org": "Comcast Corporation",
+      "asn": "AS7922"
+    },
+    "blacklists": [
+      { "name": "Spamhaus ZEN", "listed": false, "type": "spam" },
+      { "name": "AbuseIPDB", "listed": false, "type": "abuse" }
+    ],
+    "reputation": "good",
+    "reportCount": 0
   }
 }
 ```
 
-#### Run Monte Carlo Simulation
+#### GET /api/v1/ip/my
+Get visitor's own IP analysis.
 
-```http
-POST /api/v1/riskquantify/risks/{riskId}/simulate
-Authorization: Bearer {token}
-Content-Type: application/json
-```
+**Response:** Same as above, using request IP.
+
+### Device Fingerprint
+
+#### POST /api/v1/device/analyze
+Analyze device fingerprint for trust score.
 
 **Request:**
 ```json
 {
-  "iterations": 10000,
-  "distribution": "pert",
-  "confidenceLevels": [0.05, 0.50, 0.95, 0.99]
+  "userAgent": "Mozilla/5.0...",
+  "screenResolution": "1920x1080",
+  "language": "en-US",
+  "timezone": "America/New_York",
+  "plugins": 5,
+  "canvas": "abc123...",
+  "webgl": "def456..."
 }
 ```
 
@@ -298,628 +366,238 @@ Content-Type: application/json
 {
   "success": true,
   "data": {
-    "riskId": "risk_abc123",
-    "simulation": {
-      "iterations": 10000,
-      "results": {
-        "mean": 1250000,
-        "median": 980000,
-        "standardDeviation": 450000,
-        "percentile5": 350000,
-        "percentile95": 2100000,
-        "percentile99": 2850000,
-        "valueAtRisk": 2100000,
-        "conditionalVaR": 2450000
-      },
-      "histogram": [
-        { "bucket": 0, "count": 150 },
-        { "bucket": 500000, "count": 2300 },
-        { "bucket": 1000000, "count": 3800 }
-      ]
-    }
+    "fingerprint": "FP-A1B2C3D4E5F6",
+    "trustScore": 85,
+    "browser": "Chrome",
+    "browserVersion": "120",
+    "os": "Windows",
+    "osVersion": "11",
+    "device": "Desktop",
+    "flags": []
+  }
+}
+```
+
+### Payment Simulation
+
+#### POST /api/v1/payment/simulate
+Simulate a payment with current IP and device.
+
+**Request:**
+```json
+{
+  "amount": 100,
+  "currency": "USD",
+  "region": "US",
+  "method": "card",
+  "ipData": { ... },
+  "deviceData": { ... }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "TXN-ABC123",
+    "status": "approved",
+    "riskScore": 25,
+    "checks": [
+      { "name": "IP Reputation", "passed": true, "message": "IP has good reputation" },
+      { "name": "VPN/Proxy Check", "passed": true, "message": "No VPN/Proxy detected" }
+    ],
+    "processingTime": 245
   }
 }
 ```
 
 ---
 
-## 🗄️ Database Schema
+## 💾 Database Schema
 
-### Collections Overview (8 Models, 50+ Indexes)
-
-```
-victorykit (MongoDB Atlas - Shared Database)
-├── risks              # Core risk entities with FAIR data
-├── riskassessments    # Assessment sessions and workflows
-├── riskregisters      # Risk register snapshots
-├── threats            # Threat catalog and intelligence
-├── controls           # Control library and effectiveness
-├── assets             # Asset inventory for risk mapping
-├── simulations        # Monte Carlo simulation results
-└── compliancemaps     # Framework compliance mappings
-```
-
-### Model Summary Table
-
-| Model | Collection | Indexes | Purpose |
-|-------|------------|---------|---------|
-| **Risk** | risks | 10 | Core risk entities |
-| **RiskAssessment** | riskassessments | 8 | Assessment workflows |
-| **RiskRegister** | riskregisters | 6 | Register snapshots |
-| **Threat** | threats | 8 | Threat intelligence |
-| **Control** | controls | 6 | Control library |
-| **Asset** | assets | 8 | Asset inventory |
-| **Simulation** | simulations | 5 | Monte Carlo results |
-| **ComplianceMap** | compliancemaps | 4 | Framework mappings |
-
-### 1. Risk Schema
-
+### IP Lookups Collection
 ```javascript
-// risks collection - Core risk entities with FAIR framework
 {
   _id: ObjectId,
-  riskId: String,            // Unique
-  userId: ObjectId,
-  organizationId: ObjectId,
-  
-  name: String,
-  description: String,
-  category: ['operational', 'financial', 'strategic', 'compliance', 'cyber'],
-  subcategory: String,
-  tags: [String],
-  
-  // FAIR Framework
-  fair: {
-    lef: {
-      threatEventFrequency: Number,
-      vulnerability: Number,
-      calculated: Number
-    },
-    lm: {
-      primaryLoss: {
-        productivity: Number,
-        response: Number,
-        replacement: Number,
-        finesJudgments: Number,
-        competitiveAdvantage: Number,
-        reputation: Number
-      },
-      secondaryLoss: {
-        probability: Number,
-        magnitude: Number
-      },
-      calculated: Number
-    },
-    ale: {
-      minimum: Number,
-      mostLikely: Number,
-      maximum: Number,
-      mean: Number,
-      standardDeviation: Number
-    }
+  ip: String,                    // IP address
+  riskScore: Number,             // 0-100
+  fraudScore: Number,            // 0-100
+  abuseScore: Number,            // 0-100
+  flags: {
+    isVpn: Boolean,
+    isProxy: Boolean,
+    isTor: Boolean,
+    isDatacenter: Boolean,
+    isBot: Boolean,
+    isRelay: Boolean
   },
-  
-  // Traditional Assessment
-  assessment: {
-    probability: Number,
-    impact: Number,
-    riskScore: Number,
-    riskLevel: ['critical', 'high', 'medium', 'low', 'negligible'],
-    velocity: ['immediate', 'days', 'weeks', 'months', 'years']
-  },
-  
-  // Monte Carlo Results
-  simulation: {
-    iterations: Number,
-    distribution: String,
-    results: {
-      mean: Number,
-      median: Number,
-      percentile95: Number,
-      valueAtRisk: Number,
-      conditionalVaR: Number
-    }
-  },
-  
-  ownership: {
-    owner: ObjectId,
-    ownerName: String,
-    department: String
-  },
-  
-  status: ['draft', 'identified', 'assessed', 'mitigated', 'accepted', 'closed'],
-  treatmentStrategy: ['mitigate', 'accept', 'transfer', 'avoid'],
-  
-  compliance: {
-    frameworks: [{
-      name: String,
-      controls: [String],
-      compliant: Boolean
-    }]
-  },
-  
-  aiAnalysis: {
-    confidenceScore: Number,
-    predictedTrend: String,
-    recommendations: [Object]
-  },
-  
-  createdAt: Date,
-  updatedAt: Date
-}
-
-// Indexes:
-// - { riskId: 1 } (unique)
-// - { userId: 1, status: 1, 'assessment.riskLevel': 1 }
-// - { organizationId: 1, category: 1, status: 1 }
-// - { 'ownership.owner': 1, status: 1 }
-// - { 'assessment.riskScore': -1 }
-// - { 'fair.ale.mean': -1 }
-// - { 'compliance.frameworks.name': 1 }
-// - { treatmentStrategy: 1, status: 1 }
-// - { tags: 1 }
-// - { createdAt: -1 }
-```
-
-### 2. RiskAssessment Schema
-
-```javascript
-// riskassessments collection - Assessment workflows
-{
-  _id: ObjectId,
-  assessmentId: String,
-  userId: ObjectId,
-  
-  name: String,
-  type: ['initial', 'periodic', 'triggered', 'compliance', 'vendor'],
-  scope: {
-    businessUnits: [String],
-    assetTypes: [String],
-    riskCategories: [String]
-  },
-  
-  methodology: ['fair', 'nist', 'iso31000', 'coso', 'custom'],
-  
-  workflow: {
-    currentPhase: ['planning', 'identification', 'analysis', 'evaluation', 'treatment', 'review'],
-    phases: [{
-      name: String,
-      status: String,
-      completedBy: ObjectId,
-      completedAt: Date
-    }]
-  },
-  
-  participants: [{
-    user: ObjectId,
-    role: ['owner', 'assessor', 'reviewer', 'approver'],
-    assignedAt: Date
-  }],
-  
-  risks: [{ type: ObjectId, ref: 'Risk' }],
-  
-  summary: {
-    totalRisks: Number,
-    byLevel: {
-      critical: Number,
-      high: Number,
-      medium: Number,
-      low: Number
-    },
-    totalExposure: Number,
-    avgRiskScore: Number
-  },
-  
-  status: ['draft', 'in-progress', 'review', 'approved', 'closed'],
-  
-  schedule: {
-    startDate: Date,
-    dueDate: Date,
-    completedDate: Date
-  },
-  
-  createdAt: Date,
-  updatedAt: Date
-}
-
-// Indexes:
-// - { assessmentId: 1 } (unique)
-// - { userId: 1, status: 1 }
-// - { 'workflow.currentPhase': 1 }
-// - { methodology: 1 }
-// - { 'schedule.dueDate': 1 }
-// - { 'participants.user': 1 }
-// - { status: 1, 'schedule.dueDate': 1 }
-// - { createdAt: -1 }
-```
-
-### 3. Threat Schema
-
-```javascript
-// threats collection - Threat intelligence catalog
-{
-  _id: ObjectId,
-  threatId: String,
-  
-  name: String,
-  description: String,
-  category: ['cyber', 'physical', 'natural', 'human', 'technical', 'operational'],
-  
-  type: ['apt', 'insider', 'competitor', 'hacktivist', 'criminal', 'nation-state', 'opportunistic'],
-  
-  characteristics: {
-    capability: Number,      // 1-10
-    intent: Number,          // 1-10
-    targeting: Number,       // 1-10
-    resources: ['limited', 'moderate', 'significant', 'extensive']
-  },
-  
-  tactics: [{
-    mitreTactic: String,
-    techniques: [String]
-  }],
-  
-  indicators: {
-    iocs: [{
-      type: String,
-      value: String,
-      confidence: Number
-    }],
-    ttps: [String]
-  },
-  
-  historicalIncidents: [{
-    date: Date,
-    description: String,
-    impact: String
-  }],
-  
-  frequency: {
-    historical: Number,
-    projected: Number,
-    trend: ['increasing', 'stable', 'decreasing']
-  },
-  
-  sources: [{
-    name: String,
-    url: String,
-    reliability: Number
-  }],
-  
-  status: ['active', 'dormant', 'emerging', 'deprecated'],
-  lastUpdated: Date,
-  
-  createdAt: Date,
-  updatedAt: Date
-}
-
-// Indexes:
-// - { threatId: 1 } (unique)
-// - { category: 1, status: 1 }
-// - { type: 1 }
-// - { 'characteristics.capability': -1 }
-// - { 'tactics.mitreTactic': 1 }
-// - { 'indicators.iocs.value': 1 }
-// - { status: 1 }
-// - { lastUpdated: -1 }
-```
-
-### 4. Control Schema
-
-```javascript
-// controls collection - Control library
-{
-  _id: ObjectId,
-  controlId: String,
-  
-  name: String,
-  description: String,
-  
-  type: ['preventive', 'detective', 'corrective', 'deterrent', 'compensating'],
-  category: ['technical', 'administrative', 'physical', 'operational'],
-  
-  implementation: {
-    status: ['planned', 'implementing', 'implemented', 'operational', 'deprecated'],
-    owner: ObjectId,
-    cost: Number,
-    effort: ['low', 'medium', 'high']
-  },
-  
-  effectiveness: {
-    designEffectiveness: Number,    // 0-100
-    operatingEffectiveness: Number, // 0-100
-    lastTestedAt: Date,
-    testResult: String
-  },
-  
-  compliance: {
-    frameworks: [{
-      name: String,
-      requirement: String
-    }]
-  },
-  
-  mitigatedRisks: [{ type: ObjectId, ref: 'Risk' }],
-  
-  metrics: {
-    incidentsPrevented: Number,
-    falsePositives: Number,
-    meanTimeToDetect: Number
-  },
-  
-  createdAt: Date,
-  updatedAt: Date
-}
-
-// Indexes:
-// - { controlId: 1 } (unique)
-// - { type: 1, category: 1 }
-// - { 'implementation.status': 1 }
-// - { 'effectiveness.operatingEffectiveness': -1 }
-// - { 'compliance.frameworks.name': 1 }
-// - { mitigatedRisks: 1 }
-```
-
-### 5. Asset Schema
-
-```javascript
-// assets collection - Asset inventory
-{
-  _id: ObjectId,
-  assetId: String,
-  userId: ObjectId,
-  organizationId: ObjectId,
-  
-  name: String,
-  description: String,
-  type: ['hardware', 'software', 'data', 'people', 'process', 'facility'],
-  
-  classification: {
-    confidentiality: ['public', 'internal', 'confidential', 'restricted'],
-    criticality: ['low', 'medium', 'high', 'critical'],
-    dataTypes: [String]
-  },
-  
-  valuation: {
-    replacementCost: Number,
-    businessValue: Number,
-    complianceImpact: Number,
-    reputationalImpact: Number,
-    totalValue: Number
-  },
-  
-  ownership: {
-    owner: ObjectId,
-    custodian: ObjectId,
-    department: String
-  },
-  
   location: {
-    physical: String,
-    network: String,
-    cloud: String
+    country: String,
+    countryCode: String,
+    city: String,
+    region: String,
+    timezone: String
   },
-  
-  dependencies: [{
-    asset: ObjectId,
+  network: {
+    isp: String,
+    org: String,
+    asn: String
+  },
+  blacklists: [{
+    name: String,
+    listed: Boolean,
     type: String
   }],
-  
-  associatedRisks: [{ type: ObjectId, ref: 'Risk' }],
-  
-  status: ['active', 'inactive', 'decommissioned'],
-  
+  reputation: String,            // excellent|good|neutral|suspicious|bad|critical
+  reportCount: Number,
+  lookupCount: Number,           // Times this IP was looked up
+  lastLookup: Date,
   createdAt: Date,
   updatedAt: Date
 }
-
-// Indexes:
-// - { assetId: 1 } (unique)
-// - { userId: 1, type: 1 }
-// - { organizationId: 1, 'classification.criticality': 1 }
-// - { 'ownership.owner': 1 }
-// - { 'valuation.totalValue': -1 }
-// - { associatedRisks: 1 }
-// - { status: 1 }
-// - { createdAt: -1 }
 ```
 
-### 6. Simulation Schema
-
+### Device Fingerprints Collection
 ```javascript
-// simulations collection - Monte Carlo results
 {
   _id: ObjectId,
-  simulationId: String,
-  riskId: ObjectId,
-  userId: ObjectId,
-  
-  config: {
-    iterations: Number,
-    distribution: ['pert', 'triangular', 'normal', 'lognormal', 'uniform'],
-    seed: Number,
-    confidenceLevels: [Number]
-  },
-  
-  inputs: {
-    minLoss: Number,
-    mostLikelyLoss: Number,
-    maxLoss: Number,
-    frequency: {
-      min: Number,
-      mostLikely: Number,
-      max: Number
-    }
-  },
-  
-  results: {
-    mean: Number,
-    median: Number,
-    mode: Number,
-    standardDeviation: Number,
-    variance: Number,
-    skewness: Number,
-    kurtosis: Number,
-    
-    percentiles: {
-      p5: Number,
-      p10: Number,
-      p25: Number,
-      p50: Number,
-      p75: Number,
-      p90: Number,
-      p95: Number,
-      p99: Number
-    },
-    
-    valueAtRisk: Number,
-    conditionalVaR: Number,
-    expectedShortfall: Number
-  },
-  
-  histogram: [{
-    bucket: Number,
-    count: Number,
-    percentage: Number
-  }],
-  
-  sensitivityAnalysis: [{
-    variable: String,
-    correlation: Number,
-    impact: Number
-  }],
-  
-  executionTime: Number,
-  status: ['pending', 'running', 'completed', 'failed'],
-  
+  fingerprint: String,           // Unique device ID
+  trustScore: Number,            // 0-100
+  browser: String,
+  browserVersion: String,
+  os: String,
+  osVersion: String,
+  device: String,
+  screenResolution: String,
+  language: String,
+  timezone: String,
+  plugins: Number,
+  canvas: String,
+  webgl: String,
+  flags: [String],
+  seenIPs: [String],             // IPs seen with this device
+  seenCount: Number,
+  lastSeen: Date,
   createdAt: Date,
-  completedAt: Date
+  updatedAt: Date
 }
+```
 
-// Indexes:
-// - { simulationId: 1 } (unique)
-// - { riskId: 1, createdAt: -1 }
-// - { userId: 1, status: 1 }
-// - { status: 1 }
-// - { createdAt: -1 }
+### Payment Simulations Collection
+```javascript
+{
+  _id: ObjectId,
+  transactionId: String,
+  status: String,                // approved|declined|review|pending
+  amount: Number,
+  currency: String,
+  region: String,
+  method: String,
+  riskScore: Number,
+  checks: [{
+    name: String,
+    passed: Boolean,
+    message: String
+  }],
+  declineReason: String,
+  processingTime: Number,
+  ipAddress: String,
+  deviceFingerprint: String,
+  createdAt: Date
+}
 ```
 
 ---
 
-## 🤖 ML Models
+## 🔑 Third-Party APIs
 
-### Model Architecture
+### Required API Keys
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    RISK QUANTIFICATION ENGINE                        │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐   │
-│  │                    INPUT PROCESSING                           │   │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐   │   │
-│  │  │  Risk       │  │  Historical │  │    External         │   │   │
-│  │  │  Parameters │  │  Data       │  │    Threat Intel     │   │   │
-│  │  └──────┬──────┘  └──────┬──────┘  └──────────┬──────────┘   │   │
-│  │         └────────────────┼────────────────────┘               │   │
-│  │                          ▼                                    │   │
-│  │              ┌─────────────────────────┐                      │   │
-│  │              │   Monte Carlo Engine    │                      │   │
-│  │              │   (10,000 iterations)   │                      │   │
-│  │              └────────────┬────────────┘                      │   │
-│  └───────────────────────────┼──────────────────────────────────┘   │
-│                              │                                       │
-│  ┌───────────────────────────┼──────────────────────────────────┐   │
-│  │                    ANALYSIS MODELS                            │   │
-│  │  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────┐  │   │
-│  │  │   FAIR          │  │   Trend         │  │   Anomaly    │  │   │
-│  │  │   Calculator    │  │   Predictor     │  │   Detector   │  │   │
-│  │  └────────┬────────┘  └────────┬────────┘  └──────┬───────┘  │   │
-│  └───────────┼────────────────────┼──────────────────┼──────────┘   │
-│              │                    │                  │               │
-│              ▼                    ▼                  ▼               │
-│       ┌──────────────────────────────────────────────────┐          │
-│       │   Financial Metrics + Risk Intelligence Report   │          │
-│       └──────────────────────────────────────────────────┘          │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
-```
+| Service | Purpose | Get Key |
+|---------|---------|---------|
+| **AbuseIPDB** | Abuse reports & blacklist | https://www.abuseipdb.com/api |
+| **IPQualityScore** | Fraud scoring & VPN detection | https://www.ipqualityscore.com/api |
+| **MaxMind GeoIP2** | Premium geolocation | https://www.maxmind.com/en/geoip2-services |
 
-### Models Overview
+### Optional API Keys
 
-| Model | Purpose | Accuracy |
-|-------|---------|----------|
-| **FAIR Calculator v3** | Loss expectancy calculation | 98.5% |
-| **Monte Carlo v2** | Probability distribution | 99.9% |
-| **Trend Predictor v1** | Risk trend forecasting | 87.2% |
-| **Anomaly Detector v1** | Unusual pattern detection | 91.4% |
-| **VaR Calculator v2** | Value at Risk metrics | 97.8% |
+| Service | Purpose | Get Key |
+|---------|---------|---------|
+| **Shodan** | Network intelligence | https://shodan.io/api |
+| **VirusTotal** | IP reputation | https://virustotal.com/api |
+| **Greynoise** | Internet noise filtering | https://greynoise.io/api |
+
+### Free APIs (No Key Required)
+
+| Service | Purpose |
+|---------|---------|
+| ipify.org | IP detection |
+| IP-API.com | Basic geolocation |
 
 ---
 
 ## 🚀 Deployment
 
-### Production Architecture
+### Production URLs
+- **Frontend:** https://riskquantify.maula.ai
+- **API:** https://api.riskquantify.maula.ai
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                    PRODUCTION DEPLOYMENT                             │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│     ┌─────────────────────────────────────────────────────────┐     │
-│     │                    LOAD BALANCER                         │     │
-│     │                riskquantify.maula.ai                     │     │
-│     └───────────────────────┬─────────────────────────────────┘     │
-│                             │                                        │
-│         ┌───────────────────┼───────────────────┐                   │
-│         ▼                   ▼                   ▼                   │
-│   ┌───────────┐       ┌───────────┐       ┌───────────┐            │
-│   │   API     │       │   API     │       │   ML      │            │
-│   │ Instance 1│       │ Instance 2│       │  Workers  │            │
-│   └───────────┘       └───────────┘       └───────────┘            │
-│                                                                      │
-│   ┌─────────────────────────────────────────────────────────┐       │
-│   │                    DATA LAYER                            │       │
-│   │  ┌──────────┐  ┌──────────┐  ┌──────────┐               │       │
-│   │  │ MongoDB  │  │  Redis   │  │  MinIO   │               │       │
-│   │  │ Replica  │  │ Cluster  │  │ Reports  │               │       │
-│   │  └──────────┘  └──────────┘  └──────────┘               │       │
-│   └─────────────────────────────────────────────────────────┘       │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+### Docker Deployment
+
+```bash
+# Build image
+docker build -t riskquantify-api .
+
+# Run container
+docker run -d \
+  --name riskquantify \
+  -p 4019:4019 \
+  -e NODE_ENV=production \
+  -e MONGODB_URI=mongodb://... \
+  riskquantify-api
 ```
 
-### Performance Benchmarks
+### PM2 Deployment
 
-| Metric | Value | Target |
-|--------|-------|--------|
-| **Monte Carlo (10K)** | 1.2 seconds | less than 3s |
-| **FAIR Calculation** | 50ms | less than 100ms |
-| **Risk Dashboard** | 200ms | less than 500ms |
-| **Concurrent Users** | 500 | 200 |
-| **API Latency (p99)** | 150ms | less than 300ms |
+```bash
+# Start with PM2
+pm2 start ecosystem.config.js --env production
+
+# Monitor
+pm2 monit
+```
 
 ---
 
-## 📞 Support
+## 📊 VictoryKit Integration
 
-### Contact
+RiskQuantify is **Tool 19** in the VictoryKit Security Platform.
 
-- **Documentation**: https://docs.riskquantify.maula.ai
-- **API Status**: https://status.riskquantify.maula.ai
-- **Support Email**: support@maula.ai
-- **Security Issues**: security@maula.ai
+| Property | Value |
+|----------|-------|
+| Tool Number | 19 |
+| Tool Name | RiskQuantify |
+| Theme Color | Violet (#8b5cf6) |
+| Frontend Port | 3019 |
+| API Port | 4019 |
+| WebSocket Port | 4119 |
+| Production URL | https://riskquantify.maula.ai |
+
+### Related Tools
+- **Tool 18:** ThreatModel - Threat modeling & analysis
+- **Tool 20:** SecurityScore - Security posture scoring
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - VictoryKit Security Platform
 
 ---
 
-**Built with love by the VictoryKit Team**
+## 🙏 Credits
 
-*Quantify risk, empower decisions.*
+Built with ❤️ for **Maula.AI** - The ONE Platform for 100+ Security Tools
 
-![RiskQuantify](https://img.shields.io/badge/RiskQuantify-Risk%20Intelligence-8b5cf6?style=for-the-badge)
+Part of the VictoryKit Security Suite by AI Chaudhary
