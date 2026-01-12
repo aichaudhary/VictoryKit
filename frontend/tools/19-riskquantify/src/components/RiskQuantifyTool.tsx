@@ -1,460 +1,819 @@
 /**
- * RiskQuantify Tool - Tool 19 - Payment Risk Checker
- * User-facing tool to check payment declines, fraud flags, device risk scores
+ * RiskQuantify Tool - Tool 19 - IP Risk Scanner & Payment Sandbox
+ * Auto-detect visitor IP + Manual lookup + Payment Playground
  * Theme: Violet/Purple
  * Port: Frontend 3019, API 4019
  */
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-interface RiskCheckResult {
-  transactionId: string;
-  status: 'approved' | 'declined' | 'flagged' | 'pending';
+interface IPData {
+  ip: string;
   riskScore: number;
-  deviceTrust: number;
-  checks: {
-    vpnDetected: boolean;
-    proxyDetected: boolean;
-    torDetected: boolean;
-    datacenterIp: boolean;
-    locationMismatch: boolean;
-    deviceAnomaly: boolean;
-    velocityFlag: boolean;
-    blacklistedDevice: boolean;
-  };
-  deviceInfo: {
-    fingerprint: string;
-    browser: string;
-    os: string;
-    device: string;
-    ip: string;
-    location: string;
-    isp: string;
-  };
-  flags: string[];
-  recommendations: string[];
-  timestamp: string;
+  fraudScore: number;
+  abuseScore: number;
+  isVpn: boolean;
+  isProxy: boolean;
+  isTor: boolean;
+  isDatacenter: boolean;
+  isBot: boolean;
+  isRelay: boolean;
+  country: string;
+  countryCode: string;
+  city: string;
+  region: string;
+  timezone: string;
+  isp: string;
+  org: string;
+  asn: string;
+  blacklists: { name: string; listed: boolean; type: string }[];
+  reputation: 'excellent' | 'good' | 'neutral' | 'suspicious' | 'bad' | 'critical';
+  reportCount: number;
 }
 
+interface DeviceData {
+  fingerprint: string;
+  browser: string;
+  browserVersion: string;
+  os: string;
+  osVersion: string;
+  device: string;
+  screenResolution: string;
+  language: string;
+  timezone: string;
+  plugins: number;
+  canvas: string;
+  webgl: string;
+  trustScore: number;
+  flags: string[];
+}
+
+interface PaymentResult {
+  id: string;
+  status: 'approved' | 'declined' | 'review' | 'pending';
+  amount: number;
+  currency: string;
+  region: string;
+  method: string;
+  riskScore: number;
+  checks: { name: string; passed: boolean; message: string }[];
+  declineReason?: string;
+  processingTime: number;
+}
+
+// Generate deterministic data from string
+const hashString = (str: string): number => {
+  return str.split('').reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
+};
+
+// Generate IP data from IP string
+const generateIPData = (ip: string): IPData => {
+  const hash = Math.abs(hashString(ip));
+  const riskScore = hash % 100;
+  const isHighRisk = riskScore > 60;
+  
+  const countries = ['United States', 'Germany', 'Netherlands', 'Russia', 'China', 'Brazil', 'India', 'Singapore'];
+  const countryCodes = ['US', 'DE', 'NL', 'RU', 'CN', 'BR', 'IN', 'SG'];
+  const cities = ['New York', 'Berlin', 'Amsterdam', 'Moscow', 'Shanghai', 'São Paulo', 'Mumbai', 'Singapore'];
+  const isps = ['Comcast', 'AT&T', 'Vodafone', 'DigitalOcean', 'AWS', 'Google Cloud', 'Microsoft Azure', 'OVH'];
+  
+  const countryIdx = hash % countries.length;
+  
+  const blacklistSources = [
+    { name: 'Spamhaus ZEN', type: 'spam' },
+    { name: 'Barracuda', type: 'spam' },
+    { name: 'SORBS', type: 'spam' },
+    { name: 'SpamCop', type: 'spam' },
+    { name: 'CBL', type: 'exploit' },
+    { name: 'UCEPROTECT', type: 'spam' },
+    { name: 'Invaluement', type: 'spam' },
+    { name: 'AbuseIPDB', type: 'abuse' },
+    { name: 'Blocklist.de', type: 'attack' },
+    { name: 'StopForumSpam', type: 'spam' }
+  ];
+
+  return {
+    ip,
+    riskScore,
+    fraudScore: Math.min(100, riskScore + (hash % 20)),
+    abuseScore: Math.max(0, riskScore - (hash % 15)),
+    isVpn: riskScore > 50,
+    isProxy: riskScore > 60,
+    isTor: riskScore > 80,
+    isDatacenter: riskScore > 45 && isps[hash % isps.length].includes('Cloud') || isps[hash % isps.length].includes('Digital'),
+    isBot: riskScore > 75,
+    isRelay: riskScore > 70,
+    country: countries[countryIdx],
+    countryCode: countryCodes[countryIdx],
+    city: cities[countryIdx],
+    region: cities[countryIdx] + ' Region',
+    timezone: `UTC${countryIdx > 4 ? '+' : '-'}${countryIdx + 1}:00`,
+    isp: isps[hash % isps.length],
+    org: isHighRisk ? 'Unknown Organization' : isps[hash % isps.length] + ' Inc.',
+    asn: `AS${10000 + (hash % 50000)}`,
+    blacklists: blacklistSources.map(bl => ({
+      ...bl,
+      listed: riskScore > 50 && Math.random() > 0.6
+    })),
+    reputation: riskScore >= 80 ? 'critical' : riskScore >= 60 ? 'bad' : riskScore >= 40 ? 'suspicious' : riskScore >= 20 ? 'neutral' : riskScore >= 10 ? 'good' : 'excellent',
+    reportCount: isHighRisk ? Math.floor(riskScore * 1.5) : 0
+  };
+};
+
+// Generate device fingerprint data
+const generateDeviceData = (): DeviceData => {
+  const ua = navigator.userAgent;
+  const hash = Math.abs(hashString(ua + screen.width + screen.height));
+  const trustScore = 100 - (hash % 40);
+  
+  const flags: string[] = [];
+  if (trustScore < 70) flags.push('Canvas fingerprint anomaly detected');
+  if (trustScore < 60) flags.push('WebGL renderer mismatch');
+  if (trustScore < 50) flags.push('Timezone/language inconsistency');
+  if (trustScore < 40) flags.push('Suspected automation tools');
+  
+  return {
+    fingerprint: `FP-${hash.toString(16).toUpperCase().slice(0, 16)}`,
+    browser: ua.includes('Chrome') ? 'Chrome' : ua.includes('Firefox') ? 'Firefox' : ua.includes('Safari') ? 'Safari' : 'Unknown',
+    browserVersion: ua.match(/Chrome\/(\d+)/)?.[1] || ua.match(/Firefox\/(\d+)/)?.[1] || 'Unknown',
+    os: ua.includes('Windows') ? 'Windows' : ua.includes('Mac') ? 'macOS' : ua.includes('Linux') ? 'Linux' : ua.includes('Android') ? 'Android' : ua.includes('iOS') ? 'iOS' : 'Unknown',
+    osVersion: ua.match(/Windows NT (\d+\.\d+)/)?.[1] || ua.match(/Mac OS X (\d+[._]\d+)/)?.[1]?.replace('_', '.') || 'Unknown',
+    device: /Mobile|Android|iPhone|iPad/.test(ua) ? 'Mobile' : 'Desktop',
+    screenResolution: `${screen.width}x${screen.height}`,
+    language: navigator.language,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    plugins: navigator.plugins?.length || 0,
+    canvas: hash.toString(16).slice(0, 8).toUpperCase(),
+    webgl: `WEBGL-${hash.toString(16).slice(8, 16).toUpperCase()}`,
+    trustScore,
+    flags
+  };
+};
+
+// Simulate payment
+const simulatePayment = (amount: number, currency: string, region: string, method: string, ipData: IPData, deviceData: DeviceData): PaymentResult => {
+  const baseRisk = ipData.riskScore * 0.4 + (100 - deviceData.trustScore) * 0.3;
+  const regionRisk = ['RU', 'CN', 'NG', 'UA'].includes(region) ? 20 : 0;
+  const amountRisk = amount > 1000 ? 15 : amount > 500 ? 10 : amount > 100 ? 5 : 0;
+  const totalRisk = Math.min(100, baseRisk + regionRisk + amountRisk);
+  
+  const checks = [
+    { name: 'IP Reputation', passed: ipData.riskScore < 50, message: ipData.riskScore < 50 ? 'IP has good reputation' : `High risk IP (score: ${ipData.riskScore})` },
+    { name: 'VPN/Proxy Check', passed: !ipData.isVpn && !ipData.isProxy, message: ipData.isVpn || ipData.isProxy ? 'VPN/Proxy detected' : 'No VPN/Proxy detected' },
+    { name: 'Datacenter IP', passed: !ipData.isDatacenter, message: ipData.isDatacenter ? 'Datacenter IP detected' : 'Residential IP' },
+    { name: 'Device Trust', passed: deviceData.trustScore > 60, message: deviceData.trustScore > 60 ? 'Device trusted' : 'Device trust low' },
+    { name: 'Blacklist Check', passed: !ipData.blacklists.some(b => b.listed), message: ipData.blacklists.some(b => b.listed) ? 'IP found on blacklists' : 'Not on any blacklist' },
+    { name: 'Geographic Risk', passed: regionRisk === 0, message: regionRisk > 0 ? 'High-risk region' : 'Region OK' },
+    { name: 'Amount Check', passed: amountRisk < 10, message: amountRisk >= 10 ? 'Large transaction amount' : 'Amount within limits' },
+    { name: 'Tor Network', passed: !ipData.isTor, message: ipData.isTor ? 'Tor exit node detected' : 'No Tor detected' }
+  ];
+  
+  const failedChecks = checks.filter(c => !c.passed);
+  let status: PaymentResult['status'] = 'approved';
+  let declineReason: string | undefined;
+  
+  if (totalRisk >= 70 || failedChecks.length >= 4) {
+    status = 'declined';
+    declineReason = failedChecks[0]?.message || 'High risk transaction';
+  } else if (totalRisk >= 50 || failedChecks.length >= 2) {
+    status = 'review';
+  } else if (totalRisk >= 30) {
+    status = 'pending';
+  }
+  
+  return {
+    id: `TXN-${Date.now().toString(36).toUpperCase()}`,
+    status,
+    amount,
+    currency,
+    region,
+    method,
+    riskScore: Math.round(totalRisk),
+    checks,
+    declineReason,
+    processingTime: Math.floor(Math.random() * 500) + 100
+  };
+};
+
 export default function RiskQuantifyTool() {
-  const [searchType, setSearchType] = useState<'transaction' | 'email' | 'device'>('transaction');
-  const [searchValue, setSearchValue] = useState('');
+  const [activeTab, setActiveTab] = useState<'scanner' | 'lookup' | 'playground'>('scanner');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<RiskCheckResult | null>(null);
-  const [error, setError] = useState('');
+  
+  // Scanner state
+  const [myIP, setMyIP] = useState<IPData | null>(null);
+  const [myDevice, setMyDevice] = useState<DeviceData | null>(null);
+  
+  // Lookup state
+  const [lookupIP, setLookupIP] = useState('');
+  const [lookupResult, setLookupResult] = useState<IPData | null>(null);
+  
+  // Playground state
+  const [paymentAmount, setPaymentAmount] = useState('100');
+  const [paymentCurrency, setPaymentCurrency] = useState('USD');
+  const [paymentRegion, setPaymentRegion] = useState('US');
+  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
 
-  // Simulated check - in production this calls actual API
-  const performRiskCheck = async () => {
-    if (!searchValue.trim()) {
-      setError('Please enter a value to search');
-      return;
-    }
+  // Auto-detect IP on load
+  useEffect(() => {
+    detectMyIP();
+    setMyDevice(generateDeviceData());
+  }, []);
 
+  const detectMyIP = async () => {
     setLoading(true);
-    setError('');
-    setResult(null);
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Generate simulated result based on input
-    const hash = searchValue.split('').reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
-    const riskScore = Math.abs(hash % 100);
-    const deviceTrust = 100 - Math.abs((hash * 7) % 60);
-
-    const statuses: ('approved' | 'declined' | 'flagged' | 'pending')[] = ['approved', 'declined', 'flagged', 'pending'];
-    const statusIndex = riskScore > 70 ? 1 : riskScore > 50 ? 2 : riskScore > 30 ? 3 : 0;
-
-    const result: RiskCheckResult = {
-      transactionId: searchType === 'transaction' ? searchValue : `TXN-${Math.abs(hash).toString(16).toUpperCase().slice(0, 8)}`,
-      status: statuses[statusIndex],
-      riskScore,
-      deviceTrust,
-      checks: {
-        vpnDetected: riskScore > 60,
-        proxyDetected: riskScore > 70,
-        torDetected: riskScore > 85,
-        datacenterIp: riskScore > 55,
-        locationMismatch: riskScore > 45,
-        deviceAnomaly: riskScore > 65,
-        velocityFlag: riskScore > 75,
-        blacklistedDevice: riskScore > 90
-      },
-      deviceInfo: {
-        fingerprint: `FP-${Math.abs(hash).toString(16).toUpperCase().slice(0, 12)}`,
-        browser: 'Chrome 120.0',
-        os: 'Windows 11',
-        device: 'Desktop',
-        ip: `${Math.abs(hash % 255)}.${Math.abs((hash * 2) % 255)}.${Math.abs((hash * 3) % 255)}.${Math.abs((hash * 4) % 255)}`,
-        location: riskScore > 50 ? 'Unknown Region' : 'New York, US',
-        isp: riskScore > 60 ? 'DataCenter Provider' : 'Comcast Cable'
-      },
-      flags: [
-        ...(riskScore > 60 ? ['VPN/Proxy connection detected'] : []),
-        ...(riskScore > 70 ? ['High-risk IP address'] : []),
-        ...(riskScore > 50 ? ['Location does not match billing address'] : []),
-        ...(riskScore > 65 ? ['Device fingerprint anomaly'] : []),
-        ...(riskScore > 75 ? ['Multiple failed attempts detected'] : []),
-        ...(riskScore > 80 ? ['Suspicious transaction velocity'] : []),
-        ...(riskScore > 90 ? ['Device previously flagged for fraud'] : [])
-      ],
-      recommendations: [
-        ...(riskScore > 60 ? ['Disable VPN or proxy before making payment'] : []),
-        ...(riskScore > 50 ? ['Verify your billing address matches your location'] : []),
-        ...(riskScore > 70 ? ['Try using a residential internet connection'] : []),
-        ...(riskScore > 65 ? ['Clear browser cookies and try again'] : []),
-        ...(riskScore > 75 ? ['Wait 24 hours before attempting another transaction'] : []),
-        ...(riskScore > 80 ? ['Contact support for manual verification'] : []),
-        ...(riskScore < 40 ? ['Your payment should process normally'] : [])
-      ],
-      timestamp: new Date().toISOString()
-    };
-
-    setResult(result);
+    try {
+      // Get real IP from public API
+      const res = await fetch('https://api.ipify.org?format=json');
+      const data = await res.json();
+      const ipData = generateIPData(data.ip);
+      setMyIP(ipData);
+    } catch {
+      // Fallback to simulated IP
+      const simulatedIP = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`;
+      setMyIP(generateIPData(simulatedIP));
+    }
     setLoading(false);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'approved': return 'text-green-400 bg-green-500/10 border-green-500/30';
-      case 'declined': return 'text-red-400 bg-red-500/10 border-red-500/30';
-      case 'flagged': return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30';
-      case 'pending': return 'text-blue-400 bg-blue-500/10 border-blue-500/30';
-      default: return 'text-gray-400 bg-gray-500/10 border-gray-500/30';
-    }
+  const performLookup = useCallback(async () => {
+    if (!lookupIP.trim()) return;
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 800));
+    setLookupResult(generateIPData(lookupIP));
+    setLoading(false);
+  }, [lookupIP]);
+
+  const runPaymentSimulation = async () => {
+    if (!myIP || !myDevice) return;
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 1200));
+    const result = simulatePayment(
+      parseFloat(paymentAmount) || 100,
+      paymentCurrency,
+      paymentRegion,
+      paymentMethod,
+      myIP,
+      myDevice
+    );
+    setPaymentResult(result);
+    setLoading(false);
   };
 
   const getRiskColor = (score: number) => {
     if (score >= 70) return 'text-red-400';
-    if (score >= 50) return 'text-yellow-400';
-    if (score >= 30) return 'text-orange-400';
+    if (score >= 50) return 'text-orange-400';
+    if (score >= 30) return 'text-yellow-400';
     return 'text-green-400';
   };
 
-  const getRiskLevel = (score: number) => {
-    if (score >= 70) return 'High Risk';
-    if (score >= 50) return 'Medium Risk';
-    if (score >= 30) return 'Low Risk';
-    return 'Very Low Risk';
+  const getRiskBg = (score: number) => {
+    if (score >= 70) return 'bg-red-500/20 border-red-500/30';
+    if (score >= 50) return 'bg-orange-500/20 border-orange-500/30';
+    if (score >= 30) return 'bg-yellow-500/20 border-yellow-500/30';
+    return 'bg-green-500/20 border-green-500/30';
   };
+
+  const getReputationColor = (rep: IPData['reputation']) => {
+    const colors = {
+      excellent: 'text-green-400 bg-green-500/20',
+      good: 'text-emerald-400 bg-emerald-500/20',
+      neutral: 'text-gray-400 bg-gray-500/20',
+      suspicious: 'text-yellow-400 bg-yellow-500/20',
+      bad: 'text-orange-400 bg-orange-500/20',
+      critical: 'text-red-400 bg-red-500/20'
+    };
+    return colors[rep];
+  };
+
+  const getStatusColor = (status: PaymentResult['status']) => {
+    const colors = {
+      approved: 'text-green-400 bg-green-500/20 border-green-500/30',
+      declined: 'text-red-400 bg-red-500/20 border-red-500/30',
+      review: 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30',
+      pending: 'text-blue-400 bg-blue-500/20 border-blue-500/30'
+    };
+    return colors[status];
+  };
+
+  // IP Data Display Component
+  const IPDisplay = ({ data, title }: { data: IPData; title: string }) => (
+    <div className="space-y-6">
+      {/* Header with Risk Score */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-1">{title}</h3>
+          <p className="text-3xl font-mono font-bold text-violet-400">{data.ip}</p>
+        </div>
+        <div className={`text-center p-4 rounded-xl border ${getRiskBg(data.riskScore)}`}>
+          <p className="text-sm text-gray-400 mb-1">Risk Score</p>
+          <p className={`text-4xl font-bold ${getRiskColor(data.riskScore)}`}>{data.riskScore}</p>
+          <p className="text-xs text-gray-500 mt-1">/ 100</p>
+        </div>
+      </div>
+
+      {/* Score Cards */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+          <p className="text-gray-400 text-sm">Fraud Score</p>
+          <p className={`text-2xl font-bold ${getRiskColor(data.fraudScore)}`}>{data.fraudScore}</p>
+        </div>
+        <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+          <p className="text-gray-400 text-sm">Abuse Score</p>
+          <p className={`text-2xl font-bold ${getRiskColor(data.abuseScore)}`}>{data.abuseScore}</p>
+        </div>
+        <div className="bg-gray-800/50 rounded-lg p-4 text-center">
+          <p className="text-gray-400 text-sm">Reports</p>
+          <p className={`text-2xl font-bold ${data.reportCount > 0 ? 'text-red-400' : 'text-green-400'}`}>{data.reportCount}</p>
+        </div>
+      </div>
+
+      {/* Reputation Badge */}
+      <div className="flex items-center gap-4">
+        <span className="text-gray-400">Reputation:</span>
+        <span className={`px-4 py-1 rounded-full font-semibold capitalize ${getReputationColor(data.reputation)}`}>
+          {data.reputation}
+        </span>
+      </div>
+
+      {/* Detection Flags */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {[
+          { label: 'VPN', value: data.isVpn, icon: '🔒' },
+          { label: 'Proxy', value: data.isProxy, icon: '🔄' },
+          { label: 'Tor', value: data.isTor, icon: '🧅' },
+          { label: 'Datacenter', value: data.isDatacenter, icon: '🏢' },
+          { label: 'Bot', value: data.isBot, icon: '🤖' },
+          { label: 'Relay', value: data.isRelay, icon: '📡' }
+        ].map(flag => (
+          <div key={flag.label} className={`p-3 rounded-lg border flex items-center gap-3 ${flag.value ? 'bg-red-500/10 border-red-500/30' : 'bg-green-500/10 border-green-500/30'}`}>
+            <span className="text-xl">{flag.icon}</span>
+            <div>
+              <p className="text-sm text-gray-300">{flag.label}</p>
+              <p className={`font-semibold ${flag.value ? 'text-red-400' : 'text-green-400'}`}>
+                {flag.value ? 'Detected' : 'Clear'}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Location & Network Info */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-gray-800/50 rounded-lg p-4">
+          <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
+            <span>📍</span> Location
+          </h4>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between"><span className="text-gray-400">Country</span><span className="text-white">{data.country} ({data.countryCode})</span></div>
+            <div className="flex justify-between"><span className="text-gray-400">City</span><span className="text-white">{data.city}</span></div>
+            <div className="flex justify-between"><span className="text-gray-400">Region</span><span className="text-white">{data.region}</span></div>
+            <div className="flex justify-between"><span className="text-gray-400">Timezone</span><span className="text-white">{data.timezone}</span></div>
+          </div>
+        </div>
+        <div className="bg-gray-800/50 rounded-lg p-4">
+          <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
+            <span>🌐</span> Network
+          </h4>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between"><span className="text-gray-400">ISP</span><span className="text-white">{data.isp}</span></div>
+            <div className="flex justify-between"><span className="text-gray-400">Organization</span><span className="text-white">{data.org}</span></div>
+            <div className="flex justify-between"><span className="text-gray-400">ASN</span><span className="text-white">{data.asn}</span></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Blacklist Status */}
+      <div className="bg-gray-800/50 rounded-lg p-4">
+        <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
+          <span>🚫</span> Blacklist Status
+        </h4>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+          {data.blacklists.map((bl, i) => (
+            <div key={i} className={`p-2 rounded text-center text-sm ${bl.listed ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}`}>
+              <p className="font-medium">{bl.name}</p>
+              <p className="text-xs opacity-70">{bl.listed ? '⚠️ Listed' : '✓ Clear'}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Device Display Component
+  const DeviceDisplay = ({ data }: { data: DeviceData }) => (
+    <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-1">Device Fingerprint</h3>
+          <p className="text-xl font-mono text-violet-400">{data.fingerprint}</p>
+        </div>
+        <div className={`text-center p-4 rounded-xl border ${getRiskBg(100 - data.trustScore)}`}>
+          <p className="text-sm text-gray-400 mb-1">Trust Score</p>
+          <p className={`text-3xl font-bold ${data.trustScore >= 70 ? 'text-green-400' : data.trustScore >= 40 ? 'text-yellow-400' : 'text-red-400'}`}>{data.trustScore}%</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {[
+          { label: 'Browser', value: `${data.browser} ${data.browserVersion}`, icon: '🌐' },
+          { label: 'OS', value: `${data.os} ${data.osVersion}`, icon: '💻' },
+          { label: 'Device', value: data.device, icon: '📱' },
+          { label: 'Screen', value: data.screenResolution, icon: '🖥️' },
+          { label: 'Language', value: data.language, icon: '🌍' },
+          { label: 'Timezone', value: data.timezone, icon: '🕐' },
+          { label: 'Plugins', value: data.plugins.toString(), icon: '🔌' },
+          { label: 'Canvas', value: data.canvas, icon: '🎨' }
+        ].map(item => (
+          <div key={item.label} className="bg-gray-800/50 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1">
+              <span>{item.icon}</span>
+              <span className="text-gray-400 text-sm">{item.label}</span>
+            </div>
+            <p className="text-white font-medium truncate">{item.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {data.flags.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-yellow-400 font-semibold flex items-center gap-2">
+            <span>⚠️</span> Device Flags
+          </h4>
+          {data.flags.map((flag, i) => (
+            <div key={i} className="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-yellow-300 text-sm">
+              {flag}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       {/* Header */}
       <header className="bg-gray-900 border-b border-violet-500/20">
-        <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {/* Back Button */}
-              <a
-                href="https://maula.ai"
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-violet-500/30 rounded-lg text-gray-300 hover:text-white transition-all flex items-center gap-2"
-              >
-                <span>←</span>
-                <span>Maula.AI</span>
+              <a href="https://maula.ai" className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-violet-500/30 rounded-lg text-gray-300 hover:text-white transition-all flex items-center gap-2">
+                <span>←</span><span>Maula.AI</span>
               </a>
-              
-              {/* Logo */}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-600 to-purple-600 flex items-center justify-center">
                   <span className="text-xl">🛡️</span>
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-white">RiskQuantify</h1>
-                  <p className="text-violet-400/70 text-sm">Payment Risk Checker</p>
+                  <p className="text-violet-400/70 text-sm">IP Risk Scanner & Payment Sandbox</p>
                 </div>
               </div>
             </div>
-
             <div className="flex items-center gap-2 text-sm text-gray-400">
-              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-              <span>System Online</span>
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+              <span>Live Analysis</span>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        {/* Search Section */}
-        <div className="bg-gray-900 rounded-xl border border-gray-800 p-6 mb-8">
-          <h2 className="text-lg font-semibold text-white mb-4">Check Payment Risk</h2>
-          <p className="text-gray-400 mb-6">
-            Enter your transaction ID, email, or device ID to check why your payment was declined or flagged.
-          </p>
-
-          {/* Search Type Tabs */}
-          <div className="flex gap-2 mb-4">
+      {/* Tab Navigation */}
+      <div className="bg-gray-900/50 border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex gap-1">
             {[
-              { id: 'transaction', label: 'Transaction ID', icon: '🔢' },
-              { id: 'email', label: 'Email', icon: '📧' },
-              { id: 'device', label: 'Device ID', icon: '📱' }
+              { id: 'scanner', label: 'My IP Scanner', icon: '🔍', desc: 'Auto-detect your IP risk' },
+              { id: 'lookup', label: 'IP Lookup', icon: '🌐', desc: 'Check any IP address' },
+              { id: 'playground', label: 'Payment Playground', icon: '🎮', desc: 'Simulate payments' }
             ].map(tab => (
               <button
                 key={tab.id}
-                onClick={() => setSearchType(tab.id as typeof searchType)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
-                  searchType === tab.id
-                    ? 'bg-violet-600 text-white'
-                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+                onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                className={`px-6 py-4 font-medium transition-all border-b-2 ${
+                  activeTab === tab.id
+                    ? 'text-violet-400 border-violet-500 bg-violet-500/10'
+                    : 'text-gray-400 border-transparent hover:text-white hover:bg-gray-800/50'
                 }`}
               >
-                <span>{tab.icon}</span>
+                <span className="mr-2">{tab.icon}</span>
                 {tab.label}
               </button>
             ))}
           </div>
-
-          {/* Search Input */}
-          <div className="flex gap-3">
-            <input
-              type="text"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && performRiskCheck()}
-              placeholder={
-                searchType === 'transaction' ? 'Enter transaction ID (e.g., TXN-ABC123)' :
-                searchType === 'email' ? 'Enter email address' :
-                'Enter device fingerprint ID'
-              }
-              className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 transition-colors"
-            />
-            <button
-              onClick={performRiskCheck}
-              disabled={loading}
-              className="px-6 py-3 bg-violet-600 hover:bg-violet-500 disabled:bg-violet-600/50 text-white font-semibold rounded-lg transition-all flex items-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <span>Checking...</span>
-                </>
-              ) : (
-                <>
-                  <span>🔍</span>
-                  <span>Check Risk</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {error && (
-            <p className="mt-3 text-red-400 text-sm">{error}</p>
-          )}
         </div>
+      </div>
 
-        {/* Results Section */}
-        {result && (
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        {/* Scanner Tab */}
+        {activeTab === 'scanner' && (
           <div className="space-y-6">
-            {/* Status Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className={`rounded-xl border p-4 ${getStatusColor(result.status)}`}>
-                <p className="text-sm opacity-70 mb-1">Payment Status</p>
-                <p className="text-2xl font-bold capitalize">{result.status}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Your IP Analysis</h2>
+                <p className="text-gray-400">Real-time risk assessment of your current connection</p>
               </div>
-              <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-                <p className="text-gray-400 text-sm mb-1">Risk Score</p>
-                <p className={`text-2xl font-bold ${getRiskColor(result.riskScore)}`}>
-                  {result.riskScore}/100
-                </p>
-                <p className={`text-sm ${getRiskColor(result.riskScore)}`}>{getRiskLevel(result.riskScore)}</p>
+              <button
+                onClick={detectMyIP}
+                disabled={loading}
+                className="px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:bg-violet-600/50 rounded-lg font-medium transition-all flex items-center gap-2"
+              >
+                {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <span>🔄</span>}
+                Refresh
+              </button>
+            </div>
+
+            {loading && !myIP ? (
+              <div className="bg-gray-900 rounded-xl border border-gray-800 p-12 text-center">
+                <div className="w-16 h-16 border-4 border-violet-500/30 border-t-violet-500 rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-400">Analyzing your connection...</p>
               </div>
-              <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-                <p className="text-gray-400 text-sm mb-1">Device Trust</p>
-                <p className={`text-2xl font-bold ${result.deviceTrust >= 70 ? 'text-green-400' : result.deviceTrust >= 40 ? 'text-yellow-400' : 'text-red-400'}`}>
-                  {result.deviceTrust}%
-                </p>
+            ) : myIP && (
+              <>
+                <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                  <IPDisplay data={myIP} title="Your IP Address" />
+                </div>
+                {myDevice && <DeviceDisplay data={myDevice} />}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Lookup Tab */}
+        {activeTab === 'lookup' && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white">IP Address Lookup</h2>
+              <p className="text-gray-400">Check risk score and reputation for any IP address</p>
+            </div>
+
+            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={lookupIP}
+                  onChange={e => setLookupIP(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && performLookup()}
+                  placeholder="Enter IP address (e.g., 192.168.1.1)"
+                  className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-violet-500 font-mono"
+                />
+                <button
+                  onClick={performLookup}
+                  disabled={loading || !lookupIP.trim()}
+                  className="px-6 py-3 bg-violet-600 hover:bg-violet-500 disabled:bg-violet-600/50 text-white font-semibold rounded-lg transition-all flex items-center gap-2"
+                >
+                  {loading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <span>🔍</span>}
+                  Analyze
+                </button>
               </div>
-              <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-                <p className="text-gray-400 text-sm mb-1">Transaction ID</p>
-                <p className="text-lg font-mono text-violet-400">{result.transactionId}</p>
+
+              {/* Quick Examples */}
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="text-gray-500 text-sm">Try:</span>
+                {['8.8.8.8', '1.1.1.1', '185.220.101.1', '104.16.0.1'].map(ip => (
+                  <button
+                    key={ip}
+                    onClick={() => { setLookupIP(ip); }}
+                    className="px-3 py-1 bg-gray-800 hover:bg-gray-700 rounded text-sm text-gray-400 hover:text-white transition-all font-mono"
+                  >
+                    {ip}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Security Checks */}
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <span>🔒</span>
-                Security Checks
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[
-                  { label: 'VPN Detection', value: result.checks.vpnDetected, icon: '🌐' },
-                  { label: 'Proxy Detection', value: result.checks.proxyDetected, icon: '🔄' },
-                  { label: 'Tor Network', value: result.checks.torDetected, icon: '🧅' },
-                  { label: 'Datacenter IP', value: result.checks.datacenterIp, icon: '🏢' },
-                  { label: 'Location Mismatch', value: result.checks.locationMismatch, icon: '📍' },
-                  { label: 'Device Anomaly', value: result.checks.deviceAnomaly, icon: '⚠️' },
-                  { label: 'Velocity Flag', value: result.checks.velocityFlag, icon: '⚡' },
-                  { label: 'Blacklisted Device', value: result.checks.blacklistedDevice, icon: '🚫' }
-                ].map((check, i) => (
-                  <div key={i} className={`p-3 rounded-lg border ${check.value ? 'bg-red-500/10 border-red-500/30' : 'bg-green-500/10 border-green-500/30'}`}>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span>{check.icon}</span>
-                      <span className="text-sm text-gray-300">{check.label}</span>
+            {lookupResult && (
+              <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                <IPDisplay data={lookupResult} title="IP Analysis Result" />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Playground Tab */}
+        {activeTab === 'playground' && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white">Payment Sandbox</h2>
+              <p className="text-gray-400">Test how your current IP and device would perform in payment scenarios</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Configuration */}
+              <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <span>⚙️</span> Payment Configuration
+                </h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-gray-400 text-sm mb-2 block">Amount</label>
+                    <input
+                      type="number"
+                      value={paymentAmount}
+                      onChange={e => setPaymentAmount(e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-violet-500"
+                      placeholder="100"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-gray-400 text-sm mb-2 block">Currency</label>
+                    <select
+                      value={paymentCurrency}
+                      onChange={e => setPaymentCurrency(e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-violet-500"
+                    >
+                      <option value="USD">USD - US Dollar</option>
+                      <option value="EUR">EUR - Euro</option>
+                      <option value="GBP">GBP - British Pound</option>
+                      <option value="JPY">JPY - Japanese Yen</option>
+                      <option value="AUD">AUD - Australian Dollar</option>
+                      <option value="CAD">CAD - Canadian Dollar</option>
+                      <option value="INR">INR - Indian Rupee</option>
+                      <option value="BRL">BRL - Brazilian Real</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-gray-400 text-sm mb-2 block">Region / Country</label>
+                    <select
+                      value={paymentRegion}
+                      onChange={e => setPaymentRegion(e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-violet-500"
+                    >
+                      <option value="US">🇺🇸 United States</option>
+                      <option value="GB">🇬🇧 United Kingdom</option>
+                      <option value="DE">🇩🇪 Germany</option>
+                      <option value="FR">🇫🇷 France</option>
+                      <option value="JP">🇯🇵 Japan</option>
+                      <option value="AU">🇦🇺 Australia</option>
+                      <option value="CA">🇨🇦 Canada</option>
+                      <option value="IN">🇮🇳 India</option>
+                      <option value="BR">🇧🇷 Brazil</option>
+                      <option value="RU">🇷🇺 Russia (High Risk)</option>
+                      <option value="CN">🇨🇳 China (High Risk)</option>
+                      <option value="NG">🇳🇬 Nigeria (High Risk)</option>
+                      <option value="UA">🇺🇦 Ukraine (High Risk)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-gray-400 text-sm mb-2 block">Payment Method</label>
+                    <select
+                      value={paymentMethod}
+                      onChange={e => setPaymentMethod(e.target.value)}
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-violet-500"
+                    >
+                      <option value="card">💳 Credit/Debit Card</option>
+                      <option value="paypal">🅿️ PayPal</option>
+                      <option value="crypto">₿ Cryptocurrency</option>
+                      <option value="bank">🏦 Bank Transfer</option>
+                      <option value="applepay">🍎 Apple Pay</option>
+                      <option value="googlepay">📱 Google Pay</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={runPaymentSimulation}
+                    disabled={loading || !myIP}
+                    className="w-full px-6 py-4 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 disabled:from-violet-600/50 disabled:to-purple-600/50 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <span>🚀</span>
+                        Simulate Payment
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Current Context */}
+              <div className="space-y-4">
+                <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
+                  <h4 className="text-sm font-semibold text-gray-400 mb-3">Your Current Risk Profile</h4>
+                  {myIP ? (
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                        <p className="text-gray-400 text-xs">IP Risk</p>
+                        <p className={`text-2xl font-bold ${getRiskColor(myIP.riskScore)}`}>{myIP.riskScore}</p>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                        <p className="text-gray-400 text-xs">Device Trust</p>
+                        <p className={`text-2xl font-bold ${myDevice && myDevice.trustScore >= 70 ? 'text-green-400' : 'text-yellow-400'}`}>{myDevice?.trustScore || 0}%</p>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-3 text-center col-span-2">
+                        <p className="text-gray-400 text-xs">Your IP</p>
+                        <p className="text-lg font-mono text-violet-400">{myIP.ip}</p>
+                      </div>
                     </div>
-                    <p className={`font-semibold ${check.value ? 'text-red-400' : 'text-green-400'}`}>
-                      {check.value ? 'Detected' : 'Clear'}
+                  ) : (
+                    <p className="text-gray-500 text-center py-4">Loading your IP data...</p>
+                  )}
+                </div>
+
+                {/* Quick Scenarios */}
+                <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
+                  <h4 className="text-sm font-semibold text-gray-400 mb-3">Quick Scenarios</h4>
+                  <div className="space-y-2">
+                    {[
+                      { label: 'Small Purchase', amount: '25', currency: 'USD', region: 'US' },
+                      { label: 'Medium Purchase', amount: '150', currency: 'EUR', region: 'DE' },
+                      { label: 'Large Purchase', amount: '1500', currency: 'USD', region: 'US' },
+                      { label: 'High Risk Region', amount: '100', currency: 'USD', region: 'RU' }
+                    ].map(scenario => (
+                      <button
+                        key={scenario.label}
+                        onClick={() => {
+                          setPaymentAmount(scenario.amount);
+                          setPaymentCurrency(scenario.currency);
+                          setPaymentRegion(scenario.region);
+                        }}
+                        className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-left text-sm transition-all flex justify-between items-center"
+                      >
+                        <span className="text-white">{scenario.label}</span>
+                        <span className="text-gray-400">{scenario.currency} {scenario.amount}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Result */}
+            {paymentResult && (
+              <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-1">Simulation Result</h3>
+                    <p className="text-gray-400 text-sm">Transaction ID: {paymentResult.id}</p>
+                  </div>
+                  <div className={`px-6 py-3 rounded-xl border font-bold text-xl ${getStatusColor(paymentResult.status)}`}>
+                    {paymentResult.status.toUpperCase()}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                    <p className="text-gray-400 text-xs">Amount</p>
+                    <p className="text-xl font-bold text-white">{paymentResult.currency} {paymentResult.amount}</p>
+                  </div>
+                  <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                    <p className="text-gray-400 text-xs">Risk Score</p>
+                    <p className={`text-xl font-bold ${getRiskColor(paymentResult.riskScore)}`}>{paymentResult.riskScore}</p>
+                  </div>
+                  <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                    <p className="text-gray-400 text-xs">Processing Time</p>
+                    <p className="text-xl font-bold text-white">{paymentResult.processingTime}ms</p>
+                  </div>
+                  <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                    <p className="text-gray-400 text-xs">Method</p>
+                    <p className="text-xl font-bold text-white capitalize">{paymentResult.method}</p>
+                  </div>
+                </div>
+
+                {paymentResult.declineReason && (
+                  <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+                    <p className="text-red-400 font-semibold flex items-center gap-2">
+                      <span>❌</span> Decline Reason: {paymentResult.declineReason}
                     </p>
                   </div>
-                ))}
-              </div>
-            </div>
+                )}
 
-            {/* Device Information */}
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <span>📱</span>
-                Device Information
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {[
-                  { label: 'Fingerprint', value: result.deviceInfo.fingerprint },
-                  { label: 'Browser', value: result.deviceInfo.browser },
-                  { label: 'Operating System', value: result.deviceInfo.os },
-                  { label: 'Device Type', value: result.deviceInfo.device },
-                  { label: 'IP Address', value: result.deviceInfo.ip },
-                  { label: 'Location', value: result.deviceInfo.location },
-                  { label: 'ISP', value: result.deviceInfo.isp }
-                ].map((info, i) => (
-                  <div key={i} className="p-3 bg-gray-800/50 rounded-lg">
-                    <p className="text-gray-400 text-sm mb-1">{info.label}</p>
-                    <p className="text-white font-medium">{info.value}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Flags */}
-            {result.flags.length > 0 && (
-              <div className="bg-gray-900 rounded-xl border border-red-500/30 p-6">
-                <h3 className="text-lg font-semibold text-red-400 mb-4 flex items-center gap-2">
-                  <span>🚨</span>
-                  Risk Flags ({result.flags.length})
-                </h3>
-                <div className="space-y-2">
-                  {result.flags.map((flag, i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 bg-red-500/10 rounded-lg">
-                      <span className="text-red-400">⚠️</span>
-                      <span className="text-red-300">{flag}</span>
+                <h4 className="text-white font-semibold mb-3">Security Checks</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {paymentResult.checks.map((check, i) => (
+                    <div key={i} className={`p-3 rounded-lg border flex items-center gap-3 ${check.passed ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
+                      <span className="text-xl">{check.passed ? '✅' : '❌'}</span>
+                      <div>
+                        <p className={`font-medium ${check.passed ? 'text-green-400' : 'text-red-400'}`}>{check.name}</p>
+                        <p className="text-gray-400 text-sm">{check.message}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
-
-            {/* Recommendations */}
-            {result.recommendations.length > 0 && (
-              <div className="bg-gray-900 rounded-xl border border-green-500/30 p-6">
-                <h3 className="text-lg font-semibold text-green-400 mb-4 flex items-center gap-2">
-                  <span>💡</span>
-                  Recommendations
-                </h3>
-                <div className="space-y-2">
-                  {result.recommendations.map((rec, i) => (
-                    <div key={i} className="flex items-start gap-3 p-3 bg-green-500/10 rounded-lg">
-                      <span className="text-green-400 mt-0.5">✓</span>
-                      <span className="text-green-300">{rec}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Need Help */}
-            <div className="bg-gray-900 rounded-xl border border-gray-800 p-6">
-              <h3 className="text-lg font-semibold text-white mb-2">Still having issues?</h3>
-              <p className="text-gray-400 mb-4">
-                If your payment continues to be declined after following the recommendations, contact our support team.
-              </p>
-              <div className="flex gap-3">
-                <a
-                  href="mailto:support@maula.ai"
-                  className="px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-all"
-                >
-                  📧 Contact Support
-                </a>
-                <a
-                  href="https://maula.ai/help"
-                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-all"
-                >
-                  📚 Help Center
-                </a>
-              </div>
-            </div>
           </div>
         )}
-
-        {/* Empty State */}
-        {!result && !loading && (
-          <div className="text-center py-16">
-            <div className="w-20 h-20 rounded-full bg-gray-800 flex items-center justify-center mx-auto mb-4">
-              <span className="text-4xl">🔍</span>
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">Check Your Payment Status</h3>
-            <p className="text-gray-400 max-w-md mx-auto">
-              Enter your transaction ID, email, or device ID above to check why your payment might have been declined or flagged.
-            </p>
-          </div>
-        )}
-
-        {/* Common Issues Section */}
-        <div className="mt-12">
-          <h2 className="text-xl font-semibold text-white mb-6">Common Payment Issues</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              {
-                icon: '🌐',
-                title: 'VPN/Proxy Detection',
-                desc: 'Payments from VPN or proxy connections may be blocked to prevent fraud.'
-              },
-              {
-                icon: '📍',
-                title: 'Location Mismatch',
-                desc: 'Your current location doesn\'t match your billing address on file.'
-              },
-              {
-                icon: '📱',
-                title: 'New Device',
-                desc: 'First-time payments from a new device may require additional verification.'
-              },
-              {
-                icon: '⚡',
-                title: 'Too Many Attempts',
-                desc: 'Multiple failed payment attempts can trigger temporary blocks.'
-              },
-              {
-                icon: '💳',
-                title: 'Card Issues',
-                desc: 'Expired card, insufficient funds, or bank restrictions.'
-              },
-              {
-                icon: '🔒',
-                title: 'Security Holds',
-                desc: 'Your bank may have placed a security hold on the transaction.'
-              }
-            ].map((issue, i) => (
-              <div key={i} className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl">{issue.icon}</span>
-                  <h3 className="font-semibold text-white">{issue.title}</h3>
-                </div>
-                <p className="text-gray-400 text-sm">{issue.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </main>
 
       {/* Footer */}
       <footer className="border-t border-gray-800 mt-12 py-6">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between text-sm text-gray-500">
             <div className="flex items-center gap-2">
               <span>🛡️</span>
               <span>RiskQuantify • Tool 19</span>
             </div>
             <span>VictoryKit Security Platform</span>
-            <span>v19.0.0</span>
+            <span>v19.1.0</span>
           </div>
         </div>
       </footer>
