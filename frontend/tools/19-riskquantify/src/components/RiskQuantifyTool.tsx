@@ -6,13 +6,13 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { riskAssessApi, simulatedData, type Risk, type RiskDashboard } from '../api/riskquantify.api';
+import { riskAssessApi, simulatedData, type Risk, type RiskDashboard } from '../api/riskassess.api';
 
 type TabType = 'dashboard' | 'risks' | 'matrix' | 'ai-analysis' | 'threat-intel' | 'compliance' | 'reports' | 'analytics' | 'collaboration';
 
 interface WebSocketMessage {
   type: string;
-  data: any;
+  data: unknown;
   userId?: string;
   timestamp: string;
 }
@@ -384,7 +384,7 @@ const NeuralRiskNetwork = () => {
       ctx.fillRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
       
       // Draw connections
-      nodes.forEach((node, i) => {
+      nodes.forEach((node) => {
         node.connections.forEach(targetIdx => {
           const target = nodes[targetIdx];
           const avgRisk = (node.risk + target.risk) / 2;
@@ -804,16 +804,20 @@ export default function RiskQuantifyTool() {
   const [usingSimulated, setUsingSimulated] = useState(false);
 
   // Enhanced state for new features
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [aiAnalysis, setAiAnalysis] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [threatIntel, setThreatIntel] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [complianceStatus, setComplianceStatus] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [predictiveAnalytics, setPredictiveAnalytics] = useState<any>(null);
   const [chatMessages, setChatMessages] = useState<WebSocketMessage[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
   // WebSocket connection
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     loadDashboard();
@@ -833,7 +837,7 @@ export default function RiskQuantifyTool() {
   }, [activeTab]);
 
   const initializeWebSocket = () => {
-    const wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:4119';
+    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:4019';
     wsRef.current = new WebSocket(wsUrl);
 
     wsRef.current.onopen = () => {
@@ -1039,7 +1043,7 @@ export default function RiskQuantifyTool() {
         <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
           <h3 className="text-white font-semibold mb-4">Top Risks</h3>
           <div className="space-y-3">
-            {dashboard.topRisks.map(r => (
+            {dashboard.topRisks.map((r: Risk) => (
               <div key={r._id} className="flex items-center justify-between p-3 bg-gray-900/50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold ${
