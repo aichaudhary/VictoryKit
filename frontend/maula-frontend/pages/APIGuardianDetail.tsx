@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, ClipboardList, Zap, Activity, FileText, Shield, Search, Database, Eye } from 'lucide-react';
 
-const AuditTrailProDetail: React.FC = () => {
+const APIGuardianDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const AuditTrailProDetail: React.FC = () => {
   );
 };
 
-export default AuditTrailProDetail;
+export default APIGuardianDetail;

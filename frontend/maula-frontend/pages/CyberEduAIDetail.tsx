@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Award, Zap, Shield, FileCheck, ClipboardList, Lock } from 'lucide-react';
 
-const ISO27001Detail: React.FC = () => {
+const CyberEduAIDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const ISO27001Detail: React.FC = () => {
   );
 };
 
-export default ISO27001Detail;
+export default CyberEduAIDetail;

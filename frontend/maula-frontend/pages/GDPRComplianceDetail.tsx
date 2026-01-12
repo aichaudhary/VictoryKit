@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Eye, Zap, Shield, UserCheck, FileText, Search, Lock } from 'lucide-react';
 
-const PrivacyShieldDetail: React.FC = () => {
+const GDPRComplianceDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const PrivacyShieldDetail: React.FC = () => {
   );
 };
 
-export default PrivacyShieldDetail;
+export default GDPRComplianceDetail;

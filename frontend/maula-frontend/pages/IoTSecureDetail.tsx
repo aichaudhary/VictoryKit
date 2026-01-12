@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Database, FileSearch, Eye, Lock } from 'lucide-react';
 
-const DLPAdvancedDetail: React.FC = () => {
+const IoTSecureDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const DLPAdvancedDetail: React.FC = () => {
   );
 };
 
-export default DLPAdvancedDetail;
+export default IoTSecureDetail;

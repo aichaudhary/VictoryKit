@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Link, Zap, Package, Shield, FileText, AlertTriangle } from 'lucide-react';
 
-const SupplyChainAIDetail: React.FC = () => {
+const DRPlanDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const SupplyChainAIDetail: React.FC = () => {
   );
 };
 
-export default SupplyChainAIDetail;
+export default DRPlanDetail;

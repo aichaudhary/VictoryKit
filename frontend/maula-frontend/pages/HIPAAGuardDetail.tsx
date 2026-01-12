@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Globe, Zap, FileText, Shield, Search, BookOpen, ShieldCheck } from 'lucide-react';
 
-const GDPRComplianceDetail: React.FC = () => {
+const HIPAAGuardDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const GDPRComplianceDetail: React.FC = () => {
   );
 };
 
-export default GDPRComplianceDetail;
+export default HIPAAGuardDetail;

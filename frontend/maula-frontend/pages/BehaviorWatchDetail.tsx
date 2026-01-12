@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Bot, Brain, Shield, Fingerprint } from 'lucide-react';
 
-const BotMitigationDetail: React.FC = () => {
+const BehaviorWatchDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const BotMitigationDetail: React.FC = () => {
   );
 };
 
-export default BotMitigationDetail;
+export default BehaviorWatchDetail;

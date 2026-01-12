@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Lock, Globe, Network, Activity, BarChart } from 'lucide-react';
 
-const VPNAnalyzerDetail: React.FC = () => {
+const VPNGuardianDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const VPNAnalyzerDetail: React.FC = () => {
   );
 };
 
-export default VPNAnalyzerDetail;
+export default VPNGuardianDetail;

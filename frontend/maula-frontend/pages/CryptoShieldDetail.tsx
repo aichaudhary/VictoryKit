@@ -13,7 +13,7 @@ import {
   Bell,
 } from 'lucide-react';
 
-const IncidentResponseDetail: React.FC = () => {
+const CryptoShieldDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -181,4 +181,4 @@ const IncidentResponseDetail: React.FC = () => {
   );
 };
 
-export default IncidentResponseDetail;
+export default CryptoShieldDetail;

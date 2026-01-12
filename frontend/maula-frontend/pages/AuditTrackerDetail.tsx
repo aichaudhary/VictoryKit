@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Cloud, Shield, Settings, CheckCircle } from 'lucide-react';
 
-const CloudPostureDetail: React.FC = () => {
+const AuditTrackerDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const CloudPostureDetail: React.FC = () => {
   );
 };
 
-export default CloudPostureDetail;
+export default AuditTrackerDetail;

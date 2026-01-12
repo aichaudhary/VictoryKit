@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Brain, UserSearch, Activity, AlertTriangle } from 'lucide-react';
 
-const BehaviorAnalyticsDetail: React.FC = () => {
+const RiskScoreAIDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const BehaviorAnalyticsDetail: React.FC = () => {
   );
 };
 
-export default BehaviorAnalyticsDetail;
+export default RiskScoreAIDetail;

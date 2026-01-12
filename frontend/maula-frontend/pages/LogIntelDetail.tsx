@@ -13,7 +13,7 @@ import {
   Key,
 } from 'lucide-react';
 
-const IdentityForgeDetail: React.FC = () => {
+const LogIntelDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -181,4 +181,4 @@ const IdentityForgeDetail: React.FC = () => {
   );
 };
 
-export default IdentityForgeDetail;
+export default LogIntelDetail;

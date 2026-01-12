@@ -14,7 +14,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 
-const ZeroDayDetectDetail: React.FC = () => {
+const ThreatRadarDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -180,4 +180,4 @@ const ZeroDayDetectDetail: React.FC = () => {
   );
 };
 
-export default ZeroDayDetectDetail;
+export default ThreatRadarDetail;

@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Package, Shield, Search, AlertTriangle, Layers } from 'lucide-react';
 
-const ContainerScanDetail: React.FC = () => {
+const BiometricAIDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const ContainerScanDetail: React.FC = () => {
   );
 };
 
-export default ContainerScanDetail;
+export default BiometricAIDetail;

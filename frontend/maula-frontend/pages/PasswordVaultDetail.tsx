@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Box, Shield, Lock, Activity } from 'lucide-react';
 
-const KubeArmorDetail: React.FC = () => {
+const PasswordVaultDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const KubeArmorDetail: React.FC = () => {
   );
 };
 
-export default KubeArmorDetail;
+export default PasswordVaultDetail;

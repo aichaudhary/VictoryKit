@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Mail, Zap, Activity, ShieldAlert, Globe, Link, Eye, MousePointer, Brain } from 'lucide-react';
 
-const PhishNetAIDetail: React.FC = () => {
+const PhishGuardDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const PhishNetAIDetail: React.FC = () => {
   );
 };
 
-export default PhishNetAIDetail;
+export default PhishGuardDetail;

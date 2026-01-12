@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Terminal, Zap, Activity, Code, ShieldCheck, Database, Server, Cpu, Layers, Eye } from 'lucide-react';
 
-const CodeSentinelDetail: React.FC = () => {
+const SecureCodeDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -88,4 +88,4 @@ const CodeSentinelDetail: React.FC = () => {
   );
 };
 
-export default CodeSentinelDetail;
+export default SecureCodeDetail;

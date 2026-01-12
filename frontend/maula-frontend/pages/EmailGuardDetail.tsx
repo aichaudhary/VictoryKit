@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Mail, Search, ShieldCheck, Lock, FileWarning } from 'lucide-react';
 
-const EmailDefenderDetail: React.FC = () => {
+const EmailGuardDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const EmailDefenderDetail: React.FC = () => {
   );
 };
 
-export default EmailDefenderDetail;
+export default EmailGuardDetail;

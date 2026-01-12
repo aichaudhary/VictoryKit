@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Signal, Search, Globe, Network, ShieldCheck } from 'lucide-react';
 
-const DNSFirewallDetail: React.FC = () => {
+const DNSShieldDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const DNSFirewallDetail: React.FC = () => {
   );
 };
 
-export default DNSFirewallDetail;
+export default DNSShieldDetail;

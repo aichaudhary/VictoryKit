@@ -13,7 +13,7 @@ import {
   Server,
 } from 'lucide-react';
 
-const NetworkForensicsDetail: React.FC = () => {
+const CloudSecureDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -181,4 +181,4 @@ const NetworkForensicsDetail: React.FC = () => {
   );
 };
 
-export default NetworkForensicsDetail;
+export default CloudSecureDetail;

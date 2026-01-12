@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Globe, Filter, AlertTriangle } from 'lucide-react';
 
-const WAFManagerDetail: React.FC = () => {
+const ForensicsLabDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const WAFManagerDetail: React.FC = () => {
   );
 };
 
-export default WAFManagerDetail;
+export default ForensicsLabDetail;

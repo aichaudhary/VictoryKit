@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, BarChart3, Zap, Activity, TrendingUp, DollarSign, Shield, AlertTriangle, PieChart } from 'lucide-react';
 
-const RiskQuantifyDetail: React.FC = () => {
+const DevSecOpsDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const RiskQuantifyDetail: React.FC = () => {
   );
 };
 
-export default RiskQuantifyDetail;
+export default DevSecOpsDetail;

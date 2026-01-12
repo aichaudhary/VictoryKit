@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Network, UserCheck, ShieldCheck } from 'lucide-react';
 
-const ZeroTrustDetail: React.FC = () => {
+const ZeroTrustAIDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const ZeroTrustDetail: React.FC = () => {
   );
 };
 
-export default ZeroTrustDetail;
+export default ZeroTrustAIDetail;

@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Key, Zap, Activity, Lock, Shield, Database, RotateCcw, Server } from 'lucide-react';
 
-const SecretVaultDetail: React.FC = () => {
+const NetDefenderDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const SecretVaultDetail: React.FC = () => {
   );
 };
 
-export default SecretVaultDetail;
+export default NetDefenderDetail;

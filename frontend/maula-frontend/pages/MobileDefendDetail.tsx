@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Search, Network, Cpu, Wifi } from 'lucide-react';
 
-const IoTSentinelDetail: React.FC = () => {
+const MobileDefendDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const IoTSentinelDetail: React.FC = () => {
   );
 };
 
-export default IoTSentinelDetail;
+export default MobileDefendDetail;

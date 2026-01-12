@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, UserCheck, Zap, Activity, Shield, Lock, Key, Clock, Users } from 'lucide-react';
 
-const PrivilegeGuardDetail: React.FC = () => {
+const EndpointShieldDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const PrivilegeGuardDetail: React.FC = () => {
   );
 };
 
-export default PrivilegeGuardDetail;
+export default EndpointShieldDetail;

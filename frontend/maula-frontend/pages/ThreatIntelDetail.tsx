@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Key, Lock, Gauge, ShieldCheck } from 'lucide-react';
 
-const APIShieldDetail: React.FC = () => {
+const ThreatIntelDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const APIShieldDetail: React.FC = () => {
   );
 };
 
-export default APIShieldDetail;
+export default ThreatIntelDetail;

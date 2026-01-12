@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Lock, Shield, Bell, FileCheck } from 'lucide-react';
 
-const SSLMonitorDetail: React.FC = () => {
+const RedTeamAIDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const SSLMonitorDetail: React.FC = () => {
   );
 };
 
-export default SSLMonitorDetail;
+export default RedTeamAIDetail;

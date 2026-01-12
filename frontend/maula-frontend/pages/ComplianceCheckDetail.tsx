@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Shield, Zap, Activity, ShieldCheck, Database, FileText, Search, Play } from 'lucide-react';
 
-const RuntimeGuardDetail: React.FC = () => {
+const ComplianceCheckDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const RuntimeGuardDetail: React.FC = () => {
   );
 };
 
-export default RuntimeGuardDetail;
+export default ComplianceCheckDetail;

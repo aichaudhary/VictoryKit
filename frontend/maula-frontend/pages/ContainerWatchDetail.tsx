@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Target, Zap, Activity, GitBranch, Shield, FileText, AlertTriangle, Search } from 'lucide-react';
 
-const ThreatModelDetail: React.FC = () => {
+const ContainerWatchDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const ThreatModelDetail: React.FC = () => {
   );
 };
 
-export default ThreatModelDetail;
+export default ContainerWatchDetail;

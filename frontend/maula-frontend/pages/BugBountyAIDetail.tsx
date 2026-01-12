@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Shield, Zap, FileCheck, ClipboardList, CheckCircle, FolderOpen } from 'lucide-react';
 
-const SOC2AutomatorDetail: React.FC = () => {
+const BugBountyAIDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const SOC2AutomatorDetail: React.FC = () => {
   );
 };
 
-export default SOC2AutomatorDetail;
+export default BugBountyAIDetail;

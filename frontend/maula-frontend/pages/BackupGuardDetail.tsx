@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Smartphone, Lock, ShieldCheck, Scan } from 'lucide-react';
 
-const MobileShieldDetail: React.FC = () => {
+const BackupGuardDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const MobileShieldDetail: React.FC = () => {
   );
 };
 
-export default MobileShieldDetail;
+export default BackupGuardDetail;

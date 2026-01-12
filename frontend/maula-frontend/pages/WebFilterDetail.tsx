@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Globe, Monitor, ShieldCheck, Lock, Cloud } from 'lucide-react';
 
-const BrowserIsolationDetail: React.FC = () => {
+const WebFilterDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const BrowserIsolationDetail: React.FC = () => {
   );
 };
 
-export default BrowserIsolationDetail;
+export default WebFilterDetail;

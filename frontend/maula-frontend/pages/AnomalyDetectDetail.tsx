@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowLeft, Zap, Shield, Network, Gauge, Cloud } from 'lucide-react';
 
-const DDoSDefenderDetail: React.FC = () => {
+const AnomalyDetectDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
@@ -87,4 +87,4 @@ const DDoSDefenderDetail: React.FC = () => {
   );
 };
 
-export default DDoSDefenderDetail;
+export default AnomalyDetectDetail;
