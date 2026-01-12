@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import {
   Shield,
   Search,
@@ -11,6 +11,13 @@ import {
   Globe,
   AlertTriangle,
   RefreshCw,
+  Radar,
+  Cpu,
+  Database,
+  Lock,
+  Zap,
+  Radio,
+  Crosshair,
 } from "lucide-react";
 import VulnScanForm, { ScanFormData } from "./VulnScanForm";
 import LiveScanPanel, {
@@ -24,6 +31,439 @@ import AnimatedVulnResult, {
   Vulnerability,
 } from "./AnimatedVulnResult";
 import { scanApi, dashboardApi, Scan } from "../services/vulnscan.api";
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🚀 EPIC ANIMATED VISUAL COMPONENTS - Neil Armstrong at Moon 🌕 Level
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// 🔮 Vulnerability Particle System - Floating security threats
+const VulnParticleSystem: React.FC = () => {
+  const particles = useMemo(() => {
+    return Array.from({ length: 60 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 4 + 2,
+      duration: Math.random() * 20 + 15,
+      delay: Math.random() * 10,
+      type: ['bug', 'shield', 'warning', 'lock'][Math.floor(Math.random() * 4)],
+      color: ['purple', 'cyan', 'red', 'green'][Math.floor(Math.random() * 4)],
+    }));
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className={`absolute opacity-20 animate-pulse`}
+          style={{
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            animation: `floatParticle ${p.duration}s ease-in-out infinite`,
+            animationDelay: `${p.delay}s`,
+          }}
+        >
+          {p.type === 'bug' && <Bug className={`w-full h-full text-${p.color}-500/30`} />}
+          {p.type === 'shield' && <Shield className={`w-full h-full text-${p.color}-500/30`} />}
+          {p.type === 'warning' && <AlertTriangle className={`w-full h-full text-${p.color}-500/30`} />}
+          {p.type === 'lock' && <Lock className={`w-full h-full text-${p.color}-500/30`} />}
+        </div>
+      ))}
+      <style>{`
+        @keyframes floatParticle {
+          0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
+          25% { transform: translate(30px, -30px) rotate(90deg); opacity: 0.3; }
+          50% { transform: translate(-20px, -50px) rotate(180deg); opacity: 0.2; }
+          75% { transform: translate(40px, -20px) rotate(270deg); opacity: 0.3; }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+// 📡 Radar Sweep Scanner - Rotating vulnerability detection
+const RadarSweepScanner: React.FC<{ isActive?: boolean }> = ({ isActive = false }) => {
+  return (
+    <div className="absolute top-20 right-10 w-64 h-64 opacity-30">
+      <div className="absolute inset-0 rounded-full border border-purple-500/20">
+        {/* Concentric circles */}
+        {[1, 2, 3, 4].map((ring) => (
+          <div
+            key={ring}
+            className="absolute rounded-full border border-purple-500/10"
+            style={{
+              inset: `${ring * 15}%`,
+            }}
+          />
+        ))}
+        
+        {/* Cross lines */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="h-full w-px bg-gradient-to-b from-transparent via-purple-500/20 to-transparent" />
+        </div>
+        
+        {/* Rotating sweep */}
+        <div
+          className={`absolute inset-0 ${isActive ? 'animate-spin' : ''}`}
+          style={{ animationDuration: '4s' }}
+        >
+          <div
+            className="absolute top-1/2 left-1/2 w-1/2 h-1"
+            style={{
+              background: 'linear-gradient(90deg, rgba(168, 85, 247, 0.8), transparent)',
+              transformOrigin: 'left center',
+              boxShadow: '0 0 20px rgba(168, 85, 247, 0.5)',
+            }}
+          />
+        </div>
+        
+        {/* Detected blips */}
+        {isActive && [1, 2, 3].map((blip) => (
+          <div
+            key={blip}
+            className="absolute w-3 h-3 bg-red-500 rounded-full animate-ping"
+            style={{
+              top: `${20 + blip * 20}%`,
+              left: `${30 + blip * 15}%`,
+              animationDelay: `${blip * 0.5}s`,
+            }}
+          />
+        ))}
+        
+        {/* Center ping */}
+        <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="w-4 h-4 bg-purple-500 rounded-full animate-pulse shadow-lg shadow-purple-500/50" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 🔲 Cyber Grid Matrix - Network topology background
+const CyberGridMatrix: React.FC = () => {
+  const gridLines = useMemo(() => {
+    return Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      isVertical: i % 2 === 0,
+      position: (i * 5) + Math.random() * 2,
+      opacity: 0.03 + Math.random() * 0.05,
+      delay: Math.random() * 5,
+    }));
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      <svg className="w-full h-full">
+        <defs>
+          <pattern id="vulnGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <path
+              d="M 60 0 L 0 0 0 60"
+              fill="none"
+              stroke="rgba(168, 85, 247, 0.05)"
+              strokeWidth="1"
+            />
+          </pattern>
+          <linearGradient id="gridFade" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(168, 85, 247, 0.1)" />
+            <stop offset="50%" stopColor="rgba(6, 182, 212, 0.05)" />
+            <stop offset="100%" stopColor="rgba(168, 85, 247, 0.1)" />
+          </linearGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#vulnGrid)" />
+        
+        {/* Animated scan lines */}
+        {gridLines.map((line) => (
+          <line
+            key={line.id}
+            x1={line.isVertical ? `${line.position}%` : '0%'}
+            y1={line.isVertical ? '0%' : `${line.position}%`}
+            x2={line.isVertical ? `${line.position}%` : '100%'}
+            y2={line.isVertical ? '100%' : `${line.position}%`}
+            stroke="url(#gridFade)"
+            strokeWidth="1"
+            style={{
+              opacity: line.opacity,
+              animation: `gridPulse 3s ease-in-out infinite`,
+              animationDelay: `${line.delay}s`,
+            }}
+          />
+        ))}
+      </svg>
+      <style>{`
+        @keyframes gridPulse {
+          0%, 100% { opacity: 0.03; }
+          50% { opacity: 0.08; }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+// 🛡️ Pulsing Shield Orb - Central protection indicator
+const ShieldOrbPulse: React.FC<{ riskLevel?: string }> = ({ riskLevel }) => {
+  const color = useMemo(() => {
+    switch (riskLevel) {
+      case 'CRITICAL': return 'red';
+      case 'HIGH': return 'orange';
+      case 'MEDIUM': return 'yellow';
+      case 'LOW': return 'green';
+      default: return 'purple';
+    }
+  }, [riskLevel]);
+
+  return (
+    <div className="absolute bottom-20 left-10">
+      <div className="relative w-32 h-32">
+        {/* Outer pulse rings */}
+        {[1, 2, 3].map((ring) => (
+          <div
+            key={ring}
+            className={`absolute inset-0 rounded-full border-2 border-${color}-500/20 animate-ping`}
+            style={{
+              animationDuration: `${2 + ring * 0.5}s`,
+              animationDelay: `${ring * 0.3}s`,
+            }}
+          />
+        ))}
+        
+        {/* Core orb */}
+        <div className={`absolute inset-4 rounded-full bg-gradient-to-br from-${color}-500/20 to-${color}-600/10 backdrop-blur-sm flex items-center justify-center`}>
+          <Shield className={`w-12 h-12 text-${color}-400 animate-pulse`} />
+        </div>
+        
+        {/* Orbiting dots */}
+        <div className="absolute inset-0 animate-spin" style={{ animationDuration: '10s' }}>
+          <div className={`absolute top-0 left-1/2 w-2 h-2 -translate-x-1/2 bg-${color}-400 rounded-full shadow-lg shadow-${color}-400/50`} />
+        </div>
+        <div className="absolute inset-0 animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }}>
+          <div className={`absolute bottom-0 left-1/2 w-2 h-2 -translate-x-1/2 bg-cyan-400 rounded-full shadow-lg shadow-cyan-400/50`} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 📊 Port Scan Visualization - Active scanning display
+const PortScanVisualization: React.FC<{ portsScanned: number; isScanning: boolean }> = ({ portsScanned, isScanning }) => {
+  const portBlocks = useMemo(() => {
+    return Array.from({ length: 100 }, (_, i) => ({
+      id: i,
+      x: i % 10,
+      y: Math.floor(i / 10),
+      isCommon: [21, 22, 25, 53, 80, 110, 143, 443, 445, 993, 995, 1433, 3306, 3389, 5432, 5900, 6379, 8080, 8443, 27017].includes(i + 1),
+    }));
+  }, []);
+
+  if (!isScanning) return null;
+
+  return (
+    <div className="absolute bottom-20 right-10 opacity-40">
+      <div className="grid grid-cols-10 gap-1">
+        {portBlocks.map((port) => (
+          <div
+            key={port.id}
+            className={`w-2 h-2 rounded-sm transition-all duration-300 ${
+              port.id < portsScanned
+                ? port.isCommon
+                  ? 'bg-green-500 shadow-lg shadow-green-500/50'
+                  : 'bg-purple-500/50'
+                : 'bg-slate-700/50'
+            }`}
+            style={{
+              animationDelay: `${port.id * 10}ms`,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// 🌊 Scanning Wave Effect - Visual ripple during scan
+const ScanningWaveEffect: React.FC<{ isScanning: boolean }> = ({ isScanning }) => {
+  if (!isScanning) return null;
+
+  return (
+    <div className="absolute inset-0">
+      {[1, 2, 3].map((wave) => (
+        <div
+          key={wave}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-purple-500/20"
+          style={{
+            width: `${wave * 400}px`,
+            height: `${wave * 400}px`,
+            animation: `waveExpand 3s ease-out infinite`,
+            animationDelay: `${wave * 0.8}s`,
+          }}
+        />
+      ))}
+      <style>{`
+        @keyframes waveExpand {
+          0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0.5; }
+          100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+// 🔢 Binary Rain Effect - Matrix-style falling code
+const BinaryRainEffect: React.FC = () => {
+  const columns = useMemo(() => {
+    return Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      x: i * 3.5,
+      duration: 10 + Math.random() * 20,
+      delay: Math.random() * 10,
+      chars: Array.from({ length: 20 }, () => 
+        Math.random() > 0.5 ? '1' : '0'
+      ).join('\n'),
+    }));
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden opacity-10">
+      {columns.map((col) => (
+        <div
+          key={col.id}
+          className="absolute text-purple-500 text-xs font-mono whitespace-pre leading-4"
+          style={{
+            left: `${col.x}%`,
+            top: '-100px',
+            animation: `binaryFall ${col.duration}s linear infinite`,
+            animationDelay: `${col.delay}s`,
+          }}
+        >
+          {col.chars}
+        </div>
+      ))}
+      <style>{`
+        @keyframes binaryFall {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(100vh); }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+// 🎯 CVE Target Reticle - Vulnerability targeting animation
+const CVETargetReticle: React.FC<{ vulnsFound: number }> = ({ vulnsFound }) => {
+  if (vulnsFound === 0) return null;
+
+  return (
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20">
+      <div className="relative w-48 h-48">
+        {/* Outer rotating ring */}
+        <div
+          className="absolute inset-0 rounded-full border-2 border-red-500 animate-spin"
+          style={{ animationDuration: '10s' }}
+        >
+          <div className="absolute top-0 left-1/2 w-1 h-4 -translate-x-1/2 -translate-y-1/2 bg-red-500" />
+        </div>
+        
+        {/* Inner targeting circles */}
+        <div className="absolute inset-8 rounded-full border border-red-500/50 animate-pulse" />
+        <div className="absolute inset-16 rounded-full border border-red-500/30" />
+        
+        {/* Crosshairs */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="h-full w-0.5 bg-gradient-to-b from-transparent via-red-500/50 to-transparent" />
+        </div>
+        
+        {/* Center indicator */}
+        <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Crosshair className="w-8 h-8 text-red-500 animate-pulse" />
+        </div>
+        
+        {/* Vuln counter */}
+        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-red-500/20 px-3 py-1 rounded-full">
+          <span className="text-red-400 text-sm font-bold">{vulnsFound} CVE</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 🔌 Network Node Mesh - Connected nodes visualization
+const NetworkNodeMesh: React.FC = () => {
+  const nodes = useMemo(() => {
+    return Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      x: 10 + Math.random() * 80,
+      y: 10 + Math.random() * 80,
+      size: 4 + Math.random() * 8,
+      pulse: Math.random() * 2,
+    }));
+  }, []);
+
+  const connections = useMemo(() => {
+    const conns: { from: number; to: number }[] = [];
+    nodes.forEach((_, i) => {
+      const target = (i + 1 + Math.floor(Math.random() * 3)) % nodes.length;
+      conns.push({ from: i, to: target });
+    });
+    return conns;
+  }, [nodes]);
+
+  return (
+    <div className="absolute inset-0 opacity-20">
+      <svg className="w-full h-full">
+        <defs>
+          <linearGradient id="nodeGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(168, 85, 247, 0)" />
+            <stop offset="50%" stopColor="rgba(168, 85, 247, 0.5)" />
+            <stop offset="100%" stopColor="rgba(168, 85, 247, 0)" />
+          </linearGradient>
+        </defs>
+        
+        {/* Connection lines */}
+        {connections.map((conn, i) => (
+          <line
+            key={i}
+            x1={`${nodes[conn.from].x}%`}
+            y1={`${nodes[conn.from].y}%`}
+            x2={`${nodes[conn.to].x}%`}
+            y2={`${nodes[conn.to].y}%`}
+            stroke="url(#nodeGlow)"
+            strokeWidth="1"
+            className="animate-pulse"
+            style={{ animationDelay: `${i * 0.2}s` }}
+          />
+        ))}
+        
+        {/* Nodes */}
+        {nodes.map((node) => (
+          <g key={node.id}>
+            <circle
+              cx={`${node.x}%`}
+              cy={`${node.y}%`}
+              r={node.size}
+              fill="rgba(168, 85, 247, 0.3)"
+              className="animate-pulse"
+              style={{ animationDelay: `${node.pulse}s` }}
+            />
+            <circle
+              cx={`${node.x}%`}
+              cy={`${node.y}%`}
+              r={node.size / 2}
+              fill="rgba(168, 85, 247, 0.8)"
+            />
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+};
 
 // Environment check - use real API if available
 const USE_REAL_API = import.meta.env.VITE_USE_REAL_API === 'true';
@@ -855,54 +1295,123 @@ const VulnScanTool: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      {/* Header */}
-      <header className="bg-slate-900/80 backdrop-blur-xl border-b border-purple-500/20 sticky top-0 z-50">
-        <div className="max-w-[1800px] mx-auto px-6 py-4">
+    <div className="min-h-screen bg-slate-950 relative">
+      {/* ═══════════════════════════════════════════════════════════════════════════
+          🚀 EPIC ANIMATED BACKGROUND EFFECTS - Neil Armstrong Moon Level 🌕
+          All background effects are in a FIXED container that's BEHIND everything
+          ═══════════════════════════════════════════════════════════════════════════ */}
+      <div className="fixed inset-0 overflow-hidden" style={{ zIndex: -1, pointerEvents: 'none' }}>
+        <VulnParticleSystem />
+        <CyberGridMatrix />
+        <NetworkNodeMesh />
+        <BinaryRainEffect />
+        <RadarSweepScanner isActive={isScanning} />
+        <ScanningWaveEffect isScanning={isScanning} />
+        <PortScanVisualization portsScanned={portsScanned} isScanning={isScanning} />
+        <CVETargetReticle vulnsFound={vulnsFound} />
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════════════
+          🎯 EPIC HEADER WITH ANIMATED ELEMENTS
+          ═══════════════════════════════════════════════════════════════════════════ */}
+      <header className="bg-slate-900/80 backdrop-blur-xl border-b border-purple-500/20 sticky top-0" style={{ zIndex: 50, position: 'relative' }}>
+        {/* Header glow effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-transparent to-cyan-500/5" />
+        
+        <div className="max-w-[1800px] mx-auto px-6 py-4 relative">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/25">
-                  <Search className="w-6 h-6 text-white" />
+              {/* Animated Logo */}
+              <div className="relative group">
+                <div className="absolute -inset-2 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity animate-pulse" />
+                <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 via-purple-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-purple-500/30 transform transition-transform group-hover:scale-105">
+                  <Radar className="w-7 h-7 text-white animate-pulse" />
+                  <div className="absolute inset-0 rounded-xl bg-white/10 animate-ping opacity-20" />
                 </div>
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-slate-900 animate-pulse shadow-lg shadow-green-500/50" />
+                {isScanning && (
+                  <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-cyan-400 rounded-full animate-ping" />
+                )}
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-500 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-black bg-gradient-to-r from-purple-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent animate-gradient-x">
                   VulnScan
                 </h1>
-                <p className="text-sm text-gray-500">Vulnerability Scanner</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-gray-400">Enterprise Vulnerability Scanner</p>
+                  <span className="px-2 py-0.5 text-xs bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-full border border-purple-500/30 text-purple-300">
+                    v6.0
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Live Stats */}
-            <div className="hidden lg:flex items-center gap-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-lg border border-slate-700">
-                <Target className="w-4 h-4 text-cyan-400" />
-                <span className="text-sm text-gray-400">Scans Today:</span>
-                <span className="text-sm font-bold text-white tabular-nums">
-                  {stats.scansToday.toLocaleString()}
-                </span>
+            {/* Live Stats with Animations */}
+            <div className="hidden lg:flex items-center gap-4">
+              {/* Scans Today */}
+              <div className="group relative flex items-center gap-2 px-4 py-2.5 bg-slate-800/60 rounded-xl border border-slate-700/50 hover:border-cyan-500/30 transition-all backdrop-blur-sm">
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/0 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="p-1.5 rounded-lg bg-cyan-500/20">
+                  <Target className="w-4 h-4 text-cyan-400 animate-pulse" />
+                </div>
+                <div className="relative">
+                  <span className="text-xs text-gray-500">Scans Today</span>
+                  <span className="block text-lg font-bold text-white tabular-nums">
+                    {stats.scansToday.toLocaleString()}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-lg border border-slate-700">
-                <Bug className="w-4 h-4 text-red-400" />
-                <span className="text-sm text-gray-400">Vulns Found:</span>
-                <span className="text-sm font-bold text-red-400 tabular-nums">
-                  {stats.vulnsDetected.toLocaleString()}
-                </span>
+              
+              {/* Vulns Found */}
+              <div className="group relative flex items-center gap-2 px-4 py-2.5 bg-slate-800/60 rounded-xl border border-red-500/20 hover:border-red-500/40 transition-all backdrop-blur-sm">
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-red-500/5 to-red-500/10 animate-pulse" />
+                <div className="p-1.5 rounded-lg bg-red-500/20">
+                  <Bug className="w-4 h-4 text-red-400 animate-bounce" style={{ animationDuration: '2s' }} />
+                </div>
+                <div className="relative">
+                  <span className="text-xs text-gray-500">Vulns Found</span>
+                  <span className="block text-lg font-bold text-red-400 tabular-nums">
+                    {stats.vulnsDetected.toLocaleString()}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 rounded-lg border border-slate-700">
-                <Clock className="w-4 h-4 text-green-400" />
-                <span className="text-sm text-gray-400">Avg Scan:</span>
-                <span className="text-sm font-bold text-white tabular-nums">
-                  {stats.avgScanTime}s
-                </span>
+              
+              {/* Avg Scan Time */}
+              <div className="group relative flex items-center gap-2 px-4 py-2.5 bg-slate-800/60 rounded-xl border border-slate-700/50 hover:border-green-500/30 transition-all backdrop-blur-sm">
+                <div className="p-1.5 rounded-lg bg-green-500/20">
+                  <Clock className="w-4 h-4 text-green-400" />
+                </div>
+                <div>
+                  <span className="text-xs text-gray-500">Avg Scan</span>
+                  <span className="block text-lg font-bold text-white tabular-nums">
+                    {stats.avgScanTime}s
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/10 to-purple-600/10 rounded-lg border border-purple-500/30">
-                <Server className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-gray-400">Hosts:</span>
-                <span className="text-sm font-bold text-purple-400 tabular-nums">
-                  {stats.hostsScanned.toLocaleString()}
+              
+              {/* Hosts Scanned */}
+              <div className="group relative flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-500/10 to-purple-600/10 rounded-xl border border-purple-500/30 hover:border-purple-400/50 transition-all backdrop-blur-sm">
+                <div className="absolute inset-0 rounded-xl animate-pulse bg-purple-500/5" />
+                <div className="p-1.5 rounded-lg bg-purple-500/20">
+                  <Server className="w-4 h-4 text-purple-400" />
+                </div>
+                <div className="relative">
+                  <span className="text-xs text-gray-500">Hosts</span>
+                  <span className="block text-lg font-bold text-purple-400 tabular-nums">
+                    {stats.hostsScanned.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+              
+              {/* Status Indicator */}
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-full ${
+                isOnline 
+                  ? 'bg-green-500/10 border border-green-500/30' 
+                  : 'bg-amber-500/10 border border-amber-500/30'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500' : 'bg-amber-500'} animate-pulse`} />
+                <span className={`text-xs font-medium ${isOnline ? 'text-green-400' : 'text-amber-400'}`}>
+                  {USE_REAL_API && isOnline ? 'LIVE' : 'SIM'}
                 </span>
               </div>
             </div>
@@ -910,104 +1419,223 @@ const VulnScanTool: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-[1800px] mx-auto px-6 py-8">
+      {/* ═══════════════════════════════════════════════════════════════════════════
+          🎮 MAIN CONTENT AREA WITH ENHANCED LAYOUT
+          ═══════════════════════════════════════════════════════════════════════════ */}
+      <main className="max-w-[1800px] mx-auto px-6 py-8" style={{ position: 'relative', zIndex: 1 }}>
+        {/* Scanning Status Banner */}
+        {isScanning && (
+          <div className="mb-6 p-4 bg-gradient-to-r from-purple-500/10 via-cyan-500/10 to-purple-500/10 rounded-xl border border-purple-500/30 backdrop-blur-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Radar className="w-6 h-6 text-purple-400 animate-spin" style={{ animationDuration: '2s' }} />
+                  <div className="absolute inset-0 animate-ping opacity-30">
+                    <Radar className="w-6 h-6 text-purple-400" />
+                  </div>
+                </div>
+                <div>
+                  <p className="text-purple-300 font-medium">Scanning in progress...</p>
+                  <p className="text-sm text-gray-500">Target: {currentTarget}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-6 text-sm">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-purple-400 tabular-nums">{portsScanned}</p>
+                  <p className="text-gray-500">Ports Scanned</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-green-400 tabular-nums">{portsOpen}</p>
+                  <p className="text-gray-500">Open Ports</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-red-400 tabular-nums">{vulnsFound}</p>
+                  <p className="text-gray-500">Vulnerabilities</p>
+                </div>
+                <div className="w-32">
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="text-gray-500">Progress</span>
+                    <span className="text-purple-400">{progress}%</span>
+                  </div>
+                  <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-purple-500 to-cyan-500 transition-all duration-300 rounded-full"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Column 1: Form */}
           <div className="lg:col-span-1">
-            <VulnScanForm
-              onScan={handleScan}
-              onCancel={handleCancel}
-              isScanning={isScanning}
-            />
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <VulnScanForm
+                onScan={handleScan}
+                onCancel={handleCancel}
+                isScanning={isScanning}
+              />
+            </div>
           </div>
 
           {/* Column 2: Live Scan */}
           <div className="lg:col-span-1">
-            <LiveScanPanel
-              steps={steps}
-              events={events}
-              isScanning={isScanning}
-              portsScanned={portsScanned}
-              portsOpen={portsOpen}
-              vulnsFound={vulnsFound}
-              discoveredPorts={discoveredPorts}
-              currentTarget={currentTarget}
-              progress={progress}
-            />
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <LiveScanPanel
+                steps={steps}
+                events={events}
+                isScanning={isScanning}
+                portsScanned={portsScanned}
+                portsOpen={portsOpen}
+                vulnsFound={vulnsFound}
+                discoveredPorts={discoveredPorts}
+                currentTarget={currentTarget}
+                progress={progress}
+              />
+            </div>
           </div>
 
           {/* Column 3: Results */}
           <div className="lg:col-span-1">
-            {result ? (
-              <AnimatedVulnResult
-                result={result}
-                onNewScan={handleNewScan}
-                onExport={handleExport}
-              />
-            ) : (
-              <div className="vuln-card p-8 h-full flex flex-col items-center justify-center text-center">
-                <div className="w-20 h-20 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6">
-                  <Shield className="w-10 h-10 text-purple-400/50" />
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 to-red-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              {result ? (
+                <AnimatedVulnResult
+                  result={result}
+                  onNewScan={handleNewScan}
+                  onExport={handleExport}
+                />
+              ) : (
+                <div className="vuln-card p-8 h-full flex flex-col items-center justify-center text-center relative overflow-hidden backdrop-blur-sm border border-purple-500/20 rounded-2xl bg-slate-900/80">
+                  {/* Animated background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-cyan-500/5" />
+                  
+                  {/* Pulsing orb */}
+                  <div className="relative mb-6">
+                    <div className="absolute inset-0 animate-ping opacity-20">
+                      <div className="w-24 h-24 rounded-2xl bg-purple-500" />
+                    </div>
+                    <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 flex items-center justify-center border border-purple-500/30">
+                      <Shield className="w-12 h-12 text-purple-400 animate-pulse" />
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+                    Scan Results
+                  </h3>
+                  <p className="text-gray-400 mb-8 max-w-sm">
+                    Configure and start a vulnerability scan to see detailed
+                    security analysis
+                  </p>
+                  
+                  {/* Capability Grid */}
+                  <div className="grid grid-cols-2 gap-4 w-full max-w-xs relative">
+                    <div className="group/cap p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:border-purple-500/30 transition-all">
+                      <div className="relative">
+                        <Wifi className="w-8 h-8 text-purple-400 mx-auto mb-2 group-hover/cap:animate-pulse" />
+                      </div>
+                      <p className="text-sm text-gray-400">Port Scanning</p>
+                    </div>
+                    <div className="group/cap p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:border-cyan-500/30 transition-all">
+                      <div className="relative">
+                        <Server className="w-8 h-8 text-cyan-400 mx-auto mb-2 group-hover/cap:animate-pulse" />
+                      </div>
+                      <p className="text-sm text-gray-400">Service Detection</p>
+                    </div>
+                    <div className="group/cap p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:border-red-500/30 transition-all">
+                      <div className="relative">
+                        <Bug className="w-8 h-8 text-red-400 mx-auto mb-2 group-hover/cap:animate-bounce" style={{ animationDuration: '2s' }} />
+                      </div>
+                      <p className="text-sm text-gray-400">CVE Matching</p>
+                    </div>
+                    <div className="group/cap p-4 bg-slate-800/50 rounded-xl border border-slate-700/50 hover:border-green-500/30 transition-all">
+                      <div className="relative">
+                        <Lock className="w-8 h-8 text-green-400 mx-auto mb-2 group-hover/cap:animate-pulse" />
+                      </div>
+                      <p className="text-sm text-gray-400">SSL Analysis</p>
+                    </div>
+                  </div>
+                  
+                  {/* Decorative elements */}
+                  <div className="absolute top-4 right-4 w-16 h-16 border border-purple-500/10 rounded-full animate-spin" style={{ animationDuration: '20s' }} />
+                  <div className="absolute bottom-4 left-4 w-12 h-12 border border-cyan-500/10 rounded-full animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Scan Results
-                </h3>
-                <p className="text-gray-500 mb-6 max-w-sm">
-                  Configure and start a vulnerability scan to see detailed
-                  security analysis
-                </p>
-                <div className="grid grid-cols-2 gap-4 w-full max-w-xs">
-                  <div className="p-4 bg-slate-800/50 rounded-lg">
-                    <Wifi className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                    <p className="text-xs text-gray-500">Port Scanning</p>
-                  </div>
-                  <div className="p-4 bg-slate-800/50 rounded-lg">
-                    <Server className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
-                    <p className="text-xs text-gray-500">Service Detection</p>
-                  </div>
-                  <div className="p-4 bg-slate-800/50 rounded-lg">
-                    <Bug className="w-6 h-6 text-red-400 mx-auto mb-2" />
-                    <p className="text-xs text-gray-500">CVE Matching</p>
-                  </div>
-                  <div className="p-4 bg-slate-800/50 rounded-lg">
-                    <Globe className="w-6 h-6 text-green-400 mx-auto mb-2" />
-                    <p className="text-xs text-gray-500">SSL Analysis</p>
-                  </div>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-purple-500/20 mt-12">
+      {/* ═══════════════════════════════════════════════════════════════════════════
+          🦶 EPIC FOOTER WITH ANIMATED STATUS
+          ═══════════════════════════════════════════════════════════════════════════ */}
+      <footer className="border-t border-purple-500/20 mt-12 bg-slate-900/50 backdrop-blur-sm" style={{ position: 'relative', zIndex: 1 }}>
         <div className="max-w-[1800px] mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Shield className="w-4 h-4 text-purple-400" />
-              <span>VulnScan v6.0 • VictoryKit Security Suite</span>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Shield className="w-5 h-5 text-purple-400" />
+                <div className="absolute inset-0 animate-ping opacity-20">
+                  <Shield className="w-5 h-5 text-purple-400" />
+                </div>
+              </div>
+              <span className="text-gray-400">
+                <span className="font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">VulnScan</span>
+                <span className="text-gray-500"> v6.0 • VictoryKit Security Suite</span>
+              </span>
             </div>
-            <div className="flex items-center gap-4 text-sm text-gray-600">
+            <div className="flex items-center gap-6 text-sm">
               {apiError && (
-                <span className="text-amber-400 flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" />
+                <span className="text-amber-400 flex items-center gap-2 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/30">
+                  <AlertTriangle className="w-4 h-4" />
                   API Error
                 </span>
               )}
-              <span>CVE Database Synced</span>
-              <span>•</span>
-              <span>{USE_REAL_API && isOnline ? 'Live API' : 'Simulation Mode'}</span>
-              <span>•</span>
-              <span className={`flex items-center gap-1 ${isOnline ? 'text-green-400' : 'text-amber-400'}`}>
-                <Activity className="w-3 h-3" />
-                {isOnline ? 'Online' : 'Offline'}
-              </span>
+              <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 rounded-full border border-green-500/30">
+                <Database className="w-4 h-4 text-green-400" />
+                <span className="text-green-400">CVE Database Synced</span>
+              </div>
+              <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${
+                USE_REAL_API && isOnline 
+                  ? 'bg-purple-500/10 border border-purple-500/30' 
+                  : 'bg-slate-700/50 border border-slate-600'
+              }`}>
+                <Zap className={`w-4 h-4 ${USE_REAL_API && isOnline ? 'text-purple-400' : 'text-gray-400'}`} />
+                <span className={USE_REAL_API && isOnline ? 'text-purple-400' : 'text-gray-400'}>
+                  {USE_REAL_API && isOnline ? 'Live API' : 'Simulation Mode'}
+                </span>
+              </div>
+              <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${
+                isOnline 
+                  ? 'bg-green-500/10 border border-green-500/30' 
+                  : 'bg-amber-500/10 border border-amber-500/30'
+              }`}>
+                <Activity className={`w-4 h-4 ${isOnline ? 'text-green-400 animate-pulse' : 'text-amber-400'}`} />
+                <span className={isOnline ? 'text-green-400' : 'text-amber-400'}>
+                  {isOnline ? 'Online' : 'Offline'}
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </footer>
+      
+      {/* Global CSS for animations */}
+      <style>{`
+        @keyframes animate-gradient-x {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-x {
+          background-size: 200% 200%;
+          animation: animate-gradient-x 3s ease infinite;
+        }
+      `}</style>
     </div>
   );
 };

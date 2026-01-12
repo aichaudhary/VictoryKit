@@ -104,7 +104,7 @@ const ScanResultSchema = new Schema<IScanResult>({
   expires_at: {
     type: Date,
     required: true,
-    index: true,
+    // Note: TTL index created separately below
   },
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: false },
@@ -196,6 +196,6 @@ ScanResultSchema.statics.getStats = async function(timeRange: string = '24h') {
   };
 };
 
-const ScanResult = mongoose.model<IScanResult>('ScanResult', ScanResultSchema);
+export const ScanResult = mongoose.model<IScanResult>('ScanResult', ScanResultSchema);
 
 export default ScanResult;

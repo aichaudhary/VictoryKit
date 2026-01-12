@@ -61,7 +61,7 @@ const DarkWebMonitorDetail: React.FC = () => {
                 Intelligence that sees everything. Advanced threat intelligence platform that monitors dark web markets, forums, and encrypted channels for stolen credentials and data.
               </p>
               <div className="flex gap-6 pt-4">
-                 <a href="https://threatmodel.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20">Sources: 50K+</a>
+                 <a href="https://darkwebmonitor.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20">Sources: 50K+</a>
                  <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">Coverage: Global</div>
               </div>
            </div>
@@ -99,7 +99,7 @@ const DarkWebMonitorDetail: React.FC = () => {
 
         <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-white/10">
            <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">Return Home</button>
-           <a href="https://threatmodel.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-red-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Start Monitoring <Zap className="w-5 h-5 fill-current" /></a>
+           <a href="https://darkwebmonitor.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-red-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Start Monitoring <Zap className="w-5 h-5 fill-current" /></a>
         </div>
       </div>
     </div>

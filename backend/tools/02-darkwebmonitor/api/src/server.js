@@ -3,13 +3,28 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
-const routes = require('./routes');
-const { errorHandler } = require('../../../shared/middleware/errorHandler.middleware');
-const { logger } = require('../../../shared/utils/logger');
+const darkwebmonitorRoutes = require('./routes/darkwebmonitor.routes');
 
 const app = express();
 const PORT = process.env.PORT || 4002;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/darkwebmonitor_db';
+
+// Simple logger for production
+const logger = {
+  info: (msg, meta) =>
+    console.log(`[INFO] ${new Date().toISOString()} - ${msg}`, meta ? JSON.stringify(meta) : ''),
+  error: (msg, err) => console.error(`[ERROR] ${new Date().toISOString()} - ${msg}`, err),
+  warn: (msg) => console.warn(`[WARN] ${new Date().toISOString()} - ${msg}`),
+};
+
+// Error handler middleware
+const errorHandler = (err, req, res, next) => {
+  logger.error('Unhandled error:', err);
+  res.status(err.status || 500).json({
+    success: false,
+    error: err.message || 'Internal server error',
+  });
+};
 
 // Middleware
 app.use(helmet());
@@ -22,7 +37,6 @@ app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     query: req.query,
     body: req.method !== 'GET' ? req.body : undefined,
-    userId: req.user?.id
   });
   next();
 });
@@ -33,19 +47,19 @@ app.get('/health', (req, res) => {
     status: 'healthy',
     service: 'darkwebmonitor-api',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 
-// API routes
-app.use('/api/v1', routes);
+// API routes - using /api prefix for nginx proxy
+app.use('/api', darkwebmonitorRoutes);
 
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: 'Route not found',
-    path: req.path
+    path: req.path,
   });
 });
 
@@ -56,11 +70,11 @@ app.use(errorHandler);
 mongoose
   .connect(MONGODB_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(() => {
     logger.info('Connected to MongoDB (darkwebmonitor_db)');
-    
+
     // Start server
     app.listen(PORT, () => {
       logger.info(`DarkWebMonitor API server running on port ${PORT}`);

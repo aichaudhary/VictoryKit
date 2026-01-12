@@ -138,7 +138,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
 
   const handleDeploy = () => {
     const routeMap: Record<number, string> = {
-      1: 'fraud-guard', 2: 'intelli-scout', 3: 'threat-radar', 4: 'malware-hunter',
+      1: 'fraud-guard', 2: 'dark-web-monitor', 3: 'threat-radar', 4: 'ransom-shield',
       5: 'phish-guard', 6: 'vuln-scan', 7: 'pen-test-ai', 8: 'secure-code',
       9: 'compliance-check', 10: 'data-guardian', 11: 'crypto-shield',
       12: 'iam-control', 13: 'log-intel', 14: 'net-defender', 15: 'endpoint-shield',
@@ -147,7 +147,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
       24: 'ddos-defender', 25: 'ssl-monitor', 26: 'blue-team-ai', 27: 'siem-commander',
       28: 'soar-engine', 29: 'risk-score-ai', 30: 'policy-engine', 31: 'audit-tracker',
       32: 'zero-trust-ai', 33: 'password-vault', 34: 'biometric-ai', 35: 'email-guard',
-      36: 'web-filter', 37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian',
+      36: 'browser-isolation', 37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian',
       40: 'wireless-watch', 41: 'iot-secure', 42: 'mobile-defend', 43: 'backup-guard',
       44: 'dr-plan', 45: 'privacy-shield', 46: 'gdpr-compliance', 47: 'hipaa-guard',
       48: 'pcidss-guard', 49: 'bug-bounty-ai', 50: 'cyber-edu-ai'
@@ -155,6 +155,8 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
     
     if (routeMap[tool.id]) {
       setView(routeMap[tool.id] as any);
+      // Scroll to top when navigating to detail page
+      window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
       setView('home');
     }

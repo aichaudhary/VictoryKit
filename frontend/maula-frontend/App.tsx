@@ -17,9 +17,9 @@ import ResetPassword from './components/Auth/ResetPassword';
 
 // Tools 1-50
 import FraudGuardDetail from './pages/FraudGuardDetail';
-import IntelliScoutDetail from './pages/IntelliScoutDetail';
+import DarkWebMonitorDetail from './pages/DarkWebMonitorDetail';
 import ThreatRadarDetail from './pages/ThreatRadarDetail';
-import MalwareHunterDetail from './pages/MalwareHunterDetail';
+import RansomShieldDetail from './pages/RansomShieldDetail';
 import PhishGuardDetail from './pages/PhishGuardDetail';
 import VulnScanDetail from './pages/VulnScanDetail';
 import PenTestAIDetail from './pages/PenTestAIDetail';
@@ -51,7 +51,7 @@ import ZeroTrustAIDetail from './pages/ZeroTrustAIDetail';
 import PasswordVaultDetail from './pages/PasswordVaultDetail';
 import BiometricAIDetail from './pages/BiometricAIDetail';
 import EmailGuardDetail from './pages/EmailGuardDetail';
-import WebFilterDetail from './pages/WebFilterDetail';
+import BrowserIsolationDetail from './pages/BrowserIsolationDetail';
 import DNSShieldDetail from './pages/DNSShieldDetail';
 import FirewallAIDetail from './pages/FirewallAIDetail';
 import VPNGuardianDetail from './pages/VPNGuardianDetail';
@@ -105,9 +105,9 @@ const MainContent: React.FC = () => {
       nextColor = '#040412';
     } else if (['log-intel', 'incident-command', 'forensics-lab', 'behavior-watch', 'anomaly-detect', 'dr-plan', 'cyber-edu-ai'].includes(view)) {
       nextColor = '#0d0503';
-    } else if (['net-defender', 'email-guard', 'web-filter', 'dns-shield', 'firewall-ai', 'vpn-guardian', 'wireless-watch', 'mobile-defend'].includes(view)) {
+    } else if (['net-defender', 'email-guard', 'browser-isolation', 'dns-shield', 'firewall-ai', 'vpn-guardian', 'wireless-watch', 'mobile-defend'].includes(view)) {
       nextColor = '#040d0a';
-    } else if (['fraud-guard', 'intelli-scout', 'threat-radar', 'malware-hunter', 'phish-guard', 'endpoint-shield', 'threat-intel'].includes(view)) {
+    } else if (['fraud-guard', 'dark-web-monitor', 'threat-radar', 'malware-hunter', 'phish-guard', 'endpoint-shield', 'threat-intel'].includes(view)) {
       nextColor = '#0d0404';
     } else if (['cloud-secure', 'api-guardian', 'container-watch', 'devsecops', 'iot-secure', 'secure-code'].includes(view)) {
       nextColor = '#040d12';
@@ -172,9 +172,9 @@ const MainContent: React.FC = () => {
       case 'security-disclosure': return <LegalPage title="Security Disclosure" />;
       case 'global-shield-detail': return <GlobalShieldDetail />;
       case 'fraud-guard': return <FraudGuardDetail />;
-      case 'intelli-scout': return <IntelliScoutDetail />;
+      case 'dark-web-monitor': return <DarkWebMonitorDetail />;
       case 'threat-radar': return <ThreatRadarDetail />;
-      case 'malware-hunter': return <MalwareHunterDetail />;
+      case 'ransom-shield': return <RansomShieldDetail />;
       case 'phish-guard': return <PhishGuardDetail />;
       case 'vuln-scan': return <VulnScanDetail />;
       case 'pen-test-ai': return <PenTestAIDetail />;
@@ -210,7 +210,7 @@ const MainContent: React.FC = () => {
       case 'password-vault': return <PasswordVaultDetail />;
       case 'biometric-ai': return <BiometricAIDetail />;
       case 'email-guard': return <EmailGuardDetail />;
-      case 'web-filter': return <WebFilterDetail />;
+      case 'browser-isolation': return <BrowserIsolationDetail />;
       case 'dns-shield': return <DNSShieldDetail />;
       case 'firewall-ai': return <FirewallAIDetail />;
       case 'vpn-guardian': return <VPNGuardianDetail />;

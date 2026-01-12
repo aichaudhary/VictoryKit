@@ -1,30 +1,29 @@
 """
-IntelliScout ML Engine - Main FastAPI Application
+DarkWebMonitor ML Engine - Main FastAPI Application
 Threat Intelligence Analysis & Correlation
 """
 
+import logging
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
-from datetime import datetime
-import logging
-
-from models.threat_classifier import ThreatClassifier
-from models.pattern_detector import PatternDetector
 from models.correlation_engine import CorrelationEngine
+from models.pattern_detector import PatternDetector
+from models.threat_classifier import ThreatClassifier
+from pydantic import BaseModel, Field
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="IntelliScout ML Engine",
-    description="Machine Learning Engine for Threat Intelligence Analysis",
+    title="DarkWebMonitor ML Engine",
+    description="Machine Learning Engine for Dark Web Threat Intelligence Analysis",
     version="1.0.0",
 )
 
@@ -96,13 +95,13 @@ class ModelInfo(BaseModel):
 async def health_check():
     return {
         "status": "healthy",
-        "service": "IntelliScout ML Engine",
+        "service": "DarkWebMonitor ML Engine",
         "version": "1.0.0",
         "models_loaded": {
             "threat_classifier": threat_classifier.is_loaded,
             "pattern_detector": pattern_detector.is_loaded,
             "correlation_engine": correlation_engine.is_loaded,
-        }
+        },
     }
 
 
@@ -111,16 +110,16 @@ async def health_check():
 async def classify_threat(threat: ThreatInput):
     try:
         logger.info(f"Classifying threat {threat.threat_id}")
-        
+
         result = threat_classifier.classify(threat.model_dump())
-        
+
         return ClassificationResult(
             threat_id=threat.threat_id,
             threat_type=result["threat_type"],
             severity=result["severity"],
             confidence=result["confidence"],
             tags=result["tags"],
-            mitre_techniques=result["mitre_techniques"]
+            mitre_techniques=result["mitre_techniques"],
         )
     except Exception as e:
         logger.error(f"Error classifying threat: {e}")
@@ -132,7 +131,7 @@ async def classify_threat(threat: ThreatInput):
 async def batch_classify(threats: List[ThreatInput]):
     if len(threats) > 50:
         raise HTTPException(status_code=400, detail="Maximum 50 threats per batch")
-    
+
     results = []
     for threat in threats:
         try:
@@ -140,7 +139,7 @@ async def batch_classify(threats: List[ThreatInput]):
             results.append(result)
         except Exception as e:
             logger.error(f"Error classifying threat {threat.threat_id}: {e}")
-    
+
     return results
 
 
@@ -149,14 +148,14 @@ async def batch_classify(threats: List[ThreatInput]):
 async def correlate_threats(threat: ThreatInput):
     try:
         logger.info(f"Correlating threat {threat.threat_id}")
-        
+
         result = correlation_engine.correlate(threat.model_dump())
-        
+
         return CorrelationResult(
             threat_id=threat.threat_id,
             related_threats=result["related_threats"],
             common_iocs=result["common_iocs"],
-            confidence=result["confidence"]
+            confidence=result["confidence"],
         )
     except Exception as e:
         logger.error(f"Error correlating threat: {e}")
@@ -168,10 +167,10 @@ async def correlate_threats(threat: ThreatInput):
 async def detect_patterns(iocs: List[IOCInput]):
     try:
         logger.info(f"Detecting patterns in {len(iocs)} IOCs")
-        
+
         ioc_data = [ioc.model_dump() for ioc in iocs]
         patterns = pattern_detector.detect(ioc_data)
-        
+
         return [PatternResult(**p) for p in patterns]
     except Exception as e:
         logger.error(f"Error detecting patterns: {e}")
@@ -183,15 +182,15 @@ async def detect_patterns(iocs: List[IOCInput]):
 async def enrich_ioc(ioc: IOCInput):
     try:
         logger.info(f"Enriching IOC: {ioc.ioc_type}:{ioc.value}")
-        
+
         enrichment = threat_classifier.enrich_ioc(ioc.model_dump())
-        
+
         return {
             "ioc": ioc.model_dump(),
             "enrichment": enrichment,
             "risk_score": enrichment.get("risk_score", 0),
             "last_seen": enrichment.get("last_seen"),
-            "sources": enrichment.get("sources", [])
+            "sources": enrichment.get("sources", []),
         }
     except Exception as e:
         logger.error(f"Error enriching IOC: {e}")
@@ -210,11 +209,12 @@ async def get_model_info():
             "ioc_correlation",
             "pattern_detection",
             "mitre_mapping",
-            "ioc_enrichment"
-        ]
+            "ioc_enrichment",
+        ],
     )
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8002)

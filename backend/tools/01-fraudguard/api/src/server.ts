@@ -16,6 +16,8 @@ import mlRoutes from './routes/mlRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
 import publicScanRoutes from './routes/publicScanRoutes.js';
+import threatIntelRoutes from './routes/threatIntelRoutes.js';
+import investigationRoutes from './routes/investigationRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -23,6 +25,9 @@ dotenv.config();
 const app: Application = express();
 const PORT = process.env.PORT || 4001;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fraudguard_db';
+
+// Trust proxy for proper IP detection behind Nginx
+app.set('trust proxy', 1);
 
 // Rate limiting
 const limiter = rateLimit({
@@ -43,15 +48,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(limiter);
 
-// API Routes
+// API Routes - all under /api prefix
 app.use('/api/scan', publicScanRoutes);  // Public scanner routes (URL, Email, Phone, IP)
-app.use('/transactions', transactionRoutes);
-app.use('/fraud-scores', fraudScoreRoutes);
-app.use('/alerts', alertRoutes);
-app.use('/analytics', analyticsRoutes);
-app.use('/ml', mlRoutes);
-app.use('/reports', reportRoutes);
-app.use('/health', healthRoutes);
+app.use('/api/health', healthRoutes);    // Health check at /api/health
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/fraud-scores', fraudScoreRoutes);
+app.use('/api/alerts', alertRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/ml', mlRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/threat-intel', threatIntelRoutes);
+app.use('/api/investigations', investigationRoutes);
+app.use('/health', healthRoutes);  // Keep legacy /health route too
 
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {

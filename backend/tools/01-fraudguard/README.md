@@ -4,7 +4,8 @@
 
 [![Production](https://img.shields.io/badge/Production-fraudguard.maula.ai-red.svg)](https://fraudguard.maula.ai)
 [![API Port](https://img.shields.io/badge/API-4001-blue.svg)](http://localhost:4001)
-[![Status](https://img.shields.io/badge/Status-Production%20Ready-green.svg)]()
+[![Status](https://img.shields.io/badge/Status-✅%20LIVE-brightgreen.svg)]()
+[![Database](https://img.shields.io/badge/Database-MongoDB%20Atlas-green.svg)]()
 
 ---
 
@@ -14,37 +15,48 @@ Provide the public with enterprise-grade fraud protection tools that work in **r
 
 ---
 
-## 📋 Implementation Plan
+## 🌐 Live URLs
 
-### Phase 1: Public Security Scanner (CURRENT)
+| Environment | URL |
+|-------------|-----|
+| **Frontend** | https://fraudguard.maula.ai |
+| **API** | https://fraudguard.maula.ai/api |
+| **Health Check** | https://fraudguard.maula.ai/api/health |
+
+---
+
+## 📋 Implementation Status
+
+### ✅ Phase 1: Public Security Scanner (COMPLETE)
 Real-time security scanning tools accessible to all users.
 
-| Feature | Description | External APIs |
-|---------|-------------|---------------|
-| 🔗 **URL Scanner** | Scan any URL for malware, phishing, scams | VirusTotal, Google Safe Browsing, URLScan.io, PhishTank |
-| 📧 **Email Breach Check** | Check if email appeared in data breaches | Have I Been Pwned, DeHashed, Leak-Lookup |
-| 📱 **Phone Validator** | Verify phone numbers, detect spam callers | NumVerify, Twilio Lookup, CallerID |
-| 🌐 **IP Reputation** | Check IP address reputation and threats | AbuseIPDB, IPQualityScore, Shodan |
-| 🔐 **Password Strength** | Check password strength and breach status | Have I Been Pwned Passwords |
+| Feature | Status | External APIs |
+|---------|--------|---------------|
+| 🔗 **URL Scanner** | ✅ Live | VirusTotal, Google Safe Browsing, URLScan.io |
+| 📧 **Email Breach Check** | ✅ Live | Have I Been Pwned, IPQualityScore |
+| 📱 **Phone Validator** | ✅ Live | NumVerify, IPQualityScore |
+| 🌐 **IP Reputation** | ✅ Live | AbuseIPDB, IPQualityScore |
+| 🔐 **Password Checker** | ✅ Live | Have I Been Pwned Passwords (k-Anonymity) |
 
-### Phase 2: Transaction Analysis (NEXT)
+### 🔄 Phase 2: Transaction Analysis (IN PROGRESS)
 Advanced fraud detection for financial transactions.
 
-| Feature | Description | Technology |
-|---------|-------------|------------|
-| 💳 **Transaction Analyzer** | Real-time fraud scoring | ML Models + Rule Engine |
-| 🎯 **Risk Scoring** | 0-100 risk score with explanations | Neural Networks |
-| 📊 **Pattern Detection** | Detect fraud rings, velocity attacks | Graph Analysis |
-| 🔍 **Device Fingerprinting** | Identify device fraud patterns | FingerprintJS |
+| Feature | Status | Technology |
+|---------|--------|------------|
+| 💳 **Transaction Analyzer** | ✅ API Ready | ML Models + Rule Engine |
+| 🎯 **Risk Scoring** | ✅ API Ready | Neural Networks |
+| 📊 **Alerts System** | ✅ API Ready | Real-time Monitoring |
+| 🔍 **Investigations** | ✅ API Ready | Case Management |
+| 📈 **Analytics Dashboard** | ✅ API Ready | Aggregated Statistics |
 
-### Phase 3: Advanced Intelligence (FUTURE)
+### 📅 Phase 3: Advanced Intelligence (PLANNED)
 Enterprise features with threat intelligence.
 
-| Feature | Description |
-|---------|-------------|
-| 🌑 **Dark Web Monitoring** | Monitor for leaked credentials |
-| 🤖 **AI Fraud Prediction** | Predictive fraud prevention |
-| 📈 **Real-time Dashboard** | Live monitoring with WebSocket |
+| Feature | Status |
+|---------|--------|
+| 🌑 **Dark Web Monitoring** | Planned |
+| 🤖 **AI Fraud Prediction** | Planned |
+| 📈 **Real-time WebSocket** | Planned |
 
 ---
 
@@ -131,6 +143,20 @@ Enterprise features with threat intelligence.
 | POST | `/api/scan/ip` | Check IP reputation | 10/min |
 | POST | `/api/scan/password` | Check password security | 20/min |
 | GET | `/api/scan/history` | Get recent scans (by IP) | 10/min |
+| GET | `/api/scan/stats/summary` | Get scan statistics | 10/min |
+
+### Dashboard & Management APIs
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/health` | Health check & service status |
+| GET | `/api/alerts` | Get all alerts |
+| POST | `/api/alerts` | Create new alert |
+| GET | `/api/transactions` | Get transactions |
+| GET | `/api/analytics/dashboard` | Dashboard statistics |
+| GET | `/api/threat-intel/blacklist` | Get blacklisted threats |
+| GET | `/api/investigations` | Get investigations |
+| POST | `/api/investigations` | Create investigation |
 
 ### Request/Response Examples
 
@@ -297,45 +323,104 @@ interface ThreatIntel {
 
 ## 🔑 External API Configuration
 
-### Required API Keys (.env)
+### Required API Keys
+
+Create a `.env` file in `backend/tools/01-fraudguard/api/` with:
 
 ```bash
-# MongoDB
-MONGODB_URI=mongodb://localhost:27017/fraudguard_db
+# ============================================
+# FRAUDGUARD ENVIRONMENT CONFIGURATION
+# ============================================
 
-# VirusTotal (URL/File Scanning)
-# https://www.virustotal.com/gui/my-apikey
-VIRUSTOTAL_API_KEY=your_virustotal_key
+# Server Configuration
+PORT=4001
+NODE_ENV=production
+CORS_ORIGIN=https://fraudguard.maula.ai
 
-# Google Safe Browsing
-# https://console.cloud.google.com/apis/credentials
-GOOGLE_SAFE_BROWSING_KEY=your_google_key
+# MongoDB Atlas Database
+# Database: fraudguard_db
+MONGODB_URI=mongodb+srv://victory_db_user:YOUR_PASSWORD@victorykit.gbnvij2.mongodb.net/fraudguard_db
 
-# URLScan.io
-# https://urlscan.io/user/profile/
-URLSCAN_API_KEY=your_urlscan_key
+# ============================================
+# EXTERNAL SECURITY API KEYS
+# ============================================
 
-# Have I Been Pwned
-# https://haveibeenpwned.com/API/Key
-HIBP_API_KEY=your_hibp_key
+# VirusTotal - URL/File Scanning (FREE: 500 req/day, 4 req/min)
+# Signup: https://www.virustotal.com/gui/join-us
+# Get Key: https://www.virustotal.com/gui/my-apikey
+VIRUSTOTAL_API_KEY=your_virustotal_api_key_here
 
-# AbuseIPDB
-# https://www.abuseipdb.com/account/api
-ABUSEIPDB_API_KEY=your_abuseipdb_key
+# Google Safe Browsing - Malicious URL Detection (FREE: 10,000 req/day)
+# Signup: https://console.cloud.google.com/
+# Enable API: APIs & Services > Library > Safe Browsing API
+# Get Key: APIs & Services > Credentials > Create API Key
+GOOGLE_SAFE_BROWSING_KEY=your_google_safe_browsing_key_here
 
-# IPQualityScore
-# https://www.ipqualityscore.com/documentation
-IPQS_API_KEY=your_ipqs_key
+# URLScan.io - URL Analysis & Screenshots (FREE: 50 scans/day)
+# Signup: https://urlscan.io/user/signup
+# Get Key: https://urlscan.io/user/profile/
+URLSCAN_API_KEY=your_urlscan_api_key_here
 
-# NumVerify (Phone Validation)
-# https://numverify.com/dashboard
-NUMVERIFY_API_KEY=your_numverify_key
+# Have I Been Pwned - Email Breach Data (PAID: $3.50/month)
+# Signup: https://haveibeenpwned.com/API/Key
+# Note: Password checking (k-Anonymity) is FREE and doesn't need a key
+HIBP_API_KEY=your_hibp_api_key_here
 
-# Twilio (Phone Lookup - Carrier Info)
-# https://www.twilio.com/console
-TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_token
+# AbuseIPDB - IP Reputation Database (FREE: 1,000 checks/day)
+# Signup: https://www.abuseipdb.com/register
+# Get Key: https://www.abuseipdb.com/account/api
+ABUSEIPDB_API_KEY=your_abuseipdb_api_key_here
+
+# IPQualityScore - Fraud Scoring & Proxy Detection (FREE: 5,000 req/month)
+# Signup: https://www.ipqualityscore.com/create-account
+# Get Key: https://www.ipqualityscore.com/documentation/overview
+IPQS_API_KEY=your_ipqualityscore_api_key_here
+
+# NumVerify - Phone Number Validation (FREE: 100 req/month)
+# Signup: https://numverify.com/product
+# Get Key: https://numverify.com/dashboard
+NUMVERIFY_API_KEY=your_numverify_api_key_here
+
+# ============================================
+# OPTIONAL API KEYS (Future Features)
+# ============================================
+
+# Twilio - Phone Lookup with Carrier Info (PAID: ~$0.005/lookup)
+# Signup: https://www.twilio.com/try-twilio
+# Get Credentials: https://www.twilio.com/console
+# TWILIO_ACCOUNT_SID=your_twilio_sid_here
+# TWILIO_AUTH_TOKEN=your_twilio_token_here
+
+# Shodan - Internet Device Search (PAID: starts at $59/month)
+# Signup: https://account.shodan.io/register
+# SHODAN_API_KEY=your_shodan_key_here
+
+# PhishTank - Phishing URL Database (FREE, requires registration)
+# Signup: https://phishtank.org/register.php
+# PHISHTANK_API_KEY=your_phishtank_key_here
 ```
+
+### API Key Pricing Summary
+
+| API | Free Tier | Paid Tier | Used For |
+|-----|-----------|-----------|----------|
+| **VirusTotal** | 500 req/day | $100+/mo | URL/file scanning |
+| **Google Safe Browsing** | 10K req/day | Free | Malicious URL detection |
+| **URLScan.io** | 50 scans/day | $25/mo | URL analysis |
+| **Have I Been Pwned** | Passwords free | $3.50/mo | Email breach data |
+| **AbuseIPDB** | 1K checks/day | $19/mo | IP reputation |
+| **IPQualityScore** | 5K req/mo | $20/mo | Fraud scoring |
+| **NumVerify** | 100 req/mo | $10/mo | Phone validation |
+
+### Quick Setup Links
+
+1. **VirusTotal**: https://www.virustotal.com/gui/join-us
+2. **Google Cloud Console**: https://console.cloud.google.com/
+3. **URLScan.io**: https://urlscan.io/user/signup
+4. **Have I Been Pwned**: https://haveibeenpwned.com/API/Key
+5. **AbuseIPDB**: https://www.abuseipdb.com/register
+6. **IPQualityScore**: https://www.ipqualityscore.com/create-account
+7. **NumVerify**: https://numverify.com/product
 
 ---
 
@@ -418,13 +503,22 @@ frontend/tools/01-fraudguard/
 - [x] Create `externalAPIs.ts` - Unified API client wrapper
 - [x] Create `urlScanner.ts` - VirusTotal + Safe Browsing + URLScan
 - [x] Create `emailChecker.ts` - Have I Been Pwned integration
-- [x] Create `phoneValidator.ts` - NumVerify + Twilio
+- [x] Create `phoneValidator.ts` - NumVerify + IPQualityScore
 - [x] Create `ipChecker.ts` - AbuseIPDB + IPQualityScore
+- [x] Create `passwordChecker.ts` - HIBP k-Anonymity API
 - [x] Create `ScanResult.ts` model
 - [x] Create `ThreatIntel.ts` model (caching)
+- [x] Create `User.ts` model (authentication)
+- [x] Create `APIKey.ts` model (API key management)
+- [x] Create `AuditLog.ts` model (audit trail)
+- [x] Create `RateLimit.ts` model (rate limiting)
 - [x] Create `publicScanRoutes.ts` - All /api/scan/* endpoints
-- [x] Update `.env.example` with all API keys
-- [x] Update `server.ts` to include new routes
+- [x] Create `threatIntelRoutes.ts` - Threat intelligence endpoints
+- [x] Create `investigationRoutes.ts` - Investigation management
+- [x] Create `database.ts` service - Connection pooling
+- [x] Update `server.ts` with all routes under /api prefix
+- [x] Add trust proxy for Nginx compatibility
+- [x] Deploy to production server
 
 ### Phase 2: Frontend Scanner Components
 - [x] Create `PublicScanner/` folder structure
@@ -434,15 +528,16 @@ frontend/tools/01-fraudguard/
 - [x] Create `IPChecker.tsx` - IP reputation
 - [x] Create `PasswordChecker.tsx` - Password strength
 - [x] Create `scanAPI.ts` - Frontend API client
-- [x] Update `FraudGuardTool.tsx` - New tabbed layout
+- [x] Update `FraudGuardTool.tsx` - Tabbed layout
+- [x] Build and deploy to fraudguard.maula.ai
 
-### Phase 3: Testing & Deployment
-- [ ] Test all scanner endpoints locally
+### Phase 3: Production Deployment
+- [x] Configure PM2 process (fraudguard-api, id: 2)
+- [x] Configure Nginx reverse proxy
+- [x] SSL certificate via Cloudflare
+- [x] Test all endpoints on production
 - [ ] Add production API keys to server .env
-- [ ] Build frontend for production
-- [ ] Deploy backend to production server
-- [ ] Deploy frontend to fraudguard.maula.ai
-- [ ] Verify all features work on production
+- [ ] Monitor and optimize performance
 
 ---
 
@@ -468,11 +563,30 @@ npm run dev
 cd frontend/tools/01-fraudguard
 npm run build
 
-# Deploy to server
-scp -r dist/* ubuntu@server:/var/www/tools/fraudguard/
+# Deploy frontend to server
+scp -i victorykit.pem -r dist/* ubuntu@ec2-18-140-156-40.ap-southeast-1.compute.amazonaws.com:/var/www/tools/fraudguard/
 
-# Backend runs via PM2
-pm2 restart fraudguard-api
+# Deploy backend source
+rsync -avz -e "ssh -i victorykit.pem" backend/tools/01-fraudguard/api/src/ ubuntu@ec2-18-140-156-40.ap-southeast-1.compute.amazonaws.com:/var/www/maula.ai/repo/backend/tools/01-fraudguard/api/src/
+
+# Build and restart on server
+ssh -i victorykit.pem ubuntu@ec2-18-140-156-40.ap-southeast-1.compute.amazonaws.com "cd /var/www/maula.ai/repo/backend/tools/01-fraudguard/api && npm run build && pm2 restart fraudguard-api"
+```
+
+### Test API
+```bash
+# Health check
+curl https://fraudguard.maula.ai/api/health
+
+# URL scan
+curl -X POST https://fraudguard.maula.ai/api/scan/url \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://google.com"}'
+
+# Password check
+curl -X POST https://fraudguard.maula.ai/api/scan/password \
+  -H "Content-Type: application/json" \
+  -d '{"password":"test123"}'
 ```
 
 ---
@@ -515,7 +629,78 @@ pm2 restart fraudguard-api
 
 | Date | Version | Changes |
 |------|---------|---------|
-| 2026-01-12 | 2.0.0 | Complete rewrite with public scanner features |
+| 2026-01-12 | 2.1.0 | Added /api prefix to all routes, created threatIntelRoutes, investigationRoutes |
+| 2026-01-11 | 2.0.5 | Added User, APIKey, AuditLog, RateLimit models |
+| 2026-01-11 | 2.0.4 | Fixed trust proxy, health endpoint, duplicate index warnings |
+| 2026-01-11 | 2.0.3 | Created database service with connection pooling |
+| 2026-01-11 | 2.0.2 | Fixed frontend routing (Vite base, BrowserRouter) |
+| 2026-01-11 | 2.0.1 | Deployed to production, PM2 configuration |
+| 2026-01-10 | 2.0.0 | Complete rewrite with public scanner features |
+
+---
+
+## 🛠️ Tech Stack
+
+| Component | Technology |
+|-----------|------------|
+| **Backend** | Node.js, Express, TypeScript |
+| **Database** | MongoDB Atlas |
+| **Frontend** | React, TypeScript, Vite, TailwindCSS |
+| **Process Manager** | PM2 |
+| **Web Server** | Nginx |
+| **SSL** | Cloudflare |
+| **Hosting** | AWS EC2 (ap-southeast-1) |
+
+---
+
+## 📁 Project Structure
+
+```
+backend/tools/01-fraudguard/
+├── README.md                    ← THIS FILE
+├── api/
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── src/
+│       ├── server.ts            ← Main entry point
+│       ├── routes/
+│       │   ├── publicScanRoutes.ts    ← /api/scan/*
+│       │   ├── alertRoutes.ts         ← /api/alerts/*
+│       │   ├── analyticsRoutes.ts     ← /api/analytics/*
+│       │   ├── transactionRoutes.ts   ← /api/transactions/*
+│       │   ├── threatIntelRoutes.ts   ← /api/threat-intel/*
+│       │   ├── investigationRoutes.ts ← /api/investigations/*
+│       │   ├── healthRoutes.ts        ← /api/health
+│       │   └── ...
+│       ├── services/
+│       │   ├── urlScanner.ts          ← URL threat detection
+│       │   ├── emailChecker.ts        ← Email breach check
+│       │   ├── phoneValidator.ts      ← Phone validation
+│       │   ├── ipChecker.ts           ← IP reputation
+│       │   ├── passwordChecker.ts     ← Password security
+│       │   ├── externalAPIs.ts        ← API client wrapper
+│       │   └── database.ts            ← MongoDB connection
+│       ├── models/
+│       │   ├── ScanResult.ts          ← Scan history
+│       │   ├── ThreatIntel.ts         ← Threat cache
+│       │   ├── User.ts                ← User authentication
+│       │   ├── APIKey.ts              ← API key management
+│       │   ├── AuditLog.ts            ← Audit trail
+│       │   └── RateLimit.ts           ← Rate limiting
+│       └── utils/
+│           └── logger.ts
+├── ai-assistant/                ← AI chat assistant (planned)
+└── ml-engine/                   ← ML fraud models (planned)
+
+frontend/tools/01-fraudguard/
+├── package.json
+├── vite.config.ts               ← base: '/'
+└── src/
+    ├── main.tsx                 ← BrowserRouter (no basename)
+    ├── App.tsx
+    └── components/
+        └── FraudGuardTool.tsx   ← Main component with tabs
+```
 
 ---
 

@@ -218,6 +218,6 @@ ThreatIntelSchema.statics.getCacheStats = async function() {
   };
 };
 
-const ThreatIntel = mongoose.model<IThreatIntel>('ThreatIntel', ThreatIntelSchema);
+export const ThreatIntel = mongoose.model<IThreatIntel>('ThreatIntel', ThreatIntelSchema);
 
 export default ThreatIntel;
