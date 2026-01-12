@@ -44,7 +44,7 @@ const KubeArmorDetail: React.FC = () => {
                 Kubernetes runtime security with eBPF-based policy enforcement, network segmentation, and real-time threat detection for containerized workloads.
               </p>
               <div className="flex gap-6 pt-4">
-                 <a href="https://privilegeguard.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-cyan-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-cyan-500/20">Protect Clusters</a>
+                 <a href="https://kubearmor.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-cyan-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-cyan-500/20">Protect Clusters</a>
                  <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">Coverage: 100%</div>
               </div>
            </div>
@@ -80,7 +80,7 @@ const KubeArmorDetail: React.FC = () => {
         </div>
         <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-white/10">
            <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">Return Home</button>
-           <a href="https://privilegeguard.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-cyan-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Secure K8s <Zap className="w-5 h-5 fill-current" /></a>
+           <a href="https://kubearmor.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-cyan-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Secure K8s <Zap className="w-5 h-5 fill-current" /></a>
         </div>
       </div>
     </div>

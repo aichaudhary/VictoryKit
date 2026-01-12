@@ -44,7 +44,7 @@ const SOC2AutomatorDetail: React.FC = () => {
                 SOC 2 compliance automation with evidence collection and audit preparation.
               </p>
               <div className="flex gap-6 pt-4">
-                 <a href="https://pentestai.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-amber-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-amber-500/20">Start Audit</a>
+                 <a href="https://soc2automator.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-amber-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-amber-500/20">Start Audit</a>
                  <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">Type I & II</div>
               </div>
            </div>
@@ -80,7 +80,7 @@ const SOC2AutomatorDetail: React.FC = () => {
         </div>
         <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-white/10">
            <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">Return Home</button>
-           <a href="https://pentestai.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-amber-500 text-black rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Prepare Audit <Zap className="w-5 h-5 fill-current" /></a>
+           <a href="https://soc2automator.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-amber-500 text-black rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl flex items-center gap-4 text-center">Prepare Audit <Zap className="w-5 h-5 fill-current" /></a>
         </div>
       </div>
     </div>
