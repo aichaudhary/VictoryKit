@@ -1404,18 +1404,13 @@ export default function RiskQuantifyTool() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-violet-950/30 to-gray-950 text-white relative overflow-hidden">
-      {/* Epic Animated Background Layers */}
-      <div className="fixed inset-0 pointer-events-none">
-        <QuantumRiskField />
+      {/* Subtle Animated Background - Single Layer Only */}
+      <div className="fixed inset-0 pointer-events-none opacity-20">
         <RiskConstellation />
-        <DataFlowStreams />
       </div>
 
       {/* Header */}
       <header className="bg-gray-900/80 backdrop-blur-xl border-b border-violet-500/30 sticky top-0 z-40 relative">
-        <div className="absolute inset-0 overflow-hidden">
-          <RiskProbabilityWave />
-        </div>
         <div className="max-w-7xl mx-auto px-4 py-4 relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -1488,10 +1483,8 @@ export default function RiskQuantifyTool() {
 
       {/* Hero Banner */}
       <div className="relative py-8 border-b border-violet-500/20 overflow-hidden">
-        <div className="absolute inset-0">
-          <ThreatRadarScanner />
-          <MonteCarloParticles />
-        </div>
+        {/* Subtle gradient overlay only */}
+        <div className="absolute inset-0 bg-gradient-to-r from-violet-900/20 via-purple-900/10 to-fuchsia-900/20"></div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-8">
@@ -1549,11 +1542,8 @@ export default function RiskQuantifyTool() {
         
         {!loading && activeTab === 'dashboard' && (
           <div className="space-y-6">
-            {/* Dashboard with Epic Background */}
+            {/* Dashboard - Clean without overwhelming animation */}
             <div className="relative">
-              <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-30">
-                <RiskMatrixHeatmap />
-              </div>
               {renderDashboard()}
             </div>
           </div>
@@ -1561,19 +1551,13 @@ export default function RiskQuantifyTool() {
         
         {!loading && activeTab === 'risks' && (
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-20">
-              <NeuralRiskNetwork />
-            </div>
             <div className="relative z-10">{renderRisks()}</div>
           </div>
         )}
         
         {!loading && activeTab === 'matrix' && (
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden">
-              <RiskMatrixHeatmap />
-            </div>
-            <div className="relative z-10 backdrop-blur-sm bg-gray-900/30 rounded-2xl p-8 border border-violet-500/20">
+            <div className="relative z-10 bg-gray-900/50 rounded-2xl p-8 border border-violet-500/20">
               <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
                 <span className="text-3xl">📈</span>
                 Interactive Risk Matrix
@@ -1602,37 +1586,25 @@ export default function RiskQuantifyTool() {
         
         {!loading && activeTab === 'ai-analysis' && (
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-30">
-              <NeuralRiskNetwork />
-            </div>
             <div className="relative z-10">{renderAIAnalysis()}</div>
           </div>
         )}
         
         {!loading && activeTab === 'threat-intel' && (
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-30">
-              <ThreatRadarScanner />
-            </div>
             <div className="relative z-10">{renderThreatIntel()}</div>
           </div>
         )}
         
         {!loading && activeTab === 'compliance' && (
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-40">
-              <ComplianceShieldPulse />
-            </div>
             <div className="relative z-10">{renderCompliance()}</div>
           </div>
         )}
         
         {!loading && activeTab === 'reports' && (
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-20">
-              <ImpactRipples />
-            </div>
-            <div className="relative z-10 backdrop-blur-sm bg-gray-900/30 rounded-2xl p-8 border border-violet-500/20">
+            <div className="relative z-10 bg-gray-900/50 rounded-2xl p-8 border border-violet-500/20">
               <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
                 <span className="text-3xl">📑</span>
                 Executive Reports
@@ -1652,18 +1624,12 @@ export default function RiskQuantifyTool() {
         
         {!loading && activeTab === 'analytics' && (
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-30">
-              <MonteCarloParticles />
-            </div>
             <div className="relative z-10">{renderAnalytics()}</div>
           </div>
         )}
         
         {!loading && activeTab === 'collaboration' && (
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl overflow-hidden opacity-20">
-              <DataFlowStreams />
-            </div>
             <div className="relative z-10">{renderCollaboration()}</div>
           </div>
         )}
