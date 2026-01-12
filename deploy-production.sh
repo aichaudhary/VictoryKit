@@ -61,6 +61,7 @@ get_server_path() {
 	threatmodel) echo "/var/www/tools/threatmodel" ;;
 	riskassess) echo "/var/www/tools/riskassess" ;;
 	securityscore) echo "/var/www/tools/securityscore" ;;
+	xdrplatform) echo "/var/www/tools/xdrplatform" ;;
 	*) echo "" ;;
 	esac
 }
@@ -94,6 +95,7 @@ get_local_path() {
 	threatmodel) echo "$PROJECT_ROOT/frontend/tools/18-threatmodel/dist" ;;
 	riskassess) echo "$PROJECT_ROOT/frontend/tools/19-riskassess/dist" ;;
 	securityscore) echo "$PROJECT_ROOT/frontend/tools/20-securityscore/dist" ;;
+	xdrplatform) echo "$PROJECT_ROOT/frontend/tools/12-xdrplatform/dist" ;;
 	*) echo "" ;;
 	esac
 }
@@ -127,12 +129,13 @@ get_build_dir() {
 	threatmodel) echo "$PROJECT_ROOT/frontend/tools/18-threatmodel" ;;
 	riskassess) echo "$PROJECT_ROOT/frontend/tools/19-riskassess" ;;
 	securityscore) echo "$PROJECT_ROOT/frontend/tools/20-securityscore" ;;
+	xdrplatform) echo "$PROJECT_ROOT/frontend/tools/12-xdrplatform" ;;
 	*) echo "" ;;
 	esac
 }
 
 # All available targets
-ALL_TARGETS="maula-frontend neural-link phishguard darkwebmonitor zerodaydetect ransomshield phishnetai vulnscan pentestai codesentinel firewallai threatradar intrusiondetect fraudguard secureauth datafortress apishield logsentry accesscontrol encryptionmanager cryptovault networkmonitor audittrail threatmodel riskassess securityscore"
+ALL_TARGETS="maula-frontend neural-link phishguard darkwebmonitor zerodaydetect ransomshield phishnetai vulnscan pentestai codesentinel firewallai threatradar intrusiondetect fraudguard secureauth datafortress apishield logsentry accesscontrol encryptionmanager cryptovault networkmonitor audittrail threatmodel riskassess securityscore xdrplatform"
 
 # Colors for output
 RED='\033[0;31m'
