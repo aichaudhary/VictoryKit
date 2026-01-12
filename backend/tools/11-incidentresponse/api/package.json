@@ -1,7 +1,7 @@
 {
-  "name": "incidentcommand-api",
+  "name": "incidentresponse-api",
   "version": "2.0.0",
-  "description": "incidentcommand API - AI-Powered Security Incident Management with Real-Time Integrations",
+  "description": "incidentresponse API - AI-Powered Security Incident Management with Real-Time Integrations",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
