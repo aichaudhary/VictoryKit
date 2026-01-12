@@ -1,12 +1,12 @@
 /**
  * WebSocket Hook for Real-Time Incident Updates
- * Connects to IncidentResponse backend WebSocket
+ * Connects to incidentcommand backend WebSocket
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const WS_URL = import.meta.env.VITE_INCIDENTRESPONSE_WS_URL || 'http://localhost:4011';
+const WS_URL = import.meta.env.VITE_incidentcommand_WS_URL || 'http://localhost:4011';
 
 export interface WebSocketEvent {
   type: string;
@@ -30,14 +30,14 @@ export interface WebSocketState {
 
 export const useIncidentWebSocket = (options: UseWebSocketOptions = {}) => {
   const { userId, incidentId, autoConnect = true, onConnect, onDisconnect, onError } = options;
-  
+
   const socketRef = useRef<Socket | null>(null);
   const [state, setState] = useState<WebSocketState>({
     connected: false,
     connecting: false,
     error: null,
   });
-  
+
   const [lastEvent, setLastEvent] = useState<WebSocketEvent | null>(null);
   const [events, setEvents] = useState<WebSocketEvent[]>([]);
 
@@ -47,7 +47,7 @@ export const useIncidentWebSocket = (options: UseWebSocketOptions = {}) => {
   const connect = useCallback(() => {
     if (socketRef.current?.connected) return;
 
-    setState(prev => ({ ...prev, connecting: true }));
+    setState((prev) => ({ ...prev, connecting: true }));
 
     const socket = io(WS_URL, {
       transports: ['websocket', 'polling'],
@@ -72,7 +72,7 @@ export const useIncidentWebSocket = (options: UseWebSocketOptions = {}) => {
     });
 
     socket.on('disconnect', () => {
-      setState(prev => ({ ...prev, connected: false }));
+      setState((prev) => ({ ...prev, connected: false }));
       onDisconnect?.();
     });
 
@@ -98,15 +98,15 @@ export const useIncidentWebSocket = (options: UseWebSocketOptions = {}) => {
       'dashboard:metrics',
     ];
 
-    eventTypes.forEach(eventType => {
+    eventTypes.forEach((eventType) => {
       socket.on(eventType, (data) => {
         const event = { type: eventType, ...data, receivedAt: new Date().toISOString() };
         setLastEvent(event);
-        setEvents(prev => [event, ...prev].slice(0, 100)); // Keep last 100 events
+        setEvents((prev) => [event, ...prev].slice(0, 100)); // Keep last 100 events
 
         // Trigger registered handlers
         const handlers = eventHandlersRef.current.get(eventType);
-        handlers?.forEach(handler => handler(data));
+        handlers?.forEach((handler) => handler(data));
       });
     });
 

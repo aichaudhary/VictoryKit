@@ -5,7 +5,7 @@
 set -e
 
 # Include Cloudflare SSL config
-cat > /etc/nginx/snippets/cloudflare-ssl.conf << 'SSLEOF'
+cat >/etc/nginx/snippets/cloudflare-ssl.conf <<'SSLEOF'
 ssl_certificate /etc/ssl/cloudflare/origin-cert.pem;
 ssl_certificate_key /etc/ssl/cloudflare/origin-key.pem;
 ssl_protocols TLSv1.2 TLSv1.3;
@@ -16,7 +16,7 @@ ssl_session_cache shared:SSL:50m;
 SSLEOF
 
 # Security headers snippet
-cat > /etc/nginx/snippets/security-headers.conf << 'SECEOF'
+cat >/etc/nginx/snippets/security-headers.conf <<'SECEOF'
 add_header X-Frame-Options "SAMEORIGIN" always;
 add_header X-Content-Type-Options "nosniff" always;
 add_header X-XSS-Protection "1; mode=block" always;
@@ -24,7 +24,7 @@ add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 SECEOF
 
 # Main domain - maula.ai
-cat > /etc/nginx/sites-available/maula.ai << 'EOF'
+cat >/etc/nginx/sites-available/maula.ai <<'EOF'
 server {
     listen 443 ssl http2;
     server_name maula.ai www.maula.ai;
@@ -57,7 +57,7 @@ server {
 EOF
 
 # API domain - api.maula.ai
-cat > /etc/nginx/sites-available/api.maula.ai << 'EOF'
+cat >/etc/nginx/sites-available/api.maula.ai <<'EOF'
 server {
     listen 443 ssl http2;
     server_name api.maula.ai;
@@ -86,62 +86,62 @@ EOF
 
 # Tool configurations - Array of tool names and ports
 declare -a TOOLS=(
-    "fraudguard:3001:4001"
-    "darkwebmonitor:3002:4002"
-    "zerodaydetect:3003:4003"
-    "ransomshield:3004:4004"
-    "phishnetai:3005:4005"
-    "vulnscan:3006:4006"
-    "pentestai:3007:4007"
-    "codesentinel:3008:4008"
-    "runtimeguard:3009:4009"
-    "dataguardian:3010:4010"
-    "incidentresponse:3011:4011"
-    "xdrplatform:3012:4012"
-    "identityforge:3013:4013"
-    "secretvault:3014:4014"
-    "privilegeguard:3015:4015"
-    "networkforensics:3016:4016"
-    "audittrailpro:3017:4017"
-    "threatmodel:3018:4018"
-    "riskquantify:3019:4019"
-    "securitydashboard:3020:4020"
-    "wafmanager:3021:4021"
-    "apishield:3022:4022"
-    "botmitigation:3023:4023"
-    "ddosdefender:3024:4024"
-    "sslmonitor:3025:4025"
-    "blueteamai:3026:4026"
-    "siemcommander:3027:4027"
-    "soarengine:3028:4028"
-    "behavioranalytics:3029:4029"
-    "policyengine:3030:4030"
-    "cloudposture:3031:4031"
-    "zerotrustm:3032:4032"
-    "kubearmor:3033:4033"
-    "containerscan:3034:4034"
-    "emaildefender:3035:4035"
-    "browserisolation:3036:4036"
-    "dnsfirewall:3037:4037"
-    "firewallai:3038:4038"
-    "vpnanalyzer:3039:4039"
-    "wirelesshunter:3040:4040"
-    "dlpadvanced:3041:4041"
-    "iotsentinel:3042:4042"
-    "mobileshield:3043:4043"
-    "supplychainai:3044:4044"
-    "drplan:3045:4045"
-    "privacyshield:3046:4046"
-    "gdprcompliance:3047:4047"
-    "hipaaguard:3048:4048"
-    "soc2automator:3049:4049"
-    "iso27001:3050:4050"
+	"fraudguard:3001:4001"
+	"darkwebmonitor:3002:4002"
+	"zerodaydetect:3003:4003"
+	"ransomshield:3004:4004"
+	"phishnetai:3005:4005"
+	"vulnscan:3006:4006"
+	"pentestai:3007:4007"
+	"codesentinel:3008:4008"
+	"runtimeguard:3009:4009"
+	"dataguardian:3010:4010"
+	"incidentcommand:3011:4011"
+	"xdrplatform:3012:4012"
+	"identityforge:3013:4013"
+	"secretvault:3014:4014"
+	"privilegeguard:3015:4015"
+	"networkforensics:3016:4016"
+	"audittrailpro:3017:4017"
+	"threatmodel:3018:4018"
+	"riskquantify:3019:4019"
+	"securitydashboard:3020:4020"
+	"wafmanager:3021:4021"
+	"apishield:3022:4022"
+	"botmitigation:3023:4023"
+	"ddosdefender:3024:4024"
+	"sslmonitor:3025:4025"
+	"blueteamai:3026:4026"
+	"siemcommander:3027:4027"
+	"soarengine:3028:4028"
+	"behavioranalytics:3029:4029"
+	"policyengine:3030:4030"
+	"cloudposture:3031:4031"
+	"zerotrustm:3032:4032"
+	"kubearmor:3033:4033"
+	"containerscan:3034:4034"
+	"emaildefender:3035:4035"
+	"browserisolation:3036:4036"
+	"dnsfirewall:3037:4037"
+	"firewallai:3038:4038"
+	"vpnanalyzer:3039:4039"
+	"wirelesshunter:3040:4040"
+	"dlpadvanced:3041:4041"
+	"iotsentinel:3042:4042"
+	"mobileshield:3043:4043"
+	"supplychainai:3044:4044"
+	"drplan:3045:4045"
+	"privacyshield:3046:4046"
+	"gdprcompliance:3047:4047"
+	"hipaaguard:3048:4048"
+	"soc2automator:3049:4049"
+	"iso27001:3050:4050"
 )
 
 for tool_config in "${TOOLS[@]}"; do
-    IFS=':' read -r tool frontend_port api_port <<< "$tool_config"
-    
-    cat > /etc/nginx/sites-available/${tool}.maula.ai << TOOLEOF
+	IFS=':' read -r tool frontend_port api_port <<<"$tool_config"
+
+	cat >/etc/nginx/sites-available/${tool}.maula.ai <<TOOLEOF
 server {
     listen 443 ssl http2;
     server_name ${tool}.maula.ai;
@@ -190,9 +190,9 @@ server {
 }
 TOOLEOF
 
-    # Enable site
-    ln -sf /etc/nginx/sites-available/${tool}.maula.ai /etc/nginx/sites-enabled/
-    echo "Created config for ${tool}.maula.ai (frontend: ${frontend_port}, api: ${api_port})"
+	# Enable site
+	ln -sf /etc/nginx/sites-available/${tool}.maula.ai /etc/nginx/sites-enabled/
+	echo "Created config for ${tool}.maula.ai (frontend: ${frontend_port}, api: ${api_port})"
 done
 
 # Enable main sites

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { incidentAPI, attackAPI } from '../services/api.ts';
 import { Incident, Attack } from '../types/index.ts';
-import './IncidentResponse.css';
+import './incidentcommand.css';
 
-const IncidentResponse: React.FC = () => {
+const incidentcommand: React.FC = () => {
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [attacks, setAttacks] = useState<Attack[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const IncidentResponse: React.FC = () => {
     assignedTo: '',
     relatedAttacks: [] as string[],
     responseActions: [] as string[],
-    notes: ''
+    notes: '',
   });
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const IncidentResponse: React.FC = () => {
     try {
       const [incidentsRes, attacksRes] = await Promise.all([
         incidentAPI.getAll(),
-        attackAPI.getAll({ status: 'active', limit: 100 })
+        attackAPI.getAll({ status: 'active', limit: 100 }),
       ]);
 
       setIncidents(incidentsRes.data.data);
@@ -78,60 +78,71 @@ const IncidentResponse: React.FC = () => {
       assignedTo: '',
       relatedAttacks: [],
       responseActions: [],
-      notes: ''
+      notes: '',
     });
   };
 
   const addResponseAction = (action: string) => {
     if (!action.trim()) return;
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      responseActions: [...prev.responseActions, action.trim()]
+      responseActions: [...prev.responseActions, action.trim()],
     }));
   };
 
   const removeResponseAction = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      responseActions: prev.responseActions.filter((_, i) => i !== index)
+      responseActions: prev.responseActions.filter((_, i) => i !== index),
     }));
   };
 
   const addRelatedAttack = (attackId: string) => {
     if (formData.relatedAttacks.includes(attackId)) return;
 
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      relatedAttacks: [...prev.relatedAttacks, attackId]
+      relatedAttacks: [...prev.relatedAttacks, attackId],
     }));
   };
 
   const removeRelatedAttack = (attackId: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      relatedAttacks: prev.relatedAttacks.filter(id => id !== attackId)
+      relatedAttacks: prev.relatedAttacks.filter((id) => id !== attackId),
     }));
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical': return '#ff4757';
-      case 'high': return '#ffa502';
-      case 'medium': return '#3742fa';
-      case 'low': return '#2ed573';
-      default: return '#888';
+      case 'critical':
+        return '#ff4757';
+      case 'high':
+        return '#ffa502';
+      case 'medium':
+        return '#3742fa';
+      case 'low':
+        return '#2ed573';
+      default:
+        return '#888';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'open': return '#ff4757';
-      case 'investigating': return '#ffa502';
-      case 'mitigating': return '#3742fa';
-      case 'resolved': return '#2ed573';
-      case 'closed': return '#666';
-      default: return '#888';
+      case 'open':
+        return '#ff4757';
+      case 'investigating':
+        return '#ffa502';
+      case 'mitigating':
+        return '#3742fa';
+      case 'resolved':
+        return '#2ed573';
+      case 'closed':
+        return '#666';
+      default:
+        return '#888';
     }
   };
 
@@ -139,7 +150,7 @@ const IncidentResponse: React.FC = () => {
     { value: 'low', label: 'Low' },
     { value: 'medium', label: 'Medium' },
     { value: 'high', label: 'High' },
-    { value: 'critical', label: 'Critical' }
+    { value: 'critical', label: 'Critical' },
   ];
 
   const statuses = [
@@ -147,7 +158,7 @@ const IncidentResponse: React.FC = () => {
     { value: 'investigating', label: 'Investigating' },
     { value: 'mitigating', label: 'Mitigating' },
     { value: 'resolved', label: 'Resolved' },
-    { value: 'closed', label: 'Closed' }
+    { value: 'closed', label: 'Closed' },
   ];
 
   const responseTemplates = [
@@ -160,7 +171,7 @@ const IncidentResponse: React.FC = () => {
     'Implement WAF rules',
     'Enable bot detection',
     'Update threat intelligence feeds',
-    'Notify security team'
+    'Notify security team',
   ];
 
   if (loading) {
@@ -173,14 +184,14 @@ const IncidentResponse: React.FC = () => {
         <h1>Incident Response</h1>
         <div className="header-actions">
           <div className="stats">
-            <span>Open: {incidents.filter(i => i.status === 'open').length}</span>
-            <span>Active: {incidents.filter(i => ['investigating', 'mitigating'].includes(i.status)).length}</span>
-            <span>Resolved: {incidents.filter(i => i.status === 'resolved').length}</span>
+            <span>Open: {incidents.filter((i) => i.status === 'open').length}</span>
+            <span>
+              Active:{' '}
+              {incidents.filter((i) => ['investigating', 'mitigating'].includes(i.status)).length}
+            </span>
+            <span>Resolved: {incidents.filter((i) => i.status === 'resolved').length}</span>
           </div>
-          <button
-            onClick={() => setShowCreateForm(true)}
-            className="btn btn-primary"
-          >
+          <button onClick={() => setShowCreateForm(true)} className="btn btn-primary">
             Create Incident
           </button>
         </div>
@@ -200,10 +211,16 @@ const IncidentResponse: React.FC = () => {
                   <div className="incident-title">
                     <h3>{incident.title}</h3>
                     <div className="incident-meta">
-                      <span className="severity-badge" style={{ backgroundColor: getSeverityColor(incident.severity) }}>
+                      <span
+                        className="severity-badge"
+                        style={{ backgroundColor: getSeverityColor(incident.severity) }}
+                      >
                         {incident.severity.toUpperCase()}
                       </span>
-                      <span className="status-badge" style={{ backgroundColor: getStatusColor(incident.status) }}>
+                      <span
+                        className="status-badge"
+                        style={{ backgroundColor: getStatusColor(incident.status) }}
+                      >
                         {incident.status.replace('-', ' ').toUpperCase()}
                       </span>
                     </div>
@@ -212,10 +229,12 @@ const IncidentResponse: React.FC = () => {
                   <div className="incident-actions">
                     <select
                       value={incident.status}
-                      onChange={(e) => handleUpdateIncident(incident._id, { status: e.target.value })}
+                      onChange={(e) =>
+                        handleUpdateIncident(incident._id, { status: e.target.value })
+                      }
                       className="status-select"
                     >
-                      {statuses.map(status => (
+                      {statuses.map((status) => (
                         <option key={status.value} value={status.value}>
                           {status.label}
                         </option>
@@ -259,10 +278,7 @@ const IncidentResponse: React.FC = () => {
               <div className="no-incidents">
                 <h3>No Security Incidents</h3>
                 <p>All systems operating normally</p>
-                <button
-                  onClick={() => setShowCreateForm(true)}
-                  className="btn btn-primary"
-                >
+                <button onClick={() => setShowCreateForm(true)} className="btn btn-primary">
                   Report Incident
                 </button>
               </div>
@@ -283,13 +299,19 @@ const IncidentResponse: React.FC = () => {
                   </div>
                   <div className="detail-item">
                     <span className="label">Severity:</span>
-                    <span className="value severity" style={{ color: getSeverityColor(selectedIncident.severity) }}>
+                    <span
+                      className="value severity"
+                      style={{ color: getSeverityColor(selectedIncident.severity) }}
+                    >
                       {selectedIncident.severity.toUpperCase()}
                     </span>
                   </div>
                   <div className="detail-item">
                     <span className="label">Status:</span>
-                    <span className="value status" style={{ color: getStatusColor(selectedIncident.status) }}>
+                    <span
+                      className="value status"
+                      style={{ color: getStatusColor(selectedIncident.status) }}
+                    >
                       {selectedIncident.status.replace('-', ' ').toUpperCase()}
                     </span>
                   </div>
@@ -299,11 +321,15 @@ const IncidentResponse: React.FC = () => {
                   </div>
                   <div className="detail-item">
                     <span className="label">Created:</span>
-                    <span className="value">{new Date(selectedIncident.createdAt).toLocaleString()}</span>
+                    <span className="value">
+                      {new Date(selectedIncident.createdAt).toLocaleString()}
+                    </span>
                   </div>
                   <div className="detail-item">
                     <span className="label">Last Updated:</span>
-                    <span className="value">{new Date(selectedIncident.updatedAt).toLocaleString()}</span>
+                    <span className="value">
+                      {new Date(selectedIncident.updatedAt).toLocaleString()}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -317,12 +343,14 @@ const IncidentResponse: React.FC = () => {
                 <h3>Related Attacks</h3>
                 <div className="related-attacks">
                   {selectedIncident.relatedAttacks.map((attackId) => {
-                    const attack = attacks.find(a => a._id === attackId);
+                    const attack = attacks.find((a) => a._id === attackId);
                     return attack ? (
                       <div key={attackId} className="related-attack">
                         <div className="attack-info">
                           <span className="attack-type">{attack.type.toUpperCase()}</span>
-                          <span className="attack-target">{attack.target.ip}:{attack.target.port}</span>
+                          <span className="attack-target">
+                            {attack.target.ip}:{attack.target.port}
+                          </span>
                         </div>
                         <div className="attack-metrics">
                           <span>{attack.metrics.bandwidth.toFixed(2)} Mbps</span>
@@ -371,7 +399,7 @@ const IncidentResponse: React.FC = () => {
         )}
       </div>
 
-      {(showCreateForm) && (
+      {showCreateForm && (
         <div className="incident-form-overlay">
           <div className="incident-form">
             <div className="form-header">
@@ -393,7 +421,7 @@ const IncidentResponse: React.FC = () => {
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   placeholder="Brief incident title"
                 />
               </div>
@@ -402,7 +430,9 @@ const IncidentResponse: React.FC = () => {
                 <label>Description</label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, description: e.target.value }))
+                  }
                   placeholder="Detailed description of the incident"
                   rows={4}
                 />
@@ -413,9 +443,9 @@ const IncidentResponse: React.FC = () => {
                   <label>Severity</label>
                   <select
                     value={formData.severity}
-                    onChange={(e) => setFormData(prev => ({ ...prev, severity: e.target.value }))}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, severity: e.target.value }))}
                   >
-                    {severities.map(sev => (
+                    {severities.map((sev) => (
                       <option key={sev.value} value={sev.value}>
                         {sev.label}
                       </option>
@@ -428,7 +458,9 @@ const IncidentResponse: React.FC = () => {
                   <input
                     type="text"
                     value={formData.assignedTo}
-                    onChange={(e) => setFormData(prev => ({ ...prev, assignedTo: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, assignedTo: e.target.value }))
+                    }
                     placeholder="Team member name"
                   />
                 </div>
@@ -447,15 +479,16 @@ const IncidentResponse: React.FC = () => {
                     defaultValue=""
                   >
                     <option value="">Select attack to relate...</option>
-                    {attacks.map(attack => (
+                    {attacks.map((attack) => (
                       <option key={attack._id} value={attack._id}>
-                        {attack.type} - {attack.target.ip}:{attack.target.port} ({attack.metrics.bandwidth.toFixed(2)} Mbps)
+                        {attack.type} - {attack.target.ip}:{attack.target.port} (
+                        {attack.metrics.bandwidth.toFixed(2)} Mbps)
                       </option>
                     ))}
                   </select>
                   <div className="selected-attacks">
-                    {formData.relatedAttacks.map(attackId => {
-                      const attack = attacks.find(a => a._id === attackId);
+                    {formData.relatedAttacks.map((attackId) => {
+                      const attack = attacks.find((a) => a._id === attackId);
                       return attack ? (
                         <span key={attackId} className="attack-tag">
                           {attack.type} - {attack.target.ip}
@@ -525,17 +558,14 @@ const IncidentResponse: React.FC = () => {
                 <label>Additional Notes</label>
                 <textarea
                   value={formData.notes}
-                  onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))}
                   placeholder="Any additional notes or observations"
                   rows={3}
                 />
               </div>
 
               <div className="form-actions">
-                <button
-                  onClick={handleCreateIncident}
-                  className="btn btn-primary"
-                >
+                <button onClick={handleCreateIncident} className="btn btn-primary">
                   Create Incident
                 </button>
                 <button
@@ -556,4 +586,4 @@ const IncidentResponse: React.FC = () => {
   );
 };
 
-export default IncidentResponse;
+export default incidentcommand;

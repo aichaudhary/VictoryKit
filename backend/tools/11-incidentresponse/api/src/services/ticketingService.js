@@ -1,7 +1,7 @@
 /**
  * Ticketing Integration Service
  * Real-world integrations for incident ticketing systems
- * 
+ *
  * Integrates with: ServiceNow, Jira, PagerDuty
  */
 
@@ -10,21 +10,21 @@ const axios = require('axios');
 class TicketingService {
   constructor() {
     // ServiceNow
-    this.snowInstance = process.env.INCIDENTRESPONSE_SERVICENOW_INSTANCE;
-    this.snowUsername = process.env.INCIDENTRESPONSE_SERVICENOW_USERNAME;
-    this.snowPassword = process.env.INCIDENTRESPONSE_SERVICENOW_PASSWORD;
-    this.snowApiKey = process.env.INCIDENTRESPONSE_SERVICENOW_API_KEY;
-    
+    this.snowInstance = process.env.incidentcommand_SERVICENOW_INSTANCE;
+    this.snowUsername = process.env.incidentcommand_SERVICENOW_USERNAME;
+    this.snowPassword = process.env.incidentcommand_SERVICENOW_PASSWORD;
+    this.snowApiKey = process.env.incidentcommand_SERVICENOW_API_KEY;
+
     // Jira
-    this.jiraUrl = process.env.INCIDENTRESPONSE_JIRA_URL;
-    this.jiraEmail = process.env.INCIDENTRESPONSE_JIRA_EMAIL;
-    this.jiraApiToken = process.env.INCIDENTRESPONSE_JIRA_API_TOKEN;
-    this.jiraProject = process.env.INCIDENTRESPONSE_JIRA_PROJECT_KEY;
-    
+    this.jiraUrl = process.env.incidentcommand_JIRA_URL;
+    this.jiraEmail = process.env.incidentcommand_JIRA_EMAIL;
+    this.jiraApiToken = process.env.incidentcommand_JIRA_API_TOKEN;
+    this.jiraProject = process.env.incidentcommand_JIRA_PROJECT_KEY;
+
     // PagerDuty (for on-call escalation)
-    this.pdApiKey = process.env.INCIDENTRESPONSE_PAGERDUTY_API_KEY;
-    this.pdServiceId = process.env.INCIDENTRESPONSE_PAGERDUTY_SERVICE_ID;
-    this.pdEscalationPolicyId = process.env.INCIDENTRESPONSE_PAGERDUTY_ESCALATION_POLICY_ID;
+    this.pdApiKey = process.env.incidentcommand_PAGERDUTY_API_KEY;
+    this.pdServiceId = process.env.incidentcommand_PAGERDUTY_SERVICE_ID;
+    this.pdEscalationPolicyId = process.env.incidentcommand_PAGERDUTY_ESCALATION_POLICY_ID;
   }
 
   /**
@@ -33,7 +33,7 @@ class TicketingService {
   async createTicket(incident) {
     const results = {
       tickets: [],
-      errors: []
+      errors: [],
     };
 
     // ServiceNow
@@ -68,15 +68,15 @@ class TicketingService {
    * ServiceNow - Create Security Incident
    */
   async createServiceNowIncident(incident) {
-    const auth = this.snowApiKey 
-      ? { headers: { 'Authorization': `Bearer ${this.snowApiKey}` } }
+    const auth = this.snowApiKey
+      ? { headers: { Authorization: `Bearer ${this.snowApiKey}` } }
       : { auth: { username: this.snowUsername, password: this.snowPassword } };
 
     const severityMap = {
       critical: 1,
       high: 2,
       medium: 3,
-      low: 4
+      low: 4,
     };
 
     const payload = {
@@ -90,7 +90,7 @@ class TicketingService {
       assignment_group: 'Security Operations Center',
       u_security_incident_id: incident.incidentId,
       u_incident_type: incident.classification?.type,
-      u_attack_vector: incident.classification?.attack_vector
+      u_attack_vector: incident.classification?.attack_vector,
     };
 
     const response = await axios.post(
@@ -101,15 +101,15 @@ class TicketingService {
         headers: {
           ...auth.headers,
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
+          Accept: 'application/json',
+        },
       }
     );
 
     return {
       ticketId: response.data.result.number,
       sysId: response.data.result.sys_id,
-      url: `https://${this.snowInstance}.service-now.com/nav_to.do?uri=sn_si_incident.do?sys_id=${response.data.result.sys_id}`
+      url: `https://${this.snowInstance}.service-now.com/nav_to.do?uri=sn_si_incident.do?sys_id=${response.data.result.sys_id}`,
     };
   }
 
@@ -123,7 +123,7 @@ class TicketingService {
       critical: 'Highest',
       high: 'High',
       medium: 'Medium',
-      low: 'Low'
+      low: 'Low',
     };
 
     const payload = {
@@ -137,18 +137,16 @@ class TicketingService {
             {
               type: 'heading',
               attrs: { level: 2 },
-              content: [{ type: 'text', text: 'Security Incident Details' }]
+              content: [{ type: 'text', text: 'Security Incident Details' }],
             },
             {
               type: 'paragraph',
-              content: [
-                { type: 'text', text: incident.description || 'No description provided' }
-              ]
+              content: [{ type: 'text', text: incident.description || 'No description provided' }],
             },
             {
               type: 'heading',
               attrs: { level: 3 },
-              content: [{ type: 'text', text: 'Incident Information' }]
+              content: [{ type: 'text', text: 'Incident Information' }],
             },
             {
               type: 'bulletList',
@@ -157,43 +155,41 @@ class TicketingService {
                 this.jiraListItem(`Severity: ${incident.severity}`),
                 this.jiraListItem(`Status: ${incident.status}`),
                 this.jiraListItem(`Category: ${incident.classification?.type || 'Unknown'}`),
-                this.jiraListItem(`Affected Assets: ${incident.affectedAssets?.length || 0}`)
-              ]
-            }
-          ]
+                this.jiraListItem(`Affected Assets: ${incident.affectedAssets?.length || 0}`),
+              ],
+            },
+          ],
         },
         issuetype: { name: 'Bug' }, // Or custom 'Security Incident' type
         priority: { name: priorityMap[incident.severity] || 'Medium' },
-        labels: ['security-incident', incident.classification?.type || 'security'].filter(Boolean)
-      }
+        labels: ['security-incident', incident.classification?.type || 'security'].filter(Boolean),
+      },
     };
 
-    const response = await axios.post(
-      `${this.jiraUrl}/rest/api/3/issue`,
-      payload,
-      {
-        headers: {
-          'Authorization': `Basic ${auth}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      }
-    );
+    const response = await axios.post(`${this.jiraUrl}/rest/api/3/issue`, payload, {
+      headers: {
+        Authorization: `Basic ${auth}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
 
     return {
       ticketId: response.data.key,
       id: response.data.id,
-      url: `${this.jiraUrl}/browse/${response.data.key}`
+      url: `${this.jiraUrl}/browse/${response.data.key}`,
     };
   }
 
   jiraListItem(text) {
     return {
       type: 'listItem',
-      content: [{
-        type: 'paragraph',
-        content: [{ type: 'text', text }]
-      }]
+      content: [
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', text }],
+        },
+      ],
     };
   }
 
@@ -210,7 +206,7 @@ class TicketingService {
         critical: 'high',
         high: 'high',
         medium: 'low',
-        low: 'low'
+        low: 'low',
       };
 
       const response = await axios.post(
@@ -221,25 +217,27 @@ class TicketingService {
             title: `[${incident.severity.toUpperCase()}] ${incident.title}`,
             service: {
               id: this.pdServiceId,
-              type: 'service_reference'
+              type: 'service_reference',
             },
             urgency: urgencyMap[incident.severity] || 'low',
             body: {
               type: 'incident_body',
-              details: this.formatIncidentDescription(incident)
+              details: this.formatIncidentDescription(incident),
             },
-            escalation_policy: this.pdEscalationPolicyId ? {
-              id: this.pdEscalationPolicyId,
-              type: 'escalation_policy_reference'
-            } : undefined
-          }
+            escalation_policy: this.pdEscalationPolicyId
+              ? {
+                  id: this.pdEscalationPolicyId,
+                  type: 'escalation_policy_reference',
+                }
+              : undefined,
+          },
         },
         {
           headers: {
-            'Authorization': `Token token=${this.pdApiKey}`,
+            Authorization: `Token token=${this.pdApiKey}`,
             'Content-Type': 'application/json',
-            'Accept': 'application/vnd.pagerduty+json;version=2'
-          }
+            Accept: 'application/vnd.pagerduty+json;version=2',
+          },
         }
       );
 
@@ -248,7 +246,7 @@ class TicketingService {
         incidentId: response.data.incident.id,
         incidentNumber: response.data.incident.incident_number,
         url: response.data.incident.html_url,
-        status: response.data.incident.status
+        status: response.data.incident.status,
       };
     } catch (error) {
       console.error('PagerDuty incident creation error:', error.message);
@@ -279,7 +277,11 @@ class TicketingService {
             break;
         }
       } catch (error) {
-        results.push({ system: ref.system, ticketId: ref.ticketId || ref.incidentId, error: error.message });
+        results.push({
+          system: ref.system,
+          ticketId: ref.ticketId || ref.incidentId,
+          error: error.message,
+        });
       }
     }
 
@@ -287,8 +289,8 @@ class TicketingService {
   }
 
   async updateServiceNowIncident(sysId, status, comment) {
-    const auth = this.snowApiKey 
-      ? { headers: { 'Authorization': `Bearer ${this.snowApiKey}` } }
+    const auth = this.snowApiKey
+      ? { headers: { Authorization: `Bearer ${this.snowApiKey}` } }
       : { auth: { username: this.snowUsername, password: this.snowPassword } };
 
     const stateMap = {
@@ -298,14 +300,14 @@ class TicketingService {
       eradication: 4,
       recovery: 5,
       resolved: 6,
-      closed: 7
+      closed: 7,
     };
 
     await axios.patch(
       `https://${this.snowInstance}.service-now.com/api/now/table/sn_si_incident/${sysId}`,
       {
         state: stateMap[status] || 2,
-        work_notes: comment
+        work_notes: comment,
       },
       auth
     );
@@ -313,7 +315,7 @@ class TicketingService {
 
   async updateJiraIssue(issueKey, status, comment) {
     const auth = Buffer.from(`${this.jiraEmail}:${this.jiraApiToken}`).toString('base64');
-    const headers = { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' };
+    const headers = { Authorization: `Basic ${auth}`, 'Content-Type': 'application/json' };
 
     // Add comment
     if (comment) {
@@ -323,11 +325,13 @@ class TicketingService {
           body: {
             version: 1,
             type: 'doc',
-            content: [{
-              type: 'paragraph',
-              content: [{ type: 'text', text: `Status Update: ${status}\n\n${comment}` }]
-            }]
-          }
+            content: [
+              {
+                type: 'paragraph',
+                content: [{ type: 'text', text: `Status Update: ${status}\n\n${comment}` }],
+              },
+            ],
+          },
         },
         { headers }
       );
@@ -341,7 +345,7 @@ class TicketingService {
     const statusMap = {
       resolved: 'resolved',
       closed: 'resolved',
-      acknowledged: 'acknowledged'
+      acknowledged: 'acknowledged',
     };
 
     if (statusMap[status]) {
@@ -350,14 +354,14 @@ class TicketingService {
         {
           incident: {
             type: 'incident',
-            status: statusMap[status]
-          }
+            status: statusMap[status],
+          },
         },
         {
           headers: {
-            'Authorization': `Token token=${this.pdApiKey}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Token token=${this.pdApiKey}`,
+            'Content-Type': 'application/json',
+          },
         }
       );
     }
@@ -409,16 +413,21 @@ DESCRIPTION:
 ${incident.description || 'No description provided'}
 
 AFFECTED ASSETS:
-${incident.affectedAssets?.map(a => `- ${a.hostname || a.assetId} (${a.type})`).join('\n') || 'None recorded'}
+${incident.affectedAssets?.map((a) => `- ${a.hostname || a.assetId} (${a.type})`).join('\n') || 'None recorded'}
 
 INDICATORS OF COMPROMISE:
-${incident.indicators?.map(i => `- [${i.type}] ${i.value}`).join('\n') || 'None recorded'}
+${incident.indicators?.map((i) => `- [${i.type}] ${i.value}`).join('\n') || 'None recorded'}
 
 RESPONSE ACTIONS:
-${incident.timeline?.filter(t => t.type === 'action').map(t => `- ${t.event}`).join('\n') || 'No actions recorded'}
+${
+  incident.timeline
+    ?.filter((t) => t.type === 'action')
+    .map((t) => `- ${t.event}`)
+    .join('\n') || 'No actions recorded'
+}
 
 ---
-Generated by VictoryKit IncidentResponse
+Generated by VictoryKit incidentcommand
     `.trim();
   }
 
@@ -432,17 +441,17 @@ Generated by VictoryKit IncidentResponse
           system: 'Simulated ServiceNow',
           ticketId: `INC${ticketNum}`,
           sysId: `sim-${Date.now()}`,
-          url: `https://example.service-now.com/incident/${ticketNum}`
+          url: `https://example.service-now.com/incident/${ticketNum}`,
         },
         {
           system: 'Simulated Jira',
           ticketId: `SEC-${ticketNum}`,
           id: `sim-${Date.now() + 1}`,
-          url: `https://example.atlassian.net/browse/SEC-${ticketNum}`
-        }
+          url: `https://example.atlassian.net/browse/SEC-${ticketNum}`,
+        },
       ],
       errors: [],
-      simulated: true
+      simulated: true,
     };
   }
 
@@ -453,7 +462,7 @@ Generated by VictoryKit IncidentResponse
       incidentNumber: Math.floor(1000 + Math.random() * 9000),
       url: 'https://example.pagerduty.com/incidents/P123456',
       status: 'triggered',
-      simulated: true
+      simulated: true,
     };
   }
 }

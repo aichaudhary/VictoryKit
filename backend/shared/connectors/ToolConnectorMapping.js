@@ -18,32 +18,32 @@ const ToolConnectorMapping = {
       sentinel: {
         ingestEvents: true,
         createIncidents: true,
-        queryThreats: true
+        queryThreats: true,
       },
       // SOAR: Automated response playbooks for high-risk transactions
       cortexXSOAR: {
         createIncidents: true,
         executePlaybooks: ['fraud-response', 'risk-escalation'],
-        addEvidence: true
+        addEvidence: true,
       },
       // WAF: Block IPs with high fraud scores
       cloudflare: {
         blockIPs: true,
         createWAFRules: true,
-        rateLimit: true
+        rateLimit: true,
       },
       // API Gateway: Rate limit suspicious API calls
       kong: {
         rateLimit: true,
-        blockRequests: true
+        blockRequests: true,
       },
       // IdP: Step-up authentication for high-risk users
       okta: {
         riskAssessment: true,
         stepUpAuth: true,
-        suspendUsers: true
-      }
-    }
+        suspendUsers: true,
+      },
+    },
   },
 
   // 02-darkwebmonitor
@@ -53,8 +53,8 @@ const ToolConnectorMapping = {
       sentinel: { ingestEvents: true, createIncidents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['recon-response'] },
       opencti: { createIndicators: true, enrichIntelligence: true },
-      crowdstrike: { createIOCs: true, huntThreats: true }
-    }
+      crowdstrike: { createIOCs: true, huntThreats: true },
+    },
   },
 
   // 03-zerodaydetect
@@ -65,8 +65,8 @@ const ToolConnectorMapping = {
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['threat-response'] },
       cloudflare: { blockIPs: true, createWAFRules: true },
       crowdstrike: { containHosts: true, createIOCs: true },
-      opencti: { createIndicators: true, correlateThreats: true }
-    }
+      opencti: { createIndicators: true, correlateThreats: true },
+    },
   },
 
   // 04-ransomshield
@@ -77,8 +77,8 @@ const ToolConnectorMapping = {
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['malware-response'] },
       crowdstrike: { containHosts: true, killProcesses: true, createIOCs: true },
       opencti: { createIndicators: true, malwareAnalysis: true },
-      capeSandbox: { submitSamples: true, getReports: true }
-    }
+      capeSandbox: { submitSamples: true, getReports: true },
+    },
   },
 
   // 05-phishnetai
@@ -89,8 +89,8 @@ const ToolConnectorMapping = {
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['phishing-response'] },
       cloudflare: { blockIPs: true, createWAFRules: true },
       okta: { suspendUsers: true, resetFactors: true },
-      opencti: { createIndicators: true, phishingAnalysis: true }
-    }
+      opencti: { createIndicators: true, phishingAnalysis: true },
+    },
   },
 
   // 06-vulnscan
@@ -100,8 +100,8 @@ const ToolConnectorMapping = {
       sentinel: { ingestEvents: true, createIncidents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['vulnerability-response'] },
       wiz: { scanAssets: true, getFindings: true },
-      crowdstrike: { vulnerabilityAssessment: true }
-    }
+      crowdstrike: { vulnerabilityAssessment: true },
+    },
   },
 
   // 07-pentestai
@@ -111,8 +111,8 @@ const ToolConnectorMapping = {
       sentinel: { ingestEvents: true, createIncidents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['pentest-response'] },
       crowdstrike: { executeCommands: true, containHosts: true },
-      kong: { blockRequests: true, rateLimit: true }
-    }
+      kong: { blockRequests: true, rateLimit: true },
+    },
   },
 
   // 08-codesentinel
@@ -121,8 +121,8 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { ingestEvents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['code-security'] },
-      opencti: { createIndicators: true }
-    }
+      opencti: { createIndicators: true },
+    },
   },
 
   // 09-runtimeguard
@@ -131,8 +131,8 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { ingestEvents: true },
       vanta: { submitEvidence: true, getFindings: true },
-      wiz: { complianceChecks: true }
-    }
+      wiz: { complianceChecks: true },
+    },
   },
 
   // 10-dataguardian
@@ -141,19 +141,19 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { ingestEvents: true, createIncidents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['data-protection'] },
-      cloudflare: { blockIPs: true, createWAFRules: true }
-    }
+      cloudflare: { blockIPs: true, createWAFRules: true },
+    },
   },
 
-  // 11-incidentresponse
-  incidentresponse: {
+  // 11-incidentcommand
+  incidentcommand: {
     connectors: ['sentinel', 'cortexXSOAR', 'crowdstrike', 'slack'],
     actions: {
       sentinel: { createIncidents: true, updateIncidents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['incident-response'] },
       crowdstrike: { containHosts: true, executeCommands: true },
-      slack: { sendNotifications: true, createChannels: true }
-    }
+      slack: { sendNotifications: true, createChannels: true },
+    },
   },
 
   // 12-xdrplatform
@@ -162,8 +162,8 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { ingestEvents: true, queryLogs: true },
       redpanda: { publishEvents: true, consumeEvents: true },
-      cortexXSOAR: { createIncidents: true }
-    }
+      cortexXSOAR: { createIncidents: true },
+    },
   },
 
   // 13-identityforge
@@ -172,8 +172,8 @@ const ToolConnectorMapping = {
     actions: {
       okta: { manageUsers: true, riskAssessment: true },
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['access-violation'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['access-violation'] },
+    },
   },
 
   // 14-secretvault
@@ -181,8 +181,8 @@ const ToolConnectorMapping = {
     connectors: ['sentinel', 'cortexXSOAR'],
     actions: {
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['encryption-events'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['encryption-events'] },
+    },
   },
 
   // 15-backuprecovery
@@ -190,8 +190,8 @@ const ToolConnectorMapping = {
     connectors: ['sentinel', 'cortexXSOAR'],
     actions: {
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['backup-failure'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['backup-failure'] },
+    },
   },
 
   // 16-networkforensics
@@ -201,8 +201,8 @@ const ToolConnectorMapping = {
       sentinel: { ingestEvents: true, createIncidents: true },
       cloudflare: { getAnalytics: true, blockIPs: true },
       zeek: { getLogs: true },
-      suricata: { getAlerts: true }
-    }
+      suricata: { getAlerts: true },
+    },
   },
 
   // 17-endpointprotection
@@ -211,8 +211,8 @@ const ToolConnectorMapping = {
     actions: {
       crowdstrike: { containHosts: true, killProcesses: true, createIOCs: true },
       sentinel: { ingestEvents: true, createIncidents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['endpoint-response'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['endpoint-response'] },
+    },
   },
 
   // 18-identitymanagement
@@ -221,8 +221,8 @@ const ToolConnectorMapping = {
     actions: {
       okta: { manageUsers: true, riskAssessment: true, stepUpAuth: true },
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['identity-events'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['identity-events'] },
+    },
   },
 
   // 19-auditcompliance
@@ -231,8 +231,8 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { ingestEvents: true },
       vanta: { submitEvidence: true },
-      wiz: { auditChecks: true }
-    }
+      wiz: { auditChecks: true },
+    },
   },
 
   // 20-threatintelligence
@@ -242,8 +242,8 @@ const ToolConnectorMapping = {
       opencti: { createIndicators: true, enrichIntelligence: true },
       sentinel: { createIndicators: true },
       cortexXSOAR: { createIncidents: true },
-      crowdstrike: { createIOCs: true }
-    }
+      crowdstrike: { createIOCs: true },
+    },
   },
 
   // 21-wafmanager
@@ -252,8 +252,8 @@ const ToolConnectorMapping = {
     actions: {
       cloudflare: { createWAFRules: true, blockIPs: true, rateLimit: true },
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['waf-events'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['waf-events'] },
+    },
   },
 
   // 22-apishield
@@ -263,8 +263,8 @@ const ToolConnectorMapping = {
       kong: { rateLimit: true, blockRequests: true },
       sentinel: { ingestEvents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['api-protection'] },
-      cloudflare: { createWAFRules: true }
-    }
+      cloudflare: { createWAFRules: true },
+    },
   },
 
   // 23-botmitigation
@@ -273,8 +273,8 @@ const ToolConnectorMapping = {
     actions: {
       cloudflare: { createBotRules: true, blockIPs: true, challenge: true },
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['bot-detection'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['bot-detection'] },
+    },
   },
 
   // 24-ddosdefender
@@ -283,8 +283,8 @@ const ToolConnectorMapping = {
     actions: {
       cloudflare: { ddosProtection: true, blockIPs: true, rateLimit: true },
       sentinel: { ingestEvents: true, createIncidents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['ddos-response'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['ddos-response'] },
+    },
   },
 
   // 25-sslmonitor
@@ -292,8 +292,8 @@ const ToolConnectorMapping = {
     connectors: ['sentinel', 'cortexXSOAR'],
     actions: {
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['ssl-events'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['ssl-events'] },
+    },
   },
 
   // 26-blueteamai
@@ -303,8 +303,8 @@ const ToolConnectorMapping = {
       sentinel: { ingestEvents: true, createIncidents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['blue-team'] },
       crowdstrike: { threatHunting: true },
-      opencti: { intelligenceAnalysis: true }
-    }
+      opencti: { intelligenceAnalysis: true },
+    },
   },
 
   // 27-siemcommander
@@ -313,8 +313,8 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { queryLogs: true, createIncidents: true, manageAlerts: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: true },
-      redpanda: { publishEvents: true }
-    }
+      redpanda: { publishEvents: true },
+    },
   },
 
   // 28-soarengine
@@ -324,8 +324,8 @@ const ToolConnectorMapping = {
       cortexXSOAR: { createIncidents: true, executePlaybooks: true, manageTasks: true },
       sentinel: { createIncidents: true },
       slack: { sendNotifications: true },
-      linear: { createTickets: true }
-    }
+      linear: { createTickets: true },
+    },
   },
 
   // 29-behavioranalytics
@@ -335,8 +335,8 @@ const ToolConnectorMapping = {
       sentinel: { ingestEvents: true },
       cortexXSOAR: { createIncidents: true },
       okta: { riskAssessment: true },
-      cloudflare: { riskBasedActions: true }
-    }
+      cloudflare: { riskBasedActions: true },
+    },
   },
 
   // 30-policyengine
@@ -345,8 +345,8 @@ const ToolConnectorMapping = {
     actions: {
       opa: { evaluatePolicies: true },
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true }
-    }
+      cortexXSOAR: { createIncidents: true },
+    },
   },
 
   // 41-iotsentinel
@@ -355,8 +355,8 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { ingestEvents: true, createIncidents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['iot-security'] },
-      crowdstrike: { containDevices: true }
-    }
+      crowdstrike: { containDevices: true },
+    },
   },
 
   // 42-mobileshield
@@ -366,8 +366,8 @@ const ToolConnectorMapping = {
       crowdstrike: { mobileProtection: true },
       sentinel: { ingestEvents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['mobile-security'] },
-      okta: { deviceManagement: true }
-    }
+      okta: { deviceManagement: true },
+    },
   },
 
   // 43-supplychainai
@@ -375,8 +375,8 @@ const ToolConnectorMapping = {
     connectors: ['sentinel', 'cortexXSOAR'],
     actions: {
       sentinel: { ingestEvents: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['backup-monitoring'] }
-    }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['backup-monitoring'] },
+    },
   },
 
   // 44-drplan
@@ -385,8 +385,8 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { ingestEvents: true },
       cortexXSOAR: { createIncidents: true, executePlaybooks: ['disaster-recovery'] },
-      slack: { sendNotifications: true }
-    }
+      slack: { sendNotifications: true },
+    },
   },
 
   // 45-privacyshield
@@ -395,9 +395,9 @@ const ToolConnectorMapping = {
     actions: {
       sentinel: { ingestEvents: true },
       vanta: { privacyCompliance: true },
-      cortexXSOAR: { createIncidents: true, executePlaybooks: ['privacy-events'] }
-    }
-  }
+      cortexXSOAR: { createIncidents: true, executePlaybooks: ['privacy-events'] },
+    },
+  },
 };
 
 /**
@@ -427,5 +427,5 @@ module.exports = {
   ToolConnectorMapping,
   getToolConnectors,
   getToolActions,
-  getConnectorTools
+  getConnectorTools,
 };

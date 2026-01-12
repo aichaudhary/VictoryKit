@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { incidentApi } from '../api/incidentresponse.api';
+import { incidentApi } from '../api/incidentcommand.api';
 
 interface IntegrationActionsPanelProps {
   incidentId: string;
@@ -24,7 +24,7 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
   const [actionStates, setActionStates] = useState<Record<string, ActionState>>({});
 
   const updateActionState = (action: string, state: Partial<ActionState>) => {
-    setActionStates(prev => ({
+    setActionStates((prev) => ({
       ...prev,
       [action]: { ...prev[action], ...state },
     }));
@@ -37,9 +37,9 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       updateActionState(action, { loading: false, result });
       onActionComplete?.(action, result);
     } catch (error) {
-      updateActionState(action, { 
-        loading: false, 
-        error: error instanceof Error ? error.message : 'Action failed' 
+      updateActionState(action, {
+        loading: false,
+        error: error instanceof Error ? error.message : 'Action failed',
       });
     }
   };
@@ -51,10 +51,11 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       description: 'Query threat intelligence for all indicators',
       icon: '🔍',
       color: 'purple',
-      action: () => fetch(`http://localhost:4011/api/v1/incidentresponse/incidents/${incidentId}/enrich-iocs`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      }).then(r => r.json()),
+      action: () =>
+        fetch(`http://localhost:4011/api/v1/incidentcommand/incidents/${incidentId}/enrich-iocs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }).then((r) => r.json()),
     },
     {
       id: 'siem',
@@ -62,11 +63,12 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       description: 'Correlate events across SIEM platforms',
       icon: '📊',
       color: 'blue',
-      action: () => fetch(`http://localhost:4011/api/v1/incidentresponse/incidents/${incidentId}/siem-search`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ timeRange: '24h' }),
-      }).then(r => r.json()),
+      action: () =>
+        fetch(`http://localhost:4011/api/v1/incidentcommand/incidents/${incidentId}/siem-search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ timeRange: '24h' }),
+        }).then((r) => r.json()),
     },
     {
       id: 'edr',
@@ -74,10 +76,11 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       description: 'Search endpoints for IOC matches',
       icon: '🖥️',
       color: 'green',
-      action: () => fetch(`http://localhost:4011/api/v1/incidentresponse/incidents/${incidentId}/edr-search`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      }).then(r => r.json()),
+      action: () =>
+        fetch(`http://localhost:4011/api/v1/incidentcommand/incidents/${incidentId}/edr-search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }).then((r) => r.json()),
     },
     {
       id: 'ai',
@@ -85,11 +88,12 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       description: 'Generate AI-powered incident analysis',
       icon: '🤖',
       color: 'cyan',
-      action: () => fetch(`http://localhost:4011/api/v1/incidentresponse/incidents/${incidentId}/ai-analyze`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ analysisType: 'comprehensive' }),
-      }).then(r => r.json()),
+      action: () =>
+        fetch(`http://localhost:4011/api/v1/incidentcommand/incidents/${incidentId}/ai-analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ analysisType: 'comprehensive' }),
+        }).then((r) => r.json()),
     },
     {
       id: 'notify',
@@ -97,11 +101,12 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       description: 'Notify team via Slack, Teams, Email',
       icon: '📢',
       color: 'yellow',
-      action: () => fetch(`http://localhost:4011/api/v1/incidentresponse/incidents/${incidentId}/notify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channels: ['slack', 'email'] }),
-      }).then(r => r.json()),
+      action: () =>
+        fetch(`http://localhost:4011/api/v1/incidentcommand/incidents/${incidentId}/notify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channels: ['slack', 'email'] }),
+        }).then((r) => r.json()),
     },
     {
       id: 'ticket',
@@ -109,10 +114,14 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       description: 'Create ServiceNow/Jira ticket',
       icon: '🎫',
       color: 'orange',
-      action: () => fetch(`http://localhost:4011/api/v1/incidentresponse/incidents/${incidentId}/create-tickets`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      }).then(r => r.json()),
+      action: () =>
+        fetch(
+          `http://localhost:4011/api/v1/incidentcommand/incidents/${incidentId}/create-tickets`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+          }
+        ).then((r) => r.json()),
     },
     {
       id: 'pager',
@@ -120,10 +129,11 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       description: 'Escalate via PagerDuty',
       icon: '🚨',
       color: 'red',
-      action: () => fetch(`http://localhost:4011/api/v1/incidentresponse/incidents/${incidentId}/page-oncall`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      }).then(r => r.json()),
+      action: () =>
+        fetch(`http://localhost:4011/api/v1/incidentcommand/incidents/${incidentId}/page-oncall`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        }).then((r) => r.json()),
     },
     {
       id: 'summary',
@@ -131,10 +141,14 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       description: 'Generate executive summary',
       icon: '📝',
       color: 'indigo',
-      action: () => fetch(`http://localhost:4011/api/v1/incidentresponse/incidents/${incidentId}/executive-summary`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      }).then(r => r.json()),
+      action: () =>
+        fetch(
+          `http://localhost:4011/api/v1/incidentcommand/incidents/${incidentId}/executive-summary`,
+          {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+          }
+        ).then((r) => r.json()),
     },
   ];
 
@@ -164,7 +178,7 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
       <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
         {integrations.map((integration) => {
           const state = actionStates[integration.id] || {};
-          
+
           return (
             <button
               key={integration.id}
@@ -181,12 +195,21 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
                 <span className="text-white font-medium text-sm">{integration.title}</span>
               </div>
               <p className="text-white/70 text-xs">{integration.description}</p>
-              
+
               {state.loading && (
                 <div className="mt-2 flex items-center gap-1">
-                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <div
+                    className="w-2 h-2 bg-white rounded-full animate-bounce"
+                    style={{ animationDelay: '0ms' }}
+                  />
+                  <div
+                    className="w-2 h-2 bg-white rounded-full animate-bounce"
+                    style={{ animationDelay: '150ms' }}
+                  />
+                  <div
+                    className="w-2 h-2 bg-white rounded-full animate-bounce"
+                    style={{ animationDelay: '300ms' }}
+                  />
                 </div>
               )}
 
@@ -197,9 +220,7 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
               )}
 
               {state.error && (
-                <div className="mt-2 text-xs text-red-300 truncate">
-                  ⚠ {state.error}
-                </div>
+                <div className="mt-2 text-xs text-red-300 truncate">⚠ {state.error}</div>
               )}
             </button>
           );

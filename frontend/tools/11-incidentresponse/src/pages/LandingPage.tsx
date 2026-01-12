@@ -1,5 +1,5 @@
 /**
- * Landing Page - IncidentResponse Tool 11
+ * Landing Page - incidentcommand Tool 11
  * Marketing landing page for the tool
  */
 
@@ -13,7 +13,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <div className="flex justify-center mb-6">
@@ -21,16 +21,16 @@ export default function LandingPage() {
                 <span className="text-4xl">🚨</span>
               </div>
             </div>
-            
+
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               Incident<span className="text-red-400">Response</span>
             </h1>
-            
+
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              AI-powered incident detection, response automation, and threat remediation. 
-              Respond to security incidents in real-time with intelligent automation and expert guidance.
+              AI-powered incident detection, response automation, and threat remediation. Respond to
+              security incidents in real-time with intelligent automation and expert guidance.
             </p>
-            
+
             <div className="flex flex-wrap justify-center gap-4">
               <button
                 onClick={() => navigate('/maula')}
@@ -57,23 +57,29 @@ export default function LandingPage() {
               ⚡
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">Rapid Detection</h3>
-            <p className="text-gray-400">Real-time threat detection with AI-powered anomaly analysis and automated alerting.</p>
+            <p className="text-gray-400">
+              Real-time threat detection with AI-powered anomaly analysis and automated alerting.
+            </p>
           </div>
-          
+
           <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-red-500/20">
             <div className="w-12 h-12 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4">
               🤖
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">Auto-Remediation</h3>
-            <p className="text-gray-400">Automated response playbooks that contain threats and minimize damage instantly.</p>
+            <p className="text-gray-400">
+              Automated response playbooks that contain threats and minimize damage instantly.
+            </p>
           </div>
-          
+
           <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-red-500/20">
             <div className="w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center mb-4">
               📊
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">Post-Incident Analysis</h3>
-            <p className="text-gray-400">Comprehensive incident reports with timeline reconstruction and lessons learned.</p>
+            <p className="text-gray-400">
+              Comprehensive incident reports with timeline reconstruction and lessons learned.
+            </p>
           </div>
         </div>
       </div>

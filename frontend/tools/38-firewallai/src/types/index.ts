@@ -53,7 +53,7 @@ export interface Alert {
   assigned_to?: string;
   tags: string[];
   automation?: AlertAutomation;
-  incident_response?: IncidentResponse;
+  incident_response?: incidentcommand;
   ml_insights?: MLAlertInsights;
   related_logs?: string[];
   escalation_rules?: EscalationRule[];
@@ -62,7 +62,17 @@ export interface Alert {
 export interface Vendor {
   id: string;
   name: string;
-  type: 'pfsense' | 'palo_alto' | 'fortinet' | 'checkpoint' | 'cisco_asa' | 'aws_firewall' | 'azure_firewall' | 'gcp_armor' | 'cloudflare' | 'akamai';
+  type:
+    | 'pfsense'
+    | 'palo_alto'
+    | 'fortinet'
+    | 'checkpoint'
+    | 'cisco_asa'
+    | 'aws_firewall'
+    | 'azure_firewall'
+    | 'gcp_armor'
+    | 'cloudflare'
+    | 'akamai';
   host: string;
   port?: number;
   username?: string;
@@ -80,7 +90,12 @@ export interface Policy {
   id: string;
   name: string;
   description: string;
-  type: 'access_control' | 'threat_response' | 'compliance' | 'traffic_shaping' | 'intrusion_prevention';
+  type:
+    | 'access_control'
+    | 'threat_response'
+    | 'compliance'
+    | 'traffic_shaping'
+    | 'intrusion_prevention';
   rules: string[];
   conditions: PolicyCondition[];
   actions: PolicyAction[];
@@ -115,7 +130,7 @@ export interface RealTimeData {
   threats: {
     detected: number;
     blocked: number;
-    categories: {[key: string]: number};
+    categories: { [key: string]: number };
   };
 }
 
@@ -210,7 +225,7 @@ export interface AlertAutomation {
   response_actions?: string[];
 }
 
-export interface IncidentResponse {
+export interface incidentcommand {
   incident_id?: string;
   status: 'investigating' | 'contained' | 'resolved' | 'closed';
   assigned_team?: string;
@@ -238,7 +253,7 @@ export interface VendorConfig {
   ssl_verify?: boolean;
   retry_count?: number;
   api_version?: string;
-  custom_headers?: {[key: string]: string};
+  custom_headers?: { [key: string]: string };
   rate_limiting?: {
     requests_per_minute: number;
     burst_limit: number;
@@ -373,7 +388,13 @@ export interface TrafficFilters {
 
 // WebSocket Message Types
 export interface WSMessage {
-  type: 'traffic_update' | 'alert_new' | 'alert_update' | 'rule_change' | 'system_health' | 'threat_detected';
+  type:
+    | 'traffic_update'
+    | 'alert_new'
+    | 'alert_update'
+    | 'rule_change'
+    | 'system_health'
+    | 'threat_detected';
   data: any;
   timestamp: Date;
 }
@@ -425,7 +446,7 @@ export type {
   PolicyCondition,
   PolicyAction,
   AlertAutomation,
-  IncidentResponse,
+  incidentcommand,
   IncidentTimelineEntry,
   EscalationRule,
   VendorConfig,

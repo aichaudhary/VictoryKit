@@ -1,6 +1,6 @@
 /**
  * Tines SOAR Connector
- * 
+ *
  * No-code automation platform integration:
  * - Story (playbook) management
  * - Action execution
@@ -46,22 +46,22 @@ const RunState = {
 class TinesConnector extends BaseConnector {
   constructor(config = {}) {
     super({ name: 'TinesConnector', ...config });
-    
+
     this.baseUrl = config.baseUrl || 'https://victorykit.tines.com';
     this.apiKey = config.apiKey;
     this.teamId = config.teamId;
-    
+
     // Cache for stories and agents
     this.storiesCache = new Map();
     this.cacheMaxAge = 300000; // 5 minutes
-    
+
     // Resilience
     this.circuitBreaker = new CircuitBreaker({
       name: 'tines',
       failureThreshold: 5,
       timeout: 30000,
     });
-    
+
     this.retryStrategy = new RetryStrategy({
       maxRetries: 3,
       type: 'exponential-jitter',
@@ -74,14 +74,14 @@ class TinesConnector extends BaseConnector {
    */
   async connect() {
     this.setState(ConnectorState.CONNECTING);
-    
+
     try {
       // Verify API key with a simple request
       await this.request('/api/v1/teams');
-      
+
       this.setState(ConnectorState.CONNECTED);
       this.log('info', 'Connected to Tines', { baseUrl: this.baseUrl });
-      
+
       return true;
     } catch (error) {
       this.setState(ConnectorState.ERROR);
@@ -141,14 +141,14 @@ class TinesConnector extends BaseConnector {
   async getStory(storyId) {
     const cacheKey = `story:${storyId}`;
     const cached = this.storiesCache.get(cacheKey);
-    
+
     if (cached && Date.now() - cached.timestamp < this.cacheMaxAge) {
       return cached.data;
     }
 
     const result = await this.request(`/api/v1/stories/${storyId}`);
     this.storiesCache.set(cacheKey, { data: result, timestamp: Date.now() });
-    
+
     return result;
   }
 
@@ -157,7 +157,7 @@ class TinesConnector extends BaseConnector {
    */
   async findStoryByName(name) {
     const stories = await this.listStories();
-    return stories.find(s => s.name === name);
+    return stories.find((s) => s.name === name);
   }
 
   /**
@@ -322,11 +322,11 @@ class TinesConnector extends BaseConnector {
    */
   async sendToStory(storyId, event, options = {}) {
     const story = await this.getStory(storyId);
-    
+
     // Find the receive agent or webhook
     const agents = await this.listAgents(storyId);
-    const entryPoint = agents.find(a => 
-      a.type === ActionType.RECEIVE || a.type === ActionType.WEBHOOK
+    const entryPoint = agents.find(
+      (a) => a.type === ActionType.RECEIVE || a.type === ActionType.WEBHOOK
     );
 
     if (!entryPoint) {
@@ -504,7 +504,7 @@ class TinesConnector extends BaseConnector {
   /**
    * Create incident response playbook
    */
-  async createIncidentResponsePlaybook(name) {
+  async createincidentcommandPlaybook(name) {
     const story = await this.createStory(name, {
       description: 'Automated incident response workflow',
     });
@@ -647,7 +647,7 @@ class TinesConnector extends BaseConnector {
   async checkHealth() {
     try {
       const result = await this.request('/api/v1/teams');
-      
+
       return {
         isHealthy: true,
         message: 'Connected',

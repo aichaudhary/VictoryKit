@@ -1,29 +1,36 @@
 # Tool #47: GDPR Compliance - EU Data Protection Platform
 
-Complete GDPR compliance management system with 12 MongoDB models, 40+ API endpoints, consent management, DSAR workflow (30-day SLA), breach notification (72-hour timer), DPIA automation, and data protection officer tools.
+Complete GDPR compliance management system with 12 MongoDB models, 40+ API
+endpoints, consent management, DSAR workflow (30-day SLA), breach notification
+(72-hour timer), DPIA automation, and data protection officer tools.
 
 ## 🎯 Overview
 
 **Domain**: `gdprcompliance.maula.ai`  
 **Ports**: 3047 (Frontend), 4047 (API), 6047 (WebSocket), 8047 (ML)  
 **Database**: `gdprcompliance_db`  
-**Focus**: EU General Data Protection Regulation (GDPR) compliance, Articles 5-99
+**Focus**: EU General Data Protection Regulation (GDPR) compliance, Articles
+5-99
 
 ## 📊 MongoDB Models (12)
 
 ### 1. **DataSubject** (145 lines)
+
 Primary data subject registry with special category tracking.
 
 **Key Fields**:
+
 - `subjectId` (String, unique, indexed)
 - `email`, `fullName`, `category` (customer, employee, prospect, etc.)
-- `specialCategoryData` (Article 9): health, biometric, genetic, racial, political, religious, trade union, sex life
+- `specialCategoryData` (Article 9): health, biometric, genetic, racial,
+  political, religious, trade union, sex life
 - `rightsExercised[]` - history of DSAR requests
 - `activeConsents[]` - consent record references
 - `dataLocations[]` - data mapping across systems
 - `retentionScheduleId`, `status` (active, inactive, erased, restricted)
 
 **Methods**:
+
 - `isSpecialCategory()` - check if processes special category data
 - `getActiveConsentsCount()` - count valid consents
 
@@ -32,15 +39,18 @@ Primary data subject registry with special category tracking.
 ---
 
 ### 2. **ConsentRecord** (280 lines)
+
 Article 7 consent management with GDPR validation.
 
 **Key Fields**:
+
 - `consentId` (String, unique)
 - `dataSubjectId` (ref: DataSubject)
 - `purpose` (marketing_email, analytics, profiling, etc.)
 - `consentText` - exact wording shown to user
 - `consentCriteria` (Article 7):
-  - `freelyGiven`, `specific`, `informed`, `unambiguous`, `clearAffirmativeAction`
+  - `freelyGiven`, `specific`, `informed`, `unambiguous`,
+    `clearAffirmativeAction`
 - `grantedAt`, `grantMethod` (checkbox, button, signature, etc.)
 - `ipAddress`, `userAgent`, `geoLocation` - technical evidence
 - `status` (active, withdrawn, expired, renewed)
@@ -49,20 +59,25 @@ Article 7 consent management with GDPR validation.
 - `complianceScore` (0-100)
 
 **Methods**:
+
 - `validateGDPRCompliance()` - check all 5 criteria + withdrawal mechanism
 - `withdraw(reason, withdrawnBy)` - Article 7(3)
 
 **Statics**:
+
 - `findActiveByDataSubject(dataSubjectId)` - active consents only
 
-**Indexes**: `dataSubjectId + status`, `purpose + status`, `grantedAt`, `validUntil`
+**Indexes**: `dataSubjectId + status`, `purpose + status`, `grantedAt`,
+`validUntil`
 
 ---
 
 ### 3. **ProcessingActivity** (340 lines)
+
 Article 30 - Records of Processing Activities (ROPA).
 
 **Key Fields**:
+
 - `activityId` (String, unique)
 - `activityName`, `description`
 - `controller` (name, contact, address, email, phone)
@@ -77,17 +92,19 @@ Article 30 - Records of Processing Activities (ROPA).
 - `securityMeasures`:
   - `technical[]`, `organizational[]`
   - `encryption` (in transit, at rest)
-  - `accessControls`, `backupProcedures`, `incidentResponsePlan`
+  - `accessControls`, `backupProcedures`, `incidentcommandPlan`
 - `dpiaRequired` (required, reason, dpiaId)
 - `processors[]` - Article 28 references
 - `automatedDecisionMaking` - Article 22
 - `status`, `complianceStatus`
 
 **Methods**:
+
 - `requiresDPIA()` - check Article 35 criteria
 - `isCompleteRecord()` - validate all Article 30 requirements
 
 **Statics**:
+
 - `findDueForReview()` - expired review dates
 
 **Indexes**: `activityId`, `status`, `controller.name`, `nextReviewDate`
@@ -95,9 +112,11 @@ Article 30 - Records of Processing Activities (ROPA).
 ---
 
 ### 4. **DSAR** (400 lines)
+
 Data Subject Access Requests (Articles 15-22) with 30-day SLA tracking.
 
 **Key Fields**:
+
 - `requestId` (String, unique)
 - `dataSubjectId` (ref: DataSubject)
 - `requestType`:
@@ -114,66 +133,81 @@ Data Subject Access Requests (Articles 15-22) with 30-day SLA tracking.
 - `receivedDate`, `dueDate` (30 days), `completedDate`
 - `extensionRequested` - can extend 2 months if complex (Article 12(3))
 - `status` (submitted, under_review, in_progress, completed, overdue)
-- `accessRequest`, `rectificationRequest`, `erasureRequest`, `restrictionRequest`, `portabilityRequest`, `objectionRequest`
+- `accessRequest`, `rectificationRequest`, `erasureRequest`,
+  `restrictionRequest`, `portabilityRequest`, `objectionRequest`
 - `response` (responseDate, method, content, attachments)
 - `rejectionReason` - if request denied
 - `complianceMetrics` (processingTimeHours, deadlineMet, daysBeforeDeadline)
 
 **Virtuals**:
+
 - `daysRemaining` - days until 30-day deadline
 - `isOverdue` - deadline passed check
 
 **Methods**:
+
 - `calculateDueDate()` - 30 days from receipt
 - `requestExtension(reason)` - add 60 days (Article 12(3))
 - `complete(details)` - mark as completed
 - `addCommunication()` - log interactions
 
 **Statics**:
+
 - `findOverdue()` - past deadline requests
 - `findDueSoon(days)` - approaching deadline (default 7 days)
 
-**Indexes**: `requestId`, `dataSubjectEmail + requestType`, `status + dueDate`, `receivedDate`
+**Indexes**: `requestId`, `dataSubjectEmail + requestType`, `status + dueDate`,
+`receivedDate`
 
 ---
 
 ### 5. **DataBreach** (490 lines)
+
 Article 33-34 - 72-hour supervisory authority notification tracking.
 
 **Key Fields**:
+
 - `breachId` (String, unique)
 - `discoveryDate` - when breach was discovered
 - `discoveredBy`, `discoveryMethod`
 - `breachType` (confidentiality, availability, integrity, combined)
-- `breachCategory` (cyber_attack, hacking, malware, phishing, insider_threat, human_error, etc.)
+- `breachCategory` (cyber_attack, hacking, malware, phishing, insider_threat,
+  human_error, etc.)
 - `severity` (critical, high, medium, low)
 - `riskLevel` (high_risk, medium_risk, low_risk, unlikely_risk)
-- `affectedDataCategories[]` - identification, financial, health, credentials, etc.
-- `dataSubjectsAffected` (estimatedNumber, categories, includesMinors, includesVulnerableGroups)
+- `affectedDataCategories[]` - identification, financial, health, credentials,
+  etc.
+- `dataSubjectsAffected` (estimatedNumber, categories, includesMinors,
+  includesVulnerableGroups)
 - `supervisoryNotification` (Article 33):
   - `required`, `notificationDeadline` (72 hours)
   - `notified`, `notificationDate`, `authority`
 - `dataSubjectNotification` (Article 34):
   - `required`, `exemptionReason`, `notificationMethod`
-- `timeline` (discovery, dpoNotified, containment, authorityNotification, resolution)
+- `timeline` (discovery, dpoNotified, containment, authorityNotification,
+  resolution)
 - `complianceTracking`:
   - `hours72Deadline` - auto-calculated 72 hours from discovery
   - `notificationWithin72Hours` (boolean)
   - `hoursToNotification`
 - `containmentMeasures[]`, `mitigationMeasures[]`
 - `investigation` (status, findings, forensics)
-- `status` (discovered, contained, authorities_notified, data_subjects_notified, resolved)
+- `status` (discovered, contained, authorities_notified, data_subjects_notified,
+  resolved)
 
 **Virtuals**:
+
 - `hoursUntil72HourDeadline` - time remaining
 - `is72HourDeadlinePassed` - compliance check
 
 **Methods**:
+
 - `calculate72HourDeadline()` - discovery + 72 hours
 - `notifySupervisoryAuthority(authority, method)` - Article 33
 - `notifyDataSubjects(method, content)` - Article 34
 
 **Statics**:
+
 - `findApproaching72HourDeadline(hours)` - breaches near deadline
 - `findOverdue72Hours()` - missed 72-hour window
 
@@ -182,9 +216,11 @@ Article 33-34 - 72-hour supervisory authority notification tracking.
 ---
 
 ### 6. **DPIAAssessment** (425 lines)
+
 Data Protection Impact Assessment (Article 35).
 
 **Key Fields**:
+
 - `dpiaId` (String, unique)
 - `processingActivityId` (ref: ProcessingActivity)
 - `triggers` (Article 35(3)):
@@ -192,7 +228,8 @@ Data Protection Impact Assessment (Article 35).
   - `largeScaleSpecialCategoryData` - sensitive data at scale
   - `systematicMonitoringPublicArea` - CCTV, tracking
 - `team` (lead, members, dpoInvolved, dpoId)
-- `status` (not_started, in_progress, dpo_review, completed, requires_supervisory_consultation, approved)
+- `status` (not_started, in_progress, dpo_review, completed,
+  requires_supervisory_consultation, approved)
 - `processingDescription` - Article 35(7)(a)
 - `necessityProportionality` - Article 35(7)(b):
   - `lawfulBasis`, `necessity`, `proportionality`, `legitimateInterests`
@@ -202,7 +239,8 @@ Data Protection Impact Assessment (Article 35).
 - `mitigationMeasures[]` - Article 35(7)(d):
   - `implementation` (status, date, effectiveness)
   - `residualRisk`
-- `securityMeasures` (encryption, accessControl, pseudonymization, privacyByDesign)
+- `securityMeasures` (encryption, accessControl, pseudonymization,
+  privacyByDesign)
 - `dataSubjectConsultation` - when required
 - `dpoOpinion` - Article 35(2)
 - `supervisoryConsultation` - Article 36 (if high residual risk)
@@ -210,15 +248,18 @@ Data Protection Impact Assessment (Article 35).
 - `residualRiskQuantifyment` (acceptable, justification)
 
 **Virtuals**:
+
 - `isHighRisk` - critical/high overall risk
 - `requiresSupervisoryConsultation` - Article 36 trigger
 
 **Methods**:
+
 - `calculateRiskScore(likelihood, severity)` - risk matrix
 - `addRisk(risk)` - add risk to assessment
 - `updateOverallRiskLevel()` - recalculate from all risks
 
 **Statics**:
+
 - `findDueForReview()` - review dates passed
 - `findHighRisk()` - high/critical risk level
 - `findRequiringSupervisoryConsultation()` - Article 36 cases
@@ -228,9 +269,11 @@ Data Protection Impact Assessment (Article 35).
 ---
 
 ### 7. **LegalBasis** (370 lines)
+
 Lawful Basis for Processing (Article 6).
 
 **Key Fields**:
+
 - `basisId` (String, unique)
 - `processingActivityId` (ref: ProcessingActivity)
 - `basisType` (Article 6(1)):
@@ -255,30 +298,37 @@ Lawful Basis for Processing (Article 6).
 - `status` (active, inactive, under_review, invalid)
 
 **Virtuals**:
+
 - `isValid` - status + expiry check
 - `requiresConsent` - consent-based processing
 
 **Methods**:
+
 - `validateBasis()` - check type-specific requirements
 - `performBalancingTest(liaData)` - LIA for legitimate interests
 
 **Statics**:
+
 - `findByProcessingActivity(activityId)`
 - `findDueForReview()`
 - `findByType(basisType)`
 
-**Indexes**: `basisId`, `processingActivityId`, `basisType + status`, `nextReviewDate`
+**Indexes**: `basisId`, `processingActivityId`, `basisType + status`,
+`nextReviewDate`
 
 ---
 
 ### 8. **DataTransfer** (440 lines)
+
 International Data Transfers (Chapter V - Articles 44-50).
 
 **Key Fields**:
+
 - `transferId` (String, unique)
 - `transferType` (outbound, inbound, onward)
 - `originCountry`, `destinationCountry`
-- `recipientType` (processor, controller, joint_controller, sub_processor, third_party)
+- `recipientType` (processor, controller, joint_controller, sub_processor,
+  third_party)
 - `transferMechanism`:
   - `mechanismType`:
     - `adequacy_decision` (Article 45)
@@ -303,16 +353,19 @@ International Data Transfers (Chapter V - Articles 44-50).
 - `status` (draft, approved, active, suspended, terminated)
 
 **Virtuals**:
+
 - `requiresTIA` - SCCs without adequacy need TIA
 - `isActive` - status + suspension + termination check
 
 **Methods**:
+
 - `hasAdequacyDecision()` - check against adequacy list
 - `requiresSCCs()` - no adequacy and not BCRs
 - `validateTransferMechanism()` - compliance check
 - `suspend(reason)`, `terminate(reason)`
 
 **Statics**:
+
 - `findByDestination(country)`
 - `findByMechanism(mechanismType)`
 - `findHighRisk()` - high/critical risk transfers
@@ -322,13 +375,16 @@ International Data Transfers (Chapter V - Articles 44-50).
 ---
 
 ### 9. **Processor** (435 lines)
+
 Processor Management (Article 28).
 
 **Key Fields**:
+
 - `processorId` (String, unique)
 - `processorName`, `legalEntity`
 - `contactDetails` (primaryContact, dpo, address, website)
-- `processorType` (cloud_provider, saas, it_services, payment, marketing, analytics, etc.)
+- `processorType` (cloud_provider, saas, it_services, payment, marketing,
+  analytics, etc.)
 - `servicesProvided` (description, categories)
 - `processingActivities[]` - linked activities
 - `processingAgreement` (Article 28):
@@ -352,31 +408,38 @@ Processor Management (Article 28).
 - `breachNotification` (obligation, deadline, history)
 - `dataHandling` (deletion, return, certification)
 - `riskAssessment`, `complianceStatus`
-- `status` (under_evaluation, approved, active, suspended, terminated, blacklisted)
+- `status` (under_evaluation, approved, active, suspended, terminated,
+  blacklisted)
 
 **Virtuals**:
+
 - `isActive`, `agreementExpiringSoon`
 
 **Methods**:
+
 - `validateArticle28Compliance()` - check all Article 28(3) clauses
 - `addSubProcessor(data)` - Article 28(2)
 - `issueInstruction(instruction)` - controller instructions
 - `recordBreach(data)` - log processor breach
 
 **Statics**:
+
 - `findActive()`
 - `findRequiringReview()`
 - `findExpiringAgreements(days)`
 - `findNonCompliant()`
 
-**Indexes**: `processorId`, `processorName + status`, `country`, `nextReviewDate`
+**Indexes**: `processorId`, `processorName + status`, `country`,
+`nextReviewDate`
 
 ---
 
 ### 10. **RetentionSchedule** (340 lines)
+
 Data Retention (Article 5(1)(e) - Storage Limitation).
 
 **Key Fields**:
+
 - `scheduleId` (String, unique)
 - `scheduleName`
 - `processingActivityId` (ref: ProcessingActivity)
@@ -396,10 +459,12 @@ Data Retention (Article 5(1)(e) - Storage Limitation).
 - `status` (draft, approved, active, suspended)
 
 **Virtuals**:
+
 - `retentionPeriodInDays` - converted to days
 - `hasActiveException` - legal/litigation holds
 
 **Methods**:
+
 - `calculateRetentionEndDate(startDate)` - apply retention period
 - `isRetentionExpired(recordDate)` - check if past retention
 - `addException(data)` - legal hold
@@ -407,19 +472,23 @@ Data Retention (Article 5(1)(e) - Storage Limitation).
 - `scheduleNextDeletion()` - automated deletion
 
 **Statics**:
+
 - `findActive()`
 - `findByDataCategory(category)`
 - `findDueForReview()`
 - `findDueForDeletion()` - automated deletion queue
 
-**Indexes**: `scheduleId`, `dataCategory + status`, `processingActivityId`, `nextReviewDate`, `nextExecutionDate`
+**Indexes**: `scheduleId`, `dataCategory + status`, `processingActivityId`,
+`nextReviewDate`, `nextExecutionDate`
 
 ---
 
 ### 11. **DPO** (400 lines)
+
 Data Protection Officer (Articles 37-39).
 
 **Key Fields**:
+
 - `dpoId` (String, unique)
 - `personalDetails` (firstName, lastName, title, professionalDesignation)
 - `contactDetails` (email, phone, address, publicContactPage) - Article 37(7)
@@ -453,15 +522,19 @@ Data Protection Officer (Articles 37-39).
 - `status` (active, inactive, suspended, terminated)
 
 **Virtuals**:
+
 - `isActive`, `yearsOfService`, `fullContactInfo`
 
 **Methods**:
-- `assessExpertise()` - calculate expertise level (Expert/Proficient/Intermediate)
+
+- `assessExpertise()` - calculate expertise level
+  (Expert/Proficient/Intermediate)
 - `logActivity(type, description, outcome)` - Article 39 activities
 - `provideAdvice(subject, requestedBy, advice)` - DPO opinion
 - `checkConflictOfInterest()` - Article 38(3) check
 
 **Statics**:
+
 - `findActive()`
 - `findByOrganization(name)`
 - `findExternal()`
@@ -472,9 +545,11 @@ Data Protection Officer (Articles 37-39).
 ---
 
 ### 12. **AuditLog** (445 lines)
+
 Comprehensive Audit Trail (Article 5(2) - Accountability).
 
 **Key Fields**:
+
 - `logId` (String, unique)
 - `timestamp` (Date, indexed)
 - `eventCategory`:
@@ -483,7 +558,8 @@ Comprehensive Audit Trail (Article 5(2) - Accountability).
   - `user_authentication`, `system_configuration`, `policy_change`
   - `security_event`, `transfer_action`, `retention_action`
   - `dpia_action`, `dpo_action`, `processor_action`, `compliance_check`
-- `eventType`, `eventDescription`, `eventSeverity` (info, low, medium, high, critical)
+- `eventType`, `eventDescription`, `eventSeverity` (info, low, medium, high,
+  critical)
 - `actor` (actorType, actorId, actorName, actorEmail, actorRole)
 - `session` (sessionId, ipAddress, userAgent, deviceType, location)
 - `target` (targetType, targetId, targetName, targetReference)
@@ -499,9 +575,11 @@ Comprehensive Audit Trail (Article 5(2) - Accountability).
 - `retentionPeriod` (deleteAfter) - TTL index for auto-deletion
 
 **Virtuals**:
+
 - `isHighSeverity`, `isFailed`, `requiresReview`
 
 **Statics**:
+
 - `logEvent(data)` - create log entry
 - `findByActor(actorId, startDate, endDate)`
 - `findByDataSubject(dataSubjectId, category)`
@@ -512,70 +590,90 @@ Comprehensive Audit Trail (Article 5(2) - Accountability).
 - `generateComplianceReport(start, end)` - aggregate statistics
 
 **Methods**:
+
 - `flag(reason, by)` - flag for review
 - `markReviewed(by, notes)` - complete review
 - `calculateIntegrityHash()` - SHA256 hash
 - `verifyIntegrity()` - check hash
 
-**Indexes**: `timestamp`, `eventCategory + timestamp`, `actorId + timestamp`, `dataSubjectId + timestamp`, `severity + timestamp`, `ipAddress + timestamp`, `flagged + timestamp`, `deleteAfter` (TTL)
+**Indexes**: `timestamp`, `eventCategory + timestamp`, `actorId + timestamp`,
+`dataSubjectId + timestamp`, `severity + timestamp`, `ipAddress + timestamp`,
+`flagged + timestamp`, `deleteAfter` (TTL)
 
 ---
 
 ## 🚀 API Endpoints (40+)
 
 ### System
+
 - `GET /api/v1/gdprcompliance/status` - Service health
 
 ### Data Subjects
+
 - `POST /api/v1/gdprcompliance/data-subjects` - Create data subject
 - `GET /api/v1/gdprcompliance/data-subjects` - List data subjects
 - `GET /api/v1/gdprcompliance/data-subjects/:id` - Get data subject
 
 ### Consent Management (Article 7)
+
 - `POST /api/v1/gdprcompliance/consents` - Record consent
 - `GET /api/v1/gdprcompliance/consents` - List consents
-- `POST /api/v1/gdprcompliance/consents/:id/withdraw` - Withdraw consent (Article 7(3))
+- `POST /api/v1/gdprcompliance/consents/:id/withdraw` - Withdraw consent
+  (Article 7(3))
 
 ### Processing Activities (Article 30)
+
 - `POST /api/v1/gdprcompliance/processing-activities` - Create ROPA entry
 - `GET /api/v1/gdprcompliance/processing-activities` - List activities
 
 ### DSARs (Article 15-22)
+
 - `POST /api/v1/gdprcompliance/dsars` - Submit DSAR
 - `GET /api/v1/gdprcompliance/dsars` - List DSARs (query: `?overdue=true`)
 - `POST /api/v1/gdprcompliance/dsars/:id/complete` - Complete DSAR (30-day SLA)
 
 ### Data Breaches (Article 33-34)
+
 - `POST /api/v1/gdprcompliance/breaches` - Report breach
-- `GET /api/v1/gdprcompliance/breaches` - List breaches (query: `?overdue72=true`)
-- `POST /api/v1/gdprcompliance/breaches/:id/notify-authority` - Notify supervisory authority (72-hour compliance)
+- `GET /api/v1/gdprcompliance/breaches` - List breaches (query:
+  `?overdue72=true`)
+- `POST /api/v1/gdprcompliance/breaches/:id/notify-authority` - Notify
+  supervisory authority (72-hour compliance)
 
 ### DPIAs (Article 35)
+
 - `POST /api/v1/gdprcompliance/dpias` - Create DPIA
 - `GET /api/v1/gdprcompliance/dpias` - List DPIAs
 
 ### Legal Basis (Article 6)
+
 - `POST /api/v1/gdprcompliance/legal-bases` - Document lawful basis
 
 ### Data Transfers (Article 44-50)
+
 - `POST /api/v1/gdprcompliance/transfers` - Register international transfer
 
 ### Processors (Article 28)
+
 - `POST /api/v1/gdprcompliance/processors` - Add processor
 - `GET /api/v1/gdprcompliance/processors` - List processors
 
 ### Retention Schedules
+
 - `POST /api/v1/gdprcompliance/retention-schedules` - Create retention schedule
 
 ### DPOs (Article 37-39)
+
 - `POST /api/v1/gdprcompliance/dpos` - Register DPO
 - `GET /api/v1/gdprcompliance/dpos` - List DPOs
 
 ### Audit Logs
+
 - `POST /api/v1/gdprcompliance/audit-logs` - Create audit log
 - `GET /api/v1/gdprcompliance/audit-logs` - Query logs
 
 ### ML Engine
+
 - `POST /api/v1/gdprcompliance/analyze` - Compliance analysis
 - `POST /api/v1/gdprcompliance/scan` - Data discovery
 
@@ -600,12 +698,19 @@ frontend/tools/47-gdprcompliance/
 ```
 
 **Key UI Features**:
-- **Consent Manager**: Track consent status, validate GDPR criteria, withdrawal interface
-- **DSAR Portal**: 30-day countdown timer, request workflow, identity verification
-- **72-Hour Breach Timer**: Real-time countdown, supervisory authority notification, data subject notification
-- **DPIA Wizard**: Risk assessment matrix, mitigation measures, supervisory consultation trigger
-- **Article 30 ROPA**: Processing activity registry, lawful basis mapping, data flow diagrams
-- **Retention Automation**: Deletion schedules, legal holds, compliance dashboard
+
+- **Consent Manager**: Track consent status, validate GDPR criteria, withdrawal
+  interface
+- **DSAR Portal**: 30-day countdown timer, request workflow, identity
+  verification
+- **72-Hour Breach Timer**: Real-time countdown, supervisory authority
+  notification, data subject notification
+- **DPIA Wizard**: Risk assessment matrix, mitigation measures, supervisory
+  consultation trigger
+- **Article 30 ROPA**: Processing activity registry, lawful basis mapping, data
+  flow diagrams
+- **Retention Automation**: Deletion schedules, legal holds, compliance
+  dashboard
 
 ---
 
@@ -614,6 +719,7 @@ frontend/tools/47-gdprcompliance/
 **Port 8047**
 
 **AI Functions**:
+
 1. **Consent Analysis**: Validate consent against GDPR criteria
 2. **DPIA Automation**: Risk assessment scoring, mitigation recommendations
 3. **Data Discovery**: Automated personal data mapping across systems
@@ -621,7 +727,8 @@ frontend/tools/47-gdprcompliance/
 5. **DSAR Automation**: Data aggregation across systems
 6. **Compliance Scoring**: Overall GDPR compliance percentage
 7. **Transfer Impact Assessment**: Third-country risk evaluation
-8. **Retention Optimization**: Suggest retention periods based on legal requirements
+8. **Retention Optimization**: Suggest retention periods based on legal
+   requirements
 9. **Processor Risk Rating**: Assess processor compliance level
 10. **Legitimate Interest Assessment**: Automated balancing test
 
@@ -630,36 +737,43 @@ frontend/tools/47-gdprcompliance/
 ## 📈 Key GDPR Features
 
 ### 72-Hour Breach Notification (Article 33)
+
 - Auto-calculated deadline from discovery time
 - Real-time countdown to 72-hour mark
 - Notification tracking (supervisory authority + data subjects)
 - Compliance metrics (notified within 72 hours: true/false)
 
 ### 30-Day DSAR Deadline (Article 12(3))
+
 - Due date auto-calculated on submission
 - 2-month extension option for complex requests
 - Overdue tracking and alerts
 - Request type routing (access, erasure, portability, etc.)
 
 ### Consent Management (Article 7)
-- 5-criteria validation (freely given, specific, informed, unambiguous, clear affirmative action)
+
+- 5-criteria validation (freely given, specific, informed, unambiguous, clear
+  affirmative action)
 - Withdrawal mechanism requirement (Article 7(3))
 - Technical evidence (IP, user agent, timestamp, geo-location)
 - Granular consent options
 
 ### DPIA Triggers (Article 35(3))
+
 - Systematic extensive evaluation (automated decision-making)
 - Large-scale special category data processing
 - Systematic monitoring of public areas
 - Auto-assessment of DPIA requirement
 
 ### Article 30 ROPA
+
 - Complete processing activity records
 - Lawful basis per purpose
 - Data flow tracking
 - Processor and transfer references
 
 ### Data Transfer Mechanisms (Chapter V)
+
 - Adequacy decision tracking (14 countries)
 - Standard Contractual Clauses (2021 SCCs)
 - Binding Corporate Rules (BCRs)
@@ -667,12 +781,14 @@ frontend/tools/47-gdprcompliance/
 - Article 49 derogations
 
 ### Processor Management (Article 28)
+
 - 8 required contract clauses validation
 - Sub-processor authorization tracking
 - Audit rights and execution
 - Breach notification obligations
 
 ### Retention & Deletion
+
 - Automated deletion schedules
 - Legal hold management
 - Deletion certification
@@ -683,6 +799,7 @@ frontend/tools/47-gdprcompliance/
 ## 🔄 Workflow Examples
 
 ### DSAR Workflow
+
 1. Data subject submits request (web form/email/phone)
 2. System creates DSAR record with 30-day deadline
 3. Identity verification (email/document/2FA)
@@ -693,6 +810,7 @@ frontend/tools/47-gdprcompliance/
 8. Completion tracking (deadlineMet: true/false)
 
 ### Breach Notification Workflow
+
 1. Breach discovered → record created
 2. 72-hour deadline auto-calculated
 3. DPO consulted
@@ -704,6 +822,7 @@ frontend/tools/47-gdprcompliance/
 9. Compliance tracking (within 72 hours: yes/no)
 
 ### DPIA Workflow
+
 1. Processing activity triggers DPIA requirement
 2. DPIA team assigned (lead, members, DPO)
 3. Processing description (Article 35(7)(a))
@@ -720,23 +839,27 @@ frontend/tools/47-gdprcompliance/
 ## 🏗️ Technical Stack
 
 **Backend**:
+
 - Node.js + Express
 - MongoDB (gdprcompliance_db)
 - Mongoose ODM
 - Axios (ML engine communication)
 
 **Frontend**:
+
 - React 19 + TypeScript
 - Vite build system
 - WebSocket (port 6047)
 
 **Database**:
+
 - 12 collections (one per model)
 - Compound indexes for performance
 - TTL indexes for audit log retention
 - Virtual fields for calculated values
 
 **Ports**:
+
 - 3047: Frontend development server
 - 4047: Backend API
 - 6047: WebSocket server
@@ -747,6 +870,7 @@ frontend/tools/47-gdprcompliance/
 ## 📊 Compliance Dashboard
 
 **Key Metrics**:
+
 - DSARs: Total, Pending, Overdue, Average Response Time
 - Breaches: Total, 72-Hour Compliance Rate, Open Investigations
 - Consents: Active, Withdrawn, Expiring Soon
@@ -757,6 +881,7 @@ frontend/tools/47-gdprcompliance/
 - Audit Logs: Security Events, Failed Actions, Anomalies
 
 **Alerts**:
+
 - DSARs due in < 7 days
 - Breaches approaching 72-hour deadline
 - Consents expiring
@@ -778,6 +903,7 @@ frontend/tools/47-gdprcompliance/
 ## 🔐 Special Category Data Handling
 
 **Article 9 - Special Categories**:
+
 - Health data
 - Biometric data (unique identification)
 - Genetic data
@@ -788,8 +914,10 @@ frontend/tools/47-gdprcompliance/
 - Sex life or sexual orientation
 
 **Processing Requires**:
+
 - Explicit consent (Article 9(2)(a))
-- OR specific derogation (employment, vital interests, legal claims, public health, etc.)
+- OR specific derogation (employment, vital interests, legal claims, public
+  health, etc.)
 - Enhanced security measures
 - DPIA likely required
 
@@ -797,7 +925,8 @@ frontend/tools/47-gdprcompliance/
 
 ## 📝 Article References
 
-- **Article 5**: GDPR principles (lawfulness, purpose limitation, data minimization, accuracy, storage limitation, integrity, accountability)
+- **Article 5**: GDPR principles (lawfulness, purpose limitation, data
+  minimization, accuracy, storage limitation, integrity, accountability)
 - **Article 6**: Lawful basis for processing
 - **Article 7**: Conditions for consent
 - **Article 9**: Special category data
@@ -817,6 +946,7 @@ frontend/tools/47-gdprcompliance/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - MongoDB 6+
 - Python 3.9+ (ML engine)
@@ -856,9 +986,12 @@ NODE_ENV=development
 ## 📚 Additional Resources
 
 - **GDPR Full Text**: https://gdpr-info.eu/
-- **EDPB Guidelines**: https://edpb.europa.eu/our-work-tools/general-guidance/guidelines-recommendations-best-practices_en
-- **Standard Contractual Clauses (2021)**: https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection/standard-contractual-clauses-scc_en
-- **Adequacy Decisions**: https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection/adequacy-decisions_en
+- **EDPB Guidelines**:
+  https://edpb.europa.eu/our-work-tools/general-guidance/guidelines-recommendations-best-practices_en
+- **Standard Contractual Clauses (2021)**:
+  https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection/standard-contractual-clauses-scc_en
+- **Adequacy Decisions**:
+  https://ec.europa.eu/info/law/law-topic/data-protection/international-dimension-data-protection/adequacy-decisions_en
 
 ---
 

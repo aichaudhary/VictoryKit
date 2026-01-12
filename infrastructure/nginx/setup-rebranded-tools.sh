@@ -6,56 +6,56 @@ set -e
 
 # New tool subdomain mapping (new_subdomain:port:api_port:old_folder)
 declare -a TOOLS=(
-    "fraudguard:3001:4001:fraudguard"
-    "darkwebmonitor:3002:4002:darkwebmonitor"
-    "zerodaydetect:3003:4003:zerodaydetect"
-    "ransomshield:3004:4004:ransomshield"
-    "phishnetai:3005:4005:phishnetai"
-    "vulnscan:3006:4006:vulnscan"
-    "pentestai:3007:4007:pentestai"
-    "codesentinel:3008:4008:codesentinel"
-    "runtimeguard:3009:4009:runtimeguard"
-    "dataguardian:3010:4010:dataguardian"
-    "incidentresponse:3011:4011:incidentresponse"
-    "xdrplatform:3012:4012:xdrplatform"
-    "identityforge:3013:4013:identityforge"
-    "secretvault:3014:4014:secretvault"
-    "privilegeguard:3015:4015:privilegeguard"
-    "networkforensics:3016:4016:networkforensics"
-    "audittrailpropro:3017:4017:audittrailpro"
-    "threatmodel:3018:4018:threatmodel"
-    "riskquantify:3019:4019:riskquantify"
-    "securitydashboard:3020:4020:securitydashboard"
-    "wafmanager:3021:4021:wafmanager"
-    "apishield:3022:4022:apishield"
-    "botmitigation:3023:4023:botmitigation"
-    "ddosdefender:3024:4024:ddosdefender"
-    "sslmonitor:3025:4025:sslmonitor"
-    "blueteamai:3026:4026:blueteamai"
-    "siemcommander:3027:4027:siemcommander"
-    "soarengine:3028:4028:soarengine"
-    "behavioranalytics:3029:4029:behavioranalytics"
-    "policyengine:3030:4030:policyengine"
-    "cloudposture:3031:4031:cloudposture"
-    "zerotrust:3032:4032:zerotrust"
-    "kubearmor:3033:4033:kubearmor"
-    "containerscan:3034:4034:containerscan"
-    "emaildefender:3035:4035:emaildefender"
-    "browserisolation:3036:4036:browserisolation"
-    "dnsfirewall:3037:4037:dnsfirewall"
-    "firewallai:3038:4038:firewallai"
-    "vpnanalyzer:3039:4039:vpnanalyzer"
-    "wirelesshunter:3040:4040:wirelesshunter"
-    "dlpadvanced:3041:4041:dlpadvanced"
-    "iotsentinel:3042:4042:iotsentinel"
-    "mobileshield:3043:4043:mobileshield"
-    "supplychainai:3044:4044:supplychainai"
-    "drplan:3045:4045:drplan"
-    "privacyshield:3046:4046:privacyshield"
-    "gdprcompliance:3047:4047:gdprcompliance"
-    "hipaaguard:3048:4048:hipaaguard"
-    "soc2automator:3049:4049:soc2automator"
-    "iso27001:3050:4050:iso27001"
+	"fraudguard:3001:4001:fraudguard"
+	"darkwebmonitor:3002:4002:darkwebmonitor"
+	"zerodaydetect:3003:4003:zerodaydetect"
+	"ransomshield:3004:4004:ransomshield"
+	"phishnetai:3005:4005:phishnetai"
+	"vulnscan:3006:4006:vulnscan"
+	"pentestai:3007:4007:pentestai"
+	"codesentinel:3008:4008:codesentinel"
+	"runtimeguard:3009:4009:runtimeguard"
+	"dataguardian:3010:4010:dataguardian"
+	"incidentcommand:3011:4011:incidentcommand"
+	"xdrplatform:3012:4012:xdrplatform"
+	"identityforge:3013:4013:identityforge"
+	"secretvault:3014:4014:secretvault"
+	"privilegeguard:3015:4015:privilegeguard"
+	"networkforensics:3016:4016:networkforensics"
+	"audittrailpropro:3017:4017:audittrailpro"
+	"threatmodel:3018:4018:threatmodel"
+	"riskquantify:3019:4019:riskquantify"
+	"securitydashboard:3020:4020:securitydashboard"
+	"wafmanager:3021:4021:wafmanager"
+	"apishield:3022:4022:apishield"
+	"botmitigation:3023:4023:botmitigation"
+	"ddosdefender:3024:4024:ddosdefender"
+	"sslmonitor:3025:4025:sslmonitor"
+	"blueteamai:3026:4026:blueteamai"
+	"siemcommander:3027:4027:siemcommander"
+	"soarengine:3028:4028:soarengine"
+	"behavioranalytics:3029:4029:behavioranalytics"
+	"policyengine:3030:4030:policyengine"
+	"cloudposture:3031:4031:cloudposture"
+	"zerotrust:3032:4032:zerotrust"
+	"kubearmor:3033:4033:kubearmor"
+	"containerscan:3034:4034:containerscan"
+	"emaildefender:3035:4035:emaildefender"
+	"browserisolation:3036:4036:browserisolation"
+	"dnsfirewall:3037:4037:dnsfirewall"
+	"firewallai:3038:4038:firewallai"
+	"vpnanalyzer:3039:4039:vpnanalyzer"
+	"wirelesshunter:3040:4040:wirelesshunter"
+	"dlpadvanced:3041:4041:dlpadvanced"
+	"iotsentinel:3042:4042:iotsentinel"
+	"mobileshield:3043:4043:mobileshield"
+	"supplychainai:3044:4044:supplychainai"
+	"drplan:3045:4045:drplan"
+	"privacyshield:3046:4046:privacyshield"
+	"gdprcompliance:3047:4047:gdprcompliance"
+	"hipaaguard:3048:4048:hipaaguard"
+	"soc2automator:3049:4049:soc2automator"
+	"iso27001:3050:4050:iso27001"
 )
 
 echo "🔄 Updating Nginx configurations for rebranded tools..."
@@ -65,17 +65,17 @@ rm -f /etc/nginx/sites-enabled/*.maula.ai 2>/dev/null || true
 rm -f /etc/nginx/sites-available/*.maula.ai 2>/dev/null || true
 
 for tool_config in "${TOOLS[@]}"; do
-    IFS=':' read -r subdomain frontend_port api_port old_folder <<< "$tool_config"
-    
-    # Determine the root directory (check old folder exists)
-    if [ -d "/var/www/tools/${old_folder}" ]; then
-        root_dir="/var/www/tools/${old_folder}"
-    else
-        root_dir="/var/www/tools/${subdomain}"
-        mkdir -p "$root_dir"
-    fi
-    
-    cat > /etc/nginx/sites-available/${subdomain}.maula.ai << TOOLEOF
+	IFS=':' read -r subdomain frontend_port api_port old_folder <<<"$tool_config"
+
+	# Determine the root directory (check old folder exists)
+	if [ -d "/var/www/tools/${old_folder}" ]; then
+		root_dir="/var/www/tools/${old_folder}"
+	else
+		root_dir="/var/www/tools/${subdomain}"
+		mkdir -p "$root_dir"
+	fi
+
+	cat >/etc/nginx/sites-available/${subdomain}.maula.ai <<TOOLEOF
 server {
     listen 443 ssl http2;
     server_name ${subdomain}.maula.ai;
@@ -125,9 +125,9 @@ server {
 }
 TOOLEOF
 
-    # Enable site
-    ln -sf /etc/nginx/sites-available/${subdomain}.maula.ai /etc/nginx/sites-enabled/
-    echo "✓ ${subdomain}.maula.ai"
+	# Enable site
+	ln -sf /etc/nginx/sites-available/${subdomain}.maula.ai /etc/nginx/sites-enabled/
+	echo "✓ ${subdomain}.maula.ai"
 done
 
 # Test nginx configuration
