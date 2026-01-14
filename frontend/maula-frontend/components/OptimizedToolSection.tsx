@@ -6,6 +6,9 @@ import { SecurityTool } from '../types';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowRight } from 'lucide-react';
 import AIInterface from './AIInterface';
+import FraudGuardHomeVisual from './tool-visuals/FraudGuardHomeVisual';
+import DarkWebMonitorHomeVisual from './tool-visuals/DarkWebMonitorHomeVisual';
+import ZeroDayDetectHomeVisual from './tool-visuals/ZeroDayDetectHomeVisual';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -243,15 +246,30 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
             ref={imgRef} 
             className="flex-1 relative w-full aspect-video md:aspect-square max-w-2xl rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] group border border-white/10 will-change-transform"
           >
-            <img 
-              src={currentImageUrl} 
-              alt={tool.name} 
-              className="w-full h-full object-cover transition-transform duration-[8s] group-hover:scale-115 ease-out"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-90" />
-            <div className="absolute bottom-6 left-6 right-6 z-20">
-               <AIInterface currentImageUrl={currentImageUrl} onUpdateImage={set => setCurrentImageUrl(set)} />
-            </div>
+            {/* Render animated visuals for first 3 tools, static image for others */}
+            {tool.id === 1 ? (
+              <FraudGuardHomeVisual />
+            ) : tool.id === 2 ? (
+              <DarkWebMonitorHomeVisual />
+            ) : tool.id === 3 ? (
+              <ZeroDayDetectHomeVisual />
+            ) : (
+              <>
+                <img 
+                  src={currentImageUrl} 
+                  alt={tool.name} 
+                  className="w-full h-full object-cover transition-transform duration-[8s] group-hover:scale-115 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-90" />
+              </>
+            )}
+            
+            {/* AI Interface only for non-animated tools */}
+            {tool.id > 3 && (
+              <div className="absolute bottom-6 left-6 right-6 z-20">
+                <AIInterface currentImageUrl={currentImageUrl} onUpdateImage={set => setCurrentImageUrl(set)} />
+              </div>
+            )}
           </div>
 
         </div>
