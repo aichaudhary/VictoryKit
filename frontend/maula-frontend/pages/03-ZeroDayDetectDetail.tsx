@@ -557,185 +557,222 @@ const ZeroDayDetectDetail: React.FC = () => {
           </div>
 
           {/* Zero Day Detection Tool Preview - Realistic Dashboard */}
-          <div className="relative group rounded-[2rem] overflow-hidden border border-red-500/30 shadow-2xl bg-[#0f0a0a]">
+          <div className="relative group rounded-[2rem] overflow-hidden border border-red-500/30 shadow-2xl bg-[#0a0a0a]">
             {/* Tool Header */}
-            <div className="bg-slate-900/90 border-b border-red-500/20 p-4">
+            <div className="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-red-500/20 p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-red-500/30 to-orange-500/30 rounded-xl flex items-center justify-center backdrop-blur-sm border border-red-500/30">
                     <Target className="w-6 h-6 text-red-400" />
                   </div>
                   <div>
-                    <div className="font-bold text-white">ZeroDayDetect</div>
-                    <div className="text-[10px] text-gray-500">
-                      Advanced Zero-Day Threat Intelligence Platform
+                    <div className="font-bold text-white text-lg">ZeroDayDetect</div>
+                    <div className="text-[10px] text-gray-400">
+                      Zero-Day Threat Intelligence Platform
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="px-2 py-1 bg-orange-500/20 rounded text-[9px] font-mono text-orange-400">
-                    23 Zero-Days
+                  <div className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 backdrop-blur-sm">
+                    <span className="text-[11px] font-bold text-red-400">● LIVE FEED</span>
                   </div>
-                  <div className="px-2 py-1 bg-red-500/20 rounded text-[9px] font-mono text-red-400">
-                    156 Vulns
-                  </div>
-                </div>
-              </div>
-
-              {/* Stats Row */}
-              <div className="flex items-center gap-4 mt-3 pt-3 border-t border-slate-700/50">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
-                    <Radar className="w-3 h-3 text-gray-400" />
-                  </div>
-                  <div>
-                    <div className="text-[9px] text-gray-500">Active Scans</div>
-                    <div className="text-xs font-bold text-white">0</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
-                    <Shield className="w-3 h-3 text-orange-400" />
-                  </div>
-                  <div>
-                    <div className="text-[9px] text-gray-500">Threats Blocked</div>
-                    <div className="text-xs font-bold text-orange-400">2,847</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
-                    <AlertTriangle className="w-3 h-3 text-yellow-400" />
-                  </div>
-                  <div>
-                    <div className="text-[9px] text-gray-500">Vulnerabilities</div>
-                    <div className="text-xs font-bold text-yellow-400">156</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
-                    <Zap className="w-3 h-3 text-yellow-400" />
-                  </div>
-                  <div>
-                    <div className="text-[9px] text-gray-500">Zero-Days</div>
-                    <div className="text-xs font-bold text-white">23</div>
+                  <div className="px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30">
+                    <span className="text-[11px] font-bold text-green-400">MONITORING</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <div className="flex items-center gap-1 p-2 bg-slate-900/50 border-b border-slate-700/30">
+            {/* Stats Row - 5 Stats Across */}
+            <div className="bg-slate-900/50 border-b border-red-500/10 px-6 py-4 grid grid-cols-5 gap-4">
               {[
-                { label: 'Live Detection', icon: Radar, active: true },
-                { label: 'Zero-Day Feed', icon: Zap, active: false },
-                { label: 'Exploit DB', icon: Database, active: false },
-                { label: 'Vuln Scanner', icon: Search, active: false },
-                { label: 'Attack Surface', icon: Eye, active: false },
-                { label: 'Threat Hunt', icon: Crosshair, active: false },
-              ].map((tab, i) => (
-                <div
-                  key={i}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
-                    tab.active
-                      ? 'bg-red-500 text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-slate-800/50'
-                  }`}
-                >
-                  <tab.icon className="w-3 h-3" />
-                  <span>{tab.label}</span>
+                { label: 'TOTAL ZERO-DAYS', value: '20', trend: '+3', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/30' },
+                { label: 'CRITICAL', value: '3', trend: '+1', color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/30' },
+                { label: 'IN THE WILD', value: '12', trend: '+2', color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/30' },
+                { label: 'UNPATCHED', value: '13', trend: '+4', color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30' },
+                { label: 'LAST UPDATE', value: '2m', trend: 'ago', color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/30' },
+              ].map((stat, i) => (
+                <div key={i} className={`${stat.bg} border ${stat.border} rounded-xl p-3 text-center`}>
+                  <div className="text-[9px] text-gray-400 mb-1 font-medium">{stat.label}</div>
+                  <div className={`text-2xl font-black ${stat.color} tabular-nums`}>
+                    {stat.value}
+                  </div>
+                  <div className="text-[10px] text-gray-500 mt-0.5">{stat.trend}</div>
                 </div>
               ))}
             </div>
 
-            {/* Main Content Area */}
-            <div className="p-4 grid grid-cols-3 gap-3">
-              {/* Threat Detection Panel */}
-              <div className="col-span-1 bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 bg-red-500/20 rounded-lg flex items-center justify-center">
-                    <Target className="w-3 h-3 text-red-400" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-white">Threat Detection</div>
-                    <div className="text-[9px] text-gray-500">Configure and initiate scan</div>
-                  </div>
-                </div>
-                <div className="text-[9px] text-gray-400 mb-2">Scan Target</div>
-                <div className="grid grid-cols-2 gap-1.5 mb-3">
-                  {['Full Scan', 'Network', 'Endpoint', 'Cloud'].map((target, i) => (
-                    <div
-                      key={i}
-                      className={`px-2 py-1.5 rounded text-[9px] text-center ${i === 0 ? 'bg-red-500/20 border border-red-500/30 text-red-400' : 'bg-slate-700/30 text-gray-500'}`}
-                    >
-                      {target}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-[9px] text-gray-400 mb-2">Scan Depth</div>
-                <div className="flex gap-1">
-                  {['Quick', 'Standard', 'Deep'].map((depth, i) => (
-                    <div
-                      key={i}
-                      className={`flex-1 px-2 py-1 rounded text-[9px] text-center ${i === 1 ? 'bg-red-500 text-white' : 'bg-slate-700/30 text-gray-500'}`}
-                    >
-                      {depth}
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {/* Tab Navigation */}
+            <div className="bg-slate-900/30 border-b border-red-500/10 px-6 flex gap-2">
+              {[
+                { name: 'Zero-Day Feed', active: true },
+                { name: 'Exploit DB', active: false },
+                { name: 'Vuln Scanner', active: false },
+                { name: 'Attack Surface', active: false },
+                { name: 'Threat Hunt', active: false },
+              ].map((tab, i) => (
+                <button
+                  key={i}
+                  className={`px-5 py-3 text-[11px] font-semibold transition-all rounded-t-lg ${
+                    tab.active
+                      ? 'text-red-400 bg-gradient-to-b from-red-500/10 to-transparent border-t-2 border-red-500 shadow-lg'
+                      : 'text-gray-500 hover:text-gray-300 hover:bg-slate-800/30'
+                  }`}
+                >
+                  {tab.name}
+                </button>
+              ))}
+            </div>
 
-              {/* Live Detection Panel */}
-              <div className="col-span-1 bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-red-500/20 rounded-lg flex items-center justify-center">
-                      <Target className="w-3 h-3 text-red-400" />
-                    </div>
-                    <div className="text-xs font-bold text-white">Live Detection</div>
-                  </div>
-                  <div className="text-[9px] text-gray-500">0.0s</div>
-                </div>
-                <div className="space-y-2">
-                  {[
-                    'System Initialization',
-                    'Network Scan',
-                    'Endpoint Analysis',
-                    'Signature Matching',
-                    'Behavioral Analysis',
-                  ].map((step, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded-full bg-slate-700 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
+            {/* Main Content Area - Zero-Day Feed */}
+            <div className="p-6 space-y-4">
+              {/* Stats Cards Row */}
+              <div className="grid grid-cols-4 gap-3">
+                {[
+                  { label: 'Total Zero-Days', value: '20', icon: Target, color: 'red' },
+                  { label: 'Critical Severity', value: '3', icon: AlertTriangle, color: 'red' },
+                  { label: 'In The Wild', value: '12', icon: Activity, color: 'orange' },
+                  { label: 'Unpatched', value: '13', icon: Shield, color: 'yellow' },
+                ].map((card, i) => (
+                  <div
+                    key={i}
+                    className={`bg-slate-800/40 border border-${card.color}-500/20 rounded-xl p-4`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <card.icon className={`w-5 h-5 text-${card.color}-400`} />
+                      <div className={`text-2xl font-black text-${card.color}-400 tabular-nums`}>
+                        {card.value}
                       </div>
-                      <div className="text-[9px] text-gray-500">{step}</div>
+                    </div>
+                    <div className="text-[10px] text-gray-400">{card.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Vulnerability Feed List */}
+              <div className="bg-slate-800/30 rounded-xl border border-slate-700/30 overflow-hidden">
+                <div className="bg-slate-900/50 border-b border-slate-700/30 px-4 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-red-400" />
+                    <span className="text-xs font-bold text-white">Live Zero-Day Feed</span>
+                    <span className="text-[10px] text-gray-500">(Last 24 hours)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button className="px-3 py-1 rounded-lg bg-slate-700/50 text-[10px] text-gray-400 hover:bg-slate-600/50 transition">
+                      Filter
+                    </button>
+                    <button className="px-3 py-1 rounded-lg bg-red-500/20 text-[10px] text-red-400 border border-red-500/30 hover:bg-red-500/30 transition">
+                      Export
+                    </button>
+                  </div>
+                </div>
+
+                {/* Vulnerability Items */}
+                <div className="divide-y divide-slate-700/30">
+                  {[
+                    {
+                      cve: 'CVE-2024-9680',
+                      title: 'Remote Code Execution in Firefox',
+                      severity: 'CRITICAL',
+                      severityColor: 'red',
+                      score: '9.8',
+                      status: 'In Wild',
+                      statusColor: 'red',
+                      vendor: 'Mozilla',
+                      published: '2 hours ago',
+                    },
+                    {
+                      cve: 'CVE-2024-43451',
+                      title: 'Windows NTLM Hash Disclosure',
+                      severity: 'HIGH',
+                      severityColor: 'orange',
+                      score: '7.5',
+                      status: 'Unpatched',
+                      statusColor: 'yellow',
+                      vendor: 'Microsoft',
+                      published: '5 hours ago',
+                    },
+                    {
+                      cve: 'CVE-2024-8190',
+                      title: 'Ivanti Cloud Service Appliance Command Injection',
+                      severity: 'CRITICAL',
+                      severityColor: 'red',
+                      score: '9.4',
+                      status: 'In Wild',
+                      statusColor: 'red',
+                      vendor: 'Ivanti',
+                      published: '8 hours ago',
+                    },
+                  ].map((vuln, i) => (
+                    <div
+                      key={i}
+                      className="p-4 hover:bg-slate-800/40 transition cursor-pointer group"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-[11px] font-mono font-bold text-blue-400">
+                              {vuln.cve}
+                            </span>
+                            <span
+                              className={`px-2 py-0.5 rounded text-[9px] font-bold bg-${vuln.severityColor}-500/20 text-${vuln.severityColor}-400 border border-${vuln.severityColor}-500/30`}
+                            >
+                              {vuln.severity}
+                            </span>
+                            <span
+                              className={`px-2 py-0.5 rounded text-[9px] font-bold bg-${vuln.statusColor}-500/10 text-${vuln.statusColor}-400 border border-${vuln.statusColor}-500/30`}
+                            >
+                              {vuln.status}
+                            </span>
+                          </div>
+                          <div className="text-sm text-white group-hover:text-red-400 transition font-medium">
+                            {vuln.title}
+                          </div>
+                          <div className="flex items-center gap-3 mt-2 text-[10px] text-gray-500">
+                            <span>Vendor: {vuln.vendor}</span>
+                            <span>•</span>
+                            <span>Published: {vuln.published}</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="text-right">
+                            <div className="text-[9px] text-gray-500">CVSS Score</div>
+                            <div className={`text-xl font-black text-${vuln.severityColor}-400 tabular-nums`}>
+                              {vuln.score}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
-              </div>
 
-              {/* Results Panel */}
-              <div className="col-span-1 bg-slate-800/30 rounded-xl p-3 border border-slate-700/30 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 border-2 border-dashed border-red-500/30 rounded-full flex items-center justify-center mb-2">
-                  <Shield className="w-8 h-8 text-red-500/30" />
-                </div>
-                <div className="text-sm font-bold text-white text-center">Awaiting Detection</div>
-                <div className="text-[9px] text-gray-500 text-center mt-1">
-                  Configure and start a threat detection scan to see results
+                {/* Load More */}
+                <div className="bg-slate-900/30 border-t border-slate-700/30 px-4 py-3 text-center">
+                  <button className="text-[11px] text-gray-400 hover:text-red-400 transition font-medium">
+                    Load More Vulnerabilities →
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Status Bar */}
-            <div className="bg-slate-900/90 border-t border-red-500/20 px-4 py-2 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-[9px] font-mono text-red-400">DETECTION: ACTIVE</span>
-                <div className="w-16 h-1 bg-red-500/20 rounded-full">
-                  <div className="w-3/4 h-1 bg-red-500 rounded-full"></div>
+            <div className="bg-gradient-to-r from-slate-900 to-slate-800 border-t border-red-500/20 px-6 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                  <span className="text-[10px] font-mono font-bold text-red-400">THREAT FEED: ACTIVE</span>
+                </div>
+                <div className="w-32 h-1.5 bg-red-500/20 rounded-full overflow-hidden">
+                  <div className="w-3/4 h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full animate-pulse"></div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-[9px] font-mono">
-                <span className="text-gray-500">AI Engine: Ready</span>
-                <span className="text-green-400 animate-pulse">● ZERO DAY MODE</span>
+              <div className="flex items-center gap-4 text-[10px] font-mono">
+                <span className="text-gray-500">Intelligence Engine: <span className="text-green-400">Online</span></span>
+                <span className="text-gray-500">•</span>
+                <span className="text-gray-500">Last Scan: <span className="text-blue-400">2m ago</span></span>
+                <span className="text-gray-500">•</span>
+                <span className="text-green-400 animate-pulse">● MONITORING 24/7</span>
               </div>
             </div>
           </div>
