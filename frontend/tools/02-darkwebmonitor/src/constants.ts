@@ -91,7 +91,7 @@ export const NAV_ITEMS: NavItem[] = [
 
 export const API_ENDPOINTS = {
   // Production endpoints - use /api proxy for subdomain deployment
-  DARKWEBMONITOR_API: '',
+  DARKWEBMONITOR_API: '/api',
   ML_API: '/api/ml',
   AI_API: '/api/ai',
   WS_URL:

@@ -22,7 +22,6 @@ import {
   Sun,
   Command,
   Scan,
-  Home,
 } from 'lucide-react';
 import TransactionForm from './TransactionForm';
 import { AnimatedFraudScoreCard } from './AnimatedFraudScoreCard';
@@ -249,23 +248,14 @@ const FraudGuardTool: React.FC = () => {
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-3">
-            <a
-              href="https://maula.ai/#tool-section-1"
-              className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg hover:border-slate-600/50 transition-all"
-            >
-              <Home className="w-4 h-4" />
-              <span className="text-sm">Back to Maula</span>
-            </a>
-            <a
-              href="/neural-link/"
-              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
-            >
-              <Sparkles className="w-5 h-5" />
-              <span className="font-medium">AI Assistant</span>
-            </a>
-          </div>
+          {/* Live Assistant Button */}
+          <a
+            href="/neural-link/"
+            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
+          >
+            <Sparkles className="w-5 h-5" />
+            <span className="font-medium">AI Assistant</span>
+          </a>
         </div>
       </header>
 

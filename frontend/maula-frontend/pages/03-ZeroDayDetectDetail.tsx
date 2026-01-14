@@ -456,18 +456,58 @@ const ZeroDayDetectDetail: React.FC = () => {
     >
       {/* Epic Animated Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-red-600/8 blur-[200px] rounded-full" />
-        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-orange-600/6 blur-[250px] rounded-full" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
-        <RadarSweep color="#a855f7" />
-        <FloatingIcons icons={[Shield, AlertTriangle, Lock, Eye]} color="#a855f7" />
-        <RadarSweep color="#a855f7" />
-        <FloatingIcons icons={[Shield, AlertTriangle, Lock, Eye]} color="#a855f7" />
-        <ZeroDayScanner />
-        <ExploitDetection />
+        {/* Unique gradient blobs for Zero-Day theme - red/orange spectrum */}
+        <div className="absolute top-[-25%] right-[-10%] w-[900px] h-[900px] bg-gradient-radial from-red-600/10 via-orange-600/5 to-transparent blur-[180px] rounded-full" />
+        <div className="absolute bottom-[-20%] left-[-15%] w-[1000px] h-[1000px] bg-gradient-radial from-orange-500/8 via-yellow-600/4 to-transparent blur-[220px] rounded-full" />
+        <div className="absolute top-[40%] left-[30%] w-[600px] h-[600px] bg-gradient-radial from-red-500/6 via-transparent to-transparent blur-[150px] rounded-full animate-pulse" style={{animationDuration: '8s'}} />
+        
+        {/* Noise texture overlay */}
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
+        
+        {/* Animated scan lines for tech feel */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute w-full h-px bg-gradient-to-r from-transparent via-red-500 to-transparent animate-scan-vertical" style={{animationDuration: '4s'}} />
+          <div className="absolute w-px h-full bg-gradient-to-b from-transparent via-orange-500 to-transparent animate-scan-horizontal" style={{animationDuration: '5s'}} />
+        </div>
+        
+        {/* Custom background animations */}
         <VulnerabilityRadar />
-        <CodeAnalysisGrid />
+        <ExploitDetection />
         <ThreatSignature />
+        <CodeAnalysisGrid />
+        
+        {/* Subtle floating particles for depth */}
+        <div className="absolute inset-0 overflow-hidden opacity-20">
+          {Array.from({length: 20}).map((_, i) => (
+            <div 
+              key={i}
+              className="absolute w-1 h-1 bg-red-400/40 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animation: `float ${10 + Math.random() * 10}s ease-in-out infinite`,
+                animationDelay: `${Math.random() * 5}s`
+              }}
+            />
+          ))}
+        </div>
+        
+        <style>{`
+          @keyframes scan-vertical {
+            0%, 100% { top: -2%; }
+            50% { top: 102%; }
+          }
+          @keyframes scan-horizontal {
+            0%, 100% { left: -2%; }
+            50% { left: 102%; }
+          }
+          @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+            25% { transform: translate(10px, -20px) scale(1.2); opacity: 0.4; }
+            50% { transform: translate(-10px, -40px) scale(0.8); opacity: 0.3; }
+            75% { transform: translate(15px, -60px) scale(1.1); opacity: 0.5; }
+          }
+        `}</style>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12">
