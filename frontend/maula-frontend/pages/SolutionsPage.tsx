@@ -27,7 +27,7 @@ const SolutionsPage: React.FC = () => {
              <Rocket className="w-4 h-4 text-blue-500" />
              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-blue-500">Tailored Defense</span>
            </div>
-           <h1 className="text-8xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase">
+           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] uppercase">
              INDUSTRY <span className="text-blue-500">SOLUTIONS</span>
            </h1>
            <p className="text-xl md:text-2xl text-white/60 font-medium leading-relaxed max-w-2xl">

@@ -205,21 +205,19 @@ const DarkWebMonitorTool: React.FC = () => {
             {/* Actions */}
             <div className="flex items-center gap-3">
               <a
-                href="https://maula.ai"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="https://maula.ai/#tool-section-2"
                 className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg hover:border-slate-600/50 transition-all"
               >
                 <Home className="w-4 h-4" />
                 <span className="text-sm">Back to Maula</span>
               </a>
-              <Link
-                to="/maula/ai"
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg hover:from-green-500 hover:to-emerald-500 transition-all shadow-lg shadow-green-500/25"
+              <a
+                href="/neural-link/"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-violet-600 rounded-lg hover:from-purple-500 hover:to-violet-500 transition-all shadow-lg shadow-purple-500/25"
               >
                 <Bot className="w-5 h-5" />
                 <span className="font-medium">AI Assistant</span>
-              </Link>
+              </a>
             </div>
           </div>
 

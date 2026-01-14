@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent pointer-events-none" />
 
         <div
-          className="flex items-center gap-3 mb-16 cursor-pointer group"
+          className="flex items-center gap-3 mb-8 sm:mb-12 md:mb-16 cursor-pointer group"
           onClick={() => setView('home')}
         >
           <div className="bg-purple-600 p-2 rounded-xl group-hover:scale-110 transition-transform">
@@ -499,7 +499,7 @@ const ModuleGrid = ({
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex justify-between items-end border-b border-white/5 pb-8">
         <div className="space-y-1">
-          <h2 className="text-4xl font-black uppercase tracking-tighter">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tighter">
             {type === 'available' ? 'Module Library' : 'My Command Fleet'}
           </h2>
           <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.3em]">
@@ -686,7 +686,7 @@ const BillingTab = () => (
             Verified Active
           </span>
         </div>
-        <div className="text-7xl font-black tracking-tighter mb-4 relative z-10">
+        <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4 relative z-10">
           $0.00{' '}
           <span className="text-lg text-white/30 font-normal tracking-normal ml-2 italic">
             Est. Charges

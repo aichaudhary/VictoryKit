@@ -88,13 +88,13 @@ const ToolDetail: React.FC = () => {
         </div>
 
         {/* Hero Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center mb-40">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 md:gap-24 items-center mb-40">
            <div ref={heroTextRef} className="space-y-10">
               <div className={`inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-white/10 backdrop-blur-3xl`}>
                 <span className={primaryTextColor}>{getIcon()}</span>
                 <span className={`text-[10px] font-black tracking-[0.4em] uppercase ${primaryTextColor}`}>{tool.category}</span>
               </div>
-              <h1 className="text-8xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] uppercase">
                 {tool.name.split(' ').map((word, i) => (
                   <span key={i} className={i === tool.name.split(' ').length - 1 ? primaryTextColor : ''}>{word} </span>
                 ))}
@@ -151,7 +151,7 @@ const ToolDetail: React.FC = () => {
                    <div className={`w-16 h-16 rounded-2xl ${primaryBgColor}/10 flex items-center justify-center ${primaryTextColor} group-hover:scale-110 transition-transform`}>
                       {feature.icon}
                    </div>
-                   <h3 className="text-3xl font-bold tracking-tight">{feature.title}</h3>
+                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">{feature.title}</h3>
                    <p className="text-white/50 leading-relaxed font-medium">{feature.desc}</p>
                 </div>
               ))}

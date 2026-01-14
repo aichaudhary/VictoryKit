@@ -19,6 +19,9 @@ import {
   Bug,
   Lock,
   TrendingUp,
+  Home,
+  Bot,
+  Sparkles,
 } from 'lucide-react';
 import ThreatScanForm, { ScanConfig } from './ThreatScanForm';
 import LiveDetectionPanel, { DetectionStep, DetectionEvent } from './LiveDetectionPanel';
@@ -319,20 +322,40 @@ const ZeroDayDetectTool: React.FC = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="relative">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center shadow-lg shadow-red-500/30">
-                <Target className="w-8 h-8 text-white" />
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center shadow-lg shadow-red-500/30">
+                  <Target className="w-8 h-8 text-white" />
+                </div>
+                {isScanning && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse border-2 border-slate-900" />
+                )}
               </div>
-              {isScanning && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse border-2 border-slate-900" />
-              )}
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-red-200 to-red-400 bg-clip-text text-transparent">
+                  ZeroDayDetect
+                </h1>
+                <p className="text-gray-400">Advanced Zero-Day Threat Intelligence Platform</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-red-200 to-red-400 bg-clip-text text-transparent">
-                ZeroDayDetect
-              </h1>
-              <p className="text-gray-400">Advanced Zero-Day Threat Intelligence Platform</p>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3">
+              <a
+                href="https://maula.ai/#tool-section-3"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-800/50 border border-slate-700/50 rounded-lg hover:border-slate-600/50 transition-all"
+              >
+                <Home className="w-4 h-4" />
+                <span className="text-sm">Back to Maula</span>
+              </a>
+              <a
+                href="/neural-link/"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-500 to-orange-600 rounded-lg hover:from-red-600 hover:to-orange-700 transition-all shadow-lg shadow-red-500/25"
+              >
+                <Sparkles className="w-5 h-5" />
+                <span className="font-medium">AI Assistant</span>
+              </a>
             </div>
           </div>
 

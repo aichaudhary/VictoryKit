@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import {
@@ -21,707 +21,670 @@ import {
   Eye,
   Target,
   Crosshair,
+  Key,
+  Unlock,
+  FileText,
+  FolderOpen,
 } from 'lucide-react';
+import { RadarSweep, ParticleNetwork, DataStream, HexGrid, PulseRings, FloatingIcons } from '../components/AnimatedBackground';
 
-// Particle System Component
-const ParticleField: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+// ============================================================================
+// EPIC ANIMATED VISUAL COMPONENTS - RANSOM SHIELD
+// ============================================================================
+
+// 1. RansomDetectionRadar - Advanced ransomware detection radar
+const RansomDetectionRadar: React.FC = () => {
+  const [ransomIncidents, setRansomIncidents] = useState<
+    { id: number; x: number; y: number; severity: string; type: string; encrypted: number }[]
+  >([]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particles: {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-      alpha: number;
-      color: string;
-    }[] = [];
-    const particleCount = 80;
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 2 + 0.5,
-        alpha: Math.random() * 0.5 + 0.1,
-        color: Math.random() > 0.7 ? '#ef4444' : '#ffffff',
-      });
-    }
-
-    let animationId: number;
-    const animate = () => {
-      ctx.fillStyle = 'rgba(13, 4, 4, 0.1)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach((p, i) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color
-          .replace(')', `, ${p.alpha})`)
-          .replace('rgb', 'rgba')
-          .replace('#ef4444', 'rgba(239, 68, 68')
-          .replace('#ffffff', 'rgba(255, 255, 255');
-        ctx.fill();
-
-        // Connect nearby particles
-        particles.slice(i + 1).forEach((p2) => {
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(239, 68, 68, ${0.1 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        });
-      });
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', handleResize);
-    };
+    const interval = setInterval(() => {
+      if (Math.random() > 0.6) {
+        const newIncident = {
+          id: Date.now(),
+          x: 20 + Math.random() * 60,
+          y: 20 + Math.random() * 60,
+          severity: ['critical', 'high', 'medium'][Math.floor(Math.random() * 3)],
+          type: ['file_encryption', 'data_exfiltration', 'ransom_note'][Math.floor(Math.random() * 3)],
+          encrypted: Math.floor(Math.random() * 1000) + 100,
+        };
+        setRansomIncidents((prev) => [...prev.slice(-8), newIncident]);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />;
+  const severityColors: Record<string, string> = {
+    critical: '#ef4444',
+    high: '#f97316',
+    medium: '#eab308',
+  };
+
+  return (
+    <div className="absolute inset-0 overflow-hidden opacity-25">
+      <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+        <defs>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } } @keyframes transactionFlow { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }`}</style>
+          <radialGradient id="ransomGradient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ef4444" stopOpacity="0.8" />
+            <stop offset="50%" stopColor="#f97316" stopOpacity="0.6" />
+            <stop offset="100%" stopColor="#eab308" stopOpacity="0.2" />
+          </radialGradient>
+          <filter id="ransomGlow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#ef4444" strokeWidth="0.3" opacity="0.3" />
+        <circle cx="50" cy="50" r="35" fill="none" stroke="#f97316" strokeWidth="0.2" opacity="0.4" />
+        <circle cx="50" cy="50" r="25" fill="none" stroke="#eab308" strokeWidth="0.2" opacity="0.5" />
+
+        <g style={{ transformOrigin: '50px 50px', animation: 'spin-radar 5s linear infinite' }}>
+          <path d="M50,50 L50,5 A45,45 0 0,1 85,30 Z" fill="url(#ransomGradient)" />
+          <line
+            x1="50"
+            y1="50"
+            x2="50"
+            y2="5"
+            stroke="#ef4444"
+            strokeWidth="0.8"
+            filter="url(#ransomGlow)"
+          />
+        </g>
+
+        <line x1="5" y1="50" x2="95" y2="50" stroke="#ef4444" strokeWidth="0.1" opacity="0.3" />
+        <line x1="50" y1="5" x2="50" y2="95" stroke="#ef4444" strokeWidth="0.1" opacity="0.3" />
+
+        {ransomIncidents.map((incident) => (
+          <g key={incident.id}>
+            <circle
+              cx={incident.x}
+              cy={incident.y}
+              r="1.5"
+              fill={severityColors[incident.severity as keyof typeof severityColors]}
+              opacity="0.8"
+            >
+              <animate attributeName="r" values="1.5;3;1.5" dur="2s" repeatCount="indefinite" />
+            </circle>
+            <circle
+              cx={incident.x}
+              cy={incident.y}
+              r="4"
+              fill="none"
+              stroke={severityColors[incident.severity as keyof typeof severityColors]}
+              strokeWidth="0.5"
+              opacity="0.4"
+            >
+              <animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.4;0;0.4" dur="2s" repeatCount="indefinite" />
+            </circle>
+          </g>
+        ))}
+      </svg>
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
+    </div>
+  );
 };
 
-// Threat Counter Animation
-const ThreatCounter: React.FC<{ end: number; suffix?: string; duration?: number }> = ({
-  end,
-  suffix = '',
-  duration = 2,
-}) => {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
+// 2. EncryptionBreaker - Real-time encryption analysis
+const EncryptionBreaker: React.FC = () => {
+  const [breakAttempts, setBreakAttempts] = useState<
+    { id: number; algorithm: string; progress: number; status: string }[]
+  >([]);
 
   useEffect(() => {
-    let startTime: number;
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      setCount(Math.floor(progress * end));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
+    const algorithms = ['AES-256', 'RSA-4096', 'ChaCha20', 'Triple-DES', 'Blowfish'];
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          requestAnimationFrame(animate);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.5 }
-    );
+    const interval = setInterval(() => {
+      if (Math.random() > 0.7) {
+        const newAttempt = {
+          id: Date.now(),
+          algorithm: algorithms[Math.floor(Math.random() * algorithms.length)],
+          progress: 0,
+          status: 'analyzing',
+        };
+        setBreakAttempts((prev) => [...prev.slice(-6), newAttempt]);
+      }
 
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [end, duration]);
+      setBreakAttempts((prev) =>
+        prev.map((attempt) => ({
+          ...attempt,
+          progress: attempt.progress < 100 ? attempt.progress + Math.random() * 5 : 100,
+          status: attempt.progress >= 100 ? 'broken' : attempt.status,
+        }))
+      );
+    }, 800);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div ref={ref}>
-      {count.toLocaleString()}
-      {suffix}
-    </div>
-  );
-};
-
-// Binary Rain Effect
-const BinaryRain: React.FC = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-      {[...Array(20)].map((_, i) => (
+    <div className="absolute inset-0 overflow-hidden opacity-20">
+      {breakAttempts.map((attempt, i) => (
         <div
-          key={i}
-          className="absolute text-red-500/30 text-xs font-mono whitespace-nowrap animate-pulse"
+          key={attempt.id}
+          className="absolute bg-red-500/10 border border-red-500/20 rounded-lg p-2 text-[8px] font-mono"
           style={{
-            left: `${i * 5}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 2}s`,
-            animationDuration: `${3 + Math.random() * 4}s`,
+            left: `${Math.random() * 70 + 15}%`,
+            top: `${Math.random() * 70 + 15}%`,
+            animation: `breakPulse ${2 + Math.random()}s ease-in-out infinite`,
           }}
         >
-          {[...Array(30)].map((_, j) => (
-            <div key={j} style={{ animationDelay: `${j * 0.1}s` }}>
-              {Math.random() > 0.5 ? '1' : '0'}
-            </div>
-          ))}
+          <div className="text-red-400 font-bold">{attempt.algorithm}</div>
+          <div className="text-white/70">{attempt.progress.toFixed(0)}% complete</div>
+          <div className="text-orange-400">{attempt.status}</div>
+          <div className="w-12 h-1 bg-red-500/20 rounded-full mt-1">
+            <div
+              className="h-1 bg-red-500 rounded-full transition-all duration-300"
+              style={{width: `${attempt.progress}%`}}
+            ></div>
+          </div>
         </div>
       ))}
+      <style>{`
+        @keyframes breakPulse {
+          0%, 100% { transform: scale(1); opacity: 0.8; }
+          50% { transform: scale(1.1); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 };
 
-// Scanning Line Effect
-const ScanLine: React.FC = () => {
+// 3. FileRecoveryEngine - File recovery visualization
+const FileRecoveryEngine: React.FC = () => {
+  const [recoveredFiles, setRecoveredFiles] = useState<
+    { id: number; name: string; size: string; status: string; progress: number }[]
+  >([]);
+
+  useEffect(() => {
+    const fileTypes = ['document.pdf', 'spreadsheet.xlsx', 'database.db', 'image.jpg', 'video.mp4'];
+
+    const interval = setInterval(() => {
+      if (Math.random() > 0.8) {
+        const newFile = {
+          id: Date.now(),
+          name: fileTypes[Math.floor(Math.random() * fileTypes.length)],
+          size: `${Math.floor(Math.random() * 100) + 1}MB`,
+          status: 'recovering',
+          progress: 0,
+        };
+        setRecoveredFiles((prev) => [...prev.slice(-8), newFile]);
+      }
+
+      setRecoveredFiles((prev) =>
+        prev.map((file) => ({
+          ...file,
+          progress: file.progress < 100 ? file.progress + Math.random() * 8 : 100,
+          status: file.progress >= 100 ? 'recovered' : file.status,
+        }))
+      );
+    }, 600);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="absolute w-full h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent animate-scan opacity-50" />
+    <div className="absolute inset-0 overflow-hidden opacity-15">
+      {recoveredFiles.map((file, i) => (
+        <div
+          key={file.id}
+          className="absolute bg-green-500/10 border border-green-500/20 rounded-lg p-2 text-[7px] font-mono flex items-center gap-1"
+          style={{
+            left: `${Math.random() * 80 + 10}%`,
+            top: `${Math.random() * 80 + 10}%`,
+            animation: `recoveryFloat ${3 + Math.random() * 2}s linear infinite`,
+          }}
+        >
+          <FileText className="w-2 h-2 text-green-400" />
+          <div>
+            <div className="text-green-400 font-bold">{file.name}</div>
+            <div className="text-white/60">{file.size}</div>
+            <div className="w-8 h-0.5 bg-green-500/20 rounded-full mt-0.5">
+              <div
+                className="h-0.5 bg-green-500 rounded-full transition-all duration-300"
+                style={{width: `${file.progress}%`}}
+              ></div>
+            </div>
+          </div>
+        </div>
+      ))}
+      <style>{`
+        @keyframes recoveryFloat {
+          0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+      `}</style>
     </div>
   );
 };
+
+// 4. RansomNoteAnalyzer - Ransom note pattern recognition
+const RansomNoteAnalyzer: React.FC = () => {
+  const [notes, setNotes] = useState<
+    { id: number; language: string; demands: string; confidence: number }[]
+  >([]);
+
+  useEffect(() => {
+    const languages = ['English', 'Russian', 'Chinese', 'Spanish', 'Korean'];
+    const demands = ['$5000 BTC', '$10000 ETH', '$25000 XMR', 'Contact Us', 'Pay Now'];
+
+    const interval = setInterval(() => {
+      if (Math.random() > 0.75) {
+        const newNote = {
+          id: Date.now(),
+          language: languages[Math.floor(Math.random() * languages.length)],
+          demands: demands[Math.floor(Math.random() * demands.length)],
+          confidence: 70 + Math.random() * 30,
+        };
+        setNotes((prev) => [...prev.slice(-5), newNote]);
+      }
+    }, 1200);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden opacity-20">
+      {notes.map((note, i) => (
+        <div
+          key={note.id}
+          className="absolute bg-red-500/10 border border-red-500/20 rounded-lg p-2 text-[8px] font-mono"
+          style={{
+            left: `${Math.random() * 70 + 15}%`,
+            top: `${Math.random() * 70 + 15}%`,
+            animation: `noteDrift ${4 + Math.random() * 2}s linear infinite`,
+          }}
+        >
+          <div className="text-red-400 font-bold">RANSOM NOTE</div>
+          <div className="text-white/70">{note.language}</div>
+          <div className="text-yellow-400">{note.demands}</div>
+          <div className="text-green-400">{note.confidence.toFixed(0)}% match</div>
+        </div>
+      ))}
+      <style>{`
+        @keyframes noteDrift {
+          0% { transform: translateX(0px) translateY(0px); opacity: 0; }
+          20% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { transform: translateX(50px) translateY(-50px); opacity: 0; }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+// 5. BackupIntegrityGrid - Backup integrity monitoring
+const BackupIntegrityGrid: React.FC = () => {
+  const [backups, setBackups] = useState<boolean[][]>(
+    Array(12).fill(null).map(() => Array(12).fill(true))
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBackups((prev) =>
+        prev.map((row) =>
+          row.map(() => Math.random() > 0.95 ? false : true)
+        )
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden opacity-10">
+      <div className="grid grid-cols-12 gap-0.5 w-full h-full p-4">
+        {backups.flat().map((intact, i) => (
+          <div
+            key={i}
+            className={`aspect-square rounded-sm transition-all duration-300 ${
+              intact ? 'bg-green-500/40' : 'bg-red-500/60 animate-pulse'
+            }`}
+          >
+            {!intact && (
+              <div className="w-full h-full bg-red-400/60 animate-pulse rounded-sm"></div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
 
 const RansomShieldDetail: React.FC = () => {
   const { setView } = useScroll();
   const containerRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const shieldRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const featuresRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  const [shieldActive, setShieldActive] = useState(false);
-  const [threatDetected, setThreatDetected] = useState(false);
+  const heroTextRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'prevention' | 'recovery' | 'intelligence'>('overview');
+  const [liveMetrics, setLiveMetrics] = useState({
+    attacksBlocked: 284739,
+    filesRecovered: 15684,
+    ransomPaid: 2341,
+    backupIntegrity: 99.7,
+  });
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Epic entrance timeline
-      const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-
-      // Initial blackout then reveal
-      tl.fromTo(containerRef.current, { opacity: 0 }, { opacity: 1, duration: 0.5 })
-        .from('.hero-badge', { scale: 0, rotation: -180, duration: 0.8 }, 0.3)
-        .from(
-          '.hero-title span',
-          {
-            y: 200,
-            opacity: 0,
-            rotationX: -90,
-            transformOrigin: 'top center',
-            stagger: 0.1,
-            duration: 1.2,
-          },
-          0.4
-        )
-        .from('.hero-subtitle', { y: 60, opacity: 0, duration: 1 }, 0.8)
-        .from('.hero-buttons > *', { scale: 0, stagger: 0.15, duration: 0.6 }, 1)
-        .from(
-          shieldRef.current,
-          {
-            scale: 0,
-            rotation: 720,
-            opacity: 0,
-            duration: 1.5,
-            ease: 'elastic.out(1, 0.5)',
-          },
-          0.6
-        );
-
-      // Shield pulse animation
-      gsap.to(shieldRef.current, {
-        boxShadow:
-          '0 0 100px rgba(239, 68, 68, 0.5), 0 0 200px rgba(239, 68, 68, 0.3), inset 0 0 100px rgba(239, 68, 68, 0.1)',
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
+      gsap.from(heroTextRef.current?.children || [], {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: 'power4.out',
       });
-
-      // Floating animation for shield
-      gsap.to(shieldRef.current, {
-        y: -20,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      });
-
-      // Stats reveal
-      gsap.from('.stat-item', {
-        scrollTrigger: {
-          trigger: statsRef.current,
-          start: 'top 80%',
-        },
+      gsap.from(contentRef.current?.children || [], {
         y: 100,
         opacity: 0,
-        scale: 0.8,
-        stagger: 0.15,
-        duration: 0.8,
-      });
-
-      // Features 3D flip
-      gsap.from('.feature-card', {
-        scrollTrigger: {
-          trigger: featuresRef.current,
-          start: 'top 80%',
-        },
-        rotationY: 90,
-        opacity: 0,
+        duration: 1.2,
         stagger: 0.2,
-        duration: 1,
-        transformOrigin: 'left center',
+        ease: 'power3.out',
+        delay: 0.3,
       });
     }, containerRef);
+    return () => ctx.revert();
+  }, []);
 
-    // Activate shield after entrance
-    setTimeout(() => setShieldActive(true), 2000);
-
-    // Simulate threat detection
-    const threatInterval = setInterval(() => {
-      setThreatDetected(true);
-      setTimeout(() => setThreatDetected(false), 1000);
-    }, 5000);
-
-    return () => {
-      ctx.revert();
-      clearInterval(threatInterval);
-    };
+  // Live metrics simulation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveMetrics((prev) => ({
+        attacksBlocked: prev.attacksBlocked + Math.floor(Math.random() * 50),
+        filesRecovered: prev.filesRecovered + Math.floor((Math.random() - 0.9) * 20),
+        ransomPaid: prev.ransomPaid + Math.floor((Math.random() - 0.98) * 5),
+        backupIntegrity: Math.max(95, prev.backupIntegrity + (Math.random() - 0.5) * 0.1),
+      }));
+    }, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-[#0a0202] text-white selection:bg-red-500/30 font-sans overflow-hidden"
+      className="min-h-screen bg-[#0a0208] text-white selection:bg-red-500/30 font-sans overflow-hidden"
     >
-      {/* Particle Background */}
-      <ParticleField />
-
-      {/* Animated Background Layers */}
+      {/* Epic Animated Background Layers */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-600/20 blur-[200px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[-20%] left-[-10%] w-[1000px] h-[1000px] bg-red-900/10 blur-[250px] rounded-full" />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-500/5 blur-[150px] rounded-full animate-ping"
-          style={{ animationDuration: '4s' }}
-        />
-        <BinaryRain />
-        <ScanLine />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04]" />
-        {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(239,68,68,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(239,68,68,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-red-600/8 blur-[200px] rounded-full" />
+        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-orange-600/6 blur-[250px] rounded-full" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
+        <RadarSweep color="#a855f7" />
+        <ParticleNetwork color="#a855f7" />
+        <RadarSweep color="#a855f7" />
+        <ParticleNetwork color="#a855f7" />
+        <RansomDetectionRadar />
+        <EncryptionBreaker />
+        <FileRecoveryEngine />
+        <RansomNoteAnalyzer />
+        <BackupIntegrityGrid />
       </div>
 
-      {/* Threat Alert Banner */}
-      <div
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${threatDetected ? 'translate-y-0' : '-translate-y-full'}`}
-      >
-        <div className="bg-red-500 text-white py-2 px-4 flex items-center justify-center gap-3 animate-pulse">
-          <AlertTriangle className="w-5 h-5" />
-          <span className="text-sm font-bold tracking-wider uppercase">
-            Threat Detected &amp; Neutralized
-          </span>
-          <CheckCircle2 className="w-5 h-5" />
-        </div>
-      </div>
-
-      <div className="relative z-10 max-w-8xl mx-auto px-6 md:px-16 py-8">
-        {/* Navigation */}
-        <nav className="flex items-center justify-between mb-16 pt-4">
-          <button
-            onClick={() => setView('home')}
-            className="group flex items-center gap-4 text-[10px] font-black tracking-[0.5em] uppercase text-white/40 hover:text-red-500 transition-all duration-500"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-red-500/20 group-hover:border-red-500/50 transition-all">
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            </div>
-            <span className="hidden md:block">Return to Base</span>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-24">
+          <button onClick={() => setView('home')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Ecosystem
           </button>
-          <div className="flex items-center gap-4">
-            <div
-              className={`flex items-center gap-2 px-4 py-2 rounded-full border ${shieldActive ? 'bg-green-500/10 border-green-500/30 text-green-500' : 'bg-white/5 border-white/10 text-white/40'} transition-all duration-500`}
-            >
-              <div
-                className={`w-2 h-2 rounded-full ${shieldActive ? 'bg-green-500 animate-pulse' : 'bg-white/30'}`}
-              />
-              <span className="text-[10px] font-black tracking-[0.3em] uppercase">
-                {shieldActive ? 'Shield Active' : 'Initializing'}
-              </span>
-            </div>
-            <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/30">
-              v5.4.0
-            </span>
-          </div>
-        </nav>
+          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">RansomShield Enterprise v7.1</span>
+        </div>
 
         {/* Hero Section */}
-        <div
-          ref={heroRef}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[80vh] mb-32"
-        >
-          {/* Left Content */}
-          <div className="space-y-10">
-            <div className="hero-badge inline-flex items-center gap-4 px-6 py-3 rounded-full bg-red-500/10 border border-red-500/30 backdrop-blur-xl">
-              <div className="relative">
-                <Shield className="w-6 h-6 text-red-500" />
-                <div className="absolute inset-0 animate-ping">
-                  <Shield className="w-6 h-6 text-red-500 opacity-50" />
-                </div>
-              </div>
-              <span className="text-[11px] font-black tracking-[0.4em] uppercase text-red-400">
-                Maximum Ransomware Defense
-              </span>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 md:gap-24 items-center mb-40">
+          <div ref={heroTextRef} className="space-y-10">
+            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-red-500/20 backdrop-blur-3xl">
+              <Shield className="w-4 h-4 text-red-500 animate-pulse" />
+              <span className="text-[10px] font-black tracking-[0.3em] uppercase text-red-500">Ransomware Protection</span>
             </div>
-
-            <h1 className="hero-title text-7xl md:text-8xl lg:text-[10rem] font-black tracking-tighter leading-[0.8] uppercase perspective-1000">
-              <span className="block text-white transform-gpu">RANSOM</span>
-              <span className="block bg-gradient-to-r from-red-500 via-red-400 to-orange-500 bg-clip-text text-transparent transform-gpu">
-                SHIELD
-              </span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] uppercase">
+              RANSOM <span className="text-red-500">SHIELD</span>
             </h1>
-
-            <p className="hero-subtitle text-xl md:text-2xl text-white/50 font-medium leading-relaxed max-w-xl">
-              One small step for your files, one giant leap for cybersecurity.
-              <span className="text-red-400"> Zero-day ransomware protection</span> with instant
-              recovery capabilities.
+            <p className="text-xl md:text-2xl text-white/60 font-medium leading-relaxed max-w-xl">
+              Advanced ransomware detection and prevention. Stop attacks before they encrypt, recover data instantly, and protect against all known and unknown ransomware variants.
             </p>
-
-            <div className="hero-buttons flex flex-wrap gap-6 pt-6">
-              <a
-                href="https://ransomshield.maula.ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative px-10 py-5 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-2xl font-black text-sm tracking-[0.3em] uppercase overflow-hidden shadow-[0_20px_60px_-10px_rgba(239,68,68,0.5)] hover:shadow-[0_30px_80px_-10px_rgba(239,68,68,0.7)] transition-all duration-500 hover:scale-105"
-              >
-                <span className="relative z-10 flex items-center gap-3">
-                  <Zap className="w-5 h-5 fill-current" />
-                  Activate Shield
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="flex gap-6 pt-4">
+              <a href="https://ransomshield.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20 flex items-center gap-2">
+                <Shield className="w-4 h-4" /> Activate Shield
               </a>
-              <button className="group px-10 py-5 bg-white/5 border-2 border-white/20 text-white rounded-2xl font-black text-sm tracking-[0.3em] uppercase hover:bg-white/10 hover:border-red-500/50 transition-all duration-500 flex items-center gap-3">
-                <Eye className="w-5 h-5" />
-                Live Demo
-              </button>
-            </div>
-
-            {/* Live Stats Ticker */}
-            <div className="flex flex-wrap gap-8 pt-8 border-t border-white/10">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-sm text-white/40">Threats Blocked Today:</span>
-                <span className="text-lg font-black text-green-500">
-                  <ThreatCounter end={847293} />
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Activity className="w-4 h-4 text-red-500 animate-pulse" />
-                <span className="text-sm text-white/40">Active Shields:</span>
-                <span className="text-lg font-black text-red-500">
-                  <ThreatCounter end={2847} suffix="+" duration={1.5} />
-                </span>
+              <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">
+                99.7% Success Rate
               </div>
             </div>
           </div>
 
-          {/* Right - 3D Shield Visual */}
-          <div className="relative flex items-center justify-center">
-            <div ref={shieldRef} className="relative w-[400px] h-[400px] md:w-[500px] md:h-[500px]">
-              {/* Orbiting elements */}
-              <div className="absolute inset-0 animate-spin" style={{ animationDuration: '20s' }}>
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <div className="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center backdrop-blur-xl">
-                    <Skull className="w-6 h-6 text-red-500" />
-                  </div>
-                </div>
-              </div>
-              <div
-                className="absolute inset-0 animate-spin"
-                style={{ animationDuration: '15s', animationDirection: 'reverse' }}
-              >
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
-                  <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center backdrop-blur-xl">
-                    <FileWarning className="w-5 h-5 text-orange-500" />
-                  </div>
-                </div>
-              </div>
-              <div className="absolute inset-0 animate-spin" style={{ animationDuration: '25s' }}>
-                <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2">
-                  <div className="w-10 h-10 rounded-xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center backdrop-blur-xl">
-                    <Binary className="w-5 h-5 text-yellow-500" />
-                  </div>
-                </div>
-              </div>
+          {/* Ransom Shield Protection Matrix Visualization */}
+          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-red-500/20 shadow-2xl bg-black/80 backdrop-blur-sm">
+            <div className="absolute inset-0 flex items-center justify-center">
+              {/* Central protection engine */}
+              <div className="relative w-80 h-80">
+                {/* Central protection engine */}
+                <div className="absolute inset-0 border-4 border-red-500/50 rounded-full flex items-center justify-center">
+                  <div className="w-64 h-64 border-2 border-red-400/40 rounded-full flex items-center justify-center">
+                    <div className="w-48 h-48 border border-red-300/30 rounded-full flex items-center justify-center">
+                      {/* Core protection engine */}
+                      <div className="w-32 h-32 bg-red-500/20 rounded-full flex items-center justify-center relative">
+                        <Shield className="w-16 h-16 text-red-400" />
 
-              {/* Shield rings */}
-              <div className="absolute inset-8 rounded-full border-2 border-red-500/20 animate-pulse" />
-              <div
-                className="absolute inset-16 rounded-full border border-red-500/10 animate-ping"
-                style={{ animationDuration: '3s' }}
-              />
-              <div className="absolute inset-24 rounded-full border border-red-500/5" />
-
-              {/* Main Shield */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-64 h-64 md:w-80 md:h-80">
-                  {/* Hexagonal shield shape using CSS */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/30 via-red-600/20 to-red-900/30 backdrop-blur-3xl rounded-[4rem] border-2 border-red-500/40 shadow-[0_0_100px_rgba(239,68,68,0.3),inset_0_0_60px_rgba(239,68,68,0.1)] flex items-center justify-center overflow-hidden">
-                    <Shield className="w-32 h-32 md:w-40 md:h-40 text-red-500 drop-shadow-[0_0_30px_rgba(239,68,68,0.8)]" />
-
-                    {/* Shield status indicator */}
-                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-black/50 rounded-full border border-red-500/30">
-                      <div
-                        className={`w-2 h-2 rounded-full ${shieldActive ? 'bg-green-500 animate-pulse' : 'bg-yellow-500 animate-bounce'}`}
-                      />
-                      <span className="text-[10px] font-bold text-white/80 uppercase tracking-wider">
-                        {shieldActive ? 'Protected' : 'Scanning'}
-                      </span>
+                        {/* Protection modules orbiting */}
+                        {[
+                          { icon: Lock, label: 'Encryption Block' },
+                          { icon: Key, label: 'Key Recovery' },
+                          { icon: FileText, label: 'File Protection' },
+                          { icon: Database, label: 'Backup Secure' },
+                          { icon: Activity, label: 'Behavior Analysis' },
+                          { icon: Target, label: 'Threat Detection' }
+                        ].map((module, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-10 h-10 bg-red-400/15 rounded-full flex items-center justify-center border border-red-400/30"
+                            style={{
+                              top: `${50 + 45 * Math.sin((i * 60) * Math.PI / 180)}%`,
+                              left: `${50 + 45 * Math.cos((i * 60) * Math.PI / 180)}%`,
+                              transform: 'translate(-50%, -50%)',
+                              animationDelay: `${i * 0.15}s`
+                            }}
+                          >
+                            <module.icon className="w-5 h-5 text-red-300" />
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-
-                  {/* Scanning effect */}
-                  <div className="absolute inset-0 overflow-hidden rounded-[4rem]">
-                    <div className="absolute inset-0 bg-gradient-to-b from-red-500/20 via-transparent to-transparent animate-scan" />
-                  </div>
                 </div>
+
+                {/* Protection rings */}
+                {[...Array(4)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute border border-red-500/20 rounded-full animate-pulse"
+                    style={{
+                      top: `${50 - (i + 1) * 12}%`,
+                      left: `${50 - (i + 1) * 12}%`,
+                      width: `${(i + 1) * 24}%`,
+                      height: `${(i + 1) * 24}%`,
+                      animationDelay: `${i * 0.4}s`
+                    }}
+                  ></div>
+                ))}
+              </div>
+            </div>
+
+            {/* Status overlay */}
+            <div className="absolute bottom-6 left-6 right-6">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-red-400">PROTECTION: ACTIVE</span>
+                <span className="text-green-400 animate-pulse">● RANSOM SHIELD</span>
+              </div>
+              <div className="mt-2 w-full bg-red-500/10 rounded-full h-1">
+                <div className="bg-red-500 h-1 rounded-full animate-pulse" style={{width: '99%'}}></div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Stats Section */}
-        <div ref={statsRef} className="mb-40">
-          <div className="text-center mb-16">
-            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-red-500/60">
-              Real-Time Defense Metrics
-            </span>
-            <h2 className="text-5xl md:text-6xl font-black tracking-tight mt-4">Mission Control</h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Target,
-                value: 1000000,
-                suffix: '+',
-                label: 'Samples Analyzed',
-                color: 'red',
-              },
-              { icon: Skull, value: 500, suffix: '+', label: 'Zero-Days Blocked', color: 'orange' },
-              {
-                icon: Zap,
-                value: 30,
-                suffix: 's',
-                label: 'Recovery Time',
-                prefix: '<',
-                color: 'yellow',
-              },
-              { icon: Shield, value: 99.9, suffix: '%', label: 'Prevention Rate', color: 'green' },
-            ].map((stat, i) => (
-              <div
-                key={i}
-                className="stat-item group relative p-8 rounded-[2rem] bg-white/[0.02] border border-white/10 hover:border-red-500/30 transition-all duration-500 hover:bg-red-500/5 overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 blur-3xl rounded-full group-hover:bg-red-500/10 transition-all" />
-                <stat.icon className={`w-8 h-8 mb-6 text-${stat.color}-500`} />
-                <div className="text-4xl md:text-5xl font-black text-white">
-                  {stat.prefix}
-                  <ThreatCounter end={stat.value} suffix={stat.suffix} duration={2 + i * 0.3} />
-                </div>
-                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-3">
-                  {stat.label}
-                </div>
+        <div ref={contentRef} className="space-y-40 mb-40">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-red-500/10 text-center">
+            <div className="space-y-4">
+              <div className="text-6xl font-black text-red-500 tabular-nums">{liveMetrics.attacksBlocked.toLocaleString()}</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Attacks Blocked</div>
+              <div className="w-full bg-red-500/10 rounded-full h-1">
+                <div className="bg-red-500 h-1 rounded-full animate-pulse" style={{width: '96%'}}></div>
               </div>
-            ))}
+            </div>
+            <div className="space-y-4">
+              <div className="text-6xl font-black text-white tabular-nums">{liveMetrics.filesRecovered.toLocaleString()}</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Files Recovered</div>
+              <div className="w-full bg-white/5 rounded-full h-1">
+                <div className="bg-green-500 h-1 rounded-full animate-pulse" style={{width: '98%'}}></div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="text-6xl font-black text-white">{liveMetrics.ransomPaid.toLocaleString()}</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Ransom Payments</div>
+              <div className="w-full bg-white/5 rounded-full h-1">
+                <div className="bg-blue-500 h-1 rounded-full" style={{width: '2%'}}></div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="text-6xl font-black text-red-500">{liveMetrics.backupIntegrity.toFixed(1)}%</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Backup Integrity</div>
+              <div className="w-full bg-red-500/10 rounded-full h-1">
+                <div className="bg-red-500 h-1 rounded-full animate-pulse" style={{width: `${liveMetrics.backupIntegrity}%`}}></div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Features Section */}
-        <div ref={featuresRef} className="mb-40">
-          <div className="text-center mb-20">
-            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-red-500/60">
-              Defense Systems
-            </span>
-            <h2 className="text-5xl md:text-6xl font-black tracking-tight mt-4">
-              Multi-Layer Protection
-            </h2>
-            <p className="text-xl text-white/40 mt-6 max-w-2xl mx-auto">
-              Like Armstrong's spacesuit protected him on the moon, RansomShield creates an
-              impenetrable barrier around your data.
-            </p>
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-red-500/20 transition-all group hover:shadow-2xl hover:shadow-red-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                <Shield className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Attack Prevention</h3>
+              <p className="text-white/50 leading-relaxed">Advanced behavioral analysis and signature detection to stop ransomware before it can execute encryption routines.</p>
+              <div className="flex items-center gap-2 text-red-400 text-sm font-mono">
+                <Activity className="w-4 h-4 animate-pulse" />
+                284K attacks prevented
+              </div>
+            </div>
+
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-red-500/20 transition-all group hover:shadow-2xl hover:shadow-red-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                <Unlock className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Instant Recovery</h3>
+              <p className="text-white/50 leading-relaxed">Automated decryption and file recovery using secure backups and advanced cryptographic techniques.</p>
+              <div className="flex items-center gap-2 text-red-400 text-sm font-mono">
+                <CheckCircle2 className="w-4 h-4 animate-pulse" />
+                Sub-5 minute recovery
+              </div>
+            </div>
+
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-red-500/20 transition-all group hover:shadow-2xl hover:shadow-red-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                <Eye className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Threat Intelligence</h3>
+              <p className="text-white/50 leading-relaxed">Global threat intelligence network sharing ransomware signatures, attack patterns, and emerging threats in real-time.</p>
+              <div className="flex items-center gap-2 text-green-400 text-sm font-mono">
+                <Target className="w-4 h-4 animate-pulse" />
+                15K+ threat signatures
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: ShieldOff,
-                title: 'Behavioral Analysis',
-                description:
-                  'AI-powered detection identifies ransomware by behavior patterns like mass encryption and shadow copy deletion before damage occurs.',
-                features: ['Pattern Recognition', 'Heuristic Analysis', 'ML Detection'],
-              },
-              {
-                icon: Lock,
-                title: 'File Integrity Guard',
-                description:
-                  'Real-time monitoring of critical files with instant snapshots and automatic rollback on any unauthorized encryption attempts.',
-                features: ['Continuous Monitoring', 'Instant Snapshots', 'Auto-Rollback'],
-              },
-              {
-                icon: HardDrive,
-                title: 'Instant Recovery',
-                description:
-                  'Automated backup system restores encrypted files in seconds. Your data is always safe, always recoverable.',
-                features: ['30-Second Recovery', 'Zero Data Loss', 'Air-Gapped Backups'],
-              },
-            ].map((feature, i) => (
-              <div
-                key={i}
-                className="feature-card group relative p-10 rounded-[3rem] bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/10 hover:border-red-500/40 transition-all duration-700 overflow-hidden"
-              >
-                {/* Glow effect */}
-                <div className="absolute -top-20 -right-20 w-40 h-40 bg-red-500/20 blur-[100px] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700" />
+          {/* Protection Engine Visualization */}
+          <div className="glass p-16 rounded-[4rem] border border-red-500/10">
+            <div className="text-center mb-8 sm:mb-12 md:mb-16">
+              <h2 className="text-5xl font-black mb-6">Ransomware Protection Engine</h2>
+              <p className="text-white/50 text-xl max-w-2xl mx-auto">Multi-layered ransomware defense combining prevention, detection, and recovery capabilities for comprehensive protection against all ransomware variants.</p>
+            </div>
 
-                {/* Icon */}
-                <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/20 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500">
-                  <feature.icon className="w-10 h-10 text-red-500" />
-                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8">
+                {/* Protection capabilities */}
+                {[
+                  { capability: 'Attack Prevention', coverage: 99.1, icon: Shield, color: 'text-red-400' },
+                  { capability: 'File Encryption Block', coverage: 98.7, icon: Lock, color: 'text-orange-400' },
+                  { capability: 'Instant Recovery', coverage: 97.3, icon: Unlock, color: 'text-yellow-400' },
+                  { capability: 'Backup Integrity', coverage: 99.5, icon: Database, color: 'text-green-400' },
+                  { capability: 'Threat Intelligence', coverage: 96.8, icon: Eye, color: 'text-blue-400' },
+                  { capability: 'Zero-Day Detection', coverage: 98.2, icon: Target, color: 'text-purple-400' }
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-6 p-4 bg-red-500/5 rounded-2xl border border-red-500/10">
+                    <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center">
+                      <item.icon className={`w-6 h-6 ${item.color}`} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-bold text-lg">{item.capability}</div>
+                      <div className="text-red-400 font-mono text-sm">{item.coverage}% effectiveness</div>
+                    </div>
+                    <div className="w-16 h-2 bg-red-500/20 rounded-full">
+                      <div className="h-2 bg-red-500 rounded-full" style={{width: `${item.coverage}%`}}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-                {/* Content */}
-                <h3 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-red-400 transition-colors">
-                  {feature.title}
-                </h3>
-                <p className="text-white/40 leading-relaxed mb-8">{feature.description}</p>
-
-                {/* Feature tags */}
-                <div className="flex flex-wrap gap-2">
-                  {feature.features.map((f, j) => (
-                    <span
-                      key={j}
-                      className="px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-bold uppercase tracking-wider"
-                    >
-                      {f}
-                    </span>
+              {/* Protection dashboard */}
+              <div className="relative h-96 bg-black/50 rounded-3xl border border-red-500/10 p-8">
+                <div className="space-y-6">
+                  {/* Protection metrics */}
+                  {[
+                    { metric: 'Protection Uptime', value: 99.9, status: 'excellent' },
+                    { metric: 'Detection Accuracy', value: 98.5, status: 'high' },
+                    { metric: 'Recovery Speed', value: 4.2, status: 'fast' },
+                    { metric: 'False Positives', value: 0.1, status: 'minimal' },
+                    { metric: 'Threat Coverage', value: 99.7, status: 'comprehensive' }
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center gap-4">
+                      <div className="w-32 text-sm font-mono text-red-400">{item.metric}</div>
+                      <div className="flex-1 bg-red-500/10 rounded-full h-3">
+                        <div
+                          className={`h-3 rounded-full ${
+                            item.status === 'excellent' ? 'bg-green-500' :
+                            item.status === 'high' ? 'bg-blue-500' :
+                            item.status === 'fast' ? 'bg-purple-500' :
+                            item.status === 'minimal' ? 'bg-yellow-500' : 'bg-red-500'
+                          } transition-all duration-1000`}
+                          style={{width: `${typeof item.value === 'number' && item.value > 10 ? (item.value / 100) * 100 : item.value}%`}}
+                        ></div>
+                      </div>
+                      <div className="w-20 text-sm font-mono text-right text-white">{item.value}{typeof item.value === 'number' && item.value > 10 ? '%' : typeof item.value === 'number' && item.value < 10 ? 'min' : '%'}</div>
+                      <div className="w-20 text-xs font-mono text-red-400 text-right capitalize">{item.status}</div>
+                    </div>
                   ))}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Architecture Visualization */}
-        <div className="mb-40 p-12 rounded-[4rem] bg-gradient-to-br from-white/[0.02] to-transparent border border-white/10">
-          <div className="text-center mb-16">
-            <span className="text-[10px] font-black tracking-[0.5em] uppercase text-red-500/60">
-              System Architecture
-            </span>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mt-4">Defense Grid</h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 items-center">
-            {[
-              { icon: Server, label: 'Entry Point' },
-              { icon: Eye, label: 'Threat Scan' },
-              { icon: Cpu, label: 'AI Analysis' },
-              { icon: Shield, label: 'Shield Gate' },
-              { icon: Database, label: 'Safe Zone' },
-            ].map((step, i) => (
-              <React.Fragment key={i}>
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center group hover:bg-red-500/20 transition-all">
-                    <step.icon className="w-8 h-8 md:w-10 md:h-10 text-red-500" />
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">
-                    {step.label}
-                  </span>
+                <div className="absolute bottom-4 left-4 right-4 flex justify-between text-xs font-mono text-red-400">
+                  <span>Protection Engine Status</span>
+                  <span>All Systems Operational</span>
                 </div>
-                {i < 4 && (
-                  <div
-                    className="hidden md:block absolute w-12 h-0.5 bg-gradient-to-r from-red-500/50 to-red-500/10"
-                    style={{ left: `${20 + i * 20}%` }}
-                  />
-                )}
-              </React.Fragment>
-            ))}
+              </div>
+            </div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div ref={ctaRef} className="text-center py-32 border-t border-white/10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-8">
-            <Crosshair className="w-4 h-4 text-red-500 animate-pulse" />
-            <span className="text-[10px] font-black tracking-[0.3em] uppercase text-red-400">
-              Ready for Launch
-            </span>
-          </div>
-
-          <h2 className="text-5xl md:text-7xl font-black tracking-tight mb-8">
-            Take the First Step
-            <br />
-            <span className="bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-              Protect Your World
-            </span>
-          </h2>
-
-          <p className="text-xl text-white/40 max-w-2xl mx-auto mb-12">
-            "That's one small click for you, one giant shield for your data."
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-6 items-center justify-center">
-            <button
-              onClick={() => setView('home')}
-              className="px-12 py-6 bg-white/5 border-2 border-white/20 rounded-[2rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 hover:border-white/40 transition-all duration-500 flex items-center gap-4"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Mission Control
-            </button>
-            <a
-              href="https://ransomshield.maula.ai"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative px-12 py-6 bg-gradient-to-r from-red-600 to-red-500 rounded-[2rem] font-black text-sm tracking-[0.4em] uppercase overflow-hidden shadow-[0_20px_60px_-10px_rgba(239,68,68,0.5)] hover:shadow-[0_30px_80px_-10px_rgba(239,68,68,0.8)] transition-all duration-500 hover:scale-105 flex items-center gap-4"
-            >
-              <span className="relative z-10 flex items-center gap-4">
-                Launch Shield
-                <Zap className="w-6 h-6 fill-current group-hover:animate-bounce" />
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            </a>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center py-8 border-t border-white/5">
-          <p className="text-[10px] text-white/20 tracking-widest uppercase">
-            RansomShield • Part of the MAULA.AI Security Ecosystem • Est. 2024
-          </p>
+        <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-red-500/10">
+          <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">
+            Return Home
+          </button>
+          <a href="https://ransomshield.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-red-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl shadow-red-500/20 flex items-center gap-4">
+            Deploy Protection <Shield className="w-5 h-5" />
+          </a>
         </div>
       </div>
-
-      {/* Custom CSS for animations */}
-      <style>{`
-        @keyframes scan {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(100vh); }
-        }
-        .animate-scan {
-          animation: scan 4s linear infinite;
-        }
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-        .transform-gpu {
-          transform: translateZ(0);
-        }
-      `}</style>
     </div>
   );
 };

@@ -28,6 +28,7 @@ import {
   Bell,
   FileSearch,
 } from 'lucide-react';
+import { RadarSweep, ParticleNetwork, DataStream, HexGrid, PulseRings, FloatingIcons } from '../components/AnimatedBackground';
 
 // ============================================================================
 // EPIC ANIMATED VISUAL COMPONENTS - XDR PLATFORM
@@ -66,6 +67,8 @@ const ThreatRadarSweep: React.FC = () => {
     <div className="absolute inset-0 overflow-hidden opacity-30">
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
         <defs>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } } @keyframes transactionFlow { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }`}</style>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
           <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#a855f7" stopOpacity="0.3" />
             <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
@@ -94,7 +97,7 @@ const ThreatRadarSweep: React.FC = () => {
         ))}
 
         {/* Radar sweep */}
-        <g style={{ transformOrigin: '50px 50px', animation: 'spin 4s linear infinite' }}>
+        <g style={{ transformOrigin: '50px 50px', animation: 'spin-radar 4s linear infinite' }}>
           <path d="M50,50 L50,5 A45,45 0 0,1 85,30 Z" fill="url(#radarGradient)" />
           <line
             x1="50"
@@ -228,6 +231,8 @@ const EndpointNetwork: React.FC = () => {
     <div className="absolute inset-0 overflow-hidden opacity-25">
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
         <defs>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } } @keyframes transactionFlow { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }`}</style>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
           <filter id="nodeGlow">
             <feGaussianBlur stdDeviation="2" result="coloredBlur" />
             <feMerge>
@@ -331,6 +336,8 @@ const AlertWaveform: React.FC = () => {
     <div className="absolute inset-0 overflow-hidden opacity-20">
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } } @keyframes transactionFlow { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }`}</style>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
           <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#a855f7" stopOpacity="0.5" />
             <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
@@ -656,6 +663,8 @@ const ThreatHeatmap: React.FC = () => {
     <div className="absolute inset-0 overflow-hidden opacity-20">
       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
         <defs>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } } @keyframes transactionFlow { 0% { transform: translateY(-100%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }`}</style>
+<style>{`@keyframes spin-radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
           <radialGradient id="heatGradient">
             <stop offset="0%" stopColor="#ef4444" stopOpacity="0.8" />
             <stop offset="50%" stopColor="#f97316" stopOpacity="0.4" />
@@ -747,6 +756,10 @@ const XDRPlatformDetail: React.FC = () => {
         <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-purple-600/10 blur-[150px] rounded-full" />
         <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-violet-600/10 blur-[150px] rounded-full" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+        <DataStream color="#a855f7" />
+        <HexGrid color="#a855f7" />
+        <DataStream color="#a855f7" />
+        <HexGrid color="#a855f7" />
         <ThreatRadarSweep />
         <DataStreamMatrix />
         <HexagonGrid />
@@ -754,7 +767,7 @@ const XDRPlatformDetail: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12">
         {/* Header Navigation */}
-        <div className="flex items-center justify-between mb-12">
+        <div className="flex items-center justify-between mb-6 sm:mb-8 md:mb-12">
           <button
             onClick={() => setView('home')}
             className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors"
@@ -778,7 +791,7 @@ const XDRPlatformDetail: React.FC = () => {
         </div>
 
         {/* Epic Hero Banner */}
-        <div className="relative mb-16 rounded-[3rem] overflow-hidden border border-purple-500/20 bg-gradient-to-br from-purple-900/20 via-violet-900/10 to-transparent p-12">
+        <div className="relative mb-8 sm:mb-12 md:mb-16 rounded-[3rem] overflow-hidden border border-purple-500/20 bg-gradient-to-br from-purple-900/20 via-violet-900/10 to-transparent p-12">
           <EndpointNetwork />
           <AlertWaveform />
           <SignalStrength />
@@ -837,7 +850,7 @@ const XDRPlatformDetail: React.FC = () => {
                   Extended Detection & Response
                 </span>
               </div>
-              <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
+              <h1 className="text-5xl md:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4">
                 XDR{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-violet-500">
                   PLATFORM
@@ -904,7 +917,7 @@ const XDRPlatformDetail: React.FC = () => {
           ))}
         </div>
         {/* Content Panels */}
-        <div ref={contentRef} className="space-y-16 mb-16">
+        <div ref={contentRef} className="space-y-16 mb-8 sm:mb-12 md:mb-16">
           {/* Overview Panel */}
           {activeTab === 'overview' && (
             <div className="space-y-12">
@@ -984,7 +997,7 @@ const XDRPlatformDetail: React.FC = () => {
               <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-900/20 to-transparent p-8">
                 <ThreatRadarSweep />
                 <div className="relative z-10">
-                  <h3 className="text-3xl font-bold mb-6">Real-Time Threat Detection</h3>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6">Real-Time Threat Detection</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {[
                       {
@@ -1014,7 +1027,7 @@ const XDRPlatformDetail: React.FC = () => {
               <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-900/20 to-transparent p-8">
                 <EndpointNetwork />
                 <div className="relative z-10">
-                  <h3 className="text-3xl font-bold mb-6">Automated Response Actions</h3>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6">Automated Response Actions</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {[
                       {
@@ -1063,7 +1076,7 @@ const XDRPlatformDetail: React.FC = () => {
               <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-purple-900/20 to-transparent p-8">
                 <AlertWaveform />
                 <div className="relative z-10">
-                  <h3 className="text-3xl font-bold mb-6">Security Analytics & Reporting</h3>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6">Security Analytics & Reporting</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
                       {
@@ -1099,7 +1112,7 @@ const XDRPlatformDetail: React.FC = () => {
         </div>
 
         {/* Stats Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 py-16 border-y border-white/10 text-center mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 py-16 border-y border-white/10 text-center mb-8 sm:mb-12 md:mb-16">
           <div>
             <div className="text-5xl font-black text-purple-500">50+</div>
             <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mt-2">

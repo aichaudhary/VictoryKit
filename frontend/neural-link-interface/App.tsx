@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -6,7 +5,6 @@ import SettingsPanel from './components/SettingsPanel';
 import ChatBox from './components/ChatBox';
 import NavigationDrawer from './components/NavigationDrawer';
 import Overlay from './components/Overlay';
-import Footer from './components/Footer';
 // Fix: Import WorkspaceMode which was missing and causing a reference error on line 312
 import { ChatSession, Message, SettingsState, NavItem, CanvasState, WorkspaceMode } from './types';
 import { DEFAULT_SETTINGS, NEURAL_PRESETS } from './constants';
@@ -37,18 +35,18 @@ const App: React.FC = () => {
     return [
       {
         id: '1',
-        name: "PROTOCOL_INITIAL_CONTACT",
+        name: 'PROTOCOL_INITIAL_CONTACT',
         active: true,
         messages: [
-          { 
-            id: 'init-1', 
-            sender: 'AGENT', 
-            text: 'Uplink established. Secure line verified. Neural link at 100% capacity. Workspace synchronized.', 
-            timestamp: new Date().toLocaleTimeString() 
-          }
+          {
+            id: 'init-1',
+            sender: 'AGENT',
+            text: 'Uplink established. Secure line verified. Neural link at 100% capacity. Workspace synchronized.',
+            timestamp: new Date().toLocaleTimeString(),
+          },
         ],
-        settings: { ...DEFAULT_SETTINGS }
-      }
+        settings: { ...DEFAULT_SETTINGS },
+      },
     ];
   });
 
@@ -56,7 +54,7 @@ const App: React.FC = () => {
     localStorage.setItem('neural_sessions', JSON.stringify(sessions));
   }, [sessions]);
 
-  const activeSession = sessions.find(s => s.active) || sessions[0];
+  const activeSession = sessions.find((s) => s.active) || sessions[0];
 
   const handleSend = async (text: string) => {
     if (isThinking) return;
@@ -64,9 +62,9 @@ const App: React.FC = () => {
     const timestamp = new Date().toLocaleTimeString();
     const userMsg: Message = { id: Date.now().toString(), sender: 'YOU', text, timestamp };
 
-    setSessions(prev => prev.map(s => 
-      s.active ? { ...s, messages: [...s.messages, userMsg] } : s
-    ));
+    setSessions((prev) =>
+      prev.map((s) => (s.active ? { ...s, messages: [...s.messages, userMsg] } : s))
+    );
 
     setIsThinking(true);
     const result = await callGemini(text, activeSession.settings);
@@ -85,18 +83,18 @@ const App: React.FC = () => {
       updateActiveSettings({ ...activeSession.settings, ...settingsUpdate } as SettingsState);
     }
 
-    const agentMsg: Message = { 
-      id: (Date.now() + 1).toString(), 
-      sender: 'AGENT', 
-      text: result.text, 
+    const agentMsg: Message = {
+      id: (Date.now() + 1).toString(),
+      sender: 'AGENT',
+      text: result.text,
       timestamp: new Date().toLocaleTimeString(),
       isImage: result.isImage,
-      groundingUrls: result.urls
+      groundingUrls: result.urls,
     };
 
-    setSessions(prev => prev.map(s => 
-      s.active ? { ...s, messages: [...s.messages, agentMsg] } : s
-    ));
+    setSessions((prev) =>
+      prev.map((s) => (s.active ? { ...s, messages: [...s.messages, agentMsg] } : s))
+    );
   };
 
   const handleFileUpload = (file: File) => {
@@ -105,8 +103,12 @@ const App: React.FC = () => {
       const content = e.target?.result as string;
       const isImage = file.type.startsWith('image/');
       const isVideo = file.type.startsWith('video/');
-      const isCode = file.name.endsWith('.js') || file.name.endsWith('.py') || file.name.endsWith('.html') || file.name.endsWith('.css');
-      
+      const isCode =
+        file.name.endsWith('.js') ||
+        file.name.endsWith('.py') ||
+        file.name.endsWith('.html') ||
+        file.name.endsWith('.css');
+
       let type: CanvasState['type'] = 'text';
       if (isImage) type = 'image';
       else if (isVideo) type = 'video';
@@ -119,8 +121,8 @@ const App: React.FC = () => {
           ...activeSession.settings.canvas,
           content: content,
           type: type,
-          title: `UPLOAD_${file.name.toUpperCase()}`
-        }
+          title: `UPLOAD_${file.name.toUpperCase()}`,
+        },
       });
 
       handleSend(`I have uploaded a file: ${file.name}. Please analyze it in the workspace.`);
@@ -138,9 +140,10 @@ const App: React.FC = () => {
       recognitionRef.current?.stop();
       setIsRecordingSTT(false);
     } else {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("Speech Recognition not supported in this browser environment.");
+        alert('Speech Recognition not supported in this browser environment.');
         return;
       }
       const recognition = new SpeechRecognition();
@@ -171,8 +174,12 @@ const App: React.FC = () => {
       setIsLiveActive(true);
 
       // Audio setup
-      const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
-      const outputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
+      const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({
+        sampleRate: 16000,
+      });
+      const outputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({
+        sampleRate: 24000,
+      });
       audioContextRef.current = outputCtx;
 
       try {
@@ -188,15 +195,17 @@ const App: React.FC = () => {
                 const l = inputData.length;
                 const int16 = new Int16Array(l);
                 for (let i = 0; i < l; i++) int16[i] = inputData[i] * 32768;
-                
+
                 const binary = new Uint8Array(int16.buffer);
                 // Fix: Implemented manual audio encoding following GenAI SDK guidelines
                 let bStr = '';
                 for (let i = 0; i < binary.length; i++) bStr += String.fromCharCode(binary[i]);
                 const base64 = btoa(bStr);
 
-                sessionPromise.then(session => {
-                  session.sendRealtimeInput({ media: { data: base64, mimeType: 'audio/pcm;rate=16000' } });
+                sessionPromise.then((session) => {
+                  session.sendRealtimeInput({
+                    media: { data: base64, mimeType: 'audio/pcm;rate=16000' },
+                  });
                 });
               };
               source.connect(scriptProcessor);
@@ -209,7 +218,7 @@ const App: React.FC = () => {
                 const binStr = atob(base64);
                 const bytes = new Uint8Array(binStr.length);
                 for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
-                
+
                 const dataInt16 = new Int16Array(bytes.buffer);
                 const buffer = outputCtx.createBuffer(1, dataInt16.length, 24000);
                 const channelData = buffer.getChannelData(0);
@@ -218,41 +227,51 @@ const App: React.FC = () => {
                 const source = outputCtx.createBufferSource();
                 source.buffer = buffer;
                 source.connect(outputCtx.destination);
-                
-                nextStartTimeRef.current = Math.max(nextStartTimeRef.current, outputCtx.currentTime);
+
+                nextStartTimeRef.current = Math.max(
+                  nextStartTimeRef.current,
+                  outputCtx.currentTime
+                );
                 source.start(nextStartTimeRef.current);
                 nextStartTimeRef.current += buffer.duration;
                 sourcesRef.current.add(source);
               }
               if (message.serverContent?.interrupted) {
-                sourcesRef.current.forEach(s => s.stop());
+                sourcesRef.current.forEach((s) => s.stop());
                 sourcesRef.current.clear();
                 nextStartTimeRef.current = 0;
               }
             },
             onclose: () => setIsLiveActive(false),
-            onerror: () => setIsLiveActive(false)
+            onerror: () => setIsLiveActive(false),
           },
           config: {
             responseModalities: [Modality.AUDIO],
-            systemInstruction: activeSession.settings.customPrompt
-          }
+            systemInstruction: activeSession.settings.customPrompt,
+          },
         });
         liveSessionRef.current = await sessionPromise;
       } catch (err) {
-        console.error("Live failed:", err);
+        console.error('Live failed:', err);
         setIsLiveActive(false);
       }
     }
   };
 
   const deleteSession = (id: string) => {
-    setSessions(prev => {
-      const filtered = prev.filter(s => s.id !== id);
-      if (filtered.length === 0) return [
-        { id: Date.now().toString(), name: "NEW_PROTOCOL", active: true, messages: [], settings: { ...DEFAULT_SETTINGS } }
-      ];
-      if (prev.find(s => s.id === id)?.active) filtered[0].active = true;
+    setSessions((prev) => {
+      const filtered = prev.filter((s) => s.id !== id);
+      if (filtered.length === 0)
+        return [
+          {
+            id: Date.now().toString(),
+            name: 'NEW_PROTOCOL',
+            active: true,
+            messages: [],
+            settings: { ...DEFAULT_SETTINGS },
+          },
+        ];
+      if (prev.find((s) => s.id === id)?.active) filtered[0].active = true;
       return filtered;
     });
   };
@@ -260,62 +279,110 @@ const App: React.FC = () => {
   const handleApplyPreset = (type: string) => {
     const preset = NEURAL_PRESETS[type];
     if (!preset) return;
-    updateActiveSettings({ ...activeSession.settings, customPrompt: preset.prompt, temperature: preset.temp });
+    updateActiveSettings({
+      ...activeSession.settings,
+      customPrompt: preset.prompt,
+      temperature: preset.temp,
+    });
   };
 
   const createNewSession = () => {
     const id = Date.now().toString();
     const newSession: ChatSession = {
-      id, name: `PROTOCOL_LOG_${id.slice(-4)}`, active: true, 
-      messages: [{ id: `init-${id}`, sender: 'AGENT', text: 'New neural channel opened. Workspace ready.', timestamp: new Date().toLocaleTimeString() }],
-      settings: { ...DEFAULT_SETTINGS }
+      id,
+      name: `PROTOCOL_LOG_${id.slice(-4)}`,
+      active: true,
+      messages: [
+        {
+          id: `init-${id}`,
+          sender: 'AGENT',
+          text: 'New neural channel opened. Workspace ready.',
+          timestamp: new Date().toLocaleTimeString(),
+        },
+      ],
+      settings: { ...DEFAULT_SETTINGS },
     };
-    setSessions(prev => prev.map(s => ({ ...s, active: false })).concat(newSession));
+    setSessions((prev) => prev.map((s) => ({ ...s, active: false })).concat(newSession));
   };
 
   const selectSession = (id: string) => {
-    setSessions(prev => prev.map(s => ({ ...s, active: s.id === id })));
+    setSessions((prev) => prev.map((s) => ({ ...s, active: s.id === id })));
   };
 
   const updateActiveSettings = (settings: SettingsState) => {
-    setSessions(prev => prev.map(s => s.active ? { ...s, settings } : s));
+    setSessions((prev) => prev.map((s) => (s.active ? { ...s, settings } : s)));
   };
 
   return (
     <div className="matrix-bg text-gray-300 h-screen flex flex-col overflow-hidden relative selection:bg-green-500/30 selection:text-white font-mono">
       <Overlay active={isOverlayActive} onActivate={() => setIsOverlayActive(false)} />
-      <div className={`flex flex-col h-full transition-opacity duration-300 ${isNavDrawerOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <Header 
-          onToggleLeft={() => setIsLeftPanelOpen(!isLeftPanelOpen)} 
+      <div
+        className={`flex flex-col h-full transition-opacity duration-300 ${isNavDrawerOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+      >
+        <Header
+          onToggleLeft={() => setIsLeftPanelOpen(!isLeftPanelOpen)}
           onToggleRight={() => setIsRightPanelOpen(!isRightPanelOpen)}
           onToggleNav={() => setIsNavDrawerOpen(!isNavDrawerOpen)}
-          onClear={() => setSessions(prev => prev.map(s => s.active ? { ...s, messages: [] } : s))}
+          onClear={() =>
+            setSessions((prev) => prev.map((s) => (s.active ? { ...s, messages: [] } : s)))
+          }
           onLock={() => setIsOverlayActive(true)}
-          leftOpen={isLeftPanelOpen} rightOpen={isRightPanelOpen}
+          leftOpen={isLeftPanelOpen}
+          rightOpen={isRightPanelOpen}
         />
         <div className="flex-grow flex relative overflow-hidden z-10">
           {(isLeftPanelOpen || isRightPanelOpen) && (
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-[50] transition-opacity animate-in fade-in duration-300" onClick={() => { setIsLeftPanelOpen(false); setIsRightPanelOpen(false); }}></div>
+            <div
+              className="absolute inset-0 bg-black/40 backdrop-blur-[2px] z-[50] transition-opacity animate-in fade-in duration-300"
+              onClick={() => {
+                setIsLeftPanelOpen(false);
+                setIsRightPanelOpen(false);
+              }}
+            ></div>
           )}
-          <Sidebar sessions={sessions} onSelect={selectSession} onCreate={createNewSession} onDelete={deleteSession} isOpen={isLeftPanelOpen} />
-          <ChatBox 
-            messages={activeSession.messages} isThinking={isThinking}
-            isRecordingSTT={isRecordingSTT} isLiveActive={isLiveActive}
-            onSend={handleSend} onFileUpload={handleFileUpload}
-            onToggleSTT={toggleSTT} onToggleLive={toggleLive}
-            agentSettings={activeSession.settings} onUpdateSettings={updateActiveSettings}
+          <Sidebar
+            sessions={sessions}
+            onSelect={selectSession}
+            onCreate={createNewSession}
+            onDelete={deleteSession}
+            isOpen={isLeftPanelOpen}
           />
-          <SettingsPanel settings={activeSession.settings} onChange={updateActiveSettings} onApplyPreset={handleApplyPreset} onReset={() => updateActiveSettings({ ...activeSession.settings, ...DEFAULT_SETTINGS })} isOpen={isRightPanelOpen} />
+          <ChatBox
+            messages={activeSession.messages}
+            isThinking={isThinking}
+            isRecordingSTT={isRecordingSTT}
+            isLiveActive={isLiveActive}
+            onSend={handleSend}
+            onFileUpload={handleFileUpload}
+            onToggleSTT={toggleSTT}
+            onToggleLive={toggleLive}
+            agentSettings={activeSession.settings}
+            onUpdateSettings={updateActiveSettings}
+          />
+          <SettingsPanel
+            settings={activeSession.settings}
+            onChange={updateActiveSettings}
+            onApplyPreset={handleApplyPreset}
+            onReset={() => updateActiveSettings({ ...activeSession.settings, ...DEFAULT_SETTINGS })}
+            isOpen={isRightPanelOpen}
+          />
         </div>
-        <Footer />
       </div>
-      <NavigationDrawer isOpen={isNavDrawerOpen} onClose={() => setIsNavDrawerOpen(false)} onModuleSelect={(item: NavItem) => {
+      <NavigationDrawer
+        isOpen={isNavDrawerOpen}
+        onClose={() => setIsNavDrawerOpen(false)}
+        onModuleSelect={(item: NavItem) => {
           let mode: WorkspaceMode = 'CHAT';
           if (item.tool === 'browser') mode = 'PORTAL';
           else if (item.tool === 'canvas') mode = 'CANVAS';
-          updateActiveSettings({ ...activeSession.settings, activeTool: item.tool, workspaceMode: mode });
+          updateActiveSettings({
+            ...activeSession.settings,
+            activeTool: item.tool,
+            workspaceMode: mode,
+          });
           setIsNavDrawerOpen(false);
-      }} />
+        }}
+      />
     </div>
   );
 };
