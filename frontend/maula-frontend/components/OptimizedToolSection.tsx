@@ -11,6 +11,7 @@ import DarkWebMonitorHomeVisual from './tool-visuals/DarkWebMonitorHomeVisual';
 import ZeroDayDetectHomeVisual from './tool-visuals/ZeroDayDetectHomeVisual';
 import RansomShieldHomeVisual from './tool-visuals/RansomShieldHomeVisual';
 import PhishNetAIHomeVisual from './tool-visuals/PhishNetAIHomeVisual';
+import VulnScanHomeVisual from './tool-visuals/VulnScanHomeVisual';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -248,7 +249,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
             ref={imgRef} 
             className="flex-1 relative w-full aspect-video md:aspect-square max-w-2xl rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] group border border-white/10 will-change-transform"
           >
-            {/* Render animated visuals for first 5 tools, static image for others */}
+            {/* Render animated visuals for first 6 tools, static image for others */}
             {tool.id === 1 ? (
               <FraudGuardHomeVisual />
             ) : tool.id === 2 ? (
@@ -259,6 +260,8 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
               <RansomShieldHomeVisual />
             ) : tool.id === 5 ? (
               <PhishNetAIHomeVisual />
+            ) : tool.id === 6 ? (
+              <VulnScanHomeVisual />
             ) : (
               <>
                 <img 
@@ -271,7 +274,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
             )}
             
             {/* AI Interface only for non-animated tools */}
-            {tool.id > 4 && (
+            {tool.id > 6 && (
               <div className="absolute bottom-6 left-6 right-6 z-20">
                 <AIInterface currentImageUrl={currentImageUrl} onUpdateImage={set => setCurrentImageUrl(set)} />
               </div>
