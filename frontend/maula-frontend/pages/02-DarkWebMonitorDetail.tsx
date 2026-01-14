@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { gsap } from 'gsap';
 import { useScroll } from '../context/ScrollContext';
 import {
@@ -11,7 +11,234 @@ import {
   Cpu,
   Network,
   Zap,
+  Shield,
+  AlertTriangle,
+  CheckCircle2,
+  Lock,
+  Activity,
+  TrendingUp,
+  Users,
+  FileWarning,
 } from 'lucide-react';
+
+// ============================================================================
+// DARK WEB MONITORING VISUAL - Animated tool showcase
+// ============================================================================
+
+const DarkWebMonitoringVisual: React.FC = () => {
+  const [activeMonitor, setActiveMonitor] = useState(0);
+  const [scanProgress, setScanProgress] = useState(0);
+  const [monitorResults, setMonitorResults] = useState<{ threats: number; sources: number }>({
+    threats: 0,
+    sources: 0,
+  });
+
+  const monitors = [
+    {
+      id: 'live-threats',
+      name: 'Live Threats',
+      icon: ShieldAlert,
+      description: 'Real-time threat monitoring',
+      color: 'from-red-500 to-orange-500',
+      bgColor: 'bg-red-500/20',
+      borderColor: 'border-red-500/40',
+      textColor: 'text-red-400',
+      stats: { label: 'Active Threats', value: '847K' },
+    },
+    {
+      id: 'asset-monitor',
+      name: 'Asset Monitor',
+      icon: Database,
+      description: 'Monitor exposed assets',
+      color: 'from-purple-500 to-violet-500',
+      bgColor: 'bg-purple-500/20',
+      borderColor: 'border-purple-500/40',
+      textColor: 'text-purple-400',
+      stats: { label: 'Assets Tracked', value: '12.8K' },
+    },
+    {
+      id: 'breach-check',
+      name: 'Breach Check',
+      icon: AlertTriangle,
+      description: 'Detect data breaches',
+      color: 'from-orange-500 to-yellow-500',
+      bgColor: 'bg-orange-500/20',
+      borderColor: 'border-orange-500/40',
+      textColor: 'text-orange-400',
+      stats: { label: 'Breaches Found', value: '3.4K' },
+    },
+    {
+      id: 'intel-gather',
+      name: 'Intel Gather',
+      icon: Eye,
+      description: 'Gather threat intelligence',
+      color: 'from-cyan-500 to-blue-500',
+      bgColor: 'bg-cyan-500/20',
+      borderColor: 'border-cyan-500/40',
+      textColor: 'text-cyan-400',
+      stats: { label: 'Intel Sources', value: '50K+' },
+    },
+    {
+      id: 'osint-search',
+      name: 'OSINT Search',
+      icon: Search,
+      description: 'Open source intelligence',
+      color: 'from-green-500 to-emerald-500',
+      bgColor: 'bg-green-500/20',
+      borderColor: 'border-green-500/40',
+      textColor: 'text-green-400',
+      stats: { label: 'OSINT Queries', value: '127' },
+    },
+  ];
+
+  // Auto-cycle through monitors
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveMonitor((prev) => (prev + 1) % monitors.length);
+      setScanProgress(0);
+      setMonitorResults({ threats: 0, sources: 0 });
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Simulate monitoring progress
+  useEffect(() => {
+    const progressInterval = setInterval(() => {
+      setScanProgress((prev) => {
+        if (prev >= 100) {
+          setMonitorResults({
+            threats: Math.floor(Math.random() * 50) + 10,
+            sources: Math.floor(Math.random() * 100) + 200,
+          });
+          return 100;
+        }
+        return prev + 5;
+      });
+    }, 100);
+    return () => clearInterval(progressInterval);
+  }, [activeMonitor]);
+
+  const currentMonitor = monitors[activeMonitor];
+  const CurrentIcon = currentMonitor.icon;
+
+  return (
+    <div className="relative group rounded-[3rem] overflow-hidden border border-purple-500/20 shadow-2xl bg-gradient-to-br from-[#18132a] to-[#0d0414] backdrop-blur-sm p-6 sm:p-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="w-3 h-3 rounded-full bg-purple-500 animate-pulse" />
+          <span className="text-[10px] font-black tracking-[0.3em] uppercase text-purple-400">
+            Dark Web Intelligence
+          </span>
+        </div>
+        <div className="text-[10px] font-mono text-white/40">MONITORING</div>
+      </div>
+
+      {/* Monitor Title */}
+      <h3 className="text-xl sm:text-2xl font-black text-white mb-6">Threat Intelligence Suite</h3>
+
+      {/* Monitor Tabs */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {monitors.map((monitor, index) => {
+          const Icon = monitor.icon;
+          return (
+            <button
+              key={monitor.id}
+              onClick={() => {
+                setActiveMonitor(index);
+                setScanProgress(0);
+                setMonitorResults({ threats: 0, sources: 0 });
+              }}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${
+                activeMonitor === index
+                  ? `bg-gradient-to-r ${monitor.color} text-white shadow-lg`
+                  : 'bg-white/5 text-white/50 hover:bg-white/10'
+              }`}
+            >
+              <Icon className="w-3 h-3" />
+              <span className="hidden sm:inline">{monitor.name}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Active Monitor Display */}
+      <div
+        className={`relative p-6 rounded-2xl ${currentMonitor.bgColor} border ${currentMonitor.borderColor} mb-6`}
+      >
+        <div className="flex items-center gap-4 mb-4">
+          <div
+            className={`w-12 h-12 rounded-xl bg-gradient-to-br ${currentMonitor.color} flex items-center justify-center`}
+          >
+            <CurrentIcon className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <div className="font-bold text-white text-lg">{currentMonitor.name}</div>
+            <div className="text-white/60 text-sm">{currentMonitor.description}</div>
+          </div>
+        </div>
+
+        {/* Monitor Status */}
+        <div className="flex items-center gap-3 bg-black/40 rounded-xl p-3 mb-4">
+          <Activity className="w-4 h-4 text-white/40" />
+          <span className="font-mono text-sm text-white/60 flex-1">
+            Monitoring {currentMonitor.stats.label}...
+          </span>
+          <div
+            className={`px-3 py-1 rounded-lg bg-gradient-to-r ${currentMonitor.color} text-white text-xs font-bold flex items-center gap-2`}
+          >
+            <span>{currentMonitor.stats.value}</span>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="mb-4">
+          <div className="flex justify-between text-[10px] font-mono mb-1">
+            <span className={currentMonitor.textColor}>Scanning...</span>
+            <span className="text-white/60">{scanProgress}%</span>
+          </div>
+          <div className="w-full bg-black/40 rounded-full h-2">
+            <div
+              className={`h-2 rounded-full bg-gradient-to-r ${currentMonitor.color} transition-all duration-200`}
+              style={{ width: `${scanProgress}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Results */}
+        {scanProgress === 100 && (
+          <div className="flex items-center gap-4 animate-fadeIn">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-orange-400" />
+              <span className="text-orange-400 font-mono text-sm">
+                {monitorResults.threats} Threats
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Database className="w-4 h-4 text-cyan-400" />
+              <span className="text-cyan-400 font-mono text-sm">
+                {monitorResults.sources} Sources
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom Status */}
+      <div className="flex items-center justify-between text-[10px] font-mono">
+        <span className="text-white/40">TOR Network • I2P • Dark Markets</span>
+        <span className="text-purple-400 flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+          Monitoring
+        </span>
+      </div>
+
+      {/* Animated background elements */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-violet-500/10 to-transparent rounded-full blur-2xl" />
+    </div>
+  );
+};
 
 const DarkWebMonitorDetail: React.FC = () => {
   const { setView } = useScroll();
@@ -66,137 +293,39 @@ const DarkWebMonitorDetail: React.FC = () => {
           </span>
         </div>
 
-        {/* Realistic Tool Preview Hero Section */}
-        <div className="relative rounded-3xl border border-purple-500/20 bg-gradient-to-br from-[#18132a] to-[#0d0414] shadow-2xl mb-40 overflow-hidden">
-          {/* Header */}
-          <div className="flex items-center justify-between px-8 pt-8 pb-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center">
-                <Eye className="w-7 h-7 text-white" />
-              </div>
-              <div>
-                <div className="font-black text-2xl text-white leading-tight">DarkWebMonitor</div>
-                <div className="text-xs text-purple-300 font-mono">
-                  Advanced Threat Intelligence Platform
-                </div>
-              </div>
+        {/* Hero Section with Animated Monitoring Visual */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 md:gap-24 items-center mb-40">
+          <div ref={heroTextRef} className="space-y-10">
+            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-purple-500/20 backdrop-blur-3xl">
+              <Eye className="w-4 h-4 text-purple-500 animate-pulse" />
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-purple-400">
+                Dark Web Intelligence
+              </span>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="px-3 py-1 bg-red-500/20 rounded text-xs font-mono text-red-400">
-                12 Critical
-              </div>
-              <div className="px-3 py-1 bg-orange-500/20 rounded text-xs font-mono text-orange-400">
-                43 Active
-              </div>
-              <button className="px-5 py-2 bg-slate-800/70 border border-slate-700/50 rounded-lg text-white text-xs font-bold flex items-center gap-2 hover:bg-slate-700/80 transition-all">
-                <span>Back to Maula</span>
-              </button>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] uppercase">
+              DARKWEB <span className="text-purple-500">MONITOR</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-white/60 font-medium leading-relaxed max-w-xl">
+              Intelligence that sees everything. Advanced threat intelligence platform that monitors
+              dark web markets, forums, and encrypted channels for stolen credentials and data.
+            </p>
+            <div className="flex flex-wrap gap-4 pt-4">
               <a
-                href="/neural-link/"
-                className="px-5 py-2 bg-gradient-to-r from-purple-600 to-violet-600 rounded-lg text-white text-xs font-bold flex items-center gap-2 shadow-lg hover:from-purple-500 hover:to-violet-500 transition-all"
+                href="https://darkwebmonitor.maula.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-4 bg-gradient-to-r from-purple-600 to-violet-600 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-purple-500/30 flex items-center gap-3"
               >
-                <span>AI Assistant</span>
+                <Eye className="w-4 h-4" /> Launch Monitor
               </a>
-            </div>
-          </div>
-          {/* Tabs */}
-          <div className="flex items-center gap-2 px-8 pb-2">
-            {[
-              'Live Threats',
-              'Asset Monitor',
-              'Breach Check',
-              'Leak Scanner',
-              'Intel Gather',
-              'OSINT Search',
-              'Security Score',
-            ].map((tab, i) => (
-              <div
-                key={tab}
-                className={`px-4 py-2 rounded-lg text-xs font-bold ${i === 0 ? 'bg-green-600/20 text-green-400' : 'text-gray-400 hover:text-white hover:bg-slate-800/50'} transition-all cursor-pointer`}
-              >
-                {tab}
-              </div>
-            ))}
-          </div>
-          {/* Stats Row */}
-          <div className="flex gap-6 px-8 py-4">
-            <div className="flex-1 bg-slate-900/60 rounded-xl p-4 flex flex-col items-center">
-              <div className="text-3xl font-black text-green-400">847,302</div>
-              <div className="text-xs text-gray-400">Global Threats (24h)</div>
-            </div>
-            <div className="flex-1 bg-slate-900/60 rounded-xl p-4 flex flex-col items-center">
-              <div className="text-3xl font-black text-orange-400">12,850</div>
-              <div className="text-xs text-gray-400">Active Attacks</div>
-            </div>
-            <div className="flex-1 bg-slate-900/60 rounded-xl p-4 flex flex-col items-center">
-              <div className="text-3xl font-black text-red-400">3,421</div>
-              <div className="text-xs text-gray-400">Compromised Systems</div>
-            </div>
-            <div className="flex-1 bg-slate-900/60 rounded-xl p-4 flex flex-col items-center">
-              <div className="text-3xl font-black text-purple-400">127</div>
-              <div className="text-xs text-gray-400">Data Breaches (Today)</div>
-            </div>
-          </div>
-          {/* Live Threat Feed & Threat Distribution */}
-          <div className="flex gap-8 px-8 pb-8">
-            {/* Live Threat Feed */}
-            <div className="flex-1 bg-slate-900/60 rounded-2xl p-6">
-              <div className="font-bold text-white mb-2">Live Threat Feed</div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-yellow-400 text-xs font-mono">
-                  <ShieldAlert className="w-4 h-4" /> Malware{' '}
-                  <span className="bg-yellow-700/30 text-yellow-300 px-2 py-0.5 rounded ml-2">
-                    MEDIUM
-                  </span>{' '}
-                  <span className="text-gray-400 ml-2">Supply chain compromise detected</span>
-                </div>
-                <div className="flex items-center gap-2 text-blue-400 text-xs font-mono">
-                  <Database className="w-4 h-4" /> Breach{' '}
-                  <span className="bg-blue-700/30 text-blue-300 px-2 py-0.5 rounded ml-2">LOW</span>{' '}
-                  <span className="text-gray-400 ml-2">Cryptominer deployment blocked</span>
-                </div>
-                <div className="flex items-center gap-2 text-green-400 text-xs font-mono">
-                  <Cpu className="w-4 h-4" /> Apt{' '}
-                  <span className="bg-green-700/30 text-green-300 px-2 py-0.5 rounded ml-2">
-                    LOW
-                  </span>{' '}
-                  <span className="text-gray-400 ml-2">Cryptominer deployment blocked</span>
-                </div>
-                <div className="flex items-center gap-2 text-yellow-400 text-xs font-mono">
-                  <ShieldAlert className="w-4 h-4" /> Phishing{' '}
-                  <span className="bg-yellow-700/30 text-yellow-300 px-2 py-0.5 rounded ml-2">
-                    MEDIUM
-                  </span>{' '}
-                  <span className="text-gray-400 ml-2">Suspicious login detected</span>
-                </div>
-              </div>
-            </div>
-            {/* Threat Distribution */}
-            <div className="w-80 bg-slate-900/60 rounded-2xl p-6">
-              <div className="font-bold text-white mb-2">Threat Distribution</div>
-              <div className="space-y-2">
-                {[
-                  { label: 'Phishing', value: 4, color: 'bg-green-400' },
-                  { label: 'Malware', value: 4, color: 'bg-yellow-400' },
-                  { label: 'Ddos', value: 3, color: 'bg-blue-400' },
-                  { label: 'Breach', value: 3, color: 'bg-purple-400' },
-                  { label: 'Apt', value: 3, color: 'bg-green-300' },
-                  { label: 'Ransomware', value: 2, color: 'bg-red-400' },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-center gap-2 text-xs">
-                    <span className="w-20 text-gray-400">{item.label}</span>
-                    <div className="flex-1 h-2 rounded-full bg-slate-800">
-                      <div
-                        className={`${item.color} h-2 rounded-full`}
-                        style={{ width: `${item.value * 20}%` }}
-                      ></div>
-                    </div>
-                    <span className="w-6 text-right text-white font-mono">{item.value}</span>
-                  </div>
-                ))}
+              <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase">
+                50K+ Sources
               </div>
             </div>
           </div>
+
+          {/* Animated Dark Web Monitoring Visual */}
+          <DarkWebMonitoringVisual />
         </div>
 
         <div ref={contentRef} className="space-y-40 mb-40">
