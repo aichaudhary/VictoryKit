@@ -1,38 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
+import { X, Cpu, Activity, Zap, ChevronRight } from 'lucide-react';
 import { NAV_ITEMS } from '../constants';
 import { NavItem } from '../types';
-
-// Inline SVG icons to avoid lucide-react compatibility issues with React 19
-const XIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M18 6L6 18"/><path d="M6 6l12 12"/>
-  </svg>
-);
-
-const CpuIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>
-  </svg>
-);
-
-const ActivityIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-  </svg>
-);
-
-const ZapIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-  </svg>
-);
-
-const ChevronRightIcon = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="m9 18 6-6-6-6"/>
-  </svg>
-);
 
 interface NavigationDrawerProps {
   isOpen: boolean;
@@ -66,7 +36,7 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ isOpen, onClose, on
         <div>
           <div className="flex items-center gap-4 mb-2">
             <div className="p-3 bg-emerald-500/10 rounded-sm border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-              <CpuIcon className="text-emerald-500 animate-pulse" />
+              <Cpu size={32} className="text-emerald-500 animate-pulse" />
             </div>
             <div>
               <h3 className="text-green-400 font-bold text-2xl sm:text-4xl glow-green tracking-[0.3em] font-mono leading-none">
@@ -84,7 +54,7 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ isOpen, onClose, on
           onClick={onClose} 
           className="text-gray-500 hover:text-red-500 p-4 hover:bg-red-500/5 rounded-full border border-gray-800 hover:border-red-500/20 transition-all active:scale-95"
         >
-          <XIcon />
+          <X size={32} />
         </button>
       </div>
       
@@ -112,7 +82,7 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ isOpen, onClose, on
               <div className="text-[10px] text-gray-700 font-mono tracking-[0.5em] group-hover:text-emerald-600 transition-colors uppercase font-bold">
                 NODE_0{idx + 1}
               </div>
-              <ChevronRightIcon className="text-gray-800 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+              <ChevronRight size={16} className="text-gray-800 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
             </div>
             
             <div className="mb-6 text-5xl group-hover:scale-110 transition-transform duration-500 filter drop-shadow-[0_0_12px_rgba(16,185,129,0.3)] group-hover:drop-shadow-[0_0_20px_rgba(16,185,129,0.6)]">
@@ -144,7 +114,7 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ isOpen, onClose, on
       <div className="p-8 pb-12 bg-[#080808]/50 flex justify-between items-center px-12 relative overflow-hidden">
         <div className="flex gap-10 items-center z-10">
           <div className="flex items-center gap-4">
-            <ActivityIcon className="text-emerald-600 animate-[pulse_1s_infinite]" />
+            <Activity size={18} className="text-emerald-600 animate-[pulse_1s_infinite]" />
             <span className="text-xs text-emerald-500/70 font-mono uppercase tracking-[0.4em] font-bold">
               SCANNING SUB-SECTORS...
             </span>
@@ -157,7 +127,7 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({ isOpen, onClose, on
               <div key={i} className={`w-1.5 h-4 border border-emerald-900/40 ${i < 8 ? 'bg-emerald-500/20' : 'bg-transparent'} animate-pulse`} style={{ animationDelay: `${i * 100}ms` }}></div>
             ))}
           </div>
-          <ZapIcon className="text-emerald-900/30" />
+          <Zap size={18} className="text-emerald-900/30" />
         </div>
       </div>
     </div>

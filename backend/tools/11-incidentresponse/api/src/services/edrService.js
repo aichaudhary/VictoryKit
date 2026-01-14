@@ -1,7 +1,7 @@
 /**
  * EDR Integration Service
  * Real-world integrations for endpoint detection and response
- * 
+ *
  * Integrates with: CrowdStrike Falcon, SentinelOne, Microsoft Defender, Carbon Black
  */
 
@@ -10,24 +10,26 @@ const axios = require('axios');
 class EDRService {
   constructor() {
     // CrowdStrike
-    this.csClientId = process.env.INCIDENTRESPONSE_CROWDSTRIKE_CLIENT_ID;
-    this.csClientSecret = process.env.INCIDENTRESPONSE_CROWDSTRIKE_CLIENT_SECRET;
-    this.csBaseUrl = process.env.INCIDENTRESPONSE_CROWDSTRIKE_BASE_URL || 'https://api.crowdstrike.com';
+    this.csClientId = process.env.incidentcommand_CROWDSTRIKE_CLIENT_ID;
+    this.csClientSecret = process.env.incidentcommand_CROWDSTRIKE_CLIENT_SECRET;
+    this.csBaseUrl =
+      process.env.incidentcommand_CROWDSTRIKE_BASE_URL || 'https://api.crowdstrike.com';
     this.csToken = null;
     this.csTokenExpiry = null;
-    
+
     // SentinelOne
-    this.s1ApiKey = process.env.INCIDENTRESPONSE_SENTINELONE_API_KEY;
-    this.s1BaseUrl = process.env.INCIDENTRESPONSE_SENTINELONE_BASE_URL;
-    
+    this.s1ApiKey = process.env.incidentcommand_SENTINELONE_API_KEY;
+    this.s1BaseUrl = process.env.incidentcommand_SENTINELONE_BASE_URL;
+
     // Microsoft Defender
-    this.msDefenderApiKey = process.env.INCIDENTRESPONSE_MS_DEFENDER_API_KEY;
-    this.msDefenderBaseUrl = process.env.INCIDENTRESPONSE_MS_DEFENDER_BASE_URL || 'https://api.security.microsoft.com/api';
-    
+    this.msDefenderApiKey = process.env.incidentcommand_MS_DEFENDER_API_KEY;
+    this.msDefenderBaseUrl =
+      process.env.incidentcommand_MS_DEFENDER_BASE_URL || 'https://api.security.microsoft.com/api';
+
     // Carbon Black
-    this.cbApiId = process.env.INCIDENTRESPONSE_CARBONBLACK_API_ID;
-    this.cbApiKey = process.env.INCIDENTRESPONSE_CARBONBLACK_API_KEY;
-    this.cbBaseUrl = process.env.INCIDENTRESPONSE_CARBONBLACK_BASE_URL;
+    this.cbApiId = process.env.incidentcommand_CARBONBLACK_API_ID;
+    this.cbApiKey = process.env.incidentcommand_CARBONBLACK_API_KEY;
+    this.cbBaseUrl = process.env.incidentcommand_CARBONBLACK_BASE_URL;
   }
 
   /**
@@ -38,7 +40,7 @@ class EDRService {
       matches: [],
       affectedEndpoints: [],
       sources: [],
-      searchedAt: new Date().toISOString()
+      searchedAt: new Date().toISOString(),
     };
 
     const searches = [];
@@ -59,7 +61,7 @@ class EDRService {
 
     const searchResults = await Promise.allSettled(searches);
 
-    searchResults.forEach(result => {
+    searchResults.forEach((result) => {
       if (result.status === 'fulfilled' && result.value) {
         results.sources.push(result.value.source);
         results.matches.push(...(result.value.matches || []));
@@ -68,9 +70,9 @@ class EDRService {
     });
 
     // Deduplicate endpoints
-    results.affectedEndpoints = [...new Map(
-      results.affectedEndpoints.map(e => [e.hostname || e.id, e])
-    ).values()];
+    results.affectedEndpoints = [
+      ...new Map(results.affectedEndpoints.map((e) => [e.hostname || e.id, e])).values(),
+    ];
 
     return results;
   }
@@ -102,23 +104,20 @@ class EDRService {
             continue;
         }
 
-        const response = await axios.get(
-          `${this.csBaseUrl}/detects/queries/detects/v1`,
-          {
-            params: { filter, limit: 50 },
-            headers: { 'Authorization': `Bearer ${this.csToken}` }
-          }
-        );
+        const response = await axios.get(`${this.csBaseUrl}/detects/queries/detects/v1`, {
+          params: { filter, limit: 50 },
+          headers: { Authorization: `Bearer ${this.csToken}` },
+        });
 
         if (response.data.resources?.length > 0) {
           // Get detection details
           const detailsResponse = await axios.post(
             `${this.csBaseUrl}/detects/entities/summaries/GET/v1`,
             { ids: response.data.resources },
-            { headers: { 'Authorization': `Bearer ${this.csToken}` } }
+            { headers: { Authorization: `Bearer ${this.csToken}` } }
           );
 
-          detailsResponse.data.resources?.forEach(detection => {
+          detailsResponse.data.resources?.forEach((detection) => {
             matches.push({
               source: 'CrowdStrike',
               detectionId: detection.detection_id,
@@ -126,7 +125,7 @@ class EDRService {
               severity: detection.max_severity_displayname,
               tactic: detection.behaviors?.[0]?.tactic,
               technique: detection.behaviors?.[0]?.technique,
-              timestamp: detection.first_behavior
+              timestamp: detection.first_behavior,
             });
 
             if (detection.device) {
@@ -136,7 +135,7 @@ class EDRService {
                 hostname: detection.device.hostname,
                 platform: detection.device.platform_name,
                 status: detection.device.status,
-                lastSeen: detection.device.last_seen
+                lastSeen: detection.device.last_seen,
               });
             }
           });
@@ -159,19 +158,16 @@ class EDRService {
       const affectedEndpoints = [];
 
       for (const ioc of indicators) {
-        const response = await axios.get(
-          `${this.s1BaseUrl}/threats`,
-          {
-            params: {
-              limit: 50,
-              ...(ioc.type === 'hash' && { contentHashes__contains: ioc.value }),
-              ...(ioc.type === 'ip' && { networkInterfaceInet__contains: ioc.value })
-            },
-            headers: { 'Authorization': `ApiToken ${this.s1ApiKey}` }
-          }
-        );
+        const response = await axios.get(`${this.s1BaseUrl}/threats`, {
+          params: {
+            limit: 50,
+            ...(ioc.type === 'hash' && { contentHashes__contains: ioc.value }),
+            ...(ioc.type === 'ip' && { networkInterfaceInet__contains: ioc.value }),
+          },
+          headers: { Authorization: `ApiToken ${this.s1ApiKey}` },
+        });
 
-        response.data.data?.forEach(threat => {
+        response.data.data?.forEach((threat) => {
           matches.push({
             source: 'SentinelOne',
             threatId: threat.id,
@@ -179,7 +175,7 @@ class EDRService {
             classification: threat.classification,
             threatName: threat.threatName,
             status: threat.mitigationStatus,
-            timestamp: threat.createdAt
+            timestamp: threat.createdAt,
           });
 
           affectedEndpoints.push({
@@ -188,7 +184,7 @@ class EDRService {
             hostname: threat.agentComputerName,
             platform: threat.osType,
             status: threat.agentIsActive ? 'online' : 'offline',
-            lastSeen: threat.agentLastActiveAt
+            lastSeen: threat.agentLastActiveAt,
           });
         });
       }
@@ -210,30 +206,31 @@ class EDRService {
 
       for (const ioc of indicators) {
         // Advanced hunting query
-        const query = ioc.type === 'hash' 
-          ? `DeviceFileEvents | where SHA256 == "${ioc.value}" or MD5 == "${ioc.value}" | take 50`
-          : ioc.type === 'ip'
-          ? `DeviceNetworkEvents | where RemoteIP == "${ioc.value}" | take 50`
-          : `DeviceNetworkEvents | where RemoteUrl contains "${ioc.value}" | take 50`;
+        const query =
+          ioc.type === 'hash'
+            ? `DeviceFileEvents | where SHA256 == "${ioc.value}" or MD5 == "${ioc.value}" | take 50`
+            : ioc.type === 'ip'
+              ? `DeviceNetworkEvents | where RemoteIP == "${ioc.value}" | take 50`
+              : `DeviceNetworkEvents | where RemoteUrl contains "${ioc.value}" | take 50`;
 
         const response = await axios.post(
           `${this.msDefenderBaseUrl}/advancedqueries/run`,
           { Query: query },
           {
             headers: {
-              'Authorization': `Bearer ${this.msDefenderApiKey}`,
-              'Content-Type': 'application/json'
-            }
+              Authorization: `Bearer ${this.msDefenderApiKey}`,
+              'Content-Type': 'application/json',
+            },
           }
         );
 
-        response.data.Results?.forEach(result => {
+        response.data.Results?.forEach((result) => {
           matches.push({
             source: 'Microsoft Defender',
             indicator: ioc.value,
             deviceName: result.DeviceName,
             fileName: result.FileName,
-            timestamp: result.Timestamp
+            timestamp: result.Timestamp,
           });
 
           affectedEndpoints.push({
@@ -241,7 +238,7 @@ class EDRService {
             id: result.DeviceId,
             hostname: result.DeviceName,
             platform: 'Windows',
-            status: 'unknown'
+            status: 'unknown',
           });
         });
       }
@@ -275,7 +272,7 @@ class EDRService {
       await axios.post(
         `${this.csBaseUrl}/devices/entities/devices-actions/v2`,
         { ids: [deviceId], action_parameters: [{ name: 'action_name', value: 'contain' }] },
-        { headers: { 'Authorization': `Bearer ${this.csToken}` } }
+        { headers: { Authorization: `Bearer ${this.csToken}` } }
       );
       return { success: true, platform: 'CrowdStrike', action: 'isolated' };
     } catch (error) {
@@ -288,7 +285,7 @@ class EDRService {
       await axios.post(
         `${this.s1BaseUrl}/agents/actions/disconnect`,
         { filter: { ids: [agentId] } },
-        { headers: { 'Authorization': `ApiToken ${this.s1ApiKey}` } }
+        { headers: { Authorization: `ApiToken ${this.s1ApiKey}` } }
       );
       return { success: true, platform: 'SentinelOne', action: 'isolated' };
     } catch (error) {
@@ -300,8 +297,8 @@ class EDRService {
     try {
       await axios.post(
         `${this.msDefenderBaseUrl}/machines/${machineId}/isolate`,
-        { Comment: 'Isolated via VictoryKit IncidentResponse', IsolationType: 'Full' },
-        { headers: { 'Authorization': `Bearer ${this.msDefenderApiKey}` } }
+        { Comment: 'Isolated via VictoryKit incidentcommand', IsolationType: 'Full' },
+        { headers: { Authorization: `Bearer ${this.msDefenderApiKey}` } }
       );
       return { success: true, platform: 'Microsoft Defender', action: 'isolated' };
     } catch (error) {
@@ -318,18 +315,15 @@ class EDRService {
     if (this.csClientId && this.csClientSecret) {
       try {
         await this.ensureCrowdStrikeToken();
-        const response = await axios.get(
-          `${this.csBaseUrl}/devices/queries/devices/v1`,
-          {
-            params: { filter: `hostname:'${hostname}'` },
-            headers: { 'Authorization': `Bearer ${this.csToken}` }
-          }
-        );
+        const response = await axios.get(`${this.csBaseUrl}/devices/queries/devices/v1`, {
+          params: { filter: `hostname:'${hostname}'` },
+          headers: { Authorization: `Bearer ${this.csToken}` },
+        });
         if (response.data.resources?.length > 0) {
           const detailsResponse = await axios.post(
             `${this.csBaseUrl}/devices/entities/devices/v2`,
             { ids: response.data.resources },
-            { headers: { 'Authorization': `Bearer ${this.csToken}` } }
+            { headers: { Authorization: `Bearer ${this.csToken}` } }
           );
           results.push({ source: 'CrowdStrike', data: detailsResponse.data.resources[0] });
         }
@@ -357,7 +351,7 @@ class EDRService {
       `${this.csBaseUrl}/oauth2/token`,
       new URLSearchParams({
         client_id: this.csClientId,
-        client_secret: this.csClientSecret
+        client_secret: this.csClientSecret,
       }),
       { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
     );
@@ -374,33 +368,47 @@ class EDRService {
         source: 'Simulated EDR',
         indicator: ioc.value,
         severity: idx % 3 === 0 ? 'High' : 'Medium',
-        detected: new Date(Date.now() - idx * 3600000).toISOString()
+        detected: new Date(Date.now() - idx * 3600000).toISOString(),
       })),
       affectedEndpoints: [
-        { source: 'Simulated', id: 'SIM-001', hostname: 'WORKSTATION-001', platform: 'Windows', status: 'online' },
-        { source: 'Simulated', id: 'SIM-002', hostname: 'SERVER-WEB-01', platform: 'Linux', status: 'online' }
+        {
+          source: 'Simulated',
+          id: 'SIM-001',
+          hostname: 'WORKSTATION-001',
+          platform: 'Windows',
+          status: 'online',
+        },
+        {
+          source: 'Simulated',
+          id: 'SIM-002',
+          hostname: 'SERVER-WEB-01',
+          platform: 'Linux',
+          status: 'online',
+        },
       ],
       sources: ['Simulated EDR'],
       searchedAt: new Date().toISOString(),
-      simulated: true
+      simulated: true,
     };
   }
 
   simulatedEndpointDetails(hostname) {
-    return [{
-      source: 'Simulated',
-      data: {
-        hostname,
-        platform: 'Windows 11',
-        osVersion: '10.0.22621',
-        lastSeen: new Date().toISOString(),
-        status: 'online',
-        agent: { version: '7.10.0', status: 'active' },
-        policies: ['Default Policy', 'High Security'],
-        tags: ['production', 'workstation']
+    return [
+      {
+        source: 'Simulated',
+        data: {
+          hostname,
+          platform: 'Windows 11',
+          osVersion: '10.0.22621',
+          lastSeen: new Date().toISOString(),
+          status: 'online',
+          agent: { version: '7.10.0', status: 'active' },
+          policies: ['Default Policy', 'High Security'],
+          tags: ['production', 'workstation'],
+        },
+        simulated: true,
       },
-      simulated: true
-    }];
+    ];
   }
 }
 

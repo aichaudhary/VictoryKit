@@ -79,5 +79,8 @@
     "url": "git+https://github.com/VM07B/VictoryKit.git"
   },
   "author": "VictoryKit Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "frontend-victoyrkit-snow-falling-daws": "^0.0.0"
+  }
 }

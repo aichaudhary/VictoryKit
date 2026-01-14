@@ -26,7 +26,7 @@ export type ViewState =
   | 'api-guardian' | 'container-watch' | 'devsecops' | 'incident-command' | 'forensics-lab'
   | 'threat-intel' | 'behavior-watch' | 'anomaly-detect' | 'red-team-ai' | 'blue-team-ai'
   | 'siem-commander' | 'soar-engine' | 'risk-score-ai' | 'policy-engine' | 'audit-tracker'
-  | 'zero-trust-ai' | 'password-vault' | 'biometric-ai' | 'email-guard' | 'web-filter'
+  | 'zero-trust-ai' | 'password-vault' | 'biometric-ai' | 'email-guard' | 'browser-isolation'
   | 'dns-shield' | 'firewall-ai' | 'vpn-guardian' | 'wireless-watch' | 'iot-secure'
   | 'mobile-defend' | 'backup-guard' | 'dr-plan' | 'privacy-shield' | 'gdpr-compliance'
   | 'hipaa-guard' | 'pcidss-guard' | 'bug-bounty-ai' | 'cyber-edu-ai'

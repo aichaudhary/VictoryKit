@@ -1,6 +1,6 @@
 /**
  * Redpanda/Kafka Connector
- * 
+ *
  * High-performance message bus for VictoryKit with:
  * - Schema Registry integration
  * - Multi-topic support for all 50 tools
@@ -22,34 +22,34 @@ const Topics = {
   SECURITY_ALERTS: 'victorykit.security.alerts',
   SECURITY_INCIDENTS: 'victorykit.security.incidents',
   SECURITY_FINDINGS: 'victorykit.security.findings',
-  
+
   // Threat Intelligence
   THREAT_IOC: 'victorykit.threat.ioc',
   THREAT_ENRICHMENT: 'victorykit.threat.enrichment',
-  
+
   // Network events
   NETWORK_FLOWS: 'victorykit.network.flows',
   NETWORK_DNS: 'victorykit.network.dns',
   NETWORK_ALERTS: 'victorykit.network.alerts',
-  
+
   // Endpoint events
   ENDPOINT_THREATS: 'victorykit.endpoint.threats',
   ENDPOINT_TELEMETRY: 'victorykit.endpoint.telemetry',
-  
+
   // Identity events
   IDENTITY_AUTH: 'victorykit.identity.auth',
   IDENTITY_RISK: 'victorykit.identity.risk',
-  
+
   // API events
   API_REQUESTS: 'victorykit.api.requests',
   API_ANOMALIES: 'victorykit.api.anomalies',
-  
+
   // WAF events
   WAF_EVENTS: 'victorykit.waf.events',
-  
+
   // Scan results by tool
   SCAN_FRAUDGUARD: 'victorykit.scan.fraudguard',
-  SCAN_INTELLISCOUT: 'victorykit.scan.darkwebmonitor',
+  SCAN_DARKWEBMONITOR: 'victorykit.scan.darkwebmonitor',
   SCAN_THREATRADAR: 'victorykit.scan.zerodaydetect',
   SCAN_MALWAREHUNTER: 'victorykit.scan.ransomshield',
   SCAN_PHISHGUARD: 'victorykit.scan.phishnetai',
@@ -58,16 +58,16 @@ const Topics = {
   SCAN_SECURECODE: 'victorykit.scan.codesentinel',
   SCAN_COMPLIANCECHECK: 'victorykit.scan.runtimeguard',
   SCAN_DATAGUARDIAN: 'victorykit.scan.dataguardian',
-  
+
   // Compliance
   COMPLIANCE_EVENTS: 'victorykit.compliance.events',
   COMPLIANCE_EVIDENCE: 'victorykit.compliance.evidence',
-  
+
   // SOAR
   SOAR_PLAYBOOKS: 'victorykit.soar.playbooks',
   SOAR_ACTIONS: 'victorykit.soar.actions',
   SOAR_RESULTS: 'victorykit.soar.results',
-  
+
   // Dead Letter Queues
   DLQ_SECURITY: 'victorykit.dlq.security',
   DLQ_NETWORK: 'victorykit.dlq.network',
@@ -92,24 +92,24 @@ const ConsumerGroups = {
 class RedpandaConnector extends BaseConnector {
   constructor(config = {}) {
     super({ name: 'RedpandaConnector', ...config });
-    
+
     this.brokers = config.brokers || ['localhost:9092'];
     this.clientId = config.clientId || 'victorykit';
     this.ssl = config.ssl || false;
     this.sasl = config.sasl || null;
-    
+
     this.kafka = null;
     this.admin = null;
     this.producers = new Map();
     this.consumers = new Map();
-    
+
     // Circuit breaker for publish operations
     this.circuitBreaker = new CircuitBreaker({
       name: 'redpanda-publish',
       failureThreshold: 5,
       timeout: 30000,
     });
-    
+
     // Retry strategy for transient failures
     this.retryStrategy = new RetryStrategy({
       maxRetries: 3,
@@ -123,7 +123,7 @@ class RedpandaConnector extends BaseConnector {
    */
   async connect() {
     this.setState(ConnectorState.CONNECTING);
-    
+
     try {
       // Initialize Kafka client
       this.kafka = new Kafka({
@@ -152,7 +152,7 @@ class RedpandaConnector extends BaseConnector {
 
       this.setState(ConnectorState.CONNECTED);
       this.log('info', 'Connected to Redpanda cluster', { brokers: this.brokers });
-      
+
       return true;
     } catch (error) {
       this.setState(ConnectorState.ERROR);
@@ -223,7 +223,7 @@ class RedpandaConnector extends BaseConnector {
 
     await producer.connect();
     this.producers.set(name, producer);
-    
+
     // Handle producer events
     producer.on('producer.disconnect', () => {
       this.log('warn', `Producer ${name} disconnected`);
@@ -250,12 +250,14 @@ class RedpandaConnector extends BaseConnector {
     return this.circuitBreaker.execute(async () => {
       return this.retryStrategy.execute(async () => {
         const producer = await this.getProducer(options.producer || 'default');
-        
+
         // Validate against schema if provided
         if (options.schemaId) {
           const validation = schemaRegistry.validate(options.schemaId, message);
           if (!validation.valid) {
-            const error = new Error(`Schema validation failed: ${JSON.stringify(validation.errors)}`);
+            const error = new Error(
+              `Schema validation failed: ${JSON.stringify(validation.errors)}`
+            );
             error.code = 'SCHEMA_VALIDATION_ERROR';
             throw error;
           }
@@ -263,23 +265,25 @@ class RedpandaConnector extends BaseConnector {
 
         const record = {
           topic,
-          messages: [{
-            key: options.key || message.id || null,
-            value: JSON.stringify(message),
-            headers: {
-              'content-type': 'application/json',
-              'victorykit-version': '1.0.0',
-              'victorykit-source': message.source || 'unknown',
-              'victorykit-type': message.type || 'unknown',
-              ...options.headers,
+          messages: [
+            {
+              key: options.key || message.id || null,
+              value: JSON.stringify(message),
+              headers: {
+                'content-type': 'application/json',
+                'victorykit-version': '1.0.0',
+                'victorykit-source': message.source || 'unknown',
+                'victorykit-type': message.type || 'unknown',
+                ...options.headers,
+              },
+              timestamp: options.timestamp || Date.now().toString(),
             },
-            timestamp: options.timestamp || Date.now().toString(),
-          }],
+          ],
           compression: options.compression || CompressionTypes.GZIP,
         };
 
         await producer.send(record);
-        
+
         this.emit('message:published', { topic, messageId: message.id });
         return { success: true, topic, messageId: message.id };
       });
@@ -292,7 +296,7 @@ class RedpandaConnector extends BaseConnector {
   async publishBatch(topic, messages, options = {}) {
     const producer = await this.getProducer(options.producer || 'default');
 
-    const records = messages.map(message => ({
+    const records = messages.map((message) => ({
       key: message.id || null,
       value: JSON.stringify(message),
       headers: {
@@ -347,7 +351,7 @@ class RedpandaConnector extends BaseConnector {
    */
   async subscribe(groupId, topics, handler, options = {}) {
     let consumer = this.consumers.get(groupId);
-    
+
     if (!consumer) {
       consumer = await this.createConsumer(groupId, options);
     }
@@ -381,7 +385,7 @@ class RedpandaConnector extends BaseConnector {
           this.emit('message:consumed', { topic, offset: message.offset });
         } catch (error) {
           this.log('error', 'Error processing message', { topic, error: error.message });
-          
+
           // Send to DLQ if configured
           if (options.dlqTopic) {
             await this.publish(options.dlqTopic, {
@@ -391,9 +395,9 @@ class RedpandaConnector extends BaseConnector {
               timestamp: new Date().toISOString(),
             });
           }
-          
+
           this.emit('message:error', { topic, error });
-          
+
           if (!options.continueOnError) {
             throw error;
           }
@@ -426,7 +430,7 @@ class RedpandaConnector extends BaseConnector {
       throw new Error(`Consumer ${groupId} not found`);
     }
 
-    const topicPartitions = topics.map(topic => ({ topic }));
+    const topicPartitions = topics.map((topic) => ({ topic }));
     consumer.pause(topicPartitions);
   }
 
@@ -439,7 +443,7 @@ class RedpandaConnector extends BaseConnector {
       throw new Error(`Consumer ${groupId} not found`);
     }
 
-    const topicPartitions = topics.map(topic => ({ topic }));
+    const topicPartitions = topics.map((topic) => ({ topic }));
     consumer.resume(topicPartitions);
   }
 
@@ -521,23 +525,18 @@ class RedpandaProducer {
   }
 
   async publish(message, options = {}) {
-    return this.connector.publish(
-      options.topic || this.defaultTopic,
-      message,
-      {
-        producer: this.producerName,
-        schemaId: options.schemaId || this.schemaId,
-        ...options,
-      }
-    );
+    return this.connector.publish(options.topic || this.defaultTopic, message, {
+      producer: this.producerName,
+      schemaId: options.schemaId || this.schemaId,
+      ...options,
+    });
   }
 
   async publishBatch(messages, options = {}) {
-    return this.connector.publishBatch(
-      options.topic || this.defaultTopic,
-      messages,
-      { producer: this.producerName, ...options }
-    );
+    return this.connector.publishBatch(options.topic || this.defaultTopic, messages, {
+      producer: this.producerName,
+      ...options,
+    });
   }
 }
 

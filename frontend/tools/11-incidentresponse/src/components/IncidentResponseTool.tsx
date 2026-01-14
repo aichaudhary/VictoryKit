@@ -1,14 +1,14 @@
 /**
- * IncidentResponse Tool Component
+ * incidentcommand Tool Component
  * Tool 11 - AI-Powered Security Incident Management
- * 
+ *
  * React component for managing security incidents, playbooks, and response workflows
  */
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  incidentResponseApi,
+  incidentcommandApi,
   simulatedData,
   type Incident,
   type IncidentDashboard,
@@ -17,7 +17,7 @@ import {
   type IncidentSeverity,
   type IncidentStatus,
   type IncidentCategory,
-} from '../api/incidentresponse.api';
+} from '../api/incidentcommand.api';
 
 // ============= Severity Colors =============
 
@@ -51,10 +51,13 @@ interface StatsCardProps {
 
 function StatsCard({ title, value, subtitle, icon, trend, color = 'rose' }: StatsCardProps) {
   const trendIcon = trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→';
-  const trendColor = trend === 'up' ? 'text-red-400' : trend === 'down' ? 'text-green-400' : 'text-gray-400';
+  const trendColor =
+    trend === 'up' ? 'text-red-400' : trend === 'down' ? 'text-green-400' : 'text-gray-400';
 
   return (
-    <div className={`bg-gray-800/50 rounded-xl p-4 border border-${color}-500/20 hover:border-${color}-500/40 transition-all`}>
+    <div
+      className={`bg-gray-800/50 rounded-xl p-4 border border-${color}-500/20 hover:border-${color}-500/40 transition-all`}
+    >
       <div className="flex items-center justify-between mb-2">
         <span className="text-2xl">{icon}</span>
         {trend && <span className={`${trendColor} text-sm font-medium`}>{trendIcon}</span>}
@@ -89,15 +92,15 @@ function IncidentCard({ incident, onSelect }: IncidentCardProps) {
           {incident.status}
         </span>
       </div>
-      
+
       <h3 className="text-white font-semibold mb-1 line-clamp-2">{incident.title}</h3>
       <p className="text-gray-400 text-sm mb-3">{incident.incidentId}</p>
-      
+
       <div className="flex items-center justify-between text-xs text-gray-500">
         <span>📁 {incident.category}</span>
         <span>🕐 {timeAgo}</span>
       </div>
-      
+
       {incident.assignee && (
         <div className="mt-2 pt-2 border-t border-gray-700">
           <span className="text-xs text-gray-400">👤 {incident.assignee}</span>
@@ -121,15 +124,15 @@ function PlaybookCard({ playbook, onExecute }: PlaybookCardProps) {
           <span className="px-2 py-1 bg-green-900/30 text-green-400 rounded text-xs">Auto</span>
         )}
       </div>
-      
+
       <h3 className="text-white font-semibold mb-1">{playbook.name}</h3>
       <p className="text-gray-400 text-sm mb-3">{playbook.description}</p>
-      
+
       <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
         <span>📊 {playbook.steps.length} steps</span>
         <span>⏱️ ~{playbook.estimatedTime}min</span>
       </div>
-      
+
       {onExecute && (
         <button
           onClick={() => onExecute(playbook)}
@@ -231,7 +234,7 @@ function formatMinutes(minutes: number): string {
 
 type TabType = 'dashboard' | 'incidents' | 'playbooks' | 'create';
 
-export default function IncidentResponseTool() {
+export default function incidentcommandTool() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<IncidentDashboard | null>(null);
@@ -272,7 +275,7 @@ export default function IncidentResponseTool() {
   async function loadDashboard() {
     setLoading(true);
     try {
-      const response = await incidentResponseApi.getDashboard();
+      const response = await incidentcommandApi.getDashboard();
       if (response.success && response.data) {
         setDashboard(response.data);
         setUsingSimulated(false);
@@ -296,7 +299,7 @@ export default function IncidentResponseTool() {
       if (severityFilter) filters.severity = severityFilter;
       if (statusFilter) filters.status = statusFilter;
 
-      const response = await incidentResponseApi.getIncidents(filters);
+      const response = await incidentcommandApi.getIncidents(filters);
       if (response.success && response.data) {
         setIncidents(response.data.incidents);
         setUsingSimulated(false);
@@ -326,7 +329,7 @@ export default function IncidentResponseTool() {
   async function loadPlaybooks() {
     setLoading(true);
     try {
-      const response = await incidentResponseApi.getPlaybooks();
+      const response = await incidentcommandApi.getPlaybooks();
       if (response.success && response.data) {
         setPlaybooks(response.data.playbooks);
         setUsingSimulated(false);
@@ -345,7 +348,7 @@ export default function IncidentResponseTool() {
   async function analyzeIncident(incident: Incident) {
     setLoading(true);
     try {
-      const response = await incidentResponseApi.analyzeIncident(incident.incidentId);
+      const response = await incidentcommandApi.analyzeIncident(incident.incidentId);
       if (response.success && response.data) {
         setAnalysis(response.data);
       } else {
@@ -368,7 +371,7 @@ export default function IncidentResponseTool() {
     setError(null);
 
     try {
-      const response = await incidentResponseApi.createIncident(newIncident);
+      const response = await incidentcommandApi.createIncident(newIncident);
       if (response.success && response.data) {
         setIncidents([response.data.incident, ...incidents]);
         setNewIncident({ title: '', description: '', severity: 'medium', category: 'other' });
@@ -395,18 +398,18 @@ export default function IncidentResponseTool() {
 
   async function updateIncidentStatus(incident: Incident, status: IncidentStatus) {
     try {
-      const response = await incidentResponseApi.updateStatus(incident.incidentId, status);
+      const response = await incidentcommandApi.updateStatus(incident.incidentId, status);
       if (response.success && response.data) {
-        setIncidents(incidents.map(i =>
-          i.incidentId === incident.incidentId ? response.data!.incident : i
-        ));
+        setIncidents(
+          incidents.map((i) => (i.incidentId === incident.incidentId ? response.data!.incident : i))
+        );
         if (selectedIncident?.incidentId === incident.incidentId) {
           setSelectedIncident(response.data.incident);
         }
       } else {
         // Simulate update
         const updated = { ...incident, status, updatedAt: new Date().toISOString() };
-        setIncidents(incidents.map(i => i.incidentId === incident.incidentId ? updated : i));
+        setIncidents(incidents.map((i) => (i.incidentId === incident.incidentId ? updated : i)));
         if (selectedIncident?.incidentId === incident.incidentId) {
           setSelectedIncident(updated);
         }
@@ -451,31 +454,34 @@ export default function IncidentResponseTool() {
             trend="down"
             color="green"
           />
-          <StatsCard
-            icon="📊"
-            title="Total"
-            value={dashboard.overview.total}
-            color="purple"
-          />
+          <StatsCard icon="📊" title="Total" value={dashboard.overview.total} color="purple" />
         </div>
 
         {/* Metrics */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-gray-800/50 rounded-xl p-4 border border-cyan-500/20">
             <p className="text-gray-400 text-sm">Avg Time to Detect</p>
-            <p className="text-2xl font-bold text-cyan-400">{formatMinutes(dashboard.metrics.avgTimeToDetect)}</p>
+            <p className="text-2xl font-bold text-cyan-400">
+              {formatMinutes(dashboard.metrics.avgTimeToDetect)}
+            </p>
           </div>
           <div className="bg-gray-800/50 rounded-xl p-4 border border-blue-500/20">
             <p className="text-gray-400 text-sm">Avg Time to Contain</p>
-            <p className="text-2xl font-bold text-blue-400">{formatMinutes(dashboard.metrics.avgTimeToContain)}</p>
+            <p className="text-2xl font-bold text-blue-400">
+              {formatMinutes(dashboard.metrics.avgTimeToContain)}
+            </p>
           </div>
           <div className="bg-gray-800/50 rounded-xl p-4 border border-purple-500/20">
             <p className="text-gray-400 text-sm">Avg Time to Resolve</p>
-            <p className="text-2xl font-bold text-purple-400">{formatMinutes(dashboard.metrics.avgTimeToResolve)}</p>
+            <p className="text-2xl font-bold text-purple-400">
+              {formatMinutes(dashboard.metrics.avgTimeToResolve)}
+            </p>
           </div>
           <div className="bg-gray-800/50 rounded-xl p-4 border border-rose-500/20">
             <p className="text-gray-400 text-sm">MTTR</p>
-            <p className="text-2xl font-bold text-rose-400">{formatMinutes(dashboard.metrics.mttr)}</p>
+            <p className="text-2xl font-bold text-rose-400">
+              {formatMinutes(dashboard.metrics.mttr)}
+            </p>
           </div>
         </div>
 
@@ -486,7 +492,9 @@ export default function IncidentResponseTool() {
             <div className="space-y-3">
               {Object.entries(dashboard.bySeverity).map(([sev, count]) => (
                 <div key={sev} className="flex items-center gap-3">
-                  <span className={`w-3 h-3 rounded-full ${severityColors[sev as IncidentSeverity].border.replace('border', 'bg')}`} />
+                  <span
+                    className={`w-3 h-3 rounded-full ${severityColors[sev as IncidentSeverity].border.replace('border', 'bg')}`}
+                  />
                   <span className="text-gray-300 capitalize flex-1">{sev}</span>
                   <span className="text-white font-medium">{count}</span>
                   <div className="w-24 h-2 bg-gray-700 rounded-full overflow-hidden">
@@ -503,12 +511,14 @@ export default function IncidentResponseTool() {
           <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
             <h3 className="text-white font-semibold mb-4">By Category</h3>
             <div className="space-y-3">
-              {Object.entries(dashboard.byCategory).slice(0, 5).map(([cat, count]) => (
-                <div key={cat} className="flex items-center gap-3">
-                  <span className="text-gray-300 capitalize flex-1">{cat.replace('-', ' ')}</span>
-                  <span className="text-white font-medium">{count}</span>
-                </div>
-              ))}
+              {Object.entries(dashboard.byCategory)
+                .slice(0, 5)
+                .map(([cat, count]) => (
+                  <div key={cat} className="flex items-center gap-3">
+                    <span className="text-gray-300 capitalize flex-1">{cat.replace('-', ' ')}</span>
+                    <span className="text-white font-medium">{count}</span>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
@@ -524,8 +534,8 @@ export default function IncidentResponseTool() {
                   item.trend === 'up'
                     ? 'border-red-500/30 bg-red-900/20 text-red-400'
                     : item.trend === 'down'
-                    ? 'border-green-500/30 bg-green-900/20 text-green-400'
-                    : 'border-gray-500/30 bg-gray-900/20 text-gray-400'
+                      ? 'border-green-500/30 bg-green-900/20 text-green-400'
+                      : 'border-gray-500/30 bg-gray-900/20 text-gray-400'
                 }`}
               >
                 <span className="capitalize">{item.category}</span>
@@ -609,10 +619,14 @@ export default function IncidentResponseTool() {
               <div className="sticky top-0 bg-gray-900 p-6 border-b border-gray-700 flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <span className={`px-3 py-1 rounded ${severityColors[selectedIncident.severity].bg} ${severityColors[selectedIncident.severity].text}`}>
+                    <span
+                      className={`px-3 py-1 rounded ${severityColors[selectedIncident.severity].bg} ${severityColors[selectedIncident.severity].text}`}
+                    >
                       {selectedIncident.severity.toUpperCase()}
                     </span>
-                    <span className={`px-3 py-1 rounded ${statusColors[selectedIncident.status].bg} ${statusColors[selectedIncident.status].text}`}>
+                    <span
+                      className={`px-3 py-1 rounded ${statusColors[selectedIncident.status].bg} ${statusColors[selectedIncident.status].text}`}
+                    >
                       {selectedIncident.status}
                     </span>
                   </div>
@@ -673,11 +687,16 @@ export default function IncidentResponseTool() {
                     <h3 className="text-gray-300 font-medium mb-2">Affected Assets</h3>
                     <div className="space-y-2">
                       {selectedIncident.affectedAssets.map((asset, i) => (
-                        <div key={i} className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg">
+                        <div
+                          key={i}
+                          className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg"
+                        >
                           <span className="text-lg">💻</span>
                           <div>
                             <p className="text-white">{asset.name}</p>
-                            <p className="text-gray-500 text-sm">{asset.type} • {asset.status}</p>
+                            <p className="text-gray-500 text-sm">
+                              {asset.type} • {asset.status}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -759,7 +778,14 @@ export default function IncidentResponseTool() {
 
   function renderCreateForm() {
     const categories: IncidentCategory[] = [
-      'malware', 'phishing', 'data-breach', 'ddos', 'unauthorized-access', 'insider-threat', 'ransomware', 'other'
+      'malware',
+      'phishing',
+      'data-breach',
+      'ddos',
+      'unauthorized-access',
+      'insider-threat',
+      'ransomware',
+      'other',
     ];
 
     return (
@@ -795,7 +821,9 @@ export default function IncidentResponseTool() {
                 <label className="block text-gray-300 mb-2">Severity</label>
                 <select
                   value={newIncident.severity}
-                  onChange={(e) => setNewIncident({ ...newIncident, severity: e.target.value as IncidentSeverity })}
+                  onChange={(e) =>
+                    setNewIncident({ ...newIncident, severity: e.target.value as IncidentSeverity })
+                  }
                   className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-rose-500 focus:outline-none"
                 >
                   <option value="critical">Critical</option>
@@ -810,11 +838,15 @@ export default function IncidentResponseTool() {
                 <label className="block text-gray-300 mb-2">Category</label>
                 <select
                   value={newIncident.category}
-                  onChange={(e) => setNewIncident({ ...newIncident, category: e.target.value as IncidentCategory })}
+                  onChange={(e) =>
+                    setNewIncident({ ...newIncident, category: e.target.value as IncidentCategory })
+                  }
                   className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-rose-500 focus:outline-none"
                 >
                   {categories.map((cat) => (
-                    <option key={cat} value={cat}>{cat.replace('-', ' ')}</option>
+                    <option key={cat} value={cat}>
+                      {cat.replace('-', ' ')}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -867,7 +899,7 @@ export default function IncidentResponseTool() {
                 🚨
               </div>
               <div>
-                <h1 className="text-xl font-bold">IncidentResponse</h1>
+                <h1 className="text-xl font-bold">incidentcommand</h1>
                 <p className="text-gray-400 text-sm">AI-Powered Security Incident Management</p>
               </div>
             </div>
@@ -929,7 +961,7 @@ export default function IncidentResponseTool() {
       {/* Footer */}
       <footer className="border-t border-gray-800 py-4 mt-12">
         <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-          <p>IncidentResponse Tool 11 • VictoryKit Security Platform</p>
+          <p>incidentcommand Tool 11 • VictoryKit Security Platform</p>
         </div>
       </footer>
     </div>

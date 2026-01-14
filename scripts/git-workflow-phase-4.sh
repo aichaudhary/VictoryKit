@@ -55,7 +55,7 @@ Achievement Summary:
 
 Tools: FraudGuard, IntelliScout, ThreatRadar, MalwareHunter, PhishGuard, 
 VulnScan, PenTestAI, SecureCode, ComplianceCheck, DataGuardian, CryptoShield,
-IAMControl, LogIntel, NetDefender, EndpointShield, CloudSecure, APIGuardian,
+xdrplatform, LogIntel, NetDefender, EndpointShield, CloudSecure, APIGuardian,
 ContainerWatch, DevSecOps, IncidentCommand, ForensicsLab, ThreatHunt,
 RansomDefend, ZeroTrustNet, PrivacyShield, SOCAutomation, ThreatIntelHub,
 AssetDiscovery, PatchManager, BackupGuardian, DisasterRecovery, EmailSecure,

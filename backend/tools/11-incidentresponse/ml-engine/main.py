@@ -1,29 +1,28 @@
 """
-IncidentResponse ML Engine - Main FastAPI Application
+incidentcommand ML Engine - Main FastAPI Application
 AI-Powered Security Incident Analysis
 """
 
+import logging
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
-from datetime import datetime
-import logging
-
 from models.incident_classifier import IncidentClassifier
-from models.threat_analyzer import ThreatAnalyzer
 from models.recommendation_engine import RecommendationEngine
+from models.threat_analyzer import ThreatAnalyzer
+from pydantic import BaseModel, Field
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="IncidentResponse ML Engine",
+    title="incidentcommand ML Engine",
     description="AI-Powered Security Incident Analysis Engine",
     version="1.0.0",
 )
@@ -85,13 +84,13 @@ class AnalysisResult(BaseModel):
 async def health_check():
     return {
         "status": "healthy",
-        "service": "IncidentResponse ML Engine",
+        "service": "incidentcommand ML Engine",
         "version": "1.0.0",
         "models_loaded": {
             "incident_classifier": incident_classifier.is_loaded,
             "threat_analyzer": threat_analyzer.is_loaded,
             "recommendation_engine": recommendation_engine.is_loaded,
-        }
+        },
     }
 
 
@@ -100,27 +99,27 @@ async def health_check():
 async def classify_incident(incident: IncidentInput):
     try:
         logger.info(f"Classifying incident: {incident.title}")
-        
+
         # Get classification
         classification = incident_classifier.classify(incident.model_dump())
-        
+
         # Analyze threat
         threat_analysis = threat_analyzer.analyze(incident.model_dump(), classification)
-        
+
         # Get recommendations
         recommendations = recommendation_engine.get_recommendations(classification)
         playbooks = recommendation_engine.get_playbooks(classification["type"])
-        
+
         return AnalysisResult(
             classification=ClassificationResult(
                 type=classification["type"],
                 category=classification["category"],
                 techniques=classification["techniques"],
-                confidence=classification["confidence"]
+                confidence=classification["confidence"],
             ),
             threat_level=threat_analysis["threat_level"],
             recommendations=recommendations,
-            suggested_playbooks=playbooks
+            suggested_playbooks=playbooks,
         )
     except Exception as e:
         logger.error(f"Error classifying incident: {e}")
@@ -131,7 +130,9 @@ async def classify_incident(incident: IncidentInput):
 @app.post("/analyze/indicators")
 async def analyze_indicators(indicators: List[IndicatorInput]):
     try:
-        results = threat_analyzer.analyze_indicators([i.model_dump() for i in indicators])
+        results = threat_analyzer.analyze_indicators(
+            [i.model_dump() for i in indicators]
+        )
         return {"indicators": results}
     except Exception as e:
         logger.error(f"Error analyzing indicators: {e}")
@@ -143,9 +144,9 @@ async def analyze_indicators(indicators: List[IndicatorInput]):
 async def analyze_evidence(evidence: EvidenceInput):
     try:
         logger.info(f"Analyzing evidence: {evidence.name}")
-        
+
         analysis = threat_analyzer.analyze_evidence(evidence.model_dump())
-        
+
         return analysis
     except Exception as e:
         logger.error(f"Error analyzing evidence: {e}")
@@ -166,4 +167,5 @@ async def get_playbook_templates():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8011)

@@ -1,166 +1,201 @@
-# SecretVault
+# 🔐 SecretVault - Tool 14
 
-**Tool #14** | AI-Powered Enterprise Key Management & Data Encryption Platform
-
-[![Port: 4014](https://img.shields.io/badge/API-4014-blue.svg)](http://localhost:4014)
-[![AI WebSocket: 6014](https://img.shields.io/badge/AI_WS-6014-purple.svg)](ws://localhost:6014)
-[![Frontend: 3014](https://img.shields.io/badge/Frontend-3014-green.svg)](http://localhost:3014)
-[![ML: 8014](https://img.shields.io/badge/ML-8014-orange.svg)](http://localhost:8014)
+> **Dual-Nature Platform: Community Incident Board + Enterprise Secret Management**
 
 ## Overview
+SecretVault serves two critical functions:
+1. **🚨 Incident Board**: Public community-driven security incident reporting platform
+2. **🔐 Secret Vault**: Enterprise encryption key management system
 
-SecretVault is a comprehensive enterprise-grade key management and data encryption solution in the VictoryKit security suite. It provides advanced encryption capabilities, secure key storage, automated key rotation, and AI-powered encryption recommendations for protecting sensitive data across the organization.
+**Production URL**: https://secretvault.maula.ai  
+**Ports**: Frontend 3014 | Backend 4014
 
-**Production URL:** `https://secretvault.maula.ai`
+---
 
-## Architecture
+## 🚨 INCIDENT BOARD
 
+### Purpose
+A GitHub Issues-like platform for reporting real-world security incidents. Users can report, browse, and learn from security incidents worldwide.
+
+### Incident Report Fields
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| title | string | ✅ | Brief incident title |
+| username | string | ✅ | Reporter's display name |
+| location | string | ✅ | Where it happened |
+| date | date | ✅ | When it happened |
+| category | enum | ✅ | phishing, data-breach, malware, scam, fraud, identity-theft, security, other |
+| severity | enum | ✅ | low, medium, high, critical |
+| what_happened | text | ✅ | Detailed description |
+| why_it_happened | text | ❌ | Root cause analysis |
+| when_discovered | date | ❌ | Discovery date |
+| actions_taken | text | ❌ | Response/remediation |
+| lessons_learned | text | ❌ | What to learn from this |
+
+### API Endpoints
+
+#### Incidents
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                   SecretVault System                       │
-├─────────────────────────────────────────────────────────────────┤
-│  Frontend (React/TypeScript)           Port 3014                 │
-│  ├── Key Management Dashboard                                    │
-│  ├── Encryption/Decryption Tools                                 │
-│  ├── Key Rotation Interface                                      │
-│  ├── Audit & Compliance Reports                                  │
-│  ├── Real-time Monitoring                                        │
-│  └── Maula AI Chat Interface                                     │
-├─────────────────────────────────────────────────────────────────┤
-│  AI Assistant (TypeScript/WebSocket)   Port 6014                 │
-│  ├── Multi-LLM Support (Claude Opus/Sonnet 4.5, Gemini, GPT)    │
-│  ├── Encryption Algorithm Recommendations                        │
-│  ├── Key Strength Analysis                                       │
-│  ├── Security Policy Advisor                                     │
-│  ├── Compliance Auditing                                         │
-│  ├── Real-time Encryption Monitoring                             │
-│  └── Automated Key Rotation Suggestions                          │
-├─────────────────────────────────────────────────────────────────┤
-│  Backend API (Node.js/Express)         Port 4014                 │
-│  ├── Key Generation & Storage                                   │
-│  ├── Encryption/Decryption Services                              │
-│  ├── Key Rotation Management                                     │
-│  ├── Audit Logging                                               │
-│  ├── Policy Enforcement                                          │
-│  └── API Gateway Integration                                     │
-├─────────────────────────────────────────────────────────────────┤
-│  ML Service (Python)                   Port 8014                 │
-│  ├── Encryption Pattern Analysis                                 │
-│  ├── Key Usage Analytics                                         │
-│  ├── Anomaly Detection in Encryption Operations                  │
-│  └── Predictive Key Rotation                                     │
-├─────────────────────────────────────────────────────────────────┤
-│  MongoDB Database: secretvault_db                          │
-│  ├── Keys Collection                                             │
-│  ├── EncryptionLogs Collection                                   │
-│  ├── Policies Collection                                         │
-│  └── AuditTrailPros Collection                                      │
-└─────────────────────────────────────────────────────────────────┘
+GET    /api/incidents              # List all incidents (with pagination)
+GET    /api/incidents/:id          # Get specific incident
+POST   /api/incidents              # Create new incident report
+PUT    /api/incidents/:id          # Update incident
+DELETE /api/incidents/:id          # Delete incident (admin only)
+POST   /api/incidents/:id/upvote   # Upvote an incident
+POST   /api/incidents/:id/comment  # Add comment
+GET    /api/incidents/stats        # Get incident statistics
+GET    /api/incidents/categories   # Get category breakdown
 ```
 
-## Features
+#### Search & Filter
+```
+GET    /api/incidents/search?q=    # Full-text search
+GET    /api/incidents/filter       # Filter by category, severity, date
+GET    /api/incidents/trending     # Get trending incidents
+GET    /api/incidents/recent       # Get recent incidents
+```
 
-### Core Encryption Capabilities
-- **Advanced Encryption Algorithms**: AES-256, RSA, ECC, ChaCha20
-- **Key Management**: Generation, storage, rotation, revocation
-- **Data Encryption**: File, database, API, and communication encryption
-- **Key Lifecycle Management**: Automated rotation and expiration
-- **Hardware Security Module (HSM) Integration**: Enterprise-grade security
+---
 
-### AI-Powered Intelligence
-- **Smart Algorithm Selection**: AI recommends optimal encryption methods
-- **Key Strength Analysis**: Real-time assessment of encryption strength
-- **Anomaly Detection**: Identifies unusual encryption patterns
-- **Compliance Automation**: Ensures regulatory compliance
-- **Predictive Security**: Anticipates future security needs
+## 🔐 SECRET VAULT
 
-### Enterprise Features
-- **Multi-tenant Architecture**: Isolated key management per tenant
-- **Role-based Access Control**: Granular permissions for key operations
-- **Audit & Compliance**: Comprehensive logging and reporting
-- **High Availability**: Redundant key storage and failover
-- **Integration APIs**: RESTful APIs for seamless integration
+### Purpose
+Enterprise encryption key management system for secure storage and handling of cryptographic keys.
 
-## Real-World Usage
+### Key Types Supported
+- **AES-256**: Symmetric encryption keys
+- **RSA-2048/4096**: Asymmetric key pairs
+- **HMAC-SHA256**: Message authentication keys
+- **API Keys**: Third-party service credentials
+- **Custom**: User-defined secret storage
 
-SecretVault serves organizations requiring robust data protection:
+### API Endpoints
 
-- **Financial Services**: Protecting customer data, transaction encryption
-- **Healthcare**: HIPAA-compliant patient data encryption
-- **Government**: Classified information protection
-- **Enterprise IT**: Database encryption, file system security
-- **Cloud Services**: Data-at-rest and in-transit encryption
+#### Key Management
+```
+GET    /api/keys                   # List all keys (metadata only)
+GET    /api/keys/:id               # Get key details
+POST   /api/keys                   # Create/store new key
+PUT    /api/keys/:id               # Update key metadata
+DELETE /api/keys/:id               # Delete key (soft delete)
+POST   /api/keys/:id/rotate        # Rotate key
+```
 
-## Frontend Experience
+#### Encryption Operations
+```
+POST   /api/encrypt                # Encrypt data with specified key
+POST   /api/decrypt                # Decrypt data with specified key
+POST   /api/generate               # Generate new cryptographic key
+POST   /api/derive                 # Derive key from password
+```
 
-The world-class premium VVIP interface provides:
+#### Audit & Security
+```
+GET    /api/audit/keys             # Key access audit log
+GET    /api/audit/operations       # Encryption operation log
+GET    /api/keys/:id/history       # Key version history
+```
 
-- **Intuitive Dashboard**: Visual key management and encryption status
-- **One-Click Encryption**: Simple tools for data protection
-- **Real-time Monitoring**: Live encryption operation tracking
-- **AI Assistant Integration**: Intelligent guidance and recommendations
-- **Compliance Dashboard**: Regulatory compliance status at a glance
+---
 
-## API Endpoints
+## Database Collections
 
-### Key Management
-- `POST /api/keys/generate` - Generate new encryption keys
-- `GET /api/keys` - List managed keys
-- `PUT /api/keys/{id}/rotate` - Rotate specific key
-- `DELETE /api/keys/{id}` - Revoke key
+### MongoDB: `secretvault_db`
 
-### Encryption Operations
-- `POST /api/encrypt` - Encrypt data
-- `POST /api/decrypt` - Decrypt data
-- `POST /api/encrypt/file` - Encrypt files
-- `POST /api/decrypt/file` - Decrypt files
-
-### Monitoring & Audit
-- `GET /api/audit/logs` - Retrieve audit logs
-- `GET /api/compliance/status` - Compliance status
-- `GET /api/metrics` - Encryption metrics
-
-## Database Schema
-
-### Keys Collection
+#### incidents
 ```javascript
 {
   _id: ObjectId,
-  keyId: String,
-  algorithm: String,
-  keySize: Number,
-  publicKey: String, // For asymmetric
-  privateKey: String, // Encrypted
+  title: String,
+  username: String,
+  location: String,
+  date: Date,
+  category: String,       // enum
+  severity: String,       // low, medium, high, critical
+  status: String,         // open, investigating, resolved, closed
+  what_happened: String,
+  why_it_happened: String,
+  when_discovered: Date,
+  actions_taken: String,
+  lessons_learned: String,
+  tags: [String],
+  upvotes: Number,
+  comments: [{
+    username: String,
+    content: String,
+    timestamp: Date
+  }],
+  verified: Boolean,
   createdAt: Date,
-  expiresAt: Date,
-  status: 'active' | 'rotated' | 'revoked',
-  tenantId: String,
-  metadata: Object
+  updatedAt: Date
 }
 ```
 
-### EncryptionLogs Collection
+#### encryption_keys
 ```javascript
 {
   _id: ObjectId,
-  operation: 'encrypt' | 'decrypt',
-  keyId: String,
-  userId: String,
-  timestamp: Date,
-  success: Boolean,
-  dataSize: Number,
-  algorithm: String
+  name: String,
+  type: String,           // AES-256, RSA-2048, etc.
+  key_value: String,      // Encrypted storage
+  iv: String,             // For AES keys
+  purpose: String,
+  status: String,         // active, rotated, expired, revoked
+  expiresAt: Date,
+  lastUsed: Date,
+  accessCount: Number,
+  createdBy: String,
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
-## Setup & Installation
+#### audit_logs
+```javascript
+{
+  _id: ObjectId,
+  action: String,         // created, accessed, rotated, deleted
+  resource_type: String,  // key, incident
+  resource_id: ObjectId,
+  user: String,
+  ip_address: String,
+  details: Object,
+  timestamp: Date
+}
+```
 
-### Prerequisites
-- Node.js 18+
-- MongoDB 6+
-- Python 3.9+ (for ML service)
+---
 
-### Backend Setup
+## Environment Variables
+
+See `.env.example` for required configuration.
+
+## Incident Categories
+
+| Category | Description | Icon |
+|----------|-------------|------|
+| phishing | Email/SMS phishing attempts | 🎣 |
+| data-breach | Data leaks or unauthorized access | 💾 |
+| malware | Virus, ransomware, trojans | 🦠 |
+| scam | Financial or social engineering scams | 💰 |
+| fraud | Identity fraud, payment fraud | 🎭 |
+| identity-theft | Personal identity compromise | 👤 |
+| security | General security incidents | 🔐 |
+| other | Uncategorized incidents | ❓ |
+
+## Severity Levels
+
+| Level | Color | Description |
+|-------|-------|-------------|
+| low | Green | Minor impact, informational |
+| medium | Yellow | Moderate impact, needs attention |
+| high | Orange | Significant impact, urgent |
+| critical | Red | Severe impact, immediate action |
+
+---
+
+## Quick Start
+
 ```bash
 cd backend/tools/14-secretvault/api
 npm install
@@ -169,78 +204,9 @@ cp .env.example .env
 npm run dev
 ```
 
-### Frontend Setup
-```bash
-cd frontend/tools/14-secretvault
-npm install
-npm run dev
-```
-
-### AI Assistant Setup
-```bash
-cd backend/tools/14-secretvault/ai-assistant
-npm install
-npm run dev
-```
-
-### ML Service Setup
-```bash
-cd backend/tools/14-secretvault/ml-engine
-pip install -r requirements.txt
-python app.py
-```
-
-## Environment Variables
-
-```env
-# Database
-MONGODB_URI=mongodb://localhost:27017/secretvault_db
-
-# Security
-JWT_SECRET=your-secret-key
-ENCRYPTION_MASTER_KEY=your-master-key
-
-# AI Integration
-CLAUDE_API_KEY=your-claude-key
-GEMINI_API_KEY=your-gemini-key
-
-# Ports
-API_PORT=4014
-AI_PORT=6014
-ML_PORT=8014
-```
-
-## Security Considerations
-
-- Keys are encrypted at rest using master keys
-- All operations are logged for audit purposes
-- Role-based access control prevents unauthorized access
-- Automatic key rotation reduces exposure risk
-- HSM integration for hardware-backed security
-
-## Performance
-
-- Handles 10,000+ encryption operations per second
-- Sub-millisecond key retrieval
-- Real-time monitoring with minimal latency
-- Scalable architecture supporting enterprise workloads
-
-## Compliance
-
-- **GDPR**: Data protection and privacy compliance
-- **HIPAA**: Healthcare data encryption standards
-- **PCI DSS**: Payment card industry security standards
-- **SOX**: Financial reporting compliance
-- **ISO 27001**: Information security management
-
-## Contributing
-
-1. Follow the established code standards
-2. Add comprehensive tests for new features
-3. Update documentation for API changes
-4. Ensure security best practices are followed
-
-## License
-
-MIT License - VictoryKit Security Suite</content>
-<parameter name="filePath">/workspaces/VictoryKit/backend/tools/14-secretvault/README.md
+## Tech Stack
+- **Backend**: Node.js + Express
+- **Database**: MongoDB
+- **Encryption**: Node.js crypto module
+- **Authentication**: JWT tokens
+- **Rate Limiting**: express-rate-limit

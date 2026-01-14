@@ -65,7 +65,7 @@ export interface DLPConfig {
       insiderThreat: boolean;
       baseline: boolean;
     };
-    incidentResponse: {
+    incidentcommand: {
       enabled: boolean;
       autoBlock: boolean;
       quarantine: boolean;
@@ -140,12 +140,12 @@ export const getCompliance = () => config.compliance;
 
 // Get AI functions by category
 export const getAIFunctionsByCategory = (category: string): AIFunction[] => {
-  return config.aiAssistant.functions.filter(fn => fn.category === category);
+  return config.aiAssistant.functions.filter((fn) => fn.category === category);
 };
 
 // Get all AI function categories
 export const getAIFunctionCategories = (): string[] => {
-  return [...new Set(config.aiAssistant.functions.map(fn => fn.category))];
+  return [...new Set(config.aiAssistant.functions.map((fn) => fn.category))];
 };
 
 // Get WebSocket URL for AI assistant
@@ -163,11 +163,14 @@ export const getApiBaseUrl = (): string => {
 };
 
 // Check if a feature is enabled
-export const isFeatureEnabled = (featureGroup: keyof DLPConfig['features'], feature?: string): boolean => {
+export const isFeatureEnabled = (
+  featureGroup: keyof DLPConfig['features'],
+  feature?: string
+): boolean => {
   const group = config.features[featureGroup];
   if (!group) return false;
-  if (!feature) return group.enabled || Object.values(group).some(v => v === true);
-  return group[feature as keyof typeof group] as boolean || false;
+  if (!feature) return group.enabled || Object.values(group).some((v) => v === true);
+  return (group[feature as keyof typeof group] as boolean) || false;
 };
 
 // Get supported regulations

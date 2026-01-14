@@ -1,35 +1,41 @@
 # VictoryKit Security Tools Documentation
+
 ## Tools 11-15: Incident & Network Security
 
 ---
 
 ## 📊 Overview Dashboard
 
-| Tool | Name | Port | DB | Status | Priority |
-|------|------|------|-----|--------|----------|
-| 11 | IncidentResponse | 4011 | victorykit_incidentresponse | 📝 Planned | P1 |
-| 12 | NetworkGuard | 4012 | victorykit_networkguard | 📝 Planned | P1 |
-| 13 | CloudArmor | 4013 | victorykit_cloudarmor | 📝 Planned | P1 |
-| 14 | IdentityShield | 4014 | victorykit_identityshield | 📝 Planned | P1 |
-| 15 | PrivilegeGuard | 4015 | victorykit_privilegeguard | 📝 Planned | P1 |
+| Tool | Name            | Port | DB                         | Status     | Priority |
+| ---- | --------------- | ---- | -------------------------- | ---------- | -------- |
+| 11   | incidentcommand | 4011 | victorykit_incidentcommand | 📝 Planned | P1       |
+| 12   | NetworkGuard    | 4012 | victorykit_networkguard    | 📝 Planned | P1       |
+| 13   | CloudArmor      | 4013 | victorykit_cloudarmor      | 📝 Planned | P1       |
+| 14   | IdentityShield  | 4014 | victorykit_identityshield  | 📝 Planned | P1       |
+| 15   | PrivilegeGuard  | 4015 | victorykit_privilegeguard  | 📝 Planned | P1       |
 
 ---
 
-## 🚨 Tool 11: IncidentResponse
+## 🚨 Tool 11: incidentcommand
+
 ### AI-Powered Security Incident Management
 
 #### Purpose
-Comprehensive incident response platform with AI-driven playbook automation, threat containment, forensic analysis, and coordinated response workflows.
+
+Comprehensive incident response platform with AI-driven playbook automation,
+threat containment, forensic analysis, and coordinated response workflows.
 
 #### Technology Stack
+
 - **Backend**: Node.js + Express
 - **Database**: MongoDB
 - **ML Engine**: Python + LLM for analysis
 - **Integration**: SIEM, EDR, Ticketing
 
 #### Directory Structure
+
 ```
-backend/tools/11-incidentresponse/
+backend/tools/11-incidentcommand/
 ├── api/
 │   ├── src/
 │   │   ├── controllers/
@@ -63,6 +69,7 @@ backend/tools/11-incidentresponse/
 ```
 
 #### Database Schema
+
 ```javascript
 // Incident Model
 {
@@ -224,42 +231,44 @@ backend/tools/11-incidentresponse/
 ```
 
 #### API Endpoints
+
 ```
-POST   /api/v1/incidentresponse/incidents           # Create incident
-GET    /api/v1/incidentresponse/incidents           # List incidents
-GET    /api/v1/incidentresponse/incidents/:id       # Get incident details
-PATCH  /api/v1/incidentresponse/incidents/:id       # Update incident
-POST   /api/v1/incidentresponse/incidents/:id/escalate  # Escalate
-POST   /api/v1/incidentresponse/incidents/:id/close # Close incident
-GET    /api/v1/incidentresponse/incidents/:id/timeline  # Get timeline
-POST   /api/v1/incidentresponse/incidents/:id/analyze   # AI analysis
+POST   /api/v1/incidentcommand/incidents           # Create incident
+GET    /api/v1/incidentcommand/incidents           # List incidents
+GET    /api/v1/incidentcommand/incidents/:id       # Get incident details
+PATCH  /api/v1/incidentcommand/incidents/:id       # Update incident
+POST   /api/v1/incidentcommand/incidents/:id/escalate  # Escalate
+POST   /api/v1/incidentcommand/incidents/:id/close # Close incident
+GET    /api/v1/incidentcommand/incidents/:id/timeline  # Get timeline
+POST   /api/v1/incidentcommand/incidents/:id/analyze   # AI analysis
 
-POST   /api/v1/incidentresponse/playbooks           # Create playbook
-GET    /api/v1/incidentresponse/playbooks           # List playbooks
-GET    /api/v1/incidentresponse/playbooks/:id       # Get playbook
-PUT    /api/v1/incidentresponse/playbooks/:id       # Update playbook
-POST   /api/v1/incidentresponse/playbooks/:id/execute   # Execute playbook
+POST   /api/v1/incidentcommand/playbooks           # Create playbook
+GET    /api/v1/incidentcommand/playbooks           # List playbooks
+GET    /api/v1/incidentcommand/playbooks/:id       # Get playbook
+PUT    /api/v1/incidentcommand/playbooks/:id       # Update playbook
+POST   /api/v1/incidentcommand/playbooks/:id/execute   # Execute playbook
 
-GET    /api/v1/incidentresponse/tasks               # List tasks
-GET    /api/v1/incidentresponse/tasks/:id           # Get task
-PATCH  /api/v1/incidentresponse/tasks/:id           # Update task
-POST   /api/v1/incidentresponse/tasks/:id/complete  # Complete task
+GET    /api/v1/incidentcommand/tasks               # List tasks
+GET    /api/v1/incidentcommand/tasks/:id           # Get task
+PATCH  /api/v1/incidentcommand/tasks/:id           # Update task
+POST   /api/v1/incidentcommand/tasks/:id/complete  # Complete task
 
-POST   /api/v1/incidentresponse/evidence            # Upload evidence
-GET    /api/v1/incidentresponse/evidence            # List evidence
-GET    /api/v1/incidentresponse/evidence/:id        # Get evidence
-POST   /api/v1/incidentresponse/evidence/:id/analyze    # Analyze evidence
+POST   /api/v1/incidentcommand/evidence            # Upload evidence
+GET    /api/v1/incidentcommand/evidence            # List evidence
+GET    /api/v1/incidentcommand/evidence/:id        # Get evidence
+POST   /api/v1/incidentcommand/evidence/:id/analyze    # Analyze evidence
 
-GET    /api/v1/incidentresponse/dashboard           # Dashboard metrics
+GET    /api/v1/incidentcommand/dashboard           # Dashboard metrics
 GET    /health                                       # Health check
 ```
 
 #### Frontend Components
+
 ```
 frontend/src/
 ├── pages/
 │   └── tools/
-│       └── incidentresponse/
+│       └── incidentcommand/
 │           ├── IRDashboard.tsx              # Main dashboard
 │           ├── IncidentList.tsx             # Incident list
 │           ├── IncidentDetail.tsx           # Incident details
@@ -269,7 +278,7 @@ frontend/src/
 │           ├── ForensicsLab.tsx             # Evidence analysis
 │           └── Reporting.tsx                # IR reports
 ├── components/
-│   └── incidentresponse/
+│   └── incidentcommand/
 │       ├── SeverityIndicator.tsx            # Severity display
 │       ├── PhaseTracker.tsx                 # IR phase progress
 │       ├── TimelineViewer.tsx               # Timeline viz
@@ -279,24 +288,29 @@ frontend/src/
 │       ├── EvidenceChain.tsx                # Chain of custody
 │       └── MetricsCard.tsx                  # MTTD/MTTR metrics
 └── hooks/
-    └── useIncidentResponse.ts               # API hooks
+    └── useincidentcommand.ts               # API hooks
 ```
 
 ---
 
 ## 🌐 Tool 12: NetworkGuard
+
 ### AI-Powered Network Security Monitoring
 
 #### Purpose
-Real-time network traffic analysis, intrusion detection, anomaly detection, and automated threat response for enterprise network infrastructure.
+
+Real-time network traffic analysis, intrusion detection, anomaly detection, and
+automated threat response for enterprise network infrastructure.
 
 #### Technology Stack
+
 - **Backend**: Node.js + Express
 - **Database**: MongoDB + TimescaleDB
 - **ML Engine**: Python + Deep Learning
 - **Capture**: NetFlow, PCAP, Zeek
 
 #### Directory Structure
+
 ```
 backend/tools/12-networkguard/
 ├── api/
@@ -331,6 +345,7 @@ backend/tools/12-networkguard/
 ```
 
 #### Database Schema
+
 ```javascript
 // Sensor Model
 {
@@ -486,6 +501,7 @@ backend/tools/12-networkguard/
 ```
 
 #### API Endpoints
+
 ```
 POST   /api/v1/networkguard/sensors                 # Register sensor
 GET    /api/v1/networkguard/sensors                 # List sensors
@@ -516,6 +532,7 @@ GET    /health                                       # Health check
 ```
 
 #### Frontend Components
+
 ```
 frontend/src/
 ├── pages/
@@ -545,18 +562,23 @@ frontend/src/
 ---
 
 ## ☁️ Tool 13: CloudArmor
+
 ### Cloud Security Posture Management
 
 #### Purpose
-Comprehensive cloud security platform for AWS, Azure, and GCP with misconfiguration detection, compliance monitoring, and automated remediation.
+
+Comprehensive cloud security platform for AWS, Azure, and GCP with
+misconfiguration detection, compliance monitoring, and automated remediation.
 
 #### Technology Stack
+
 - **Backend**: Node.js + Express
 - **Database**: MongoDB
 - **ML Engine**: Python + Policy analysis
 - **Cloud APIs**: AWS SDK, Azure SDK, GCP SDK
 
 #### Directory Structure
+
 ```
 backend/tools/13-cloudarmor/
 ├── api/
@@ -591,6 +613,7 @@ backend/tools/13-cloudarmor/
 ```
 
 #### Database Schema
+
 ```javascript
 // CloudAccount Model
 {
@@ -707,6 +730,7 @@ backend/tools/13-cloudarmor/
 ```
 
 #### API Endpoints
+
 ```
 POST   /api/v1/cloudarmor/accounts                  # Connect cloud account
 GET    /api/v1/cloudarmor/accounts                  # List accounts
@@ -737,6 +761,7 @@ GET    /health                                       # Health check
 ```
 
 #### Frontend Components
+
 ```
 frontend/src/
 ├── pages/
@@ -765,18 +790,23 @@ frontend/src/
 ---
 
 ## 🪪 Tool 14: IdentityShield
+
 ### Identity & Access Management Security
 
 #### Purpose
-Comprehensive IAM security platform for identity governance, privileged access management, and access certification with AI-driven risk analysis.
+
+Comprehensive IAM security platform for identity governance, privileged access
+management, and access certification with AI-driven risk analysis.
 
 #### Technology Stack
+
 - **Backend**: Node.js + Express
 - **Database**: MongoDB
 - **ML Engine**: Python + Risk scoring
 - **Integration**: Active Directory, Okta, Azure AD
 
 #### Directory Structure
+
 ```
 backend/tools/14-identityshield/
 ├── api/
@@ -811,6 +841,7 @@ backend/tools/14-identityshield/
 ```
 
 #### Database Schema
+
 ```javascript
 // Identity Model
 {
@@ -953,6 +984,7 @@ backend/tools/14-identityshield/
 ```
 
 #### API Endpoints
+
 ```
 GET    /api/v1/identityshield/identities            # List identities
 GET    /api/v1/identityshield/identities/:id        # Get identity details
@@ -984,6 +1016,7 @@ GET    /health                                       # Health check
 ```
 
 #### Frontend Components
+
 ```
 frontend/src/
 ├── pages/
@@ -1013,18 +1046,23 @@ frontend/src/
 ---
 
 ## 🔐 Tool 15: PrivilegeGuard
+
 ### Cryptographic Key & Secrets Management
 
 #### Purpose
-Enterprise secrets management platform for cryptographic keys, certificates, API keys, and sensitive credentials with HSM integration.
+
+Enterprise secrets management platform for cryptographic keys, certificates, API
+keys, and sensitive credentials with HSM integration.
 
 #### Technology Stack
+
 - **Backend**: Node.js + Express
 - **Database**: MongoDB (encrypted)
 - **ML Engine**: Python + Certificate analysis
 - **Integration**: HSM, HashiCorp Vault, AWS KMS
 
 #### Directory Structure
+
 ```
 backend/tools/15-privilegeguard/
 ├── api/
@@ -1058,6 +1096,7 @@ backend/tools/15-privilegeguard/
 ```
 
 #### Database Schema
+
 ```javascript
 // Secret Model
 {
@@ -1217,6 +1256,7 @@ backend/tools/15-privilegeguard/
 ```
 
 #### API Endpoints
+
 ```
 POST   /api/v1/privilegeguard/secrets                  # Create secret
 GET    /api/v1/privilegeguard/secrets                  # List secrets
@@ -1248,6 +1288,7 @@ GET    /health                                       # Health check
 ```
 
 #### Frontend Components
+
 ```
 frontend/src/
 ├── pages/
@@ -1321,7 +1362,8 @@ frontend/src/
 
 ## 📋 Implementation Checklist
 
-### Tool 11 - IncidentResponse
+### Tool 11 - incidentcommand
+
 - [ ] Create directory structure
 - [ ] Implement Incident model
 - [ ] Implement Playbook model
@@ -1337,6 +1379,7 @@ frontend/src/
 - [ ] Deploy to EC2
 
 ### Tool 12 - NetworkGuard
+
 - [ ] Create directory structure
 - [ ] Implement Sensor model
 - [ ] Implement Alert model
@@ -1352,6 +1395,7 @@ frontend/src/
 - [ ] Deploy to EC2
 
 ### Tool 13 - CloudArmor
+
 - [ ] Create directory structure
 - [ ] Implement CloudAccount model
 - [ ] Implement Resource model
@@ -1367,6 +1411,7 @@ frontend/src/
 - [ ] Deploy to EC2
 
 ### Tool 14 - IdentityShield
+
 - [ ] Create directory structure
 - [ ] Implement Identity model
 - [ ] Implement Access model
@@ -1382,6 +1427,7 @@ frontend/src/
 - [ ] Deploy to EC2
 
 ### Tool 15 - PrivilegeGuard
+
 - [ ] Create directory structure
 - [ ] Implement Secret model
 - [ ] Implement Key model
@@ -1399,5 +1445,5 @@ frontend/src/
 
 ---
 
-*Documentation generated: December 29, 2025*
-*VictoryKit Phase 4 - Backend API Implementation*
+_Documentation generated: December 29, 2025_ _VictoryKit Phase 4 - Backend API
+Implementation_

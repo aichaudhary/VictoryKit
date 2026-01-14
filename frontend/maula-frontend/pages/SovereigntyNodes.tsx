@@ -59,22 +59,22 @@ const SovereigntyNodes: React.FC = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,_rgba(245,158,11,0.08),_transparent_60%)] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto relative z-10">
-        <button onClick={() => setView('dashboard')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors mb-20">
+        <button onClick={() => setView('dashboard')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors mb-10 sm:mb-16 md:mb-20">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Config
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-10 sm:mb-16 md:mb-20">
           {/* Header & Stats */}
           <div className="lg:col-span-3 space-y-6">
             <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-amber-500/20 backdrop-blur-3xl">
               <Globe className="w-4 h-4 text-amber-500" />
               <span className="text-[10px] font-black tracking-[0.4em] uppercase text-amber-500">Global Data Integrity Portal</span>
             </div>
-            <h1 className="text-7xl font-black tracking-tighter leading-none uppercase">SOVEREIGNTY <span className="text-amber-500">NODES</span></h1>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-none uppercase">SOVEREIGNTY <span className="text-amber-500">NODES</span></h1>
             <p className="text-lg text-white/40 max-w-2xl font-medium">Coordinate regional data residency and physical sovereignty laws. Deploy neural edge enclaves to satisfy specific geographic compliance requirements.</p>
           </div>
           <div className="glass p-10 rounded-[3rem] border border-amber-500/20 flex flex-col justify-center">
-             <div className="text-4xl font-black tracking-tighter text-amber-500">{syncProgress}%</div>
+             <div className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter text-amber-500">{syncProgress}%</div>
              <div className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20 mt-2">Lattice Integrity Sync</div>
              <div className="mt-6 h-1 bg-white/5 rounded-full overflow-hidden">
                 <div className="h-full bg-amber-500 transition-all duration-300" style={{ width: `${syncProgress}%` }} />
@@ -82,10 +82,10 @@ const SovereigntyNodes: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10 sm:mb-16 md:mb-20">
            {nodes.map((node) => (
              <div key={node.id} className={`glass p-10 rounded-[3rem] border transition-all group flex flex-col h-full ${node.active ? 'border-amber-500/30' : 'border-white/5 opacity-60'}`}>
-                <div className="flex justify-between items-start mb-12">
+                <div className="flex justify-between items-start mb-6 sm:mb-8 md:mb-12">
                    <div className={`w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center ${node.active ? 'text-amber-500' : 'text-white/20'}`}><MapPin className="w-8 h-8" /></div>
                    <div className="text-right">
                       <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20">Status</div>

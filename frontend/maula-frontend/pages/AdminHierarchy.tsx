@@ -60,7 +60,7 @@ const AdminHierarchy: React.FC = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,_rgba(16,185,129,0.1),_transparent_60%)] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto relative z-10">
-        <button onClick={() => setView('dashboard')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors mb-20">
+        <button onClick={() => setView('dashboard')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors mb-10 sm:mb-16 md:mb-20">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Config
         </button>
 
@@ -71,7 +71,7 @@ const AdminHierarchy: React.FC = () => {
                 <Users className="w-4 h-4 text-emerald-500" />
                 <span className="text-[10px] font-black tracking-[0.4em] uppercase text-emerald-500">Personnel Management</span>
               </div>
-              <h1 className="text-7xl font-black tracking-tighter leading-none uppercase">ADMIN <span className="text-emerald-500">HIERARCHY</span></h1>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-none uppercase">ADMIN <span className="text-emerald-500">HIERARCHY</span></h1>
               <p className="text-lg text-white/40 max-w-xl font-medium">Orchestrate organizational access and clearance levels. Ensure least-privilege enforcement across the entire lattice.</p>
             </div>
 

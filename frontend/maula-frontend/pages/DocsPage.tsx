@@ -18,7 +18,7 @@ const DocsPage: React.FC = () => {
              <Book className="w-4 h-4 text-amber-500" />
              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-amber-500">Knowledge Base</span>
            </div>
-           <h1 className="text-7xl font-black tracking-tighter uppercase">DOCUMENTATION</h1>
+           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase">DOCUMENTATION</h1>
            <div className="relative">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30" />
               <input type="text" placeholder="Search modules, API, guides..." className="w-full bg-white/5 border border-white/10 rounded-2xl py-6 pl-16 pr-6 focus:outline-none focus:border-amber-500 transition-colors" />

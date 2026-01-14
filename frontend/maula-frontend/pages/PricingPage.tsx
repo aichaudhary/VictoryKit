@@ -13,7 +13,7 @@ const PricingPage: React.FC = () => {
       </button>
 
       <div className="text-center space-y-8 mb-24">
-        <h1 className="text-7xl font-black tracking-tighter uppercase">Transparent <span className="text-purple-500">Pricing</span></h1>
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase">Transparent <span className="text-purple-500">Pricing</span></h1>
         <p className="text-white/40 text-xl max-w-2xl mx-auto leading-relaxed">Choose the defense tier that matches your scale. No hidden fees, just pure protection.</p>
       </div>
 
@@ -29,7 +29,7 @@ const PricingPage: React.FC = () => {
                <span className={`text-6xl font-black text-${tier.color}`}>{tier.price}</span>
                {tier.price !== 'Scale' && <span className="text-white/30 font-bold">/mo</span>}
             </div>
-            <ul className="space-y-6 mb-12">
+            <ul className="space-y-6 mb-6 sm:mb-8 md:mb-12">
               {tier.perks.map((p, j) => (
                 <li key={j} className="flex items-center gap-4 text-white/60">
                   <Check className={`w-5 h-5 text-${tier.color}`} /> {p}

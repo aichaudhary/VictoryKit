@@ -1,7 +1,7 @@
 /**
  * AI Analysis Service
  * Real-world integrations for intelligent incident analysis
- * 
+ *
  * Integrates with: OpenAI GPT-4, Google Gemini, Anthropic Claude
  */
 
@@ -10,17 +10,20 @@ const axios = require('axios');
 class AIAnalysisService {
   constructor() {
     // OpenAI
-    this.openaiApiKey = process.env.INCIDENTRESPONSE_OPENAI_API_KEY;
-    this.openaiBaseUrl = process.env.INCIDENTRESPONSE_OPENAI_BASE_URL || 'https://api.openai.com/v1';
-    this.openaiModel = process.env.INCIDENTRESPONSE_OPENAI_MODEL || 'gpt-4-turbo-preview';
-    
+    this.openaiApiKey = process.env.incidentcommand_OPENAI_API_KEY;
+    this.openaiBaseUrl = process.env.incidentcommand_OPENAI_BASE_URL || 'https://api.openai.com/v1';
+    this.openaiModel = process.env.incidentcommand_OPENAI_MODEL || 'gpt-4-turbo-preview';
+
     // Google Gemini
-    this.geminiApiKey = process.env.INCIDENTRESPONSE_GEMINI_API_KEY;
-    this.geminiBaseUrl = process.env.INCIDENTRESPONSE_GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta';
-    
+    this.geminiApiKey = process.env.incidentcommand_GEMINI_API_KEY;
+    this.geminiBaseUrl =
+      process.env.incidentcommand_GEMINI_BASE_URL ||
+      'https://generativelanguage.googleapis.com/v1beta';
+
     // Anthropic Claude
-    this.anthropicApiKey = process.env.INCIDENTRESPONSE_ANTHROPIC_API_KEY;
-    this.anthropicBaseUrl = process.env.INCIDENTRESPONSE_ANTHROPIC_BASE_URL || 'https://api.anthropic.com/v1';
+    this.anthropicApiKey = process.env.incidentcommand_ANTHROPIC_API_KEY;
+    this.anthropicBaseUrl =
+      process.env.incidentcommand_ANTHROPIC_BASE_URL || 'https://api.anthropic.com/v1';
   }
 
   /**
@@ -33,7 +36,7 @@ class AIAnalysisService {
     const providers = [
       { name: 'OpenAI', fn: () => this.analyzeWithOpenAI(prompt) },
       { name: 'Gemini', fn: () => this.analyzeWithGemini(prompt) },
-      { name: 'Claude', fn: () => this.analyzeWithClaude(prompt) }
+      { name: 'Claude', fn: () => this.analyzeWithClaude(prompt) },
     ];
 
     for (const provider of providers) {
@@ -61,19 +64,19 @@ class AIAnalysisService {
           messages: [
             {
               role: 'system',
-              content: `You are an expert cybersecurity incident response analyst. Analyze security incidents and provide detailed, actionable insights. Always respond with structured JSON containing: summary, severity_assessment, attack_vector, mitre_techniques, immediate_actions, containment_steps, investigation_steps, recovery_steps, iocs_to_investigate, similar_incidents, risk_score (1-100), confidence (1-100).`
+              content: `You are an expert cybersecurity incident response analyst. Analyze security incidents and provide detailed, actionable insights. Always respond with structured JSON containing: summary, severity_assessment, attack_vector, mitre_techniques, immediate_actions, containment_steps, investigation_steps, recovery_steps, iocs_to_investigate, similar_incidents, risk_score (1-100), confidence (1-100).`,
             },
-            { role: 'user', content: prompt }
+            { role: 'user', content: prompt },
           ],
           temperature: 0.3,
           max_tokens: 2000,
-          response_format: { type: 'json_object' }
+          response_format: { type: 'json_object' },
         },
         {
           headers: {
-            'Authorization': `Bearer ${this.openaiApiKey}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${this.openaiApiKey}`,
+            'Content-Type': 'application/json',
+          },
         }
       );
 
@@ -81,7 +84,7 @@ class AIAnalysisService {
       return {
         analysis: JSON.parse(content),
         tokens: response.data.usage,
-        model: this.openaiModel
+        model: this.openaiModel,
       };
     } catch (error) {
       console.error('OpenAI analysis error:', error.message);
@@ -99,15 +102,19 @@ class AIAnalysisService {
       const response = await axios.post(
         `${this.geminiBaseUrl}/models/gemini-pro:generateContent?key=${this.geminiApiKey}`,
         {
-          contents: [{
-            parts: [{
-              text: `You are an expert cybersecurity incident response analyst. Analyze the following security incident and provide detailed, actionable insights. Respond with structured JSON only.\n\n${prompt}`
-            }]
-          }],
+          contents: [
+            {
+              parts: [
+                {
+                  text: `You are an expert cybersecurity incident response analyst. Analyze the following security incident and provide detailed, actionable insights. Respond with structured JSON only.\n\n${prompt}`,
+                },
+              ],
+            },
+          ],
           generationConfig: {
             temperature: 0.3,
-            maxOutputTokens: 2000
-          }
+            maxOutputTokens: 2000,
+          },
         }
       );
 
@@ -117,7 +124,7 @@ class AIAnalysisService {
       if (jsonMatch) {
         return {
           analysis: JSON.parse(jsonMatch[0]),
-          model: 'gemini-pro'
+          model: 'gemini-pro',
         };
       }
       return null;
@@ -140,14 +147,14 @@ class AIAnalysisService {
           model: 'claude-3-opus-20240229',
           max_tokens: 2000,
           system: `You are an expert cybersecurity incident response analyst. Analyze security incidents and provide detailed, actionable insights. Always respond with structured JSON containing: summary, severity_assessment, attack_vector, mitre_techniques, immediate_actions, containment_steps, investigation_steps, recovery_steps, iocs_to_investigate, similar_incidents, risk_score (1-100), confidence (1-100).`,
-          messages: [{ role: 'user', content: prompt }]
+          messages: [{ role: 'user', content: prompt }],
         },
         {
           headers: {
             'x-api-key': this.anthropicApiKey,
             'anthropic-version': '2023-06-01',
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+          },
         }
       );
 
@@ -156,7 +163,7 @@ class AIAnalysisService {
       if (jsonMatch) {
         return {
           analysis: JSON.parse(jsonMatch[0]),
-          model: 'claude-3-opus'
+          model: 'claude-3-opus',
         };
       }
       return null;
@@ -180,13 +187,18 @@ INCIDENT DETAILS:
 - Category: ${incident.classification?.type || 'Unknown'}
 
 INDICATORS OF COMPROMISE:
-${incident.indicators?.map(i => `- ${i.type}: ${i.value}`).join('\n') || 'None recorded'}
+${incident.indicators?.map((i) => `- ${i.type}: ${i.value}`).join('\n') || 'None recorded'}
 
 AFFECTED ASSETS:
-${incident.affectedAssets?.map(a => `- ${a.hostname || a.assetId} (${a.type}) - Impact: ${a.impact}`).join('\n') || 'None recorded'}
+${incident.affectedAssets?.map((a) => `- ${a.hostname || a.assetId} (${a.type}) - Impact: ${a.impact}`).join('\n') || 'None recorded'}
 
 TIMELINE:
-${incident.timeline?.slice(-10).map(t => `- [${t.timestamp}] ${t.event} by ${t.actor}`).join('\n') || 'No timeline events'}
+${
+  incident.timeline
+    ?.slice(-10)
+    .map((t) => `- [${t.timestamp}] ${t.event} by ${t.actor}`)
+    .join('\n') || 'No timeline events'
+}
 `;
 
     const analysisPrompts = {
@@ -194,7 +206,7 @@ ${incident.timeline?.slice(-10).map(t => `- [${t.timestamp}] ${t.event} by ${t.a
       threat: `Focus on threat actor analysis: motivation, sophistication level, likely origin, similar campaigns, and predicted next actions.`,
       impact: `Assess the business impact: affected systems, data exposure risk, regulatory implications, and estimated recovery time.`,
       rootcause: `Analyze the root cause: initial access vector, security control failures, and preventive recommendations.`,
-      playbook: `Recommend a response playbook with step-by-step actions prioritized by urgency and impact.`
+      playbook: `Recommend a response playbook with step-by-step actions prioritized by urgency and impact.`,
     };
 
     return `${baseInfo}\n\nANALYSIS REQUEST:\n${analysisPrompts[analysisType] || analysisPrompts.comprehensive}`;
@@ -209,11 +221,11 @@ ${incident.timeline?.slice(-10).map(t => `- [${t.timestamp}] ${t.event} by ${t.a
 ${this.buildAnalysisPrompt(incident, 'impact')}`;
 
     const result = await this.analyzeIncident({ ...incident }, 'comprehensive');
-    
+
     if (result.analysis?.summary) {
       return result.analysis.summary;
     }
-    
+
     return `Security incident ${incident.incidentId} (${incident.severity.toUpperCase()}) detected involving ${incident.classification?.type || 'unknown attack type'}. ${incident.affectedAssets?.length || 0} assets affected. Current status: ${incident.status}. Investigation ongoing.`;
   }
 
@@ -234,12 +246,12 @@ Return JSON with: playbook_name, customized_steps (array of {step_number, action
    * Identify related incidents and patterns
    */
   async identifyPatterns(incident, historicalIncidents) {
-    const historicalSummary = historicalIncidents.slice(0, 10).map(h => ({
+    const historicalSummary = historicalIncidents.slice(0, 10).map((h) => ({
       id: h.incidentId,
       title: h.title,
       type: h.classification?.type,
       severity: h.severity,
-      indicators: h.indicators?.slice(0, 3)
+      indicators: h.indicators?.slice(0, 3),
     }));
 
     const prompt = `Analyze this incident for patterns and connections to historical incidents.
@@ -265,11 +277,11 @@ Identify: pattern matches, campaign indicators, escalation risks, and recommende
       data_breach: ['T1041', 'T1567', 'T1048'],
       ddos: ['T1498', 'T1499'],
       insider_threat: ['T1078', 'T1136', 'T1087'],
-      apt: ['T1027', 'T1070', 'T1574']
+      apt: ['T1027', 'T1070', 'T1574'],
     };
 
     const type = incident.classification?.type || 'other';
-    
+
     return {
       analysis: {
         summary: `${incident.severity.toUpperCase()} severity ${type} incident affecting ${incident.affectedAssets?.length || 0} assets. Immediate investigation and containment recommended.`,
@@ -280,33 +292,33 @@ Identify: pattern matches, campaign indicators, escalation risks, and recommende
           'Isolate affected systems from network',
           'Preserve forensic evidence',
           'Notify incident response team',
-          'Document all actions taken'
+          'Document all actions taken',
         ],
         containment_steps: [
           'Block malicious IPs at firewall',
           'Disable compromised accounts',
           'Quarantine infected endpoints',
-          'Enable enhanced logging'
+          'Enable enhanced logging',
         ],
         investigation_steps: [
           'Analyze endpoint telemetry',
           'Review authentication logs',
           'Correlate network traffic',
-          'Check for lateral movement'
+          'Check for lateral movement',
         ],
         recovery_steps: [
           'Verify threat eradication',
           'Restore from clean backups',
           'Patch vulnerable systems',
-          'Conduct lessons learned'
+          'Conduct lessons learned',
         ],
-        iocs_to_investigate: incident.indicators?.map(i => i.value) || [],
+        iocs_to_investigate: incident.indicators?.map((i) => i.value) || [],
         similar_incidents: [],
         risk_score: incident.severity === 'critical' ? 95 : incident.severity === 'high' ? 75 : 50,
-        confidence: 70
+        confidence: 70,
       },
       provider: 'Simulated',
-      simulated: true
+      simulated: true,
     };
   }
 
@@ -318,7 +330,7 @@ Identify: pattern matches, campaign indicators, escalation risks, and recommende
       data_breach: 'Unauthorized data access through compromised credentials',
       ddos: 'Volumetric attack targeting network infrastructure',
       insider_threat: 'Malicious insider activity using legitimate access',
-      apt: 'Sophisticated multi-stage attack with persistence mechanisms'
+      apt: 'Sophisticated multi-stage attack with persistence mechanisms',
     };
     return vectors[type] || 'Unknown attack vector requiring investigation';
   }

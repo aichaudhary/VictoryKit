@@ -27,7 +27,7 @@ const ProductsPage: React.FC = () => {
              <Box className="w-4 h-4 text-purple-500" />
              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-purple-500">The MAULA Ecosystem</span>
            </div>
-           <h1 className="text-8xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase">
+           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] uppercase">
              OUR <span className="text-purple-500">PRODUCTS</span>
            </h1>
            <p className="text-xl md:text-2xl text-white/60 font-medium leading-relaxed max-w-2xl">

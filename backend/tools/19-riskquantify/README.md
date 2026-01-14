@@ -1,434 +1,603 @@
-# RiskQuantify
+# 🛡️ RiskQuantify - IP Risk Scanner & Payment Sandbox
 
-**Tool #19** | AI-Powered Enterprise Risk Assessment & Quantitative Analysis Platform
+![RiskQuantify Logo](https://img.shields.io/badge/RiskQuantify-IP%20Risk%20Scanner-8b5cf6?style=for-the-badge&logo=shield&logoColor=white)
 
-[![Port: 4019](https://img.shields.io/badge/API-4019-blue.svg)](http://localhost:4019)
-[![AI WebSocket: 6019](https://img.shields.io/badge/AI_WS-6019-purple.svg)](ws://localhost:6019)
-[![Frontend: 3019](https://img.shields.io/badge/Frontend-3019-green.svg)](http://localhost:3019)
-[![ML: 8019](https://img.shields.io/badge/ML-8019-orange.svg)](http://localhost:8019)
+[![Version](https://img.shields.io/badge/version-19.1.0-8b5cf6.svg)](https://github.com/aichaudhary/VictoryKit)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933.svg)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248.svg)](https://mongodb.com/)
 
-## Overview
+**Real-time IP Risk Analysis, Device Fingerprinting & Payment Simulation Platform**
 
-RiskQuantify is a comprehensive enterprise risk assessment and quantitative analysis solution in the VictoryKit security suite. It provides advanced risk modeling, threat scenario analysis, business impact assessment, and AI-powered risk mitigation strategies for comprehensive risk management across the organization.
+🌐 **Live:** https://riskquantify.maula.ai
 
-**Production URL:** `https://riskquantify.maula.ai`
+---
 
-## Architecture
+## 📋 Table of Contents
+
+1. [Overview](#-overview)
+2. [Key Features](#-key-features)
+3. [Architecture](#-architecture)
+4. [Technology Stack](#-technology-stack)
+5. [Installation](#-installation)
+6. [API Reference](#-api-reference)
+7. [Database Schema](#-database-schema)
+8. [Third-Party APIs](#-third-party-apis)
+9. [Deployment](#-deployment)
+
+---
+
+## 🎯 Overview
+
+**RiskQuantify** is a user-facing IP risk scanner and payment sandbox platform. Similar to ip-score.com, it allows users to check their IP reputation, risk scores, blacklist status, and simulate payment scenarios to understand potential payment declines.
+
+### Why RiskQuantify?
+
+- **Auto IP Detection**: Automatically detects visitor's IP on page load
+- **Real-time Risk Scoring**: Risk, Fraud, and Abuse scores (0-100)
+- **Blacklist Checking**: 10+ major blacklist databases
+- **Device Fingerprinting**: Browser, OS, canvas, WebGL fingerprints
+- **Payment Sandbox**: Test payment scenarios with different configurations
+- **VPN/Proxy Detection**: Identifies VPN, Proxy, Tor, Datacenter IPs
+
+### Use Cases
+
+| Use Case | Description |
+|----------|-------------|
+| **IP Risk Check** | Users check their own IP reputation |
+| **Payment Troubleshooting** | Understand why payments get declined |
+| **VPN Detection** | Check if VPN/Proxy is detected |
+| **Blacklist Lookup** | See if IP is on any blacklists |
+| **Device Trust** | Analyze device fingerprint trust score |
+| **Payment Testing** | Simulate payments before real transactions |
+
+---
+
+## ✨ Key Features
+
+### 🔍 Tab 1: My IP Scanner (Auto-Detection)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                   RiskQuantify System                             │
+│                    AUTO IP DETECTION                             │
 ├─────────────────────────────────────────────────────────────────┤
-│  Frontend (React/TypeScript)           Port 3019                 │
-│  ├── Risk Dashboard                                                  │
-│  ├── Assessment Builder                                              │
-│  ├── Threat Modeling                                                 │
-│  ├── Impact Analysis                                                 │
-│  ├── Risk Register                                                   │
-│  └── Maula AI Chat Interface                                         │
-├─────────────────────────────────────────────────────────────────┤
-│  AI Assistant (TypeScript/WebSocket)   Port 6019                 │
-│  ├── Multi-LLM Support (Claude Opus/Sonnet 4.5, Gemini, GPT)    │
-│  ├── Risk Quantification & Modeling                                 │
-│  ├── Threat Scenario Analysis                                       │
-│  ├── Business Impact Forecasting                                    │
-│  ├── Mitigation Strategy Optimization                               │
-│  └── Compliance Risk Assessment                                     │
-├─────────────────────────────────────────────────────────────────┤
-│  Backend API (Node.js/Express)         Port 4019                 │
-│  ├── Risk Assessment Engine                                        │
-│  ├── Threat Modeling Engine                                         │
-│  ├── Business Impact Calculator                                     │
-│  ├── Risk Quantification Service                                    │
-│  ├── Mitigation Planning                                            │
-│  └── API Gateway Integration                                        │
-├─────────────────────────────────────────────────────────────────┤
-│  ML Service (Python)                   Port 8019                 │
-│  ├── Predictive Risk Modeling                                        │
-│  ├── Monte Carlo Simulations                                         │
-│  ├── Bayesian Risk Analysis                                          │
-│  ├── Time Series Risk Forecasting                                    │
-│  ├── Anomaly Detection in Risk Metrics                               │
-│  └── Risk Pattern Recognition                                        │
-├─────────────────────────────────────────────────────────────────┤
-│  Integration Points                                                   │
-│  ├── NIST SP 800-30 Risk Management                               │
-│  ├── ISO 31000 Risk Management                                    │
-│  ├── FAIR Quantitative Risk Analysis                               │
-│  ├── OCTAVE Risk Assessment                                        │
-│  ├── CRAMM Risk Analysis                                           │
-│  └── Custom Risk Frameworks                                        │
+│                                                                  │
+│   ┌──────────────┐     ┌──────────────┐     ┌──────────────┐   │
+│   │  Visitor     │     │  IP Risk     │     │  Device      │   │
+│   │  IP Detect   │────▶│  Analysis    │────▶│  Fingerprint │   │
+│   └──────────────┘     └──────────────┘     └──────────────┘   │
+│                                                                  │
+│   Outputs:                                                       │
+│   • Risk Score (0-100)      • VPN/Proxy Detection               │
+│   • Fraud Score (0-100)     • Tor Exit Node Check               │
+│   • Abuse Score (0-100)     • Datacenter IP Detection           │
+│   • Blacklist Status        • Bot/Crawler Detection             │
+│   • Reputation Level        • Device Trust Score                │
+│                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Core Features
+**Risk Scores:**
+- **Risk Score**: Overall IP risk (0-100)
+- **Fraud Score**: Likelihood of fraudulent activity
+- **Abuse Score**: History of abuse reports
 
-### 📊 **Quantitative Risk Assessment**
-- **Multi-Framework Support**: NIST SP 800-30, ISO 31000, FAIR, OCTAVE, CRAMM
-- **Asset Valuation**: Comprehensive asset inventory with business value assessment
-- **Threat Modeling**: Advanced threat scenario development and analysis
-- **Impact Analysis**: Quantitative and qualitative business impact assessment
+**Detection Flags:**
+| Flag | Description |
+|------|-------------|
+| VPN | Virtual Private Network detected |
+| Proxy | HTTP/SOCKS proxy detected |
+| Tor | Tor exit node detected |
+| Datacenter | Cloud/hosting provider IP |
+| Bot | Automated traffic detected |
+| Relay | Mail/open relay detected |
 
-### 🎯 **Risk Quantification & Modeling**
-- **Probability Analysis**: Statistical risk probability calculations
-- **Impact Scoring**: Financial, operational, and reputational impact quantification
-- **Risk Heat Maps**: Visual risk assessment across business units and assets
-- **Scenario Planning**: What-if analysis for risk mitigation strategies
+**Reputation Levels:**
+- 🟢 **Excellent** (0-10 risk)
+- 🟢 **Good** (10-20 risk)
+- ⚪ **Neutral** (20-40 risk)
+- 🟡 **Suspicious** (40-60 risk)
+- 🟠 **Bad** (60-80 risk)
+- 🔴 **Critical** (80-100 risk)
 
-### 🤖 **AI-Powered Intelligence**
-- **Intelligent Risk Scoring**: AI-enhanced risk quantification and prioritization
-- **Predictive Risk Analysis**: ML-based risk trend prediction and forecasting
-- **Automated Mitigation**: AI-generated risk treatment and mitigation strategies
-- **Compliance Risk Assessment**: AI analysis of regulatory and compliance risks
+### 🌐 Tab 2: IP Lookup (Manual)
 
-### 📋 **Risk Management & Reporting**
-- **Risk Register**: Comprehensive risk tracking and monitoring
-- **Mitigation Planning**: Strategic risk treatment and control implementation
-- **Executive Reporting**: C-level risk dashboards and strategic insights
-- **Audit Trails**: Complete risk assessment and decision history
-
-## API Endpoints
-
-### Risk Assessment Management
 ```
-GET    /api/v1/risk/assessments          # List all risk assessments
-POST   /api/v1/risk/assessments          # Create new assessment
-GET    /api/v1/risk/assessments/:id      # Get assessment details
-PUT    /api/v1/risk/assessments/:id      # Update assessment
-DELETE /api/v1/risk/assessments/:id      # Delete assessment
-POST   /api/v1/risk/assessments/:id/calculate # Calculate risk scores
-```
-
-### Threat Modeling
-```
-GET    /api/v1/risk/threats               # List threat scenarios
-POST   /api/v1/risk/threats               # Create threat scenario
-GET    /api/v1/risk/threats/:id           # Get threat details
-PUT    /api/v1/risk/threats/:id           # Update threat scenario
-POST   /api/v1/risk/threats/:id/analyze   # Analyze threat impact
+┌─────────────────────────────────────────────────────────────────┐
+│                    MANUAL IP LOOKUP                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   Enter any IP ──▶ [192.168.1.1] ──▶ [Analyze]                 │
+│                                                                  │
+│   Quick Examples: 8.8.8.8 | 1.1.1.1 | 185.220.101.1            │
+│                                                                  │
+│   Returns same analysis as auto-detection:                       │
+│   • Risk/Fraud/Abuse Scores                                      │
+│   • Detection Flags (VPN, Proxy, Tor, etc.)                     │
+│   • Location (Country, City, Region, Timezone)                  │
+│   • Network Info (ISP, Organization, ASN)                       │
+│   • Blacklist Status (10 databases)                             │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Asset Valuation
+### 🎮 Tab 3: Payment Sandbox (Playground)
+
 ```
-GET    /api/v1/risk/assets                # List assets
-POST   /api/v1/risk/assets                # Add asset
-GET    /api/v1/risk/assets/:id            # Get asset details
-PUT    /api/v1/risk/assets/:id            # Update asset valuation
-POST   /api/v1/risk/assets/:id/assess     # Assess asset risk
+┌─────────────────────────────────────────────────────────────────┐
+│                   PAYMENT SANDBOX                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   Configuration:                                                 │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│   │  Amount      │  │  Currency    │  │  Region      │         │
+│   │  [$100]      │  │  [USD ▼]     │  │  [US ▼]      │         │
+│   └──────────────┘  └──────────────┘  └──────────────┘         │
+│                                                                  │
+│   ┌──────────────┐                                              │
+│   │  Method      │  [💳 Card ▼]                                 │
+│   └──────────────┘                                              │
+│                                                                  │
+│   Quick Scenarios:                                               │
+│   • Small Purchase ($25 USD)                                    │
+│   • Medium Purchase ($150 EUR)                                  │
+│   • Large Purchase ($1500 USD)                                  │
+│   • High Risk Region ($100 RU)                                  │
+│                                                                  │
+│   [🚀 Simulate Payment]                                         │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Business Impact Analysis
-```
-GET    /api/v1/risk/impacts               # List impact assessments
-POST   /api/v1/risk/impacts               # Create impact analysis
-GET    /api/v1/risk/impacts/:id           # Get impact details
-PUT    /api/v1/risk/impacts/:id           # Update impact assessment
-POST   /api/v1/risk/impacts/:id/calculate # Calculate business impact
-```
+**Payment Simulation Checks:**
+| Check | Description |
+|-------|-------------|
+| IP Reputation | IP risk score threshold |
+| VPN/Proxy Check | VPN/Proxy detection |
+| Datacenter IP | Cloud provider detection |
+| Device Trust | Device fingerprint score |
+| Blacklist Check | IP blacklist status |
+| Geographic Risk | High-risk region detection |
+| Amount Check | Transaction amount threshold |
+| Tor Network | Tor exit node detection |
 
-### AI Integration
-```
-POST   /api/v1/risk/ai/quantify            # AI risk quantification
-POST   /api/v1/risk/ai/predict             # Predictive risk analysis
-POST   /api/v1/risk/ai/mitigate            # AI mitigation strategies
-GET    /api/v1/risk/ai/recommendations     # AI risk recommendations
-```
+**Result Statuses:**
+- ✅ **Approved** - Payment would succeed
+- 🔄 **Pending** - Additional verification needed
+- ⚠️ **Review** - Manual review required
+- ❌ **Declined** - Payment blocked with reason
 
-## Database Schema
+---
 
-### RiskQuantifyment
-```javascript
-{
-  _id: ObjectId,
-  name: String,
-  description: String,
-  framework: String, // 'nist', 'iso31000', 'fair', etc.
-  status: String, // 'draft', 'in_progress', 'completed', 'archived'
-  scope: {
-    organization: String,
-    businessUnits: [String],
-    assets: [ObjectId],
-    timeFrame: String
-  },
-  riskMetrics: {
-    totalRisks: Number,
-    criticalRisks: Number,
-    highRisks: Number,
-    mediumRisks: Number,
-    lowRisks: Number,
-    overallRiskScore: Number
-  },
-  createdAt: Date,
-  updatedAt: Date,
-  completedAt: Date
-}
+## 🏗️ Architecture
+
 ```
-
-### ThreatScenario
-```javascript
-{
-  _id: ObjectId,
-  name: String,
-  description: String,
-  category: String, // 'cyber', 'physical', 'operational', etc.
-  likelihood: Number, // 1-5 scale
-  impact: Number, // 1-5 scale
-  riskScore: Number, // calculated likelihood * impact
-  assets: [ObjectId],
-  controls: [String],
-  mitigationStrategies: [String],
-  residualRisk: Number,
-  assessmentId: ObjectId
-}
-```
-
-### Asset
-```javascript
-{
-  _id: ObjectId,
-  name: String,
-  type: String, // 'server', 'application', 'data', 'network', etc.
-  criticality: String, // 'critical', 'high', 'medium', 'low'
-  businessValue: Number,
-  location: String,
-  owner: String,
-  threats: [ObjectId],
-  controls: [String],
-  riskScore: Number,
-  lastAssessed: Date
-}
+┌─────────────────────────────────────────────────────────────────┐
+│                    RISKQUANTIFY ARCHITECTURE                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   FRONTEND (React + Vite)           Port: 3019                  │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐  │   │
+│   │  │ Scanner  │  │ Lookup   │  │ Payment Playground   │  │   │
+│   │  │ Tab      │  │ Tab      │  │ Tab                  │  │   │
+│   │  └──────────┘  └──────────┘  └──────────────────────┘  │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                              │                                   │
+│                              ▼                                   │
+│   BACKEND API (Node.js + Express)   Port: 4019                  │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │   │
+│   │  │ IP Analysis  │  │ Device       │  │ Payment      │  │   │
+│   │  │ Service      │  │ Fingerprint  │  │ Simulator    │  │   │
+│   │  └──────────────┘  └──────────────┘  └──────────────┘  │   │
+│   │                                                         │   │
+│   │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │   │
+│   │  │ Blacklist    │  │ GeoIP        │  │ Reputation   │  │   │
+│   │  │ Checker      │  │ Service      │  │ Service      │  │   │
+│   │  └──────────────┘  └──────────────┘  └──────────────┘  │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                              │                                   │
+│                              ▼                                   │
+│   EXTERNAL APIS                                                  │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │  • ipify.org (IP detection)                             │   │
+│   │  • IP-API (Geolocation)                                 │   │
+│   │  • AbuseIPDB (Abuse reports)                            │   │
+│   │  • IPQualityScore (Fraud scoring)                       │   │
+│   │  • Shodan (Network intelligence)                        │   │
+│   │  • MaxMind GeoIP2 (Premium geolocation)                 │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                              │                                   │
+│                              ▼                                   │
+│   DATABASE (MongoDB)                                             │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │  • ip_lookups (lookup history & caching)                │   │
+│   │  • device_fingerprints (device tracking)                │   │
+│   │  • payment_simulations (sandbox results)                │   │
+│   │  • blacklist_cache (cached blacklist data)              │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### BusinessImpact
-```javascript
-{
-  _id: ObjectId,
-  scenario: String,
-  category: String, // 'financial', 'operational', 'reputational', etc.
-  quantitative: {
-    minLoss: Number,
-    maxLoss: Number,
-    expectedLoss: Number,
-    currency: String
-  },
-  qualitative: {
-    description: String,
-    severity: String,
-    duration: String
-  },
-  recoveryTime: Number, // in hours
-  recoveryCost: Number,
-  assetId: ObjectId
-}
-```
+---
 
-## Environment Setup
+## 🛠️ Technology Stack
 
-### Backend Configuration
+### Frontend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| React | 18.x | UI framework |
+| TypeScript | 5.x | Type safety |
+| Vite | 6.x | Build tool |
+| TailwindCSS | 3.x | Styling |
+
+### Backend
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Node.js | 18+ | Runtime |
+| Express | 4.x | API framework |
+| MongoDB | 7.0 | Database |
+| Redis | 7.x | Caching |
+
+### External APIs
+| Service | Purpose |
+|---------|---------|
+| ipify.org | IP detection |
+| IP-API | Geolocation |
+| AbuseIPDB | Abuse reports |
+| IPQualityScore | Fraud scoring |
+| Shodan | Network intel |
+| MaxMind | Premium GeoIP |
+
+---
+
+## 📦 Installation
+
+### Prerequisites
+
+- Node.js 18+
+- MongoDB 7.0+
+- Redis 7.x (optional, for caching)
+- API keys for external services
+
+### Quick Start
+
 ```bash
-# Clone and setup
-cd backend/tools/19-riskquantify/api
-npm install
+# Clone repository
+git clone https://github.com/aichaudhary/VictoryKit.git
+cd VictoryKit/backend/tools/19-riskquantify
 
-# Environment variables
+# Install dependencies
+cd api && npm install
+
+# Configure environment
 cp .env.example .env
-# Edit .env with your configuration
+# Edit .env with your API keys
 
 # Start development server
 npm run dev
-```
 
-### Frontend Setup
-```bash
-# Clone and setup
-cd frontend/tools/19-riskquantify
+# Frontend (separate terminal)
+cd ../../frontend/tools/19-riskquantify
 npm install
-
-# Start development server
 npm run dev
 ```
 
-### Environment Variables
-```env
-# Server Configuration
-PORT=4019
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/victorykit_riskquantify
+---
 
-# AI Integration
-ANTHROPIC_API_KEY=your-anthropic-api-key
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
+## 📡 API Reference
 
-# Security Settings
-JWT_SECRET=your-jwt-secret
-ENCRYPTION_KEY=your-encryption-key
+### IP Analysis
 
-# Risk Calculation Settings
-DEFAULT_RISK_MATRIX=5x5
-MONTE_CARLO_SIMULATIONS=10000
-CONFIDENCE_LEVEL=0.95
-DISCOUNT_RATE=0.05
+#### GET /api/v1/ip/analyze
+Analyze an IP address for risk factors.
 
-# External Integrations
-THREAT_INTELLIGENCE_API_KEY=your-threat-intel-key
-FINANCIAL_DATA_API_KEY=your-financial-api-key
-COMPLIANCE_API_ENDPOINT=https://api.compliance-service.com
+**Request:**
+```bash
+GET /api/v1/ip/analyze?ip=192.168.1.1
 ```
 
-## Development Workflow
-
-### Phase 1: Backend Development
-1. Set up Express server with middleware
-2. Implement MongoDB models and schemas
-3. Create API routes and controllers
-4. Add authentication and authorization
-5. Implement risk calculation engines
-
-### Phase 2: Frontend Development
-1. Create React components with TypeScript
-2. Implement risk assessment dashboards
-3. Add threat modeling interface
-4. Create impact analysis components
-5. Integrate AI assistant interface
-
-### Phase 3: AI Integration
-1. Set up Claude Opus/Sonnet 4.5 integration
-2. Implement risk quantification AI
-3. Add predictive risk analysis
-4. Create mitigation strategy AI
-
-### Phase 4: Testing & Deployment
-1. Unit and integration testing
-2. Security testing and validation
-3. Production deployment setup
-4. Monitoring and logging configuration
-
-## Security Considerations
-
-### Data Protection
-- All risk assessment data encrypted at rest and in transit
-- Role-based access control for sensitive risk information
-- Audit logging for all risk-related operations
-- Data retention policies for compliance
-
-### API Security
-- JWT-based authentication with refresh tokens
-- Rate limiting and DDoS protection
-- Input validation and sanitization
-- CORS configuration for cross-origin requests
-
-### Risk Data Security
-- Sensitive risk data encrypted using industry standards
-- Access controls based on risk classification
-- Secure data transmission protocols
-- Regular security audits of risk data handling
-
-## Performance Optimization
-
-### Backend Optimization
-- Database query optimization with proper indexing
-- Caching layer for frequently accessed risk data
-- Asynchronous processing for heavy risk calculations
-- Horizontal scaling support with load balancing
-
-### Frontend Optimization
-- Code splitting and lazy loading for risk dashboards
-- Optimized bundle size with tree shaking
-- Progressive Web App (PWA) capabilities
-- Responsive design for all device types
-
-### Risk Calculation Optimization
-- Parallel processing for Monte Carlo simulations
-- Optimized algorithms for large-scale risk assessments
-- Caching of intermediate calculation results
-- Batch processing for bulk risk analysis
-
-## Monitoring & Alerting
-
-### Application Monitoring
-- Real-time performance metrics for risk calculations
-- Error tracking and alerting for assessment failures
-- User activity monitoring for risk operations
-- API usage analytics for risk services
-
-### Risk Monitoring
-- Risk score threshold alerts
-- Critical risk escalation notifications
-- Assessment deadline monitoring
-- Compliance risk drift alerts
-
-### Infrastructure Monitoring
-- Server resource utilization for calculation workloads
-- Database performance metrics for risk data
-- Network traffic analysis for risk operations
-- Backup and recovery status monitoring
-
-## Troubleshooting
-
-### Common Issues
-
-**Risk Calculation Not Starting**
-- Check MongoDB connection and data integrity
-- Verify risk assessment configuration parameters
-- Review calculation engine logs
-
-**AI Integration Failing**
-- Verify API keys in environment variables
-- Check network connectivity to AI services
-- Review API rate limits and quotas
-
-**Frontend Risk Visualizations Not Loading**
-- Clear browser cache and check console errors
-- Verify API endpoints are accessible
-- Check data format compatibility
-
-**Database Connection Issues**
-- Verify MongoDB URI in environment variables
-- Check database server status and credentials
-- Review connection pool settings
-
-### Debug Mode
-Enable debug logging by setting:
-```env
-LOG_LEVEL=debug
-DEBUG=riskquantify:*
-RISK_CALCULATION_DEBUG=true
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "ip": "192.168.1.1",
+    "riskScore": 25,
+    "fraudScore": 30,
+    "abuseScore": 15,
+    "flags": {
+      "isVpn": false,
+      "isProxy": false,
+      "isTor": false,
+      "isDatacenter": false,
+      "isBot": false,
+      "isRelay": false
+    },
+    "location": {
+      "country": "United States",
+      "countryCode": "US",
+      "city": "New York",
+      "region": "New York",
+      "timezone": "America/New_York"
+    },
+    "network": {
+      "isp": "Comcast Cable",
+      "org": "Comcast Corporation",
+      "asn": "AS7922"
+    },
+    "blacklists": [
+      { "name": "Spamhaus ZEN", "listed": false, "type": "spam" },
+      { "name": "AbuseIPDB", "listed": false, "type": "abuse" }
+    ],
+    "reputation": "good",
+    "reportCount": 0
+  }
+}
 ```
 
-### Support
-For technical support, contact:
-- **Email**: support@victorykit.com
-- **Documentation**: https://docs.victorykit.com/tools/riskquantify
-- **GitHub Issues**: https://github.com/victorykit/riskquantify/issues
+#### GET /api/v1/ip/my
+Get visitor's own IP analysis.
 
-## Contributing
+**Response:** Same as above, using request IP.
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
+### Device Fingerprint
 
-## License
+#### POST /api/v1/device/analyze
+Analyze device fingerprint for trust score.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+**Request:**
+```json
+{
+  "userAgent": "Mozilla/5.0...",
+  "screenResolution": "1920x1080",
+  "language": "en-US",
+  "timezone": "America/New_York",
+  "plugins": 5,
+  "canvas": "abc123...",
+  "webgl": "def456..."
+}
+```
 
-## Roadmap
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "fingerprint": "FP-A1B2C3D4E5F6",
+    "trustScore": 85,
+    "browser": "Chrome",
+    "browserVersion": "120",
+    "os": "Windows",
+    "osVersion": "11",
+    "device": "Desktop",
+    "flags": []
+  }
+}
+```
 
-### Version 2.0 (Current)
-- ✅ Multi-framework risk assessment support
-- ✅ Quantitative risk analysis with FAIR
-- ✅ AI-powered risk quantification
-- ✅ Business impact analysis
+### Payment Simulation
 
-### Version 2.1 (Next)
-- 🔄 Advanced Monte Carlo simulations
-- 🔄 Real-time risk monitoring
-- 🔄 Integration with threat intelligence feeds
-- 🔄 Automated risk reporting
+#### POST /api/v1/payment/simulate
+Simulate a payment with current IP and device.
 
-### Version 3.0 (Future)
-- 🔄 Predictive risk analytics with ML
-- 🔄 Integration with business continuity planning
-- 🔄 Advanced scenario planning tools
-- 🔄 Risk appetite and tolerance modeling
+**Request:**
+```json
+{
+  "amount": 100,
+  "currency": "USD",
+  "region": "US",
+  "method": "card",
+  "ipData": { ... },
+  "deviceData": { ... }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "TXN-ABC123",
+    "status": "approved",
+    "riskScore": 25,
+    "checks": [
+      { "name": "IP Reputation", "passed": true, "message": "IP has good reputation" },
+      { "name": "VPN/Proxy Check", "passed": true, "message": "No VPN/Proxy detected" }
+    ],
+    "processingTime": 245
+  }
+}
+```
+
+---
+
+## 💾 Database Schema
+
+### IP Lookups Collection
+```javascript
+{
+  _id: ObjectId,
+  ip: String,                    // IP address
+  riskScore: Number,             // 0-100
+  fraudScore: Number,            // 0-100
+  abuseScore: Number,            // 0-100
+  flags: {
+    isVpn: Boolean,
+    isProxy: Boolean,
+    isTor: Boolean,
+    isDatacenter: Boolean,
+    isBot: Boolean,
+    isRelay: Boolean
+  },
+  location: {
+    country: String,
+    countryCode: String,
+    city: String,
+    region: String,
+    timezone: String
+  },
+  network: {
+    isp: String,
+    org: String,
+    asn: String
+  },
+  blacklists: [{
+    name: String,
+    listed: Boolean,
+    type: String
+  }],
+  reputation: String,            // excellent|good|neutral|suspicious|bad|critical
+  reportCount: Number,
+  lookupCount: Number,           // Times this IP was looked up
+  lastLookup: Date,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Device Fingerprints Collection
+```javascript
+{
+  _id: ObjectId,
+  fingerprint: String,           // Unique device ID
+  trustScore: Number,            // 0-100
+  browser: String,
+  browserVersion: String,
+  os: String,
+  osVersion: String,
+  device: String,
+  screenResolution: String,
+  language: String,
+  timezone: String,
+  plugins: Number,
+  canvas: String,
+  webgl: String,
+  flags: [String],
+  seenIPs: [String],             // IPs seen with this device
+  seenCount: Number,
+  lastSeen: Date,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
+
+### Payment Simulations Collection
+```javascript
+{
+  _id: ObjectId,
+  transactionId: String,
+  status: String,                // approved|declined|review|pending
+  amount: Number,
+  currency: String,
+  region: String,
+  method: String,
+  riskScore: Number,
+  checks: [{
+    name: String,
+    passed: Boolean,
+    message: String
+  }],
+  declineReason: String,
+  processingTime: Number,
+  ipAddress: String,
+  deviceFingerprint: String,
+  createdAt: Date
+}
+```
+
+---
+
+## 🔑 Third-Party APIs
+
+### Required API Keys
+
+| Service | Purpose | Get Key |
+|---------|---------|---------|
+| **AbuseIPDB** | Abuse reports & blacklist | https://www.abuseipdb.com/api |
+| **IPQualityScore** | Fraud scoring & VPN detection | https://www.ipqualityscore.com/api |
+| **MaxMind GeoIP2** | Premium geolocation | https://www.maxmind.com/en/geoip2-services |
+
+### Optional API Keys
+
+| Service | Purpose | Get Key |
+|---------|---------|---------|
+| **Shodan** | Network intelligence | https://shodan.io/api |
+| **VirusTotal** | IP reputation | https://virustotal.com/api |
+| **Greynoise** | Internet noise filtering | https://greynoise.io/api |
+
+### Free APIs (No Key Required)
+
+| Service | Purpose |
+|---------|---------|
+| ipify.org | IP detection |
+| IP-API.com | Basic geolocation |
+
+---
+
+## 🚀 Deployment
+
+### Production URLs
+- **Frontend:** https://riskquantify.maula.ai
+- **API:** https://api.riskquantify.maula.ai
+
+### Docker Deployment
+
+```bash
+# Build image
+docker build -t riskquantify-api .
+
+# Run container
+docker run -d \
+  --name riskquantify \
+  -p 4019:4019 \
+  -e NODE_ENV=production \
+  -e MONGODB_URI=mongodb://... \
+  riskquantify-api
+```
+
+### PM2 Deployment
+
+```bash
+# Start with PM2
+pm2 start ecosystem.config.js --env production
+
+# Monitor
+pm2 monit
+```
+
+---
+
+## 📊 VictoryKit Integration
+
+RiskQuantify is **Tool 19** in the VictoryKit Security Platform.
+
+| Property | Value |
+|----------|-------|
+| Tool Number | 19 |
+| Tool Name | RiskQuantify |
+| Theme Color | Violet (#8b5cf6) |
+| Frontend Port | 3019 |
+| API Port | 4019 |
+| WebSocket Port | 4119 |
+| Production URL | https://riskquantify.maula.ai |
+
+### Related Tools
+- **Tool 18:** ThreatModel - Threat modeling & analysis
+- **Tool 20:** SecurityScore - Security posture scoring
+
+---
+
+## 📄 License
+
+MIT License - VictoryKit Security Platform
+
+---
+
+## 🙏 Credits
+
+Built with ❤️ for **Maula.AI** - The ONE Platform for 100+ Security Tools
+
+Part of the VictoryKit Security Suite by AI Chaudhary

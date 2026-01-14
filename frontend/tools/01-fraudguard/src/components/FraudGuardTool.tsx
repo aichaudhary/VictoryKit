@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Shield,
   TrendingUp,
@@ -21,23 +21,33 @@ import {
   Moon,
   Sun,
   Command,
-} from "lucide-react";
-import TransactionForm from "./TransactionForm";
-import { AnimatedFraudScoreCard } from "./AnimatedFraudScoreCard";
-import { LiveAnalysisPanel } from "./LiveAnalysisPanel";
-import RiskVisualization from "./RiskVisualization";
-import TransactionHistory from "./TransactionHistory";
-import AlertsPanel from "./AlertsPanel";
-import RealTimeDashboard from "./RealTimeDashboard";
-import ThreatIntelPanel from "./ThreatIntelPanel";
-import InvestigationCenter from "./InvestigationCenter";
-import { transactionAPI, alertsAPI, healthAPI } from "../services/fraudguardAPI";
-import { Transaction, Alert, FraudScore, SystemHealth } from "../types";
+  Scan,
+} from 'lucide-react';
+import TransactionForm from './TransactionForm';
+import { AnimatedFraudScoreCard } from './AnimatedFraudScoreCard';
+import { LiveAnalysisPanel } from './LiveAnalysisPanel';
+import RiskVisualization from './RiskVisualization';
+import TransactionHistory from './TransactionHistory';
+import AlertsPanel from './AlertsPanel';
+import RealTimeDashboard from './RealTimeDashboard';
+import ThreatIntelPanel from './ThreatIntelPanel';
+import InvestigationCenter from './InvestigationCenter';
+import PublicScanner from './PublicScanner';
+import { transactionAPI, alertsAPI, healthAPI } from '../services/fraudguardAPI';
+import { Transaction, Alert, FraudScore, SystemHealth } from '../types';
 
-type ViewType = "analyze" | "history" | "alerts" | "analytics" | "dashboard" | "threat-intel" | "investigations";
+type ViewType =
+  | 'scanner'
+  | 'analyze'
+  | 'history'
+  | 'alerts'
+  | 'analytics'
+  | 'dashboard'
+  | 'threat-intel'
+  | 'investigations';
 
 const FraudGuardTool: React.FC = () => {
-  const [currentView, setCurrentView] = useState<ViewType>("dashboard");
+  const [currentView, setCurrentView] = useState<ViewType>('scanner');
   const [lastAnalysis, setLastAnalysis] = useState<FraudScore | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -60,7 +70,7 @@ const FraudGuardTool: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        setShowCommandPalette(prev => !prev);
+        setShowCommandPalette((prev) => !prev);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -107,7 +117,7 @@ const FraudGuardTool: React.FC = () => {
       const response = await transactionAPI.getAll({ limit: 50 });
       setTransactions(response.transactions);
     } catch (error) {
-      console.error("Failed to load transactions:", error);
+      console.error('Failed to load transactions:', error);
     } finally {
       setLoading(false);
     }
@@ -118,38 +128,38 @@ const FraudGuardTool: React.FC = () => {
       const alertsData = await alertsAPI.getAll();
       setAlerts(alertsData);
     } catch (error) {
-      console.error("Failed to load alerts:", error);
+      console.error('Failed to load alerts:', error);
     }
   };
 
   const handleViewTransaction = useCallback((transaction: Transaction) => {
     setLastAnalysis({
       score: transaction.fraud_score || 0,
-      risk_level: transaction.risk_level || "low",
+      risk_level: transaction.risk_level || 'low',
       recommendation: `Review transaction ${transaction.id}`,
       indicators: [],
     });
-    setCurrentView("analyze");
+    setCurrentView('analyze');
   }, []);
 
   const handleAnalyzeTransaction = async (transaction: Transaction) => {
     try {
       const result = await transactionAPI.analyze(transaction);
       setLastAnalysis(result);
-      setCurrentView("analyze");
+      setCurrentView('analyze');
     } catch (error) {
-      console.error("Failed to analyze transaction:", error);
+      console.error('Failed to analyze transaction:', error);
     }
   };
 
   const handleCreateAlert = async (
-    alertData: Omit<Alert, "id" | "created_at" | "triggered_count">
+    alertData: Omit<Alert, 'id' | 'created_at' | 'triggered_count'>
   ) => {
     try {
       const newAlert = await alertsAPI.create(alertData);
       setAlerts((prev) => [...prev, newAlert]);
     } catch (error) {
-      console.error("Failed to create alert:", error);
+      console.error('Failed to create alert:', error);
     }
   };
 
@@ -158,18 +168,16 @@ const FraudGuardTool: React.FC = () => {
       await alertsAPI.delete(id);
       setAlerts((prev) => prev.filter((alert) => alert.id !== id));
     } catch (error) {
-      console.error("Failed to delete alert:", error);
+      console.error('Failed to delete alert:', error);
     }
   };
 
   const handleToggleAlert = async (id: string, active: boolean) => {
     try {
       const updatedAlert = await alertsAPI.toggle(id, active);
-      setAlerts((prev) =>
-        prev.map((alert) => (alert.id === id ? updatedAlert : alert))
-      );
+      setAlerts((prev) => prev.map((alert) => (alert.id === id ? updatedAlert : alert)));
     } catch (error) {
-      console.error("Failed to toggle alert:", error);
+      console.error('Failed to toggle alert:', error);
     }
   };
 
@@ -180,11 +188,11 @@ const FraudGuardTool: React.FC = () => {
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-500/10 rounded-full blur-3xl animate-pulse" />
         <div
           className="absolute top-1/2 -left-40 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "1s" }}
+          style={{ animationDelay: '1s' }}
         />
         <div
           className="absolute -bottom-40 right-1/3 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
+          style={{ animationDelay: '2s' }}
         />
       </div>
 
@@ -205,9 +213,7 @@ const FraudGuardTool: React.FC = () => {
               <div className="flex items-center gap-2 text-sm">
                 <Radio className="w-3 h-3 text-green-400 animate-pulse" />
                 <span className="text-green-400">LIVE</span>
-                <span className="text-gray-400">
-                  • AI-Powered Fraud Detection
-                </span>
+                <span className="text-gray-400">• AI-Powered Fraud Detection</span>
               </div>
             </div>
           </div>
@@ -224,9 +230,7 @@ const FraudGuardTool: React.FC = () => {
             <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/50 rounded-lg border border-slate-700/50">
               <AlertTriangle className="w-4 h-4 text-red-400" />
               <span className="text-xs text-gray-400">Frauds</span>
-              <span className="text-sm font-mono text-red-400">
-                {systemStats.fraudsDetected}
-              </span>
+              <span className="text-sm font-mono text-red-400">{systemStats.fraudsDetected}</span>
             </div>
             <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/50 rounded-lg border border-slate-700/50">
               <CheckCircle2 className="w-4 h-4 text-green-400" />
@@ -246,7 +250,7 @@ const FraudGuardTool: React.FC = () => {
 
           {/* Live Assistant Button */}
           <a
-            href="/maula/ai/"
+            href="/neural-link/"
             className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
           >
             <Sparkles className="w-5 h-5" />
@@ -260,21 +264,20 @@ const FraudGuardTool: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex space-x-1 overflow-x-auto">
             {[
-              { id: "dashboard", label: "Dashboard", icon: BarChart3 },
-              { id: "analyze", label: "Live Analysis", icon: Zap },
-              { id: "history", label: "Transactions", icon: Activity },
-              { id: "threat-intel", label: "Threat Intel", icon: Globe },
-              { id: "investigations", label: "Investigations", icon: FileSearch },
-              { id: "alerts", label: "Alerts", icon: AlertTriangle },
-              { id: "analytics", label: "Analytics", icon: TrendingUp },
+              { id: 'scanner', label: 'Security Scanner', icon: Scan },
+              { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+              { id: 'analyze', label: 'Live Analysis', icon: Zap },
+              { id: 'history', label: 'Transactions', icon: Activity },
+              { id: 'threat-intel', label: 'Threat Intel', icon: Globe },
+              { id: 'investigations', label: 'Investigations', icon: FileSearch },
+              { id: 'alerts', label: 'Alerts', icon: AlertTriangle },
+              { id: 'analytics', label: 'Analytics', icon: TrendingUp },
             ].map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => setCurrentView(id as ViewType)}
                 className={`relative flex items-center gap-2 px-4 py-4 font-medium text-sm transition-all whitespace-nowrap ${
-                  currentView === id
-                    ? "text-white"
-                    : "text-gray-400 hover:text-white"
+                  currentView === id ? 'text-white' : 'text-gray-400 hover:text-white'
                 }`}
               >
                 {currentView === id && (
@@ -283,11 +286,7 @@ const FraudGuardTool: React.FC = () => {
                     <div className="absolute inset-x-2 bottom-0 h-4 bg-gradient-to-t from-red-500/20 to-transparent blur-sm" />
                   </>
                 )}
-                <Icon
-                  className={`w-4 h-4 ${
-                    currentView === id ? "text-red-400" : ""
-                  }`}
-                />
+                <Icon className={`w-4 h-4 ${currentView === id ? 'text-red-400' : ''}`} />
                 {label}
               </button>
             ))}
@@ -297,17 +296,20 @@ const FraudGuardTool: React.FC = () => {
 
       {/* Main Content */}
       <main className="relative max-w-7xl mx-auto p-6">
+        {/* Public Scanner View */}
+        {currentView === 'scanner' && <PublicScanner />}
+
         {/* Dashboard View */}
-        {currentView === "dashboard" && (
+        {currentView === 'dashboard' && (
           <RealTimeDashboard
             onTransactionSelect={(txId) => {
               // Navigate to transaction details
-              setCurrentView("history");
+              setCurrentView('history');
             }}
           />
         )}
 
-        {currentView === "analyze" && (
+        {currentView === 'analyze' && (
           <div className="space-y-6">
             {/* Hero Section */}
             <div className="text-center mb-8">
@@ -315,8 +317,8 @@ const FraudGuardTool: React.FC = () => {
                 Real-Time Fraud Detection
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto">
-                Advanced AI-powered analysis with live streaming results. Watch
-                as our neural network processes each transaction in real-time.
+                Advanced AI-powered analysis with live streaming results. Watch as our neural
+                network processes each transaction in real-time.
               </p>
             </div>
 
@@ -349,15 +351,15 @@ const FraudGuardTool: React.FC = () => {
                 <AnimatedFraudScoreCard
                   data={lastAnalysis}
                   isAnalyzing={isAnalyzing}
-                  onViewDetails={() => console.log("View details")}
-                  onExport={() => console.log("Export report")}
+                  onViewDetails={() => console.log('View details')}
+                  onExport={() => console.log('Export report')}
                 />
               </div>
             </div>
           </div>
         )}
 
-        {currentView === "history" && (
+        {currentView === 'history' && (
           <TransactionHistory
             transactions={transactions}
             onViewTransaction={handleViewTransaction}
@@ -366,7 +368,7 @@ const FraudGuardTool: React.FC = () => {
           />
         )}
 
-        {currentView === "threat-intel" && (
+        {currentView === 'threat-intel' && (
           <ThreatIntelPanel
             onBlockEntity={(type, value) => {
               console.log(`Blocked ${type}: ${value}`);
@@ -374,15 +376,15 @@ const FraudGuardTool: React.FC = () => {
           />
         )}
 
-        {currentView === "investigations" && (
+        {currentView === 'investigations' && (
           <InvestigationCenter
             onViewTransaction={(txId) => {
-              setCurrentView("history");
+              setCurrentView('history');
             }}
           />
         )}
 
-        {currentView === "alerts" && (
+        {currentView === 'alerts' && (
           <AlertsPanel
             alerts={alerts}
             onCreateAlert={handleCreateAlert}
@@ -391,9 +393,7 @@ const FraudGuardTool: React.FC = () => {
           />
         )}
 
-        {currentView === "analytics" && (
-          <RiskVisualization type="risk_breakdown" data={{}} />
-        )}
+        {currentView === 'analytics' && <RiskVisualization type="risk_breakdown" data={{}} />}
       </main>
     </div>
   );

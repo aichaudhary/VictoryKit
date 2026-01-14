@@ -8,22 +8,25 @@ const logger = require('../../../../shared/utils/logger');
 const router = express.Router();
 
 // Auth service proxy (public routes - includes /auth and /payment)
-router.use(['/auth', '/payment'], createProxyMiddleware({
-  target: process.env.AUTH_SERVICE_URL || 'http://localhost:5000',
-  changeOrigin: true,
-  pathRewrite: {
-    '^/api/v1/auth': '/api/v1/auth',
-    '^/api/v1/payment': '/api/v1/payment'
-  },
-  onError: (err, req, res) => {
-    logger.error(`Auth Service proxy error: ${err.message}`);
-    res.status(503).json({
-      success: false,
-      message: 'Auth service unavailable',
-      timestamp: new Date().toISOString()
-    });
-  }
-}));
+router.use(
+  ['/auth', '/payment'],
+  createProxyMiddleware({
+    target: process.env.AUTH_SERVICE_URL || 'http://localhost:5000',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api/v1/auth': '/api/v1/auth',
+      '^/api/v1/payment': '/api/v1/payment',
+    },
+    onError: (err, req, res) => {
+      logger.error(`Auth Service proxy error: ${err.message}`);
+      res.status(503).json({
+        success: false,
+        message: 'Auth service unavailable',
+        timestamp: new Date().toISOString(),
+      });
+    },
+  })
+);
 
 // Tool proxies (protected routes)
 const createToolProxy = (toolName, port) => {
@@ -31,7 +34,7 @@ const createToolProxy = (toolName, port) => {
     target: `http://localhost:${port}`,
     changeOrigin: true,
     pathRewrite: {
-      [`^/api/v1/${toolName}`]: '/api/v1'
+      [`^/api/v1/${toolName}`]: '/api/v1',
     },
     onProxyReq: (proxyReq, req) => {
       // Forward user info to tool services
@@ -46,9 +49,9 @@ const createToolProxy = (toolName, port) => {
       res.status(503).json({
         success: false,
         message: `${toolName} service unavailable`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
-    }
+    },
   });
 };
 
@@ -65,7 +68,7 @@ const tools = [
   { name: 'runtimeguard', port: 4009 },
   { name: 'dataguardian', port: 4010 },
   { name: 'cryptoshield', port: 4011 },
-  { name: 'iamcontrol', port: 4012 },
+  { name: 'xdrplatform', port: 4012 },
   { name: 'logintel', port: 4013 },
   { name: 'netdefender', port: 4014 },
   { name: 'endpointshield', port: 4015 },
@@ -103,11 +106,11 @@ const tools = [
   { name: 'cyberinsurance', port: 4047 },
   { name: 'securityawareness', port: 4048 },
   { name: 'vendorriskmgmt', port: 4049 },
-  { name: 'cyberthreatmap', port: 4050 }
+  { name: 'cyberthreatmap', port: 4050 },
 ];
 
 // Register all tool proxies with auth + access control middleware
-tools.forEach(tool => {
+tools.forEach((tool) => {
   router.use(
     `/${tool.name}`,
     authMiddleware,

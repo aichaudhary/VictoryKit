@@ -64,7 +64,7 @@ const APIAccessKeys: React.FC = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,_rgba(59,130,246,0.1),_transparent_60%)] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto relative z-10">
-        <button onClick={() => setView('dashboard')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors mb-20">
+        <button onClick={() => setView('dashboard')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors mb-10 sm:mb-16 md:mb-20">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Config
         </button>
 
@@ -76,7 +76,7 @@ const APIAccessKeys: React.FC = () => {
                 <Key className="w-4 h-4 text-blue-500" />
                 <span className="text-[10px] font-black tracking-[0.4em] uppercase text-blue-500">Node Authentication</span>
               </div>
-              <h1 className="text-7xl font-black tracking-tighter leading-none uppercase">API <span className="text-blue-500">KEYS</span></h1>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-none uppercase">API <span className="text-blue-500">KEYS</span></h1>
               <p className="text-lg text-white/40 max-w-xl font-medium">Manage and rotate cryptographic tokens for external service calls into the Maula AI lattice.</p>
             </div>
 
@@ -147,7 +147,7 @@ const APIAccessKeys: React.FC = () => {
 
         {/* Dynamic Telemetry Graph Simulation */}
         <div className="mt-24 pt-24 border-t border-white/5">
-           <div className="flex justify-between items-end mb-12">
+           <div className="flex justify-between items-end mb-6 sm:mb-8 md:mb-12">
               <h4 className="text-xs font-black uppercase tracking-[0.4em] text-white/20">Global Interface Latency</h4>
               <div className="flex gap-4 text-[9px] font-black uppercase tracking-widest">
                  <span className="text-blue-500">Prod Cluster</span>

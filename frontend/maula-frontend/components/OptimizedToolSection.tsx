@@ -6,6 +6,11 @@ import { SecurityTool } from '../types';
 import { useScroll } from '../context/ScrollContext';
 import { ArrowRight } from 'lucide-react';
 import AIInterface from './AIInterface';
+import FraudGuardHomeVisual from './tool-visuals/FraudGuardHomeVisual';
+import DarkWebMonitorHomeVisual from './tool-visuals/DarkWebMonitorHomeVisual';
+import ZeroDayDetectHomeVisual from './tool-visuals/ZeroDayDetectHomeVisual';
+import RansomShieldHomeVisual from './tool-visuals/RansomShieldHomeVisual';
+import PhishNetAIHomeVisual from './tool-visuals/PhishNetAIHomeVisual';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -138,16 +143,16 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
 
   const handleDeploy = () => {
     const routeMap: Record<number, string> = {
-      1: 'fraud-guard', 2: 'intelli-scout', 3: 'threat-radar', 4: 'malware-hunter',
+      1: 'fraud-guard', 2: 'dark-web-monitor', 3: 'threat-radar', 4: 'ransom-shield',
       5: 'phish-guard', 6: 'vuln-scan', 7: 'pen-test-ai', 8: 'secure-code',
       9: 'compliance-check', 10: 'data-guardian', 11: 'crypto-shield',
       12: 'iam-control', 13: 'log-intel', 14: 'net-defender', 15: 'endpoint-shield',
       16: 'cloud-secure', 17: 'api-guardian', 18: 'container-watch', 19: 'devsecops',
-      20: 'incident-command', 21: 'forensics-lab', 22: 'threat-intel', 23: 'behavior-watch',
-      24: 'anomaly-detect', 25: 'red-team-ai', 26: 'blue-team-ai', 27: 'siem-commander',
+      20: 'incident-command', 21: 'waf-manager', 22: 'api-shield', 23: 'bot-mitigation',
+      24: 'ddos-defender', 25: 'ssl-monitor', 26: 'blue-team-ai', 27: 'siem-commander',
       28: 'soar-engine', 29: 'risk-score-ai', 30: 'policy-engine', 31: 'audit-tracker',
       32: 'zero-trust-ai', 33: 'password-vault', 34: 'biometric-ai', 35: 'email-guard',
-      36: 'web-filter', 37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian',
+      36: 'browser-isolation', 37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian',
       40: 'wireless-watch', 41: 'iot-secure', 42: 'mobile-defend', 43: 'backup-guard',
       44: 'dr-plan', 45: 'privacy-shield', 46: 'gdpr-compliance', 47: 'hipaa-guard',
       48: 'pcidss-guard', 49: 'bug-bounty-ai', 50: 'cyber-edu-ai'
@@ -155,6 +160,8 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
     
     if (routeMap[tool.id]) {
       setView(routeMap[tool.id] as any);
+      // Scroll to top when navigating to detail page
+      window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
       setView('home');
     }
@@ -166,7 +173,8 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
 
   return (
     <div 
-      ref={containerRef} 
+      ref={containerRef}
+      id={`tool-section-${tool.id}`}
       className="relative h-[120vh] w-full transition-colors duration-1000 ease-in-out overflow-hidden perspective-2500"
       style={{ 
         backgroundColor: tool.theme.bgStop,
@@ -240,15 +248,34 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
             ref={imgRef} 
             className="flex-1 relative w-full aspect-video md:aspect-square max-w-2xl rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] group border border-white/10 will-change-transform"
           >
-            <img 
-              src={currentImageUrl} 
-              alt={tool.name} 
-              className="w-full h-full object-cover transition-transform duration-[8s] group-hover:scale-115 ease-out"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-90" />
-            <div className="absolute bottom-6 left-6 right-6 z-20">
-               <AIInterface currentImageUrl={currentImageUrl} onUpdateImage={set => setCurrentImageUrl(set)} />
-            </div>
+            {/* Render animated visuals for first 5 tools, static image for others */}
+            {tool.id === 1 ? (
+              <FraudGuardHomeVisual />
+            ) : tool.id === 2 ? (
+              <DarkWebMonitorHomeVisual />
+            ) : tool.id === 3 ? (
+              <ZeroDayDetectHomeVisual />
+            ) : tool.id === 4 ? (
+              <RansomShieldHomeVisual />
+            ) : tool.id === 5 ? (
+              <PhishNetAIHomeVisual />
+            ) : (
+              <>
+                <img 
+                  src={currentImageUrl} 
+                  alt={tool.name} 
+                  className="w-full h-full object-cover transition-transform duration-[8s] group-hover:scale-115 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-90" />
+              </>
+            )}
+            
+            {/* AI Interface only for non-animated tools */}
+            {tool.id > 4 && (
+              <div className="absolute bottom-6 left-6 right-6 z-20">
+                <AIInterface currentImageUrl={currentImageUrl} onUpdateImage={set => setCurrentImageUrl(set)} />
+              </div>
+            )}
           </div>
 
         </div>

@@ -1,9 +1,9 @@
 """
-ThreatRadar ML Models Package
+ZeroDayDetect ML Models Package
 """
 
-from .threat_detector import ThreatDetector
-from .behavior_analyzer import BehaviorAnalyzer
 from .anomaly_detector import AnomalyDetector
+from .behavior_analyzer import BehaviorAnalyzer
+from .threat_detector import ThreatDetector
 
-__all__ = ['ThreatDetector', 'BehaviorAnalyzer', 'AnomalyDetector']
+__all__ = ["ThreatDetector", "BehaviorAnalyzer", "AnomalyDetector"]

@@ -543,211 +543,623 @@ Authorization: Bearer {token}
 
 ## 🗄️ Database Schema
 
-### Collections Overview
+### Collections Overview (8 Models, 45+ Indexes)
 
 ```
-codesentinel_db
-├── repositories       # Connected repositories
-├── scans              # Scan jobs and metadata
-├── vulnerabilities    # Detected vulnerabilities
-├── rules              # Security rules
-├── fixes              # Applied fixes
-├── reports            # Generated reports
-├── users              # User accounts
-├── teams              # Team management
-└── audit_logs         # Audit trail
+victorykit (MongoDB Atlas - Shared Database)
+├── codebases          # Project repositories and codebases under analysis
+├── codescans          # Individual scan sessions and their results  
+├── codeissues         # Security vulnerabilities and code issues found
+├── dependencies       # Software composition analysis (SCA) data
+├── fixsuggestions     # AI-generated code remediation suggestions
+├── scanreports        # Comprehensive security analysis reports
+├── secretfindings     # Credential and secret detection results
+└── securityrules      # SAST rules and detection patterns
 ```
 
-### Repository Schema
+### Model Summary Table
+
+| Model | Collection | Indexes | Purpose |
+|-------|------------|---------|---------|
+| **Codebase** | codebases | 2 | Project/repo management |
+| **CodeScan** | codescans | 2 | Scan sessions & progress |
+| **CodeIssue** | codeissues | 3 | Vulnerabilities found |
+| **Dependency** | dependencies | 8 | SCA/package analysis |
+| **FixSuggestion** | fixsuggestions | 6 | AI fix recommendations |
+| **ScanReport** | scanreports | 7 | Security reports |
+| **SecretFinding** | secretfindings | 8 | Credential detection |
+| **SecurityRule** | securityrules | 7 | SAST detection rules |
+
+### 1. Codebase Schema
 
 ```javascript
-// repositories collection
+// codebases collection - Project repositories under analysis
 {
   _id: ObjectId,
-  repositoryId: String,
-  userId: ObjectId,
-  teamId: ObjectId,
+  userId: ObjectId,          // Reference to User
+  name: String,              // Required
   
-  name: String,
-  url: String,
-  provider: {
-    type: String,
-    enum: ['github', 'gitlab', 'bitbucket', 'azure']
+  repository: {
+    url: String,
+    branch: String,          // Default: 'main'
+    type: ['github', 'gitlab', 'bitbucket', 'local']
   },
   
-  connection: {
-    accessToken: String,       // Encrypted
-    webhookSecret: String,     // Encrypted
-    lastSync: Date
+  languages: [String],
+  frameworks: [String],
+  
+  stats: {
+    totalFiles: Number,
+    totalLines: Number,
+    lastCommit: String
   },
   
-  settings: {
-    defaultBranch: String,
-    autoScan: Boolean,
-    scanOnPush: Boolean,
-    scanOnPR: Boolean,
-    excludePaths: [String]
-  },
-  
-  statistics: {
-    totalScans: Number,
-    lastScanDate: Date,
-    vulnerabilityCount: {
-      critical: Number,
-      high: Number,
-      medium: Number,
-      low: Number
-    },
-    codeQuality: Number
-  },
-  
-  status: {
-    type: String,
-    enum: ['connected', 'syncing', 'error', 'disconnected']
-  },
-  
+  status: ['active', 'archived', 'syncing'],
+  lastScanAt: Date,
   createdAt: Date,
   updatedAt: Date
 }
+
+// Indexes:
+// - { userId: 1, status: 1 }
+// - { 'repository.url': 1 }
 ```
 
-### Scan Schema
+### 2. CodeScan Schema
 
 ```javascript
-// scans collection
+// codescans collection - Individual scan sessions
 {
   _id: ObjectId,
-  scanId: String,
-  repositoryId: ObjectId,
-  userId: ObjectId,
+  codebaseId: ObjectId,      // Reference to Codebase
+  userId: ObjectId,          // Reference to User
   
-  branch: String,
-  commitHash: String,
+  scanType: ['full', 'incremental', 'targeted', 'quick'],
   
   options: {
-    languages: [String],
-    rulesets: [String],
-    severity: String,
-    includeTests: Boolean,
-    excludePaths: [String]
+    scanSecrets: Boolean,
+    scanVulnerabilities: Boolean,
+    scanDependencies: Boolean,
+    scanCodeQuality: Boolean,
+    severity: ['all', 'high', 'critical']
   },
   
-  status: {
-    type: String,
-    enum: ['queued', 'running', 'completed', 'failed', 'cancelled']
-  },
-  
-  progress: Number,           // 0-100
-  currentPhase: String,
+  status: ['pending', 'scanning', 'analyzing', 'completed', 'failed'],
+  progress: Number,          // 0-100
   
   results: {
     filesScanned: Number,
-    linesOfCode: Number,
-    analysisTime: Number,
-    vulnerabilities: [ObjectId],  // References
-    
-    summary: {
+    issuesFound: Number,
+    criticalCount: Number,
+    highCount: Number,
+    mediumCount: Number,
+    lowCount: Number,
+    secretsFound: Number,
+    securityScore: Number    // 0-100
+  },
+  
+  aiInsights: {
+    summary: String,
+    topRisks: [String],
+    recommendations: [String],
+    estimatedFixTime: String
+  },
+  
+  startedAt: Date,
+  completedAt: Date,
+  createdAt: Date
+}
+
+// Indexes:
+// - { codebaseId: 1, status: 1 }
+// - { userId: 1, createdAt: -1 }
+```
+
+### 3. CodeIssue Schema
+
+```javascript
+// codeissues collection - Security vulnerabilities found
+{
+  _id: ObjectId,
+  scanId: ObjectId,
+  codebaseId: ObjectId,
+  userId: ObjectId,
+  
+  type: ['vulnerability', 'secret', 'dependency', 'code-smell', 'security-hotspot'],
+  
+  category: [
+    'sql-injection', 'xss', 'csrf', 'ssrf', 'rce', 'path-traversal',
+    'hardcoded-secret', 'api-key', 'password', 'token',
+    'outdated-dependency', 'vulnerable-package',
+    'insecure-random', 'weak-crypto', 'unsafe-deserialization',
+    'open-redirect', 'information-disclosure', 'other'
+  ],
+  
+  severity: ['critical', 'high', 'medium', 'low', 'info'],
+  title: String,
+  description: String,
+  
+  location: {
+    file: String,
+    startLine: Number,
+    endLine: Number,
+    column: Number,
+    snippet: String
+  },
+  
+  cweId: String,
+  cvssScore: Number,         // 0-10
+  
+  fix: {
+    suggestion: String,
+    autoFixable: Boolean,
+    fixCode: String,
+    references: [String]
+  },
+  
+  status: ['open', 'confirmed', 'fixed', 'false-positive', 'wont-fix'],
+  aiConfidence: Number,      // 0-100
+  createdAt: Date,
+  resolvedAt: Date
+}
+
+// Indexes:
+// - { scanId: 1, severity: 1 }
+// - { codebaseId: 1, status: 1, type: 1 }
+// - { 'location.file': 1 }
+```
+
+### 4. Dependency Schema
+
+```javascript
+// dependencies collection - Software composition analysis (SCA)
+{
+  _id: ObjectId,
+  codebaseId: ObjectId,
+  scanId: ObjectId,
+  
+  name: String,
+  version: String,
+  ecosystem: ['npm', 'pypi', 'maven', 'nuget', 'cargo', 'go', 'composer', 'rubygems'],
+  
+  isDirect: Boolean,
+  isDevDependency: Boolean,
+  depth: Number,
+  parentPackage: String,
+  dependencyPath: [String],
+  
+  latestVersion: String,
+  recommendedVersion: String,
+  versionsBehind: Number,
+  
+  vulnerabilities: [{
+    cveId: String,
+    ghsaId: String,
+    title: String,
+    severity: ['critical', 'high', 'medium', 'low'],
+    cvssScore: Number,
+    patchedVersions: [String],
+    exploitAvailable: Boolean
+  }],
+  
+  vulnerabilitySummary: {
+    critical: Number,
+    high: Number,
+    medium: Number,
+    low: Number,
+    total: Number
+  },
+  
+  license: {
+    name: String,
+    spdxId: String,
+    type: ['permissive', 'copyleft', 'proprietary', 'unknown'],
+    riskLevel: ['low', 'medium', 'high', 'critical']
+  },
+  
+  health: {
+    score: Number,
+    maintenance: Number,
+    popularity: Number,
+    quality: Number,
+    deprecated: Boolean
+  },
+  
+  supplyChain: {
+    typosquattingRisk: Boolean,
+    maintainerCount: Number,
+    signedPackage: Boolean
+  },
+  
+  remediation: {
+    status: ['pending', 'available', 'unavailable', 'applied', 'ignored'],
+    suggestedAction: ['upgrade', 'downgrade', 'replace', 'remove', 'monitor'],
+    targetVersion: String
+  },
+  
+  analyzedAt: Date,
+  createdAt: Date
+}
+
+// Indexes:
+// - { codebaseId: 1, name: 1, version: 1 } (unique)
+// - { codebaseId: 1, 'vulnerabilitySummary.total': -1 }
+// - { ecosystem: 1, name: 1 }
+// - { 'vulnerabilities.cveId': 1 }
+// - { 'license.spdxId': 1 }
+// - { 'health.deprecated': 1 }
+// - { 'remediation.status': 1 }
+// - { isDirect: 1, codebaseId: 1 }
+```
+
+### 5. SecretFinding Schema
+
+```javascript
+// secretfindings collection - Credential and secret detection
+{
+  _id: ObjectId,
+  scanId: ObjectId,
+  codebaseId: ObjectId,
+  userId: ObjectId,
+  
+  secretType: [
+    'api-key', 'oauth-token', 'jwt', 'bearer-token',
+    'aws-access-key', 'aws-secret-key', 'azure-key', 'gcp-key',
+    'database-password', 'database-connection-string',
+    'private-key', 'ssh-key', 'certificate',
+    'github-token', 'gitlab-token', 'npm-token',
+    'slack-token', 'discord-token', 'stripe-key',
+    'generic-secret', 'custom'
+  ],
+  
+  provider: [
+    'aws', 'azure', 'gcp', 'github', 'gitlab', 'slack',
+    'stripe', 'twilio', 'sendgrid', 'firebase', 'mongodb',
+    'docker', 'npm', 'generic', 'unknown'
+  ],
+  
+  severity: ['critical', 'high', 'medium', 'low'],
+  
+  location: {
+    file: String,
+    line: Number,
+    column: Number,
+    snippet: String,
+    contextBefore: [String],
+    contextAfter: [String]
+  },
+  
+  secret: {
+    masked: String,          // e.g., "sk-...abc123"
+    prefix: String,
+    suffix: String,
+    length: Number,
+    entropy: Number,
+    variableName: String
+  },
+  
+  verification: {
+    status: ['unverified', 'verified-active', 'verified-inactive', 'invalid', 'rotated'],
+    verifiedAt: Date,
+    isActive: Boolean,
+    isExpired: Boolean
+  },
+  
+  gitInfo: {
+    commit: String,
+    author: String,
+    date: Date,
+    isInHistory: Boolean
+  },
+  
+  risk: {
+    score: Number,           // 0-100
+    exposure: ['public', 'internal', 'private', 'unknown'],
+    publiclyExposed: Boolean,
+    inProductionCode: Boolean
+  },
+  
+  status: ['open', 'reviewing', 'rotating', 'rotated', 'false-positive', 'ignored', 'resolved'],
+  
+  remediation: {
+    recommendation: String,
+    steps: [String],
+    rotationGuide: String
+  },
+  
+  detectedAt: Date,
+  createdAt: Date
+}
+
+// Indexes:
+// - { codebaseId: 1, status: 1, severity: 1 }
+// - { scanId: 1, secretType: 1 }
+// - { 'location.file': 1, 'location.line': 1 }
+// - { provider: 1, severity: 1 }
+// - { 'verification.status': 1 }
+// - { 'risk.publiclyExposed': 1, status: 1 }
+// - { 'gitInfo.commit': 1 }
+// - { detectedAt: -1 }
+```
+
+### 6. FixSuggestion Schema
+
+```javascript
+// fixsuggestions collection - AI-generated remediation suggestions
+{
+  _id: ObjectId,
+  issueId: ObjectId,
+  codebaseId: ObjectId,
+  scanId: ObjectId,
+  
+  title: String,
+  description: String,
+  fixType: ['code-change', 'configuration', 'dependency-update', 'removal', 'refactor', 'manual'],
+  
+  original: {
+    file: String,
+    startLine: Number,
+    endLine: Number,
+    code: String
+  },
+  
+  suggested: {
+    code: String,
+    explanation: String,
+    language: String
+  },
+  
+  quality: {
+    confidence: Number,      // 0-100
+    safetyScore: Number,
+    completeness: Number,
+    aiModel: String,
+    generatedAt: Date
+  },
+  
+  risk: {
+    level: ['minimal', 'low', 'medium', 'high'],
+    breakingChange: Boolean,
+    requiresReview: Boolean,
+    sideEffects: [String]
+  },
+  
+  validation: {
+    syntaxValid: Boolean,
+    compilable: Boolean,
+    testsPass: Boolean,
+    securityVerified: Boolean
+  },
+  
+  status: ['suggested', 'approved', 'applied', 'rejected', 'failed', 'reverted'],
+  
+  application: {
+    appliedBy: ObjectId,
+    appliedAt: Date,
+    method: ['auto', 'manual', 'pr', 'direct'],
+    pullRequestUrl: String,
+    commitHash: String
+  },
+  
+  feedback: {
+    helpful: Boolean,
+    accurate: Boolean,
+    userRating: Number,      // 1-5
+    comments: String
+  },
+  
+  alternatives: [{
+    code: String,
+    explanation: String,
+    confidence: Number
+  }],
+  
+  createdAt: Date
+}
+
+// Indexes:
+// - { issueId: 1, status: 1 }
+// - { codebaseId: 1, status: 1, 'quality.confidence': -1 }
+// - { 'original.file': 1 }
+// - { fixType: 1, status: 1 }
+// - { 'feedback.helpful': 1 }
+// - { createdAt: -1 }
+```
+
+### 7. ScanReport Schema
+
+```javascript
+// scanreports collection - Comprehensive security analysis reports
+{
+  _id: ObjectId,
+  reportId: String,          // Unique
+  scanId: ObjectId,
+  codebaseId: ObjectId,
+  userId: ObjectId,
+  
+  title: String,
+  description: String,
+  reportType: ['full', 'summary', 'executive', 'compliance', 'trending', 'diff'],
+  format: ['json', 'pdf', 'html', 'sarif', 'csv', 'markdown'],
+  
+  codebaseSnapshot: {
+    name: String,
+    repository: String,
+    branch: String,
+    commit: String,
+    languages: [String],
+    totalFiles: Number,
+    totalLines: Number
+  },
+  
+  securityScore: {
+    overall: Number,         // 0-100
+    grade: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'F'],
+    breakdown: {
+      vulnerabilities: Number,
+      secrets: Number,
+      dependencies: Number,
+      codeQuality: Number,
+      compliance: Number
+    },
+    trend: ['improving', 'stable', 'declining'],
+    changeFromLast: Number
+  },
+  
+  summary: {
+    totalIssues: Number,
+    newIssues: Number,
+    resolvedIssues: Number,
+    bySeverity: {
       critical: Number,
       high: Number,
       medium: Number,
       low: Number,
       info: Number
     },
-    
-    codeQuality: {
-      score: Number,
-      maintainability: Number,
-      complexity: Number,
-      duplication: Number
-    }
-  },
-  
-  timing: {
-    queuedAt: Date,
-    startedAt: Date,
-    completedAt: Date,
-    duration: Number
-  },
-  
-  createdAt: Date,
-  updatedAt: Date
-}
-```
-
-### Vulnerability Schema
-
-```javascript
-// vulnerabilities collection
-{
-  _id: ObjectId,
-  vulnId: String,
-  scanId: ObjectId,
-  repositoryId: ObjectId,
-  
-  identification: {
-    type: String,
-    cwe: String,
-    owasp: String,
-    rule: String,
-    title: String
-  },
-  
-  severity: {
-    type: String,
-    enum: ['critical', 'high', 'medium', 'low', 'info']
-  },
-  
-  location: {
-    file: String,
-    line: Number,
-    column: Number,
-    endLine: Number,
-    endColumn: Number,
-    snippet: String
-  },
-  
-  details: {
-    description: String,
-    impact: String,
-    recommendation: String,
-    references: [String]
-  },
-  
-  dataFlow: {
-    source: {
-      file: String,
-      line: Number,
-      param: String
-    },
-    sink: {
-      file: String,
-      line: Number,
-      function: String
-    },
-    path: [{
-      file: String,
-      line: Number,
-      code: String
+    topRisks: [{
+      title: String,
+      severity: String,
+      count: Number
     }]
   },
   
-  fix: {
-    available: Boolean,
-    code: String,
-    explanation: String,
-    confidence: Number
+  compliance: {
+    owasp: { version: String, violations: [Object], score: Number },
+    pciDss: { compliant: Boolean, violations: [String], score: Number },
+    gdpr: { compliant: Boolean, score: Number },
+    hipaa: { compliant: Boolean, violations: [String], score: Number },
+    soc2: { compliant: Boolean, score: Number },
+    iso27001: { compliant: Boolean, score: Number }
   },
   
-  status: {
-    type: String,
-    enum: ['open', 'confirmed', 'fixed', 'false_positive', 'wont_fix']
+  aiInsights: {
+    executiveSummary: String,
+    keyFindings: [String],
+    riskAssessment: String,
+    recommendations: [{
+      priority: ['critical', 'high', 'medium', 'low'],
+      title: String,
+      description: String,
+      estimatedEffort: String
+    }]
   },
   
-  assignee: ObjectId,
+  export: {
+    fileUrl: String,
+    fileSize: Number,
+    generatedAt: Date,
+    expiresAt: Date
+  },
+  
+  performance: {
+    scanDuration: Number,
+    filesPerSecond: Number,
+    rulesExecuted: Number
+  },
+  
+  generatedAt: Date,
+  createdAt: Date
+}
+
+// Indexes:
+// - { userId: 1, generatedAt: -1 }
+// - { codebaseId: 1, generatedAt: -1 }
+// - { 'securityScore.overall': 1 }
+// - { 'securityScore.grade': 1 }
+// - { reportType: 1, format: 1 }
+// - { 'sharing.shareToken': 1 }
+// - { 'export.expiresAt': 1 }
+```
+
+### 8. SecurityRule Schema
+
+```javascript
+// securityrules collection - SAST detection rules and patterns
+{
+  _id: ObjectId,
+  ruleId: String,            // Unique
+  name: String,
+  description: String,
+  shortDescription: String,
+  
+  category: [
+    'injection', 'xss', 'csrf', 'authentication', 'authorization',
+    'cryptography', 'configuration', 'data-exposure', 'xml-security',
+    'code-quality', 'secrets', 'dependencies', 'api-security',
+    'input-validation', 'session-management', 'deserialization', 'ssrf'
+  ],
+  
+  severity: ['critical', 'high', 'medium', 'low', 'info'],
+  confidenceLevel: ['certain', 'firm', 'tentative'],
+  
+  languages: [
+    'javascript', 'typescript', 'python', 'java', 'csharp', 'go',
+    'ruby', 'php', 'swift', 'kotlin', 'rust', 'cpp', 'c', 'scala',
+    'solidity', 'sql', 'shell', 'yaml', 'json', 'xml', 'html', 'all'
+  ],
+  
+  patterns: [{
+    type: ['regex', 'ast', 'semantic', 'taint-flow'],
+    pattern: String,
+    flags: String,
+    testCases: [{ code: String, shouldMatch: Boolean }]
+  }],
+  
+  compliance: {
+    cwe: [{ id: String, name: String }],
+    owasp: [{ category: String, year: Number }],
+    sans: [String],
+    pciDss: [String],
+    gdpr: [String],
+    hipaa: [String]
+  },
+  
+  remediation: {
+    description: String,
+    effort: ['trivial', 'easy', 'medium', 'hard', 'complex'],
+    autoFixable: Boolean,
+    fixTemplate: String,
+    references: [{ title: String, url: String }],
+    codeExamples: {
+      vulnerable: String,
+      secure: String
+    }
+  },
+  
+  aiConfig: {
+    useAiVerification: Boolean,
+    contextWindow: Number,
+    promptTemplate: String,
+    falsePositiveThreshold: Number
+  },
+  
+  status: ['active', 'deprecated', 'experimental', 'disabled'],
+  version: String,
+  author: String,
+  source: ['built-in', 'community', 'custom', 'semgrep', 'codeql'],
+  tags: [String],
+  
+  metrics: {
+    totalMatches: Number,
+    truePositives: Number,
+    falsePositives: Number,
+    averageScanTime: Number,
+    lastTriggered: Date
+  },
   
   createdAt: Date,
   updatedAt: Date
 }
+
+// Indexes:
+// - { ruleId: 1 } (unique)
+// - { languages: 1, status: 1, severity: 1 }
+// - { category: 1, status: 1 }
+// - { 'compliance.cwe.id': 1 }
+// - { 'compliance.owasp.category': 1 }
+// - { tags: 1 }
+// - { source: 1, status: 1 }
 ```
 
 ---

@@ -142,9 +142,9 @@ module.exports = {
     // Security Tools (11-20)
     // ===========================================
     {
-      name: 'incidentresponse',
+      name: 'incidentcommand',
       script: 'server.js',
-      cwd: './backend/tools/11-incidentresponse/api',
+      cwd: './backend/tools/11-incidentcommand/api',
       instances: 2,
       exec_mode: 'cluster',
       max_memory_restart: '400M',

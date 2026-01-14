@@ -1,5 +1,18 @@
 # DarkWebMonitor - Cyber Threat Intelligence Platform
 
+![Live](https://img.shields.io/badge/Status-LIVE-brightgreen)
+![Backend](https://img.shields.io/badge/Backend-Deployed-blue)
+![Frontend](https://img.shields.io/badge/Frontend-Deployed-blue)
+![Port](https://img.shields.io/badge/API_Port-4002-orange)
+
+## 🌐 Live URLs
+
+| Service | URL | Status |
+|---------|-----|--------|
+| **Frontend** | https://darkwebmonitor.maula.ai | ✅ Live |
+| **API Base** | https://darkwebmonitor.maula.ai/api | ✅ Live |
+| **Health Check** | https://darkwebmonitor.maula.ai/health | ✅ Live |
+
 ## Overview
 
 **DarkWebMonitor** is a comprehensive cyber threat intelligence aggregation and analysis platform designed to collect, enrich, correlate, and distribute threat intelligence from multiple sources. It provides security teams with actionable intelligence on threats, indicators of compromise (IOCs), threat actors, attack campaigns, vulnerabilities, and adversary tactics, techniques, and procedures (TTPs).
@@ -343,7 +356,80 @@ Comprehensive threat intelligence reports.
 - `findRecent()` - Recent reports
 - `getStatistics()` - Aggregate statistics
 
-## API Endpoints
+## API Endpoints (Live)
+
+> **Base URL**: `https://darkwebmonitor.maula.ai/api`
+
+### System
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/status` | Get system status and feature list |
+| GET | `/config` | Get system configuration |
+| GET | `/dashboard` | Get dashboard statistics |
+
+### Threat Intelligence
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/intelligence` | Create intelligence record |
+| GET | `/intelligence` | List intelligence (filtered) |
+| GET | `/intelligence/search` | Search intelligence |
+| GET | `/intelligence/:intelId` | Get intelligence details |
+
+### IOCs (Indicators of Compromise)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/iocs` | Create IOC |
+| GET | `/iocs` | List IOCs |
+| GET | `/iocs/stats` | Get IOC statistics |
+| POST | `/iocs/bulk` | Bulk import IOCs |
+| PUT | `/iocs/:iocId/enrich` | Enrich IOC |
+
+### Threat Actors
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/actors` | Create threat actor |
+| GET | `/actors` | List threat actors |
+| GET | `/actors/:actorId` | Get actor details |
+| PUT | `/actors/:actorId/campaign` | Link actor to campaign |
+
+### Campaigns
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/campaigns` | Create campaign |
+| GET | `/campaigns` | List campaigns |
+| GET | `/campaigns/active` | Get active campaigns |
+| GET | `/campaigns/:campaignId` | Get campaign details |
+
+### Threat Feeds
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/feeds` | Add threat feed |
+| GET | `/feeds` | List feeds |
+| GET | `/feeds/stats` | Get feed statistics |
+| POST | `/feeds/:feedId/sync` | Sync feed |
+
+### Vulnerabilities
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/vulnerabilities` | Create vulnerability |
+| GET | `/vulnerabilities` | List vulnerabilities |
+| GET | `/vulnerabilities/critical` | Critical vulnerabilities |
+
+### TTP Mapping (MITRE ATT&CK)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/ttps` | Create TTP mapping |
+| GET | `/ttps` | List TTPs |
+| GET | `/ttps/matrix` | Get MITRE ATT&CK matrix |
+| GET | `/ttps/tactic/:tactic` | TTPs by tactic |
+
+### Reports
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/reports` | Generate report |
+| GET | `/reports` | List reports |
+| GET | `/reports/:reportId` | Get report details |
+| PUT | `/reports/:reportId/publish` | Publish report |
 
 ### System
 - `GET /api/v1/config` - Get system configuration
@@ -591,29 +677,33 @@ DarkWebMonitor supports 4 TLP levels:
 
 ## Development Roadmap
 
-### Phase 1 (Current)
+### Phase 1 ✅ COMPLETE
 - ✅ 8 MongoDB models (3,800+ lines)
-- ✅ 14 threat intelligence sources
-- ✅ MITRE ATT&CK mapping
-- ✅ TLP classification
+- ✅ 14 threat intelligence sources integration
+- ✅ MITRE ATT&CK mapping (208 techniques)
+- ✅ TLP classification support
+- ✅ Backend API deployed to production
+- ✅ Frontend deployed to production
+- ✅ Nginx configured with SSL
+- ✅ PM2 process management
 
-### Phase 2 (Q1 2025)
-- 40+ API endpoints
-- Full CRUD operations
-- Advanced search and filtering
-- Real-time WebSocket updates
+### Phase 2 (In Progress)
+- ✅ 30+ API endpoints implemented
+- ✅ Full CRUD operations for all entities
+- 🔄 Advanced search and filtering
+- 🔄 Real-time WebSocket updates (port 6002)
 
 ### Phase 3 (Q2 2025)
-- ML engine integration (10 AI functions)
-- Automated threat correlation
-- Campaign detection algorithms
-- False positive reduction
+- ⏳ ML engine integration (10 AI functions)
+- ⏳ Automated threat correlation
+- ⏳ Campaign detection algorithms
+- ⏳ False positive reduction
 
 ### Phase 4 (Q3 2025)
-- SIEM/SOAR integrations
-- Automated response playbooks
-- Threat hunting workflows
-- Advanced reporting
+- ⏳ SIEM/SOAR integrations
+- ⏳ Automated response playbooks
+- ⏳ Threat hunting workflows
+- ⏳ Advanced reporting
 
 ## Contributing
 
@@ -630,8 +720,19 @@ For support, email: support@darkwebmonitor.maula.ai
 ## Version
 
 **Version**: 1.0.0  
-**Last Updated**: January 7, 2025  
-**Status**: Production-ready backend with 8 models and 14 threat sources
+**Last Updated**: January 11, 2025  
+**Status**: 🟢 LIVE - Backend & Frontend Deployed
+
+---
+
+## 📝 Updates Log
+
+| Date | Update |
+|------|--------|
+| 2025-01-11 | Backend API deployed to production |
+| 2025-01-11 | Nginx configured with /api proxy |
+| 2025-01-11 | All API endpoints verified working |
+| 2025-01-11 | .env.example updated with 14+ API keys documentation |
 
 ---
 

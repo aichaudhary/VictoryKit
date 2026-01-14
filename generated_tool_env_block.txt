@@ -80,82 +80,82 @@ XAI_API_KEY=your-fraudguard-xai-api-key
 # No external API keys defined yet. Document any future integrations in the tool spec.
 
 # ===================
-# Tool 11 - IncidentResponse
-# https://victorykit.com/tools/11-incidentresponse
-# Docs: docs/tools/TOOL-11-INCIDENTRESPONSE.md
+# Tool 11 - incidentcommand
+# https://victorykit.com/tools/11-incidentcommand
+# Docs: docs/tools/TOOL-11-incidentcommand.md
 # External integrations
 # [Paid][Recommended] Anthropic Claude API – https://console.anthropic.com/settings/keys
-ANTHROPIC_API_KEY=your-incidentresponse-anthropic-api-key
+ANTHROPIC_API_KEY=your-incidentcommand-anthropic-api-key
 # [Freemium][Recommended] Google Gemini API – https://makersuite.google.com/app/apikey
-GEMINI_API_KEY=your-incidentresponse-gemini-api-key
+GEMINI_API_KEY=your-incidentcommand-gemini-api-key
 # [Freemium][Recommended] AbuseIPDB API – https://www.abuseipdb.com/api
-INCIDENTRESPONSE_ABUSEIPDB_API_KEY=your-incidentresponse-abuseipdb-api-key
+incidentcommand_ABUSEIPDB_API_KEY=your-incidentcommand-abuseipdb-api-key
 # [Freemium][Recommended] AlienVault OTX API – https://otx.alienvault.com/api
-INCIDENTRESPONSE_ALIENVAULT_API_KEY=your-incidentresponse-alienvault-api-key
+incidentcommand_ALIENVAULT_API_KEY=your-incidentcommand-alienvault-api-key
 # [Paid][Recommended] Anthropic Claude API – https://console.anthropic.com/settings/keys
-INCIDENTRESPONSE_ANTHROPIC_API_KEY=your-incidentresponse-anthropic-api-key
+incidentcommand_ANTHROPIC_API_KEY=your-incidentcommand-anthropic-api-key
 # [Paid][Required] AWS IAM Access Key – https://console.aws.amazon.com/iam/home#/security_credentials
-INCIDENTRESPONSE_AWS_ACCESS_KEY_ID=your-incidentresponse-aws-access-key-id
+incidentcommand_AWS_ACCESS_KEY_ID=your-incidentcommand-aws-access-key-id
 # [Paid][Required] AWS IAM Access Key – https://console.aws.amazon.com/iam/home#/security_credentials
-INCIDENTRESPONSE_AWS_SECRET_ACCESS_KEY=your-incidentresponse-aws-secret-access-key
+incidentcommand_AWS_SECRET_ACCESS_KEY=your-incidentcommand-aws-secret-access-key
 # [Paid][Required] Azure AD App Registration – https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
-INCIDENTRESPONSE_AZURE_SENTINEL_CLIENT_ID=your-incidentresponse-azure-sentinel-client-id
+incidentcommand_AZURE_SENTINEL_CLIENT_ID=your-incidentcommand-azure-sentinel-client-id
 # [Paid][Required] Azure AD App Registration – https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
-INCIDENTRESPONSE_AZURE_SENTINEL_CLIENT_SECRET=your-incidentresponse-azure-sentinel-client-secret
+incidentcommand_AZURE_SENTINEL_CLIENT_SECRET=your-incidentcommand-azure-sentinel-client-secret
 # [Enterprise][Advanced] VMware Carbon Black Cloud API – https://developer.carbonblack.com/reference/carbon-black-cloud/
-INCIDENTRESPONSE_CARBONBLACK_API_ID=your-incidentresponse-carbonblack-api-id
+incidentcommand_CARBONBLACK_API_ID=your-incidentcommand-carbonblack-api-id
 # [Enterprise][Advanced] VMware Carbon Black Cloud API – https://developer.carbonblack.com/reference/carbon-black-cloud/
-INCIDENTRESPONSE_CARBONBLACK_API_KEY=your-incidentresponse-carbonblack-api-key
+incidentcommand_CARBONBLACK_API_KEY=your-incidentcommand-carbonblack-api-key
 # [Enterprise][Recommended] CrowdStrike Falcon API – https://falcon.crowdstrike.com/support/api-clients-and-keys
-INCIDENTRESPONSE_CROWDSTRIKE_CLIENT_ID=your-incidentresponse-crowdstrike-client-id
+incidentcommand_CROWDSTRIKE_CLIENT_ID=your-incidentcommand-crowdstrike-client-id
 # [Enterprise][Recommended] CrowdStrike Falcon API – https://falcon.crowdstrike.com/support/api-clients-and-keys
-INCIDENTRESPONSE_CROWDSTRIKE_CLIENT_SECRET=your-incidentresponse-crowdstrike-client-secret
+incidentcommand_CROWDSTRIKE_CLIENT_SECRET=your-incidentcommand-crowdstrike-client-secret
 # [Paid][Recommended] Elastic Cloud API – https://www.elastic.co/guide/en/cloud/current/ec-api-authentication.html
-INCIDENTRESPONSE_ELASTIC_API_KEY=your-incidentresponse-elastic-api-key
+incidentcommand_ELASTIC_API_KEY=your-incidentcommand-elastic-api-key
 # [Freemium][Recommended] Google Gemini API – https://makersuite.google.com/app/apikey
-INCIDENTRESPONSE_GEMINI_API_KEY=your-incidentresponse-gemini-api-key
+incidentcommand_GEMINI_API_KEY=your-incidentcommand-gemini-api-key
 # [Paid][Optional] IBM Cloud API – https://cloud.ibm.com/iam/apikeys
-INCIDENTRESPONSE_IBM_XFORCE_API_KEY=your-incidentresponse-ibm-xforce-api-key
+incidentcommand_IBM_XFORCE_API_KEY=your-incidentcommand-ibm-xforce-api-key
 # [Paid][Recommended] Atlassian JIRA API Token – https://id.atlassian.com/manage-profile/security/api-tokens
-INCIDENTRESPONSE_JIRA_API_TOKEN=your-incidentresponse-jira-api-token
+incidentcommand_JIRA_API_TOKEN=your-incidentcommand-jira-api-token
 # [Paid][Recommended] Microsoft Defender for Endpoint – https://security.microsoft.com/apis
-INCIDENTRESPONSE_MS_DEFENDER_API_KEY=your-incidentresponse-ms-defender-api-key
+incidentcommand_MS_DEFENDER_API_KEY=your-incidentcommand-ms-defender-api-key
 # [Paid][Required] OpenAI API – https://platform.openai.com/api-keys
-INCIDENTRESPONSE_OPENAI_API_KEY=your-incidentresponse-openai-api-key
+incidentcommand_OPENAI_API_KEY=your-incidentcommand-openai-api-key
 # [Paid][Recommended] PagerDuty API – https://pagerduty.com/api
-INCIDENTRESPONSE_PAGERDUTY_API_KEY=your-incidentresponse-pagerduty-api-key
+incidentcommand_PAGERDUTY_API_KEY=your-incidentcommand-pagerduty-api-key
 # [Enterprise][Advanced] SentinelOne API – https://developer.sentinelone.com/reference/overview
-INCIDENTRESPONSE_SENTINELONE_API_KEY=your-incidentresponse-sentinelone-api-key
+incidentcommand_SENTINELONE_API_KEY=your-incidentcommand-sentinelone-api-key
 # [Freemium][Recommended] Shodan API – https://account.shodan.io/
-INCIDENTRESPONSE_SHODAN_API_KEY=your-incidentresponse-shodan-api-key
+incidentcommand_SHODAN_API_KEY=your-incidentcommand-shodan-api-key
 # [Freemium][Optional] Slack Incoming Webhook – https://api.slack.com/messaging/webhooks
-INCIDENTRESPONSE_SLACK_BOT_TOKEN=your-incidentresponse-slack-bot-token
+incidentcommand_SLACK_BOT_TOKEN=your-incidentcommand-slack-bot-token
 # [Freemium][Optional] Slack Incoming Webhook – https://api.slack.com/messaging/webhooks
-INCIDENTRESPONSE_SLACK_WEBHOOK_URL=https://your-incidentresponse-slack-webhook-url-endpoint
+incidentcommand_SLACK_WEBHOOK_URL=https://your-incidentcommand-slack-webhook-url-endpoint
 # [Paid][Advanced] Splunk Management API Token – https://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing
-INCIDENTRESPONSE_SPLUNK_API_TOKEN=your-incidentresponse-splunk-api-token
+incidentcommand_SPLUNK_API_TOKEN=your-incidentcommand-splunk-api-token
 # [Paid][Advanced] Splunk Management API Token – https://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing
-INCIDENTRESPONSE_SPLUNK_SOAR_API_TOKEN=your-incidentresponse-splunk-soar-api-token
+incidentcommand_SPLUNK_SOAR_API_TOKEN=your-incidentcommand-splunk-soar-api-token
 # [Free][Optional] Microsoft Teams Webhook – https://learn.microsoft.com/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook
-INCIDENTRESPONSE_TEAMS_WEBHOOK_URL=https://your-incidentresponse-teams-webhook-url-endpoint
+incidentcommand_TEAMS_WEBHOOK_URL=https://your-incidentcommand-teams-webhook-url-endpoint
 # [Open Source][Advanced] TheHive Project API – https://docs.thehive-project.org/thehive/api/
-INCIDENTRESPONSE_THEHIVE_API_KEY=your-incidentresponse-thehive-api-key
+incidentcommand_THEHIVE_API_KEY=your-incidentcommand-thehive-api-key
 # [Paid][Recommended] Twilio Console – https://www.twilio.com/console
-INCIDENTRESPONSE_TWILIO_ACCOUNT_SID=your-incidentresponse-twilio-account-sid
+incidentcommand_TWILIO_ACCOUNT_SID=your-incidentcommand-twilio-account-sid
 # [Paid][Recommended] Twilio Console – https://www.twilio.com/console
-INCIDENTRESPONSE_TWILIO_AUTH_TOKEN=your-incidentresponse-twilio-auth-token
+incidentcommand_TWILIO_AUTH_TOKEN=your-incidentcommand-twilio-auth-token
 # [Freemium][Recommended] VirusTotal API – https://www.virustotal.com/gui/my-apikey
-INCIDENTRESPONSE_VIRUSTOTAL_API_KEY=your-incidentresponse-virustotal-api-key
+incidentcommand_VIRUSTOTAL_API_KEY=your-incidentcommand-virustotal-api-key
 # [Enterprise][Advanced] Palo Alto Cortex XSOAR – https://pan.dev/xsoar/docs/getting-started/api-keys/
-INCIDENTRESPONSE_XSOAR_API_KEY=your-incidentresponse-xsoar-api-key
+incidentcommand_XSOAR_API_KEY=your-incidentcommand-xsoar-api-key
 # [Freemium][Optional] Mistral AI API – https://console.mistral.ai/api-keys/
-MISTRAL_API_KEY=your-incidentresponse-mistral-api-key
+MISTRAL_API_KEY=your-incidentcommand-mistral-api-key
 # [Paid][Required] OpenAI API – https://platform.openai.com/api-keys
-OPENAI_API_KEY=your-incidentresponse-openai-api-key
+OPENAI_API_KEY=your-incidentcommand-openai-api-key
 # [Paid][Optional] Together.ai API – https://api.together.xyz/
-TOGETHER_API_KEY=your-incidentresponse-together-api-key
+TOGETHER_API_KEY=your-incidentcommand-together-api-key
 # [Paid][Experimental] xAI Grok API – https://api.x.ai/
-XAI_API_KEY=your-incidentresponse-xai-api-key
+XAI_API_KEY=your-incidentcommand-xai-api-key
 
 # ===================
 # Tool 12 - LogAnalyzer

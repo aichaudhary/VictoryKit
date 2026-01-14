@@ -8,7 +8,9 @@
 
 **Enterprise-Grade Threat Detection, Intelligence & Automated Response**
 
-[Live Demo](https://zerodaydetect.maula.ai) • [API Docs](https://zerodaydetect.maula.ai/docs) • [Support](mailto:support@maula.ai)
+[Live Demo](https://zerodaydetect.maula.ai) •
+[API Docs](https://zerodaydetect.maula.ai/docs) •
+[Support](mailto:support@maula.ai)
 
 </div>
 
@@ -34,7 +36,11 @@
 
 ## 🎯 Executive Summary
 
-**ZeroDayDetect** is an enterprise-grade threat intelligence and detection platform that provides real-time visibility into cyber threats targeting your organization. Using advanced ML algorithms and global threat feeds, ZeroDayDetect identifies, analyzes, and responds to threats before they impact your business.
+**ZeroDayDetect** is an enterprise-grade threat intelligence and detection
+platform that provides real-time visibility into cyber threats targeting your
+organization. Using advanced ML algorithms and global threat feeds,
+ZeroDayDetect identifies, analyzes, and responds to threats before they impact
+your business.
 
 ### The Challenge
 
@@ -48,14 +54,14 @@
 
 ZeroDayDetect provides:
 
-| Capability | Description |
-|------------|-------------|
-| **Real-Time Detection** | ML-powered threat detection with <1s latency |
-| **Threat Intelligence** | Integration with 50+ global threat feeds |
-| **Attack Surface Mapping** | Continuous discovery of exposed assets |
-| **Automated Response** | SOAR-like playbook execution |
-| **Threat Hunting** | AI-assisted proactive threat search |
-| **Executive Reporting** | Board-ready security dashboards |
+| Capability                 | Description                                  |
+| -------------------------- | -------------------------------------------- |
+| **Real-Time Detection**    | ML-powered threat detection with <1s latency |
+| **Threat Intelligence**    | Integration with 50+ global threat feeds     |
+| **Attack Surface Mapping** | Continuous discovery of exposed assets       |
+| **Automated Response**     | SOAR-like playbook execution                 |
+| **Threat Hunting**         | AI-assisted proactive threat search          |
+| **Executive Reporting**    | Board-ready security dashboards              |
 
 ---
 
@@ -91,20 +97,20 @@ ZeroDayDetect provides:
 
 ### 2. Threat Intelligence Integration
 
-| Feed Category | Sources | Update Frequency |
-|---------------|---------|------------------|
-| **Malware IOCs** | VirusTotal, MalwareBazaar, ANY.RUN | Real-time |
-| **IP Reputation** | AbuseIPDB, Shodan, GreyNoise | Hourly |
-| **Domain Intel** | URLhaus, PhishTank, OpenPhish | 15 minutes |
-| **Vulnerability** | NVD, CVE, Exploit-DB | Daily |
-| **APT Tracking** | MITRE ATT&CK, AlienVault OTX | Daily |
-| **Dark Web** | Custom HUMINT feeds | Real-time |
+| Feed Category     | Sources                            | Update Frequency |
+| ----------------- | ---------------------------------- | ---------------- |
+| **Malware IOCs**  | VirusTotal, MalwareBazaar, ANY.RUN | Real-time        |
+| **IP Reputation** | AbuseIPDB, Shodan, GreyNoise       | Hourly           |
+| **Domain Intel**  | URLhaus, PhishTank, OpenPhish      | 15 minutes       |
+| **Vulnerability** | NVD, CVE, Exploit-DB               | Daily            |
+| **APT Tracking**  | MITRE ATT&CK, AlienVault OTX       | Daily            |
+| **Dark Web**      | Custom HUMINT feeds                | Real-time        |
 
 ### 3. Threat Severity Classification
 
 ```javascript
 // Automatic threat classification
-const threatAnalysis = await threatRadar.analyze({
+const threatAnalysis = await zeroDayDetect.analyze({
   indicator: '185.234.219.100',
   type: 'ip',
   context: {
@@ -167,39 +173,39 @@ const threatAnalysis = await threatRadar.analyze({
 ```yaml
 # Example Playbook: Ransomware Detection Response
 playbook:
-  name: "Ransomware Containment"
+  name: 'Ransomware Containment'
   trigger:
-    threat_type: "ransomware"
-    severity: ["critical", "high"]
-  
+    threat_type: 'ransomware'
+    severity: ['critical', 'high']
+
   actions:
-    - name: "Isolate Affected Host"
+    - name: 'Isolate Affected Host'
       action: network_isolate
-      target: "{{ affected_host }}"
+      target: '{{ affected_host }}'
       timeout: 30s
-      
-    - name: "Block C2 Communication"
+
+    - name: 'Block C2 Communication'
       action: firewall_block
-      indicators: "{{ iocs.ips + iocs.domains }}"
-      
-    - name: "Capture Forensic Data"
+      indicators: '{{ iocs.ips + iocs.domains }}'
+
+    - name: 'Capture Forensic Data'
       action: forensic_snapshot
-      target: "{{ affected_host }}"
-      include: ["memory", "disk", "network"]
-      
-    - name: "Disable Compromised Accounts"
+      target: '{{ affected_host }}'
+      include: ['memory', 'disk', 'network']
+
+    - name: 'Disable Compromised Accounts'
       action: disable_accounts
-      accounts: "{{ compromised_users }}"
-      
-    - name: "Alert Security Team"
+      accounts: '{{ compromised_users }}'
+
+    - name: 'Alert Security Team'
       action: notify
-      channels: ["slack", "pagerduty", "email"]
-      priority: "P1"
-      
-    - name: "Create Incident Ticket"
+      channels: ['slack', 'pagerduty', 'email']
+      priority: 'P1'
+
+    - name: 'Create Incident Ticket'
       action: create_ticket
-      system: "servicenow"
-      template: "ransomware-incident"
+      system: 'servicenow'
+      template: 'ransomware-incident'
 ```
 
 ### 6. Threat Hunting
@@ -325,38 +331,41 @@ playbook:
 ## 💻 Technology Stack
 
 ### Frontend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| React | 19.x | UI Framework |
-| TypeScript | 5.x | Type Safety |
-| TailwindCSS | 3.x | Styling |
-| Recharts | 2.x | Data Visualization |
-| D3.js | 7.x | Network Graphs |
-| Lucide React | Latest | Icons |
-| React Router | 6.x | Navigation |
-| Axios | 1.x | HTTP Client |
+
+| Technology   | Version | Purpose            |
+| ------------ | ------- | ------------------ |
+| React        | 19.x    | UI Framework       |
+| TypeScript   | 5.x     | Type Safety        |
+| TailwindCSS  | 3.x     | Styling            |
+| Recharts     | 2.x     | Data Visualization |
+| D3.js        | 7.x     | Network Graphs     |
+| Lucide React | Latest  | Icons              |
+| React Router | 6.x     | Navigation         |
+| Axios        | 1.x     | HTTP Client        |
 
 ### Backend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Node.js | 20.x LTS | Runtime |
-| Express.js | 4.x | API Framework |
-| MongoDB | 7.x | Database |
-| Mongoose | 8.x | ODM |
-| Redis | 7.x | Caching/Pub-Sub |
-| JWT | Latest | Authentication |
-| Socket.io | 4.x | Real-time |
-| Bull | 4.x | Job Queue |
+
+| Technology | Version  | Purpose         |
+| ---------- | -------- | --------------- |
+| Node.js    | 20.x LTS | Runtime         |
+| Express.js | 4.x      | API Framework   |
+| MongoDB    | 7.x      | Database        |
+| Mongoose   | 8.x      | ODM             |
+| Redis      | 7.x      | Caching/Pub-Sub |
+| JWT        | Latest   | Authentication  |
+| Socket.io  | 4.x      | Real-time       |
+| Bull       | 4.x      | Job Queue       |
 
 ### ML Engine
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Python | 3.11+ | Runtime |
-| FastAPI | 0.100+ | API Framework |
-| scikit-learn | 1.3+ | ML Models |
-| TensorFlow | 2.15+ | Deep Learning |
-| YARA | 4.x | Malware Rules |
-| Pandas | 2.x | Data Processing |
+
+| Technology   | Version | Purpose         |
+| ------------ | ------- | --------------- |
+| Python       | 3.11+   | Runtime         |
+| FastAPI      | 0.100+  | API Framework   |
+| scikit-learn | 1.3+    | ML Models       |
+| TensorFlow   | 2.15+   | Deep Learning   |
+| YARA         | 4.x     | Malware Rules   |
+| Pandas       | 2.x     | Data Processing |
 
 ---
 
@@ -483,20 +492,20 @@ Authorization: Bearer <token>
 ### Threats API
 
 #### List Active Threats
+
 ```http
 GET /threats
 ```
 
-**Query Parameters:**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| severity | string | Filter by severity (critical, high, medium, low) |
-| status | string | Filter by status (active, investigating, resolved) |
-| type | string | Filter by threat type |
-| page | number | Page number (default: 1) |
-| limit | number | Items per page (default: 50) |
+**Query Parameters:** | Parameter | Type | Description |
+|-----------|------|-------------| | severity | string | Filter by severity
+(critical, high, medium, low) | | status | string | Filter by status (active,
+investigating, resolved) | | type | string | Filter by threat type | | page |
+number | Page number (default: 1) | | limit | number | Items per page
+(default: 50) |
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -514,8 +523,8 @@ GET /threats
           "details": "Firewall logs"
         },
         "indicators": [
-          {"type": "ip", "value": "185.234.219.100"},
-          {"type": "domain", "value": "malicious.example.com"}
+          { "type": "ip", "value": "185.234.219.100" },
+          { "type": "domain", "value": "malicious.example.com" }
         ],
         "affectedAssets": ["ws-john-doe", "srv-file-01"],
         "mitreTactics": ["TA0011", "TA0010"],
@@ -535,16 +544,19 @@ GET /threats
 ```
 
 #### Get Threat Details
+
 ```http
 GET /threats/:threatId
 ```
 
 #### Block Threat
+
 ```http
 POST /threats/:threatId/block
 ```
 
 #### Investigate Threat
+
 ```http
 POST /threats/:threatId/investigate
 ```
@@ -552,11 +564,13 @@ POST /threats/:threatId/investigate
 ### Intelligence API
 
 #### Search Indicator
+
 ```http
 GET /intelligence/search?query=185.234.219.100
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -576,9 +590,9 @@ GET /intelligence/search?query=185.234.219.100
       "reportCount": 847
     },
     "sources": [
-      {"name": "VirusTotal", "score": 62, "total": 90},
-      {"name": "AbuseIPDB", "score": 100, "reports": 1250},
-      {"name": "AlienVault", "pulses": 23}
+      { "name": "VirusTotal", "score": 62, "total": 90 },
+      { "name": "AbuseIPDB", "score": 100, "reports": 1250 },
+      { "name": "AlienVault", "pulses": 23 }
     ],
     "geolocation": {
       "country": "Russia",
@@ -591,6 +605,7 @@ GET /intelligence/search?query=185.234.219.100
 ```
 
 #### Get Attack Vectors
+
 ```http
 GET /intelligence/vectors
 ```
@@ -598,11 +613,13 @@ GET /intelligence/vectors
 ### Hunting API
 
 #### Execute Hunt Query
+
 ```http
 POST /hunting/query
 ```
 
 **Request Body:**
+
 ```json
 {
   "query": "process.name='powershell.exe' AND process.command_line CONTAINS 'encodedcommand'",
@@ -621,199 +638,242 @@ POST /hunting/query
 ### Threats Collection
 
 ```javascript
-const ThreatSchema = new Schema({
-  threatId: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  description: String,
-  type: {
-    type: String,
-    enum: ['malware', 'phishing', 'network', 'web', 'insider', 'apt'],
-    required: true
+const ThreatSchema = new Schema(
+  {
+    threatId: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    description: String,
+    type: {
+      type: String,
+      enum: ['malware', 'phishing', 'network', 'web', 'insider', 'apt'],
+      required: true,
+    },
+    severity: {
+      type: String,
+      enum: ['critical', 'high', 'medium', 'low'],
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: [
+        'active',
+        'investigating',
+        'contained',
+        'resolved',
+        'false-positive',
+      ],
+      default: 'active',
+    },
+    confidence: { type: Number, min: 0, max: 1, default: 0.5 },
+    source: {
+      type: { type: String },
+      system: String,
+      details: String,
+    },
+    indicators: [
+      {
+        type: {
+          type: String,
+          enum: ['ip', 'domain', 'url', 'hash', 'email', 'file'],
+        },
+        value: String,
+        context: String,
+      },
+    ],
+    affectedAssets: [String],
+    mitre: {
+      tactics: [String],
+      techniques: [String],
+      subTechniques: [String],
+    },
+    timeline: [
+      {
+        timestamp: Date,
+        event: String,
+        details: String,
+        user: String,
+      },
+    ],
+    remediation: {
+      status: String,
+      actions: [String],
+      completedAt: Date,
+    },
+    detectedAt: { type: Date, default: Date.now },
+    resolvedAt: Date,
+    metadata: {
+      campaign: String,
+      malwareFamily: String,
+      threatActor: String,
+    },
   },
-  severity: {
-    type: String,
-    enum: ['critical', 'high', 'medium', 'low'],
-    required: true
-  },
-  status: {
-    type: String,
-    enum: ['active', 'investigating', 'contained', 'resolved', 'false-positive'],
-    default: 'active'
-  },
-  confidence: { type: Number, min: 0, max: 1, default: 0.5 },
-  source: {
-    type: { type: String },
-    system: String,
-    details: String
-  },
-  indicators: [{
-    type: { type: String, enum: ['ip', 'domain', 'url', 'hash', 'email', 'file'] },
-    value: String,
-    context: String
-  }],
-  affectedAssets: [String],
-  mitre: {
-    tactics: [String],
-    techniques: [String],
-    subTechniques: [String]
-  },
-  timeline: [{
-    timestamp: Date,
-    event: String,
-    details: String,
-    user: String
-  }],
-  remediation: {
-    status: String,
-    actions: [String],
-    completedAt: Date
-  },
-  detectedAt: { type: Date, default: Date.now },
-  resolvedAt: Date,
-  metadata: {
-    campaign: String,
-    malwareFamily: String,
-    threatActor: String
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
 ```
 
 ### Indicators Collection
 
 ```javascript
-const IndicatorSchema = new Schema({
-  iocId: { type: String, required: true, unique: true },
-  type: {
-    type: String,
-    enum: ['ip', 'domain', 'url', 'hash-md5', 'hash-sha1', 'hash-sha256', 
-           'email', 'file', 'registry', 'mutex'],
-    required: true
-  },
-  value: { type: String, required: true },
-  reputation: {
-    score: { type: Number, min: 0, max: 100 },
-    category: {
+const IndicatorSchema = new Schema(
+  {
+    iocId: { type: String, required: true, unique: true },
+    type: {
       type: String,
-      enum: ['malicious', 'suspicious', 'benign', 'unknown']
+      enum: [
+        'ip',
+        'domain',
+        'url',
+        'hash-md5',
+        'hash-sha1',
+        'hash-sha256',
+        'email',
+        'file',
+        'registry',
+        'mutex',
+      ],
+      required: true,
     },
-    confidence: Number
+    value: { type: String, required: true },
+    reputation: {
+      score: { type: Number, min: 0, max: 100 },
+      category: {
+        type: String,
+        enum: ['malicious', 'suspicious', 'benign', 'unknown'],
+      },
+      confidence: Number,
+    },
+    intelligence: {
+      malwareFamily: String,
+      campaigns: [String],
+      threatActors: [String],
+      tags: [String],
+    },
+    sources: [
+      {
+        name: String,
+        score: Number,
+        reportCount: Number,
+        lastReport: Date,
+      },
+    ],
+    geolocation: {
+      country: String,
+      city: String,
+      latitude: Number,
+      longitude: Number,
+      asn: String,
+      org: String,
+    },
+    whois: {
+      registrar: String,
+      createdDate: Date,
+      expiresDate: Date,
+      registrant: String,
+    },
+    firstSeen: Date,
+    lastSeen: Date,
+    status: {
+      type: String,
+      enum: ['active', 'expired', 'false-positive'],
+      default: 'active',
+    },
   },
-  intelligence: {
-    malwareFamily: String,
-    campaigns: [String],
-    threatActors: [String],
-    tags: [String]
-  },
-  sources: [{
-    name: String,
-    score: Number,
-    reportCount: Number,
-    lastReport: Date
-  }],
-  geolocation: {
-    country: String,
-    city: String,
-    latitude: Number,
-    longitude: Number,
-    asn: String,
-    org: String
-  },
-  whois: {
-    registrar: String,
-    createdDate: Date,
-    expiresDate: Date,
-    registrant: String
-  },
-  firstSeen: Date,
-  lastSeen: Date,
-  status: {
-    type: String,
-    enum: ['active', 'expired', 'false-positive'],
-    default: 'active'
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
 ```
 
 ### Hunts Collection
 
 ```javascript
-const HuntSchema = new Schema({
-  huntId: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  description: String,
-  hypothesis: String,
-  query: { type: String, required: true },
-  status: {
-    type: String,
-    enum: ['draft', 'running', 'completed', 'cancelled'],
-    default: 'draft'
-  },
-  scope: {
-    dataSources: [String],
-    timeRange: {
-      start: Date,
-      end: Date
+const HuntSchema = new Schema(
+  {
+    huntId: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    description: String,
+    hypothesis: String,
+    query: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ['draft', 'running', 'completed', 'cancelled'],
+      default: 'draft',
     },
-    assets: [String]
+    scope: {
+      dataSources: [String],
+      timeRange: {
+        start: Date,
+        end: Date,
+      },
+      assets: [String],
+    },
+    results: {
+      totalMatches: Number,
+      findings: [
+        {
+          timestamp: Date,
+          asset: String,
+          details: Schema.Types.Mixed,
+          severity: String,
+        },
+      ],
+    },
+    mitre: {
+      tactics: [String],
+      techniques: [String],
+    },
+    createdBy: String,
+    startedAt: Date,
+    completedAt: Date,
   },
-  results: {
-    totalMatches: Number,
-    findings: [{
-      timestamp: Date,
-      asset: String,
-      details: Schema.Types.Mixed,
-      severity: String
-    }]
-  },
-  mitre: {
-    tactics: [String],
-    techniques: [String]
-  },
-  createdBy: String,
-  startedAt: Date,
-  completedAt: Date
-}, { timestamps: true });
+  { timestamps: true }
+);
 ```
 
 ### Playbooks Collection
 
 ```javascript
-const PlaybookSchema = new Schema({
-  playbookId: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  description: String,
-  status: {
-    type: String,
-    enum: ['active', 'inactive', 'draft'],
-    default: 'draft'
-  },
-  trigger: {
-    type: { type: String, enum: ['threat', 'alert', 'manual', 'scheduled'] },
-    conditions: Schema.Types.Mixed
-  },
-  actions: [{
-    order: Number,
-    name: String,
-    type: {
+const PlaybookSchema = new Schema(
+  {
+    playbookId: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    description: String,
+    status: {
       type: String,
-      enum: ['isolate', 'block', 'notify', 'ticket', 'script', 'api']
+      enum: ['active', 'inactive', 'draft'],
+      default: 'draft',
     },
-    config: Schema.Types.Mixed,
-    timeout: Number,
-    onFailure: String
-  }],
-  notifications: [{
-    channel: String,
-    recipients: [String],
-    template: String
-  }],
-  metrics: {
-    executions: Number,
-    avgDuration: Number,
-    successRate: Number
+    trigger: {
+      type: { type: String, enum: ['threat', 'alert', 'manual', 'scheduled'] },
+      conditions: Schema.Types.Mixed,
+    },
+    actions: [
+      {
+        order: Number,
+        name: String,
+        type: {
+          type: String,
+          enum: ['isolate', 'block', 'notify', 'ticket', 'script', 'api'],
+        },
+        config: Schema.Types.Mixed,
+        timeout: Number,
+        onFailure: String,
+      },
+    ],
+    notifications: [
+      {
+        channel: String,
+        recipients: [String],
+        template: String,
+      },
+    ],
+    metrics: {
+      executions: Number,
+      avgDuration: Number,
+      successRate: Number,
+    },
+    lastExecution: Date,
   },
-  lastExecution: Date
-}, { timestamps: true });
+  { timestamps: true }
+);
 ```
 
 ---
@@ -830,14 +890,14 @@ class ThreatClassificationModel:
     Multi-label classification for threat categorization
     using ensemble methods and deep learning.
     """
-    
+
     def __init__(self):
         self.ensemble = VotingClassifier([
             ('rf', RandomForestClassifier(n_estimators=200)),
             ('xgb', XGBClassifier()),
             ('nn', MLPClassifier(hidden_layer_sizes=(256, 128)))
         ])
-    
+
     def classify(self, features: dict) -> dict:
         """
         Features:
@@ -845,7 +905,7 @@ class ThreatClassificationModel:
         - Behavioral attributes
         - Network characteristics
         - Historical context
-        
+
         Returns threat classification.
         """
         return {
@@ -867,7 +927,7 @@ class ThreatAnomalyDetector:
     Unsupervised anomaly detection for identifying
     unusual patterns in network and endpoint data.
     """
-    
+
     def detect(self, event_stream: list) -> list:
         """
         Analyzes:
@@ -875,7 +935,7 @@ class ThreatAnomalyDetector:
         - User behavior
         - Process execution
         - File system activity
-        
+
         Returns detected anomalies.
         """
         return [
@@ -898,7 +958,7 @@ class IOCCorrelationModel:
     Graph-based correlation engine for linking
     related indicators and identifying campaigns.
     """
-    
+
     def correlate(self, indicators: list) -> dict:
         """
         Builds correlation graph and identifies:
@@ -906,7 +966,7 @@ class IOCCorrelationModel:
         - Attack campaigns
         - Threat actors
         - Kill chain progression
-        
+
         Returns correlation analysis.
         """
         return {
@@ -927,7 +987,7 @@ class AttackPredictionModel:
     Predicts probable next attack phases based on
     current indicators and MITRE ATT&CK patterns.
     """
-    
+
     def predict(self, current_state: dict) -> dict:
         """
         Based on:
@@ -935,7 +995,7 @@ class AttackPredictionModel:
         - Historical attack patterns
         - Asset criticality
         - Known threat actor TTPs
-        
+
         Returns predictions.
         """
         return {
@@ -957,6 +1017,7 @@ class AttackPredictionModel:
 **Challenge:** Detect and prevent sophisticated financial fraud attacks.
 
 **Solution:**
+
 ```yaml
 Deployment: Major Bank Security Operations
 Monitored Assets: 50,000+ endpoints
@@ -975,6 +1036,7 @@ Results:
 **Challenge:** Protect patient data and critical systems from ransomware.
 
 **Solution:**
+
 ```yaml
 Deployment: Hospital Network
 Protected Systems: 12,000+ devices
@@ -993,6 +1055,7 @@ Results:
 **Challenge:** Detect advanced persistent threats targeting customer data.
 
 **Solution:**
+
 ```yaml
 Deployment: Global E-Commerce Platform
 Transaction Volume: 10M+/day
@@ -1012,14 +1075,14 @@ Results:
 
 ### Integrated Sources
 
-| Category | Feeds | IOCs/Day |
-|----------|-------|----------|
-| **Malware** | VirusTotal, MalwareBazaar, ANY.RUN | 500K+ |
-| **IP Reputation** | AbuseIPDB, Shodan, GreyNoise | 100K+ |
-| **Domains** | URLhaus, PhishTank, OpenPhish | 50K+ |
-| **Vulnerabilities** | NVD, CVE, Exploit-DB | 500+ |
-| **APT** | MITRE ATT&CK, AlienVault OTX | Real-time |
-| **Custom** | Dark web, HUMINT | Real-time |
+| Category            | Feeds                              | IOCs/Day  |
+| ------------------- | ---------------------------------- | --------- |
+| **Malware**         | VirusTotal, MalwareBazaar, ANY.RUN | 500K+     |
+| **IP Reputation**   | AbuseIPDB, Shodan, GreyNoise       | 100K+     |
+| **Domains**         | URLhaus, PhishTank, OpenPhish      | 50K+      |
+| **Vulnerabilities** | NVD, CVE, Exploit-DB               | 500+      |
+| **APT**             | MITRE ATT&CK, AlienVault OTX       | Real-time |
+| **Custom**          | Dark web, HUMINT                   | Real-time |
 
 ---
 
@@ -1027,37 +1090,41 @@ Results:
 
 ### Tier Comparison
 
-| Feature | Starter | Professional | Enterprise |
-|---------|---------|--------------|------------|
-| Endpoints | 100 | 1,000 | Unlimited |
-| Events/Day | 1M | 50M | Unlimited |
-| Threat Feeds | 5 | 20 | All + Custom |
-| Hunting Queries | 10/day | 100/day | Unlimited |
-| Playbooks | 5 | 25 | Unlimited |
-| API Access | ❌ | ✅ | ✅ |
-| 24/7 Support | ❌ | ❌ | ✅ |
-| **Price/Month** | **$499** | **$2,499** | **Custom** |
+| Feature         | Starter  | Professional | Enterprise   |
+| --------------- | -------- | ------------ | ------------ |
+| Endpoints       | 100      | 1,000        | Unlimited    |
+| Events/Day      | 1M       | 50M          | Unlimited    |
+| Threat Feeds    | 5        | 20           | All + Custom |
+| Hunting Queries | 10/day   | 100/day      | Unlimited    |
+| Playbooks       | 5        | 25           | Unlimited    |
+| API Access      | ❌       | ✅           | ✅           |
+| 24/7 Support    | ❌       | ❌           | ✅           |
+| **Price/Month** | **$499** | **$2,499**   | **Custom**   |
 
 ---
 
 ## 🗺️ Roadmap
 
 ### Q1 2025
+
 - [ ] SOAR 2.0 with visual playbook builder
 - [ ] Extended MITRE ATT&CK coverage
 - [ ] Cloud-native threat detection (AWS, Azure, GCP)
 
 ### Q2 2025
+
 - [ ] AI-powered threat hunting assistant
 - [ ] Deception technology integration
 - [ ] Threat intelligence marketplace
 
 ### Q3 2025
+
 - [ ] Quantum-resistant threat detection
 - [ ] Autonomous response capabilities
 - [ ] Industry-specific threat packs
 
 ### Q4 2025
+
 - [ ] Global threat map visualization
 - [ ] Predictive breach modeling
 - [ ] Zero-day detection enhancement
@@ -1067,16 +1134,19 @@ Results:
 ## 🤝 Support
 
 ### Documentation
+
 - [User Guide](https://docs.zerodaydetect.maula.ai)
 - [API Reference](https://api.zerodaydetect.maula.ai/docs)
 - [MITRE ATT&CK Mapping](https://zerodaydetect.maula.ai/mitre)
 
 ### Community
+
 - [Discord Community](https://discord.gg/zerodaydetect)
 - [GitHub Discussions](https://github.com/maula-ai/zerodaydetect/discussions)
 - [Threat Intel Sharing](https://stix.zerodaydetect.maula.ai)
 
 ### Enterprise Support
+
 - 24/7 Phone Support: +1 (888) THREAT-1
 - Email: enterprise@zerodaydetect.maula.ai
 - Dedicated Threat Analyst
@@ -1093,6 +1163,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Built with ❤️ by the Maula AI Team**
 
-[Website](https://maula.ai) • [Twitter](https://twitter.com/maula_ai) • [LinkedIn](https://linkedin.com/company/maula/ai)
+[Website](https://maula.ai) • [Twitter](https://twitter.com/maula_ai) •
+[LinkedIn](https://linkedin.com/company/maula/ai)
 
 </div>

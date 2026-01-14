@@ -1,8 +1,8 @@
-# 🚨 IncidentResponse - AI-Powered Security Incident Response Platform
+# 🚨 incidentcommand - AI-Powered Security Incident Response Platform
 
 <div align="center">
 
-![IncidentResponse Logo](https://img.shields.io/badge/IncidentResponse-AI%20Incident%20Response-f43f5e?style=for-the-badge&logo=alert-triangle&logoColor=white)
+![incidentcommand Logo](https://img.shields.io/badge/incidentcommand-AI%20Incident%20Response-f43f5e?style=for-the-badge&logo=alert-triangle&logoColor=white)
 
 [![Version](https://img.shields.io/badge/version-1.0.0-f43f5e.svg)](https://github.com/VM07B/VictoryKit)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -10,9 +10,12 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB.svg)](https://python.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248.svg)](https://mongodb.com/)
 
-**Enterprise-Grade AI-Powered Security Incident Detection, Response & Remediation Platform**
+**Enterprise-Grade AI-Powered Security Incident Detection, Response &
+Remediation Platform**
 
-[Live Demo](https://incidentresponse.maula.ai) • [API Docs](https://incidentresponse.maula.ai/docs) • [Report Bug](https://github.com/VM07B/VictoryKit/issues)
+[Live Demo](https://incidentcommand.maula.ai) •
+[API Docs](https://incidentcommand.maula.ai/docs) •
+[Report Bug](https://github.com/VM07B/VictoryKit/issues)
 
 </div>
 
@@ -36,9 +39,14 @@
 
 ## 🎯 Overview
 
-**IncidentResponse** is a cutting-edge, AI-powered security incident response platform designed to detect, triage, respond to, and remediate security incidents with unprecedented speed and accuracy. Leveraging advanced machine learning for intelligent alert correlation, automated playbook execution, and real-time response coordination, IncidentResponse transforms your security operations into a proactive defense system.
+**incidentcommand** is a cutting-edge, AI-powered security incident response
+platform designed to detect, triage, respond to, and remediate security
+incidents with unprecedented speed and accuracy. Leveraging advanced machine
+learning for intelligent alert correlation, automated playbook execution, and
+real-time response coordination, incidentcommand transforms your security
+operations into a proactive defense system.
 
-### Why IncidentResponse?
+### Why incidentcommand?
 
 - **AI-Powered Triage**: Intelligent incident classification and prioritization
 - **Automated Playbooks**: Pre-configured response workflows with automation
@@ -49,14 +57,14 @@
 
 ### Use Cases
 
-| Use Case | Description |
-|----------|-------------|
-| **Incident Detection** | Real-time threat detection and alerting |
-| **Incident Triage** | AI-assisted severity classification |
-| **Response Coordination** | Team collaboration and task assignment |
-| **Playbook Execution** | Automated response workflows |
-| **Forensic Investigation** | Artifact collection and analysis |
-| **Post-Incident Review** | Automated report generation |
+| Use Case                   | Description                             |
+| -------------------------- | --------------------------------------- |
+| **Incident Detection**     | Real-time threat detection and alerting |
+| **Incident Triage**        | AI-assisted severity classification     |
+| **Response Coordination**  | Team collaboration and task assignment  |
+| **Playbook Execution**     | Automated response workflows            |
+| **Forensic Investigation** | Artifact collection and analysis        |
+| **Post-Incident Review**   | Automated report generation             |
 
 ---
 
@@ -115,7 +123,7 @@
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐
-│                       INCIDENTRESPONSE PLATFORM                             │
+│                       incidentcommand PLATFORM                             │
 ├────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
@@ -157,15 +165,15 @@
 
 ### Component Breakdown
 
-| Component | Technology | Port | Purpose |
-|-----------|------------|------|---------|
-| Frontend | React 19 + TypeScript | 3011 | User interface |
-| API Gateway | Express.js | 4000 | Authentication & routing |
-| Backend API | Node.js + Express | 4011 | Business logic |
-| ML Engine | Python + FastAPI | 8011 | AI/ML processing |
-| Response Engine | Python + Celery | 6011 | Automated response |
-| Database | MongoDB 7.0 | 27017 | Data persistence |
-| Cache/Pub-Sub | Redis 7.0 | 6379 | Real-time events |
+| Component       | Technology            | Port  | Purpose                  |
+| --------------- | --------------------- | ----- | ------------------------ |
+| Frontend        | React 19 + TypeScript | 3011  | User interface           |
+| API Gateway     | Express.js            | 4000  | Authentication & routing |
+| Backend API     | Node.js + Express     | 4011  | Business logic           |
+| ML Engine       | Python + FastAPI      | 8011  | AI/ML processing         |
+| Response Engine | Python + Celery       | 6011  | Automated response       |
+| Database        | MongoDB 7.0           | 27017 | Data persistence         |
+| Cache/Pub-Sub   | Redis 7.0             | 6379  | Real-time events         |
 
 ---
 
@@ -173,37 +181,37 @@
 
 ### Backend Technologies
 
-| Category | Technology | Version | Purpose |
-|----------|------------|---------|---------|
-| **Runtime** | Node.js | 18+ | Server runtime |
-| **Framework** | Express.js | 4.18 | REST API framework |
-| **Language** | TypeScript | 5.3 | Type safety |
-| **Database** | MongoDB | 7.0 | Document storage |
-| **ODM** | Mongoose | 8.0 | MongoDB modeling |
-| **Real-time** | Socket.io | 4.7 | WebSocket support |
-| **Queue** | Bull | 4.12 | Job processing |
+| Category      | Technology | Version | Purpose            |
+| ------------- | ---------- | ------- | ------------------ |
+| **Runtime**   | Node.js    | 18+     | Server runtime     |
+| **Framework** | Express.js | 4.18    | REST API framework |
+| **Language**  | TypeScript | 5.3     | Type safety        |
+| **Database**  | MongoDB    | 7.0     | Document storage   |
+| **ODM**       | Mongoose   | 8.0     | MongoDB modeling   |
+| **Real-time** | Socket.io  | 4.7     | WebSocket support  |
+| **Queue**     | Bull       | 4.12    | Job processing     |
 
 ### Response Engine Technologies
 
-| Category | Technology | Version | Purpose |
-|----------|------------|---------|---------|
-| **Runtime** | Python | 3.11 | Engine runtime |
-| **Framework** | FastAPI | 0.109 | Async API |
-| **Task Queue** | Celery | 5.3 | Distributed tasks |
-| **ML** | scikit-learn | 1.3 | Classification |
-| **NLP** | transformers | 4.36 | Text analysis |
-| **Automation** | ansible-runner | 2.3 | Playbook execution |
+| Category       | Technology     | Version | Purpose            |
+| -------------- | -------------- | ------- | ------------------ |
+| **Runtime**    | Python         | 3.11    | Engine runtime     |
+| **Framework**  | FastAPI        | 0.109   | Async API          |
+| **Task Queue** | Celery         | 5.3     | Distributed tasks  |
+| **ML**         | scikit-learn   | 1.3     | Classification     |
+| **NLP**        | transformers   | 4.36    | Text analysis      |
+| **Automation** | ansible-runner | 2.3     | Playbook execution |
 
 ### Frontend Technologies
 
-| Category | Technology | Version | Purpose |
-|----------|------------|---------|---------|
-| **Framework** | React | 19.0 | UI framework |
-| **Language** | TypeScript | 5.3 | Type safety |
-| **Build** | Vite | 6.0 | Build tool |
-| **Styling** | TailwindCSS | 3.4 | Utility CSS |
-| **Real-time** | Socket.io-client | 4.7 | Live updates |
-| **Charts** | Recharts | 2.10 | Data visualization |
+| Category      | Technology       | Version | Purpose            |
+| ------------- | ---------------- | ------- | ------------------ |
+| **Framework** | React            | 19.0    | UI framework       |
+| **Language**  | TypeScript       | 5.3     | Type safety        |
+| **Build**     | Vite             | 6.0     | Build tool         |
+| **Styling**   | TailwindCSS      | 3.4     | Utility CSS        |
+| **Real-time** | Socket.io-client | 4.7     | Live updates       |
+| **Charts**    | Recharts         | 2.10    | Data visualization |
 
 ---
 
@@ -229,7 +237,7 @@ git clone https://github.com/VM07B/VictoryKit.git
 cd VictoryKit
 
 # Install backend dependencies
-cd backend/tools/11-incidentresponse/api
+cd backend/tools/11-incidentcommand/api
 npm install
 
 # Install ML engine dependencies
@@ -239,7 +247,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Install frontend dependencies
-cd ../../../../frontend/tools/11-incidentresponse
+cd ../../../../frontend/tools/11-incidentcommand
 npm install
 
 # Setup environment variables
@@ -256,23 +264,23 @@ npm run dev
 version: '3.8'
 
 services:
-  incidentresponse-api:
+  incidentcommand-api:
     build: ./api
     ports:
-      - "4011:4011"
+      - '4011:4011'
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/incidentresponse
+      - MONGODB_URI=mongodb://mongo:27017/incidentcommand
 
-  incidentresponse-engine:
+  incidentcommand-engine:
     build: ./ml-engine
     ports:
-      - "8011:8011"
+      - '8011:8011'
 
-  incidentresponse-frontend:
-    build: ../../../frontend/tools/11-incidentresponse
+  incidentcommand-frontend:
+    build: ../../../frontend/tools/11-incidentcommand
     ports:
-      - "3011:3011"
+      - '3011:3011'
 
   mongo:
     image: mongo:7
@@ -297,7 +305,7 @@ volumes:
 
 ```env
 # ===========================================
-# INCIDENTRESPONSE CONFIGURATION
+# incidentcommand CONFIGURATION
 # ===========================================
 
 # Server Configuration
@@ -306,8 +314,8 @@ PORT=4011
 HOST=0.0.0.0
 
 # MongoDB Configuration
-MONGODB_URI=mongodb://localhost:27017/incidentresponse
-MONGODB_DB_NAME=incidentresponse
+MONGODB_URI=mongodb://localhost:27017/incidentcommand
+MONGODB_DB_NAME=incidentcommand
 
 # Redis Configuration
 REDIS_URL=redis://localhost:6379
@@ -353,7 +361,7 @@ RATE_LIMIT_MAX=1000
 ### Base URL
 
 ```
-Production: https://incidentresponse.maula.ai/api/v1
+Production: https://incidentcommand.maula.ai/api/v1
 Development: http://localhost:4011/api/v1
 ```
 
@@ -362,12 +370,13 @@ Development: http://localhost:4011/api/v1
 #### Create Incident
 
 ```http
-POST /api/v1/incidentresponse/incidents
+POST /api/v1/incidentcommand/incidents
 Authorization: Bearer {token}
 Content-Type: application/json
 ```
 
 **Request:**
+
 ```json
 {
   "title": "Ransomware Attack - Production Database",
@@ -380,6 +389,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -406,12 +416,13 @@ Content-Type: application/json
 #### Update Incident Status
 
 ```http
-POST /api/v1/incidentresponse/incidents/{id}/status
+POST /api/v1/incidentcommand/incidents/{id}/status
 Authorization: Bearer {token}
 Content-Type: application/json
 ```
 
 **Request:**
+
 ```json
 {
   "status": "in-progress",
@@ -422,12 +433,13 @@ Content-Type: application/json
 #### Execute Playbook
 
 ```http
-POST /api/v1/incidentresponse/playbooks/{playbookId}/execute
+POST /api/v1/incidentcommand/playbooks/{playbookId}/execute
 Authorization: Bearer {token}
 Content-Type: application/json
 ```
 
 **Request:**
+
 ```json
 {
   "incidentId": "INC-2024-001",
@@ -440,6 +452,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -461,11 +474,12 @@ Content-Type: application/json
 #### Get Alerts
 
 ```http
-GET /api/v1/incidentresponse/alerts?severity=critical&status=new
+GET /api/v1/incidentcommand/alerts?severity=critical&status=new
 Authorization: Bearer {token}
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -496,12 +510,13 @@ Authorization: Bearer {token}
 #### Upload Artifact
 
 ```http
-POST /api/v1/incidentresponse/forensics/{incidentId}/artifacts
+POST /api/v1/incidentcommand/forensics/{incidentId}/artifacts
 Authorization: Bearer {token}
 Content-Type: multipart/form-data
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -526,7 +541,7 @@ Content-Type: multipart/form-data
 ### Collections Overview
 
 ```
-incidentresponse_db
+incidentcommand_db
 ├── incidents          # Security incidents
 ├── alerts             # Alert ingestion
 ├── timeline_events    # Incident timeline
@@ -546,31 +561,31 @@ incidentresponse_db
 {
   _id: ObjectId,
   incidentId: String,       // INC-YYYY-NNN
-  
+
   title: String,
   description: String,
-  
+
   severity: {
     type: String,
     enum: ['critical', 'high', 'medium', 'low']
   },
-  
+
   status: {
     type: String,
     enum: ['open', 'investigating', 'in-progress', 'mitigating', 'resolved', 'closed']
   },
-  
+
   type: {
     type: String,
     enum: ['malware', 'intrusion', 'data_breach', 'phishing', 'ddos', 'insider']
   },
-  
+
   assignee: ObjectId,
   team: String,
-  
+
   affectedSystems: [String],
   affectedUsers: [String],
-  
+
   sla: {
     deadline: Date,
     breached: Boolean,
@@ -578,7 +593,7 @@ incidentresponse_db
     containmentTime: Number,
     resolutionTime: Number
   },
-  
+
   metrics: {
     detectionTime: Number,    // seconds
     responseTime: Number,
@@ -586,10 +601,10 @@ incidentresponse_db
     resolutionTime: Number,
     impactScore: Number       // 0-100
   },
-  
+
   relatedAlerts: [ObjectId],
   relatedIncidents: [ObjectId],
-  
+
   timeline: [{
     timestamp: Date,
     type: String,
@@ -598,7 +613,7 @@ incidentresponse_db
     automated: Boolean,
     metadata: Object
   }],
-  
+
   resolution: {
     summary: String,
     rootCause: String,
@@ -607,7 +622,7 @@ incidentresponse_db
     resolvedAt: Date,
     resolvedBy: ObjectId
   },
-  
+
   createdBy: ObjectId,
   createdAt: Date,
   updatedAt: Date
@@ -621,59 +636,59 @@ incidentresponse_db
 {
   _id: ObjectId,
   playbookId: String,
-  
+
   name: String,
   description: String,
   version: String,
-  
+
   incidentTypes: [String],
   severity: [String],
-  
+
   automationLevel: {
     type: String,
     enum: ['manual', 'semi-auto', 'full-auto']
   },
-  
+
   steps: [{
     id: String,
     order: Number,
     name: String,
     description: String,
-    
+
     action: {
       type: String,     // script, api, manual, notification
       target: String,
       command: String,
       parameters: Object
     },
-    
+
     automated: Boolean,
     required: Boolean,
     timeout: Number,
-    
+
     conditions: [{
       field: String,
       operator: String,
       value: Mixed
     }],
-    
+
     onSuccess: String,  // next step id
     onFailure: String
   }],
-  
+
   notifications: [{
     trigger: String,    // on_start, on_complete, on_failure
     channels: [String],
     template: String
   }],
-  
+
   statistics: {
     executions: Number,
     successRate: Number,
     avgDuration: Number,
     lastUsed: Date
   },
-  
+
   createdBy: ObjectId,
   createdAt: Date,
   updatedAt: Date
@@ -722,13 +737,13 @@ incidentresponse_db
 
 ### Models Overview
 
-| Model | Purpose | Accuracy |
-|-------|---------|----------|
-| **SeverityClassifier v2** | Alert severity prediction | 94.2% |
-| **AlertCorrelator v3** | Related alert grouping | 91.8% |
-| **PlaybookRecommender v1** | Optimal playbook selection | 89.5% |
-| **ImpactPredictor v2** | Incident impact assessment | 87.3% |
-| **ResolutionAdvisor v1** | Resolution suggestions | 85.1% |
+| Model                      | Purpose                    | Accuracy |
+| -------------------------- | -------------------------- | -------- |
+| **SeverityClassifier v2**  | Alert severity prediction  | 94.2%    |
+| **AlertCorrelator v3**     | Related alert grouping     | 91.8%    |
+| **PlaybookRecommender v1** | Optimal playbook selection | 89.5%    |
+| **ImpactPredictor v2**     | Incident impact assessment | 87.3%    |
+| **ResolutionAdvisor v1**   | Resolution suggestions     | 85.1%    |
 
 ---
 
@@ -736,23 +751,23 @@ incidentresponse_db
 
 ### Security Features
 
-| Feature | Description |
-|---------|-------------|
-| **Role-Based Access** | Granular permissions for responders |
-| **Audit Logging** | Complete action audit trail |
-| **Encrypted Storage** | Sensitive data at rest encryption |
-| **Secure Communication** | TLS 1.3 for all connections |
-| **MFA Support** | Multi-factor authentication |
-| **Session Management** | Secure session handling |
+| Feature                  | Description                         |
+| ------------------------ | ----------------------------------- |
+| **Role-Based Access**    | Granular permissions for responders |
+| **Audit Logging**        | Complete action audit trail         |
+| **Encrypted Storage**    | Sensitive data at rest encryption   |
+| **Secure Communication** | TLS 1.3 for all connections         |
+| **MFA Support**          | Multi-factor authentication         |
+| **Session Management**   | Secure session handling             |
 
 ### Compliance Support
 
-| Standard | Coverage |
-|----------|----------|
-| **SOC 2** | Full incident response controls |
-| **NIST CSF** | Response framework alignment |
-| **ISO 27001** | Incident management procedures |
-| **PCI-DSS** | Requirement 12.10 compliance |
+| Standard      | Coverage                        |
+| ------------- | ------------------------------- |
+| **SOC 2**     | Full incident response controls |
+| **NIST CSF**  | Response framework alignment    |
+| **ISO 27001** | Incident management procedures  |
+| **PCI-DSS**   | Requirement 12.10 compliance    |
 
 ---
 
@@ -767,7 +782,7 @@ incidentresponse_db
 │                                                                      │
 │     ┌─────────────────────────────────────────────────────────┐     │
 │     │                    LOAD BALANCER                         │     │
-│     │              incidentresponse.maula.ai                   │     │
+│     │              incidentcommand.maula.ai                   │     │
 │     └───────────────────────┬─────────────────────────────────┘     │
 │                             │                                        │
 │         ┌───────────────────┼───────────────────┐                   │
@@ -790,12 +805,12 @@ incidentresponse_db
 
 ### Performance Benchmarks
 
-| Metric | Value | Target |
-|--------|-------|--------|
-| **Alert Ingestion** | 10,000/sec | 5,000/sec |
-| **Incident Creation** | <100ms | <200ms |
-| **Playbook Start** | <500ms | <1s |
-| **Timeline Query** | <50ms | <100ms |
+| Metric                | Value      | Target    |
+| --------------------- | ---------- | --------- |
+| **Alert Ingestion**   | 10,000/sec | 5,000/sec |
+| **Incident Creation** | <100ms     | <200ms    |
+| **Playbook Start**    | <500ms     | <1s       |
+| **Timeline Query**    | <50ms      | <100ms    |
 
 ---
 
@@ -803,8 +818,8 @@ incidentresponse_db
 
 ### Contact
 
-- **Documentation**: https://docs.incidentresponse.maula.ai
-- **API Status**: https://status.incidentresponse.maula.ai
+- **Documentation**: https://docs.incidentcommand.maula.ai
+- **API Status**: https://status.incidentcommand.maula.ai
 - **Support Email**: support@maula.ai
 - **Security Issues**: security@maula.ai
 
@@ -812,7 +827,8 @@ incidentresponse_db
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
 
 ---
 
@@ -820,8 +836,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Built with ❤️ by the VictoryKit Team**
 
-*Respond faster. Resolve smarter.*
+_Respond faster. Resolve smarter._
 
-![IncidentResponse](https://img.shields.io/badge/IncidentResponse-AI%20Incident%20Response-f43f5e?style=for-the-badge)
+![incidentcommand](https://img.shields.io/badge/incidentcommand-AI%20Incident%20Response-f43f5e?style=for-the-badge)
 
 </div>

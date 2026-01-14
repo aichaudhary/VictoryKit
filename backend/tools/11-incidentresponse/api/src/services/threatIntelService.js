@@ -1,7 +1,7 @@
 /**
  * Threat Intelligence Service
  * Real-world integrations for IOC enrichment and threat analysis
- * 
+ *
  * Integrates with: VirusTotal, AlienVault OTX, IBM X-Force, AbuseIPDB, Shodan
  */
 
@@ -10,25 +10,29 @@ const axios = require('axios');
 class ThreatIntelService {
   constructor() {
     // VirusTotal
-    this.vtApiKey = process.env.INCIDENTRESPONSE_VIRUSTOTAL_API_KEY;
-    this.vtBaseUrl = process.env.INCIDENTRESPONSE_VIRUSTOTAL_BASE_URL || 'https://www.virustotal.com/api/v3';
-    
+    this.vtApiKey = process.env.incidentcommand_VIRUSTOTAL_API_KEY;
+    this.vtBaseUrl =
+      process.env.incidentcommand_VIRUSTOTAL_BASE_URL || 'https://www.virustotal.com/api/v3';
+
     // AlienVault OTX
-    this.otxApiKey = process.env.INCIDENTRESPONSE_ALIENVAULT_API_KEY;
-    this.otxBaseUrl = process.env.INCIDENTRESPONSE_ALIENVAULT_BASE_URL || 'https://otx.alienvault.com/api/v1';
-    
+    this.otxApiKey = process.env.incidentcommand_ALIENVAULT_API_KEY;
+    this.otxBaseUrl =
+      process.env.incidentcommand_ALIENVAULT_BASE_URL || 'https://otx.alienvault.com/api/v1';
+
     // IBM X-Force
-    this.xforceApiKey = process.env.INCIDENTRESPONSE_IBM_XFORCE_API_KEY;
-    this.xforcePassword = process.env.INCIDENTRESPONSE_IBM_XFORCE_API_PASSWORD;
-    this.xforceBaseUrl = process.env.INCIDENTRESPONSE_IBM_XFORCE_BASE_URL || 'https://api.xforce.ibmcloud.com';
-    
+    this.xforceApiKey = process.env.incidentcommand_IBM_XFORCE_API_KEY;
+    this.xforcePassword = process.env.incidentcommand_IBM_XFORCE_API_PASSWORD;
+    this.xforceBaseUrl =
+      process.env.incidentcommand_IBM_XFORCE_BASE_URL || 'https://api.xforce.ibmcloud.com';
+
     // AbuseIPDB
-    this.abuseipdbApiKey = process.env.INCIDENTRESPONSE_ABUSEIPDB_API_KEY;
-    this.abuseipdbBaseUrl = process.env.INCIDENTRESPONSE_ABUSEIPDB_BASE_URL || 'https://api.abuseipdb.com/api/v2';
-    
+    this.abuseipdbApiKey = process.env.incidentcommand_ABUSEIPDB_API_KEY;
+    this.abuseipdbBaseUrl =
+      process.env.incidentcommand_ABUSEIPDB_BASE_URL || 'https://api.abuseipdb.com/api/v2';
+
     // Shodan
-    this.shodanApiKey = process.env.INCIDENTRESPONSE_SHODAN_API_KEY;
-    this.shodanBaseUrl = process.env.INCIDENTRESPONSE_SHODAN_BASE_URL || 'https://api.shodan.io';
+    this.shodanApiKey = process.env.incidentcommand_SHODAN_API_KEY;
+    this.shodanBaseUrl = process.env.incidentcommand_SHODAN_BASE_URL || 'https://api.shodan.io';
   }
 
   /**
@@ -47,7 +51,7 @@ class ThreatIntelService {
       relatedCampaigns: [],
       firstSeen: null,
       lastSeen: null,
-      enrichedAt: new Date().toISOString()
+      enrichedAt: new Date().toISOString(),
     };
 
     try {
@@ -78,9 +82,9 @@ class ThreatIntelService {
       }
 
       const results = await Promise.allSettled(enrichmentPromises);
-      
+
       // Aggregate results
-      results.forEach(result => {
+      results.forEach((result) => {
         if (result.status === 'fulfilled' && result.value) {
           const data = result.value;
           if (data.source) enrichment.sources.push(data.source);
@@ -102,7 +106,6 @@ class ThreatIntelService {
       enrichment.tags = [...new Set(enrichment.tags)];
       enrichment.relatedMalware = [...new Set(enrichment.relatedMalware)];
       enrichment.relatedCampaigns = [...new Set(enrichment.relatedCampaigns)];
-
     } catch (error) {
       console.error('IOC enrichment error:', error.message);
       enrichment.error = error.message;
@@ -119,27 +122,27 @@ class ThreatIntelService {
 
     try {
       const response = await axios.get(`${this.vtBaseUrl}/ip_addresses/${ip}`, {
-        headers: { 'x-apikey': this.vtApiKey }
+        headers: { 'x-apikey': this.vtApiKey },
       });
 
       const data = response.data.data;
       const stats = data.attributes.last_analysis_stats || {};
       const malicious = stats.malicious > 0;
-      const riskScore = Math.min(100, (stats.malicious * 10) + (stats.suspicious * 5));
+      const riskScore = Math.min(100, stats.malicious * 10 + stats.suspicious * 5);
 
       return {
         source: 'VirusTotal',
         malicious,
         riskScore,
         tags: data.attributes.tags || [],
-        lastSeen: data.attributes.last_modification_date 
-          ? new Date(data.attributes.last_modification_date * 1000).toISOString() 
+        lastSeen: data.attributes.last_modification_date
+          ? new Date(data.attributes.last_modification_date * 1000).toISOString()
           : null,
         details: {
           asOwner: data.attributes.as_owner,
           country: data.attributes.country,
-          detections: stats
-        }
+          detections: stats,
+        },
       };
     } catch (error) {
       console.error('VirusTotal IP error:', error.message);
@@ -155,27 +158,27 @@ class ThreatIntelService {
 
     try {
       const response = await axios.get(`${this.vtBaseUrl}/domains/${domain}`, {
-        headers: { 'x-apikey': this.vtApiKey }
+        headers: { 'x-apikey': this.vtApiKey },
       });
 
       const data = response.data.data;
       const stats = data.attributes.last_analysis_stats || {};
       const malicious = stats.malicious > 0;
-      const riskScore = Math.min(100, (stats.malicious * 10) + (stats.suspicious * 5));
+      const riskScore = Math.min(100, stats.malicious * 10 + stats.suspicious * 5);
 
       return {
         source: 'VirusTotal',
         malicious,
         riskScore,
         tags: data.attributes.tags || [],
-        lastSeen: data.attributes.last_modification_date 
-          ? new Date(data.attributes.last_modification_date * 1000).toISOString() 
+        lastSeen: data.attributes.last_modification_date
+          ? new Date(data.attributes.last_modification_date * 1000).toISOString()
           : null,
         details: {
           registrar: data.attributes.registrar,
           creationDate: data.attributes.creation_date,
-          detections: stats
-        }
+          detections: stats,
+        },
       };
     } catch (error) {
       console.error('VirusTotal domain error:', error.message);
@@ -191,34 +194,34 @@ class ThreatIntelService {
 
     try {
       const response = await axios.get(`${this.vtBaseUrl}/files/${hash}`, {
-        headers: { 'x-apikey': this.vtApiKey }
+        headers: { 'x-apikey': this.vtApiKey },
       });
 
       const data = response.data.data;
       const stats = data.attributes.last_analysis_stats || {};
       const malicious = stats.malicious > 0;
-      const riskScore = Math.min(100, (stats.malicious * 2));
+      const riskScore = Math.min(100, stats.malicious * 2);
 
       return {
         source: 'VirusTotal',
         malicious,
         riskScore,
         tags: data.attributes.tags || [],
-        relatedMalware: data.attributes.popular_threat_classification?.suggested_threat_label 
-          ? [data.attributes.popular_threat_classification.suggested_threat_label] 
+        relatedMalware: data.attributes.popular_threat_classification?.suggested_threat_label
+          ? [data.attributes.popular_threat_classification.suggested_threat_label]
           : [],
-        firstSeen: data.attributes.first_submission_date 
-          ? new Date(data.attributes.first_submission_date * 1000).toISOString() 
+        firstSeen: data.attributes.first_submission_date
+          ? new Date(data.attributes.first_submission_date * 1000).toISOString()
           : null,
-        lastSeen: data.attributes.last_analysis_date 
-          ? new Date(data.attributes.last_analysis_date * 1000).toISOString() 
+        lastSeen: data.attributes.last_analysis_date
+          ? new Date(data.attributes.last_analysis_date * 1000).toISOString()
           : null,
         details: {
           fileName: data.attributes.meaningful_name,
           fileType: data.attributes.type_description,
           fileSize: data.attributes.size,
-          detections: stats
-        }
+          detections: stats,
+        },
       };
     } catch (error) {
       console.error('VirusTotal hash error:', error.message);
@@ -235,26 +238,26 @@ class ThreatIntelService {
     try {
       const urlId = Buffer.from(url).toString('base64').replace(/=/g, '');
       const response = await axios.get(`${this.vtBaseUrl}/urls/${urlId}`, {
-        headers: { 'x-apikey': this.vtApiKey }
+        headers: { 'x-apikey': this.vtApiKey },
       });
 
       const data = response.data.data;
       const stats = data.attributes.last_analysis_stats || {};
       const malicious = stats.malicious > 0;
-      const riskScore = Math.min(100, (stats.malicious * 10) + (stats.suspicious * 5));
+      const riskScore = Math.min(100, stats.malicious * 10 + stats.suspicious * 5);
 
       return {
         source: 'VirusTotal',
         malicious,
         riskScore,
         tags: data.attributes.tags || [],
-        lastSeen: data.attributes.last_analysis_date 
-          ? new Date(data.attributes.last_analysis_date * 1000).toISOString() 
+        lastSeen: data.attributes.last_analysis_date
+          ? new Date(data.attributes.last_analysis_date * 1000).toISOString()
           : null,
         details: {
           finalUrl: data.attributes.last_final_url,
-          detections: stats
-        }
+          detections: stats,
+        },
       };
     } catch (error) {
       console.error('VirusTotal URL error:', error.message);
@@ -271,7 +274,7 @@ class ThreatIntelService {
     try {
       const response = await axios.get(`${this.abuseipdbBaseUrl}/check`, {
         params: { ipAddress: ip, maxAgeInDays: 90, verbose: true },
-        headers: { 'Key': this.abuseipdbApiKey, 'Accept': 'application/json' }
+        headers: { Key: this.abuseipdbApiKey, Accept: 'application/json' },
       });
 
       const data = response.data.data;
@@ -290,8 +293,8 @@ class ThreatIntelService {
           isp: data.isp,
           domain: data.domain,
           isWhitelisted: data.isWhitelisted,
-          reports: data.reports?.slice(0, 5)
-        }
+          reports: data.reports?.slice(0, 5),
+        },
       };
     } catch (error) {
       console.error('AbuseIPDB error:', error.message);
@@ -307,7 +310,7 @@ class ThreatIntelService {
 
     try {
       const response = await axios.get(`${this.shodanBaseUrl}/shodan/host/${ip}`, {
-        params: { key: this.shodanApiKey }
+        params: { key: this.shodanApiKey },
       });
 
       const data = response.data;
@@ -327,8 +330,12 @@ class ThreatIntelService {
           ports: data.ports,
           vulns: vulns,
           hostnames: data.hostnames,
-          services: data.data?.map(s => ({ port: s.port, product: s.product, version: s.version }))
-        }
+          services: data.data?.map((s) => ({
+            port: s.port,
+            product: s.product,
+            version: s.version,
+          })),
+        },
       };
     } catch (error) {
       console.error('Shodan error:', error.message);
@@ -343,16 +350,21 @@ class ThreatIntelService {
     if (!this.otxApiKey) return this.simulatedOTXResponse(type, value);
 
     try {
-      const endpoint = type === 'file' ? `indicators/file/${value}/general` :
-                       type === 'IPv4' ? `indicators/IPv4/${value}/general` :
-                       type === 'domain' ? `indicators/domain/${value}/general` :
-                       type === 'url' ? `indicators/url/${encodeURIComponent(value)}/general` :
-                       null;
-      
+      const endpoint =
+        type === 'file'
+          ? `indicators/file/${value}/general`
+          : type === 'IPv4'
+            ? `indicators/IPv4/${value}/general`
+            : type === 'domain'
+              ? `indicators/domain/${value}/general`
+              : type === 'url'
+                ? `indicators/url/${encodeURIComponent(value)}/general`
+                : null;
+
       if (!endpoint) return null;
 
       const response = await axios.get(`${this.otxBaseUrl}/${endpoint}`, {
-        headers: { 'X-OTX-API-KEY': this.otxApiKey }
+        headers: { 'X-OTX-API-KEY': this.otxApiKey },
       });
 
       const data = response.data;
@@ -364,14 +376,14 @@ class ThreatIntelService {
         source: 'AlienVault OTX',
         malicious,
         riskScore,
-        tags: data.pulse_info?.pulses?.flatMap(p => p.tags || []) || [],
-        relatedMalware: data.pulse_info?.pulses?.flatMap(p => p.malware_families || []) || [],
-        relatedCampaigns: data.pulse_info?.pulses?.map(p => p.name) || [],
+        tags: data.pulse_info?.pulses?.flatMap((p) => p.tags || []) || [],
+        relatedMalware: data.pulse_info?.pulses?.flatMap((p) => p.malware_families || []) || [],
+        relatedCampaigns: data.pulse_info?.pulses?.map((p) => p.name) || [],
         details: {
           pulseCount,
           reputation: data.reputation,
-          validation: data.validation
-        }
+          validation: data.validation,
+        },
       };
     } catch (error) {
       console.error('AlienVault OTX error:', error.message);
@@ -383,7 +395,7 @@ class ThreatIntelService {
    * Batch enrich multiple IOCs
    */
   async batchEnrich(indicators) {
-    const enrichmentPromises = indicators.map(ioc => this.enrichIOC(ioc));
+    const enrichmentPromises = indicators.map((ioc) => this.enrichIOC(ioc));
     return Promise.all(enrichmentPromises);
   }
 
@@ -396,7 +408,7 @@ class ThreatIntelService {
       malicious: hash % 4 === 0,
       riskScore: hash % 80,
       tags: hash % 3 === 0 ? ['suspicious', 'malware'] : [],
-      simulated: true
+      simulated: true,
     };
   }
 
@@ -407,7 +419,7 @@ class ThreatIntelService {
       malicious: hash % 5 === 0,
       riskScore: hash % 60,
       tags: ['datacenter'],
-      simulated: true
+      simulated: true,
     };
   }
 
@@ -419,7 +431,7 @@ class ThreatIntelService {
       riskScore: hash % 40,
       tags: hash % 2 === 0 ? ['cloud', 'vpn'] : [],
       details: { ports: [22, 80, 443] },
-      simulated: true
+      simulated: true,
     };
   }
 
@@ -431,14 +443,14 @@ class ThreatIntelService {
       riskScore: hash % 70,
       tags: ['apt', 'targeted'],
       relatedCampaigns: hash % 3 === 0 ? ['APT29', 'FIN7'] : [],
-      simulated: true
+      simulated: true,
     };
   }
 
   simpleHash(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash = (hash << 5) - hash + str.charCodeAt(i);
       hash = hash & hash;
     }
     return Math.abs(hash) % 100;

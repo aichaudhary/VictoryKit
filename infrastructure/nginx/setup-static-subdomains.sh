@@ -6,71 +6,71 @@ set -e
 
 # Tool configurations - Array of tool names
 declare -a TOOLS=(
-    "fraudguard"
-    "darkwebmonitor"
-    "zerodaydetect"
-    "ransomshield"
-    "phishnetai"
-    "vulnscan"
-    "pentestai"
-    "codesentinel"
-    "runtimeguard"
-    "dataguardian"
-    "incidentresponse"
-    "xdrplatform"
-    "identityforge"
-    "secretvault"
-    "privilegeguard"
-    "networkforensics"
-    "audittrailpro"
-    "threatmodel"
-    "riskquantify"
-    "securitydashboard"
-    "wafmanager"
-    "apishield"
-    "botmitigation"
-    "ddosdefender"
-    "sslmonitor"
-    "blueteamai"
-    "siemcommander"
-    "soarengine"
-    "behavioranalytics"
-    "policyengine"
-    "cloudposture"
-    "zerotrustm"
-    "kubearmor"
-    "containerscan"
-    "emaildefender"
-    "browserisolation"
-    "dnsfirewall"
-    "firewallai"
-    "vpnanalyzer"
-    "wirelesshunter"
-    "dlpadvanced"
-    "iotsentinel"
-    "mobileshield"
-    "supplychainai"
-    "drplan"
-    "privacyshield"
-    "gdprcompliance"
-    "hipaaguard"
-    "soc2automator"
-    "iso27001"
+	"fraudguard"
+	"darkwebmonitor"
+	"zerodaydetect"
+	"ransomshield"
+	"phishnetai"
+	"vulnscan"
+	"pentestai"
+	"codesentinel"
+	"runtimeguard"
+	"dataguardian"
+	"incidentcommand"
+	"xdrplatform"
+	"identityforge"
+	"secretvault"
+	"privilegeguard"
+	"networkforensics"
+	"audittrailpro"
+	"threatmodel"
+	"riskquantify"
+	"securitydashboard"
+	"wafmanager"
+	"apishield"
+	"botmitigation"
+	"ddosdefender"
+	"sslmonitor"
+	"blueteamai"
+	"siemcommander"
+	"soarengine"
+	"behavioranalytics"
+	"policyengine"
+	"cloudposture"
+	"zerotrustm"
+	"kubearmor"
+	"containerscan"
+	"emaildefender"
+	"browserisolation"
+	"dnsfirewall"
+	"firewallai"
+	"vpnanalyzer"
+	"wirelesshunter"
+	"dlpadvanced"
+	"iotsentinel"
+	"mobileshield"
+	"supplychainai"
+	"drplan"
+	"privacyshield"
+	"gdprcompliance"
+	"hipaaguard"
+	"soc2automator"
+	"iso27001"
 )
 
 # API port starts at 4001
 api_port=4001
 
 for tool in "${TOOLS[@]}"; do
-    # Check if the tool directory exists
-    if [ -d "/var/www/tools/${tool}" ]; then
-        root_dir="/var/www/tools/${tool}"
-    else
-        root_dir="/var/www/tools/${tool}"
-        mkdir -p "$root_dir"
-    fi
-    
-    cat > /etc/nginx/sites-available/${tool}.maula.ai << TOOLEOF
+	# Check if the tool directory exists
+	if [ -d "/var/www/tools/${tool}" ]; then
+		root_dir="/var/www/tools/${tool}"
+	else
+		root_dir="/var/www/tools/${tool}"
+		mkdir -p "$root_dir"
+	fi
+
+	cat >/etc/nginx/sites-available/${tool}.maula.ai <<TOOLEOF
 server {
     listen 443 ssl http2;
     server_name ${tool}.maula.ai;
@@ -121,11 +121,11 @@ server {
 }
 TOOLEOF
 
-    # Enable site
-    ln -sf /etc/nginx/sites-available/${tool}.maula.ai /etc/nginx/sites-enabled/
-    echo "✓ ${tool}.maula.ai -> ${root_dir} (API: ${api_port})"
-    
-    ((api_port++))
+	# Enable site
+	ln -sf /etc/nginx/sites-available/${tool}.maula.ai /etc/nginx/sites-enabled/
+	echo "✓ ${tool}.maula.ai -> ${root_dir} (API: ${api_port})"
+
+	((api_port++))
 done
 
 # Test nginx configuration

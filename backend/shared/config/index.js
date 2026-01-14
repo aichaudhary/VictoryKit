@@ -2,7 +2,7 @@ require('dotenv').config({ path: require('path').resolve(__dirname, '../../../.e
 
 const config = {
   env: process.env.NODE_ENV || 'development',
-  
+
   // MongoDB
   mongodb: {
     uri: process.env.MONGODB_URI || 'mongodb://localhost:27017',
@@ -19,7 +19,7 @@ const config = {
       codesentinel: 'victorykit_codesentinel',
       runtimeguard: 'victorykit_runtimeguard',
       dataguardian: 'victorykit_dataguardian',
-      incidentresponse: 'victorykit_incidentresponse',
+      incidentcommand: 'victorykit_incidentcommand',
       xdrplatform: 'victorykit_xdrplatform',
       identityforge: 'victorykit_identityforge',
       secretvault: 'victorykit_secretvault',
@@ -40,39 +40,39 @@ const config = {
       behavioranalytics: 'victorykit_behavioranalytics',
       policyengine: 'victorykit_policyengine',
       cloudsecure: 'victorykit_cloudsecure',
-      apishield: 'victorykit_apishield'
-    }
+      apishield: 'victorykit_apishield',
+    },
   },
-  
+
   // AWS
   aws: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     region: process.env.AWS_REGION || 'ap-southeast-1',
-    s3Bucket: process.env.AWS_S3_BUCKET || 'victorykit'
+    s3Bucket: process.env.AWS_S3_BUCKET || 'victorykit',
   },
-  
+
   // JWT
   jwt: {
     secret: process.env.JWT_SECRET || 'dev-secret-change-in-production',
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d'
+    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
   },
-  
+
   // Stripe
   stripe: {
     secretKey: process.env.STRIPE_SECRET_KEY,
     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
     toolPrice: parseInt(process.env.TOOL_PRICE_CENTS) || 100,
-    accessHours: parseInt(process.env.TOOL_ACCESS_HOURS) || 24
+    accessHours: parseInt(process.env.TOOL_ACCESS_HOURS) || 24,
   },
-  
+
   // CORS
   cors: {
-    origin: process.env.CORS_ORIGIN || '*'
+    origin: process.env.CORS_ORIGIN || '*',
   },
-  
+
   // Ports
   ports: {
     auth: parseInt(process.env.PORT_AUTH) || 5000,
@@ -87,7 +87,7 @@ const config = {
     codesentinel: 4008,
     runtimeguard: 4009,
     dataguardian: 4010,
-    incidentresponse: 4011,
+    incidentcommand: 4011,
     xdrplatform: 4012,
     identityforge: 4013,
     secretvault: 4014,
@@ -108,15 +108,15 @@ const config = {
     behavioranalytics: 4029,
     policyengine: 4030,
     cloudsecure: parseInt(process.env.PORT_CLOUDSECURE) || 4031,
-    apishield: 4032
+    apishield: 4032,
   },
-  
+
   // ML Engines (local for now)
   ml: {
     ransomshield: 'http://localhost:8004',
     phishnetai: 'http://localhost:8005',
-    vulnscan: 'http://localhost:8006'
-  }
+    vulnscan: 'http://localhost:8006',
+  },
 };
 
 module.exports = config;

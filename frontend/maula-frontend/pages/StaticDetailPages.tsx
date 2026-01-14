@@ -32,7 +32,7 @@ const BaseStaticPage: React.FC<{
             {icon}
             <span className={`text-[10px] font-black tracking-[0.4em] uppercase text-${colorClass}`}>MAULA AI Platform</span>
           </div>
-          <h1 className={`text-7xl font-black tracking-tighter uppercase leading-tight`}>
+          <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase leading-tight`}>
             {title}
           </h1>
           <p className="text-xl text-white/50 leading-relaxed max-w-2xl">{subtitle}</p>
@@ -58,7 +58,7 @@ export const AboutUs = () => (
 
 export const Careers = () => (
   <BaseStaticPage title="Join the Force" subtitle="Help us build the next generation of autonomous security." colorClass="emerald-500" icon={<Users className="w-4 h-4 text-emerald-500" />}>
-    <h3 className="text-3xl font-bold mb-8">Open Roles</h3>
+    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-8">Open Roles</h3>
     <ul className="space-y-4">
       {['Senior Neural Engineer', 'Lattice Architect', 'Offensive AI Researcher', 'Technical Product Manager'].map((role, i) => (
         <li key={i} className="flex justify-between items-center p-6 glass rounded-2xl border border-white/5 hover:bg-white/5 cursor-pointer transition-all">

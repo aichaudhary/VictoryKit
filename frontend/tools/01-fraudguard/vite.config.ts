@@ -11,8 +11,8 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     
-    // Root path for subdomain deployment (fraudguard.maula.ai/maula)
-    base: '/maula/',
+    // Root path for subdomain deployment (fraudguard.maula.ai)
+    base: '/',
     
     server: {
       port: 3001,

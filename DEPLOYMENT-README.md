@@ -1,6 +1,7 @@
 # MAULA.AI Production Deployment
 
-This script automates the complete deployment process for MAULA.AI, including git operations and production deployment to AWS EC2.
+This script automates the complete deployment process for MAULA.AI, including
+git operations and production deployment to AWS EC2.
 
 ## 🚀 Quick Start
 
@@ -47,11 +48,15 @@ TOOLS_CONFIG=(
 
 ## 🏗️ What Gets Deployed
 
-### Main Dashboard
+### Main Dashboard (maula-frontend)
 
 - **URL:** https://maula.ai
-- **Port:** 3000
-- **Path:** `/var/www/maula.ai`
+- **Tech:** Vite + React 19
+- **Path:** `/var/www/maula.ai/live` ⚠️ NOT `/var/www/maula.ai/` !
+- **Deploy Script:** `./scripts/deploy-maula-frontend.sh`
+
+> **⚠️ IMPORTANT:** Nginx serves from `/var/www/maula.ai/live/` - DO NOT deploy
+> to `/var/www/maula.ai/`
 
 ### Tools
 

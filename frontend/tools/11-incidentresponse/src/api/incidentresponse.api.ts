@@ -1,17 +1,32 @@
 /**
- * IncidentResponse API Client
+ * incidentcommand API Client
  * Tool 11 - AI-Powered Security Incident Management
- * 
- * TypeScript client for communicating with IncidentResponse backend
+ *
+ * TypeScript client for communicating with incidentcommand backend
  */
 
-const API_BASE_URL = import.meta.env.VITE_INCIDENTRESPONSE_API_URL || 'http://localhost:4011/api/v1/incidentresponse';
+const API_BASE_URL =
+  import.meta.env.VITE_incidentcommand_API_URL || 'http://localhost:4011/api/v1/incidentcommand';
 
 // ============= Types =============
 
 export type IncidentSeverity = 'critical' | 'high' | 'medium' | 'low' | 'informational';
-export type IncidentStatus = 'open' | 'investigating' | 'contained' | 'eradicated' | 'recovered' | 'closed';
-export type IncidentCategory = 'malware' | 'phishing' | 'data-breach' | 'ddos' | 'unauthorized-access' | 'insider-threat' | 'ransomware' | 'other';
+export type IncidentStatus =
+  | 'open'
+  | 'investigating'
+  | 'contained'
+  | 'eradicated'
+  | 'recovered'
+  | 'closed';
+export type IncidentCategory =
+  | 'malware'
+  | 'phishing'
+  | 'data-breach'
+  | 'ddos'
+  | 'unauthorized-access'
+  | 'insider-threat'
+  | 'ransomware'
+  | 'other';
 
 export interface Incident {
   _id: string;
@@ -170,17 +185,14 @@ export interface Pagination {
 
 // ============= API Client =============
 
-class IncidentResponseApi {
+class incidentcommandApi {
   private baseUrl: string;
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
   }
 
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<ApiResponse<T>> {
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         ...options,
@@ -191,7 +203,7 @@ class IncidentResponseApi {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         return { success: false, error: data.error || 'Request failed' };
       }
@@ -199,9 +211,9 @@ class IncidentResponseApi {
       return data;
     } catch (error) {
       console.error(`API Error [${endpoint}]:`, error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Network error' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Network error',
       };
     }
   }
@@ -242,7 +254,7 @@ class IncidentResponseApi {
     if (filters?.assignee) params.append('assignee', filters.assignee);
     if (filters?.page) params.append('page', String(filters.page));
     if (filters?.limit) params.append('limit', String(filters.limit));
-    
+
     return this.request(`/incidents?${params.toString()}`);
   }
 
@@ -250,61 +262,83 @@ class IncidentResponseApi {
     return this.request(`/incidents/${incidentId}`);
   }
 
-  async updateIncident(incidentId: string, data: Partial<Incident>): Promise<ApiResponse<{ incident: Incident }>> {
+  async updateIncident(
+    incidentId: string,
+    data: Partial<Incident>
+  ): Promise<ApiResponse<{ incident: Incident }>> {
     return this.request(`/incidents/${incidentId}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
   }
 
-  async updateStatus(incidentId: string, status: IncidentStatus, notes?: string): Promise<ApiResponse<{ incident: Incident }>> {
+  async updateStatus(
+    incidentId: string,
+    status: IncidentStatus,
+    notes?: string
+  ): Promise<ApiResponse<{ incident: Incident }>> {
     return this.request(`/incidents/${incidentId}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status, notes }),
     });
   }
 
-  async assignIncident(incidentId: string, assignee: string): Promise<ApiResponse<{ incident: Incident }>> {
+  async assignIncident(
+    incidentId: string,
+    assignee: string
+  ): Promise<ApiResponse<{ incident: Incident }>> {
     return this.request(`/incidents/${incidentId}/assign`, {
       method: 'POST',
       body: JSON.stringify({ assignee }),
     });
   }
 
-  async addTimelineEntry(incidentId: string, entry: {
-    action: string;
-    performedBy: string;
-    details?: string;
-  }): Promise<ApiResponse<{ incident: Incident }>> {
+  async addTimelineEntry(
+    incidentId: string,
+    entry: {
+      action: string;
+      performedBy: string;
+      details?: string;
+    }
+  ): Promise<ApiResponse<{ incident: Incident }>> {
     return this.request(`/incidents/${incidentId}/timeline`, {
       method: 'POST',
       body: JSON.stringify(entry),
     });
   }
 
-  async addIndicator(incidentId: string, indicator: Partial<Indicator>): Promise<ApiResponse<{ incident: Incident }>> {
+  async addIndicator(
+    incidentId: string,
+    indicator: Partial<Indicator>
+  ): Promise<ApiResponse<{ incident: Incident }>> {
     return this.request(`/incidents/${incidentId}/indicators`, {
       method: 'POST',
       body: JSON.stringify(indicator),
     });
   }
 
-  async executeContainment(incidentId: string, action: {
-    action: string;
-    target: string;
-    executedBy: string;
-  }): Promise<ApiResponse<{ result: ContainmentAction }>> {
+  async executeContainment(
+    incidentId: string,
+    action: {
+      action: string;
+      target: string;
+      executedBy: string;
+    }
+  ): Promise<ApiResponse<{ result: ContainmentAction }>> {
     return this.request(`/incidents/${incidentId}/containment`, {
       method: 'POST',
       body: JSON.stringify(action),
     });
   }
 
-  async closeIncident(incidentId: string, data: {
-    rootCause?: string;
-    lessonsLearned?: string;
-    closedBy: string;
-  }): Promise<ApiResponse<{ incident: Incident }>> {
+  async closeIncident(
+    incidentId: string,
+    data: {
+      rootCause?: string;
+      lessonsLearned?: string;
+      closedBy: string;
+    }
+  ): Promise<ApiResponse<{ incident: Incident }>> {
     return this.request(`/incidents/${incidentId}/close`, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -317,39 +351,48 @@ class IncidentResponseApi {
     return this.request('/dashboard');
   }
 
-  async getMetrics(timeRange?: string): Promise<ApiResponse<{
-    mttr: number;
-    mttd: number;
-    mttc: number;
-    incidentsByDay: { date: string; count: number }[];
-    resolutionRate: number;
-  }>> {
+  async getMetrics(timeRange?: string): Promise<
+    ApiResponse<{
+      mttr: number;
+      mttd: number;
+      mttc: number;
+      incidentsByDay: { date: string; count: number }[];
+      resolutionRate: number;
+    }>
+  > {
     const params = timeRange ? `?timeRange=${timeRange}` : '';
     return this.request(`/metrics${params}`);
   }
 
   // ============= AI Analysis =============
 
-  async analyzeIncident(incidentId: string, analysisType?: string): Promise<ApiResponse<AIAnalysis>> {
+  async analyzeIncident(
+    incidentId: string,
+    analysisType?: string
+  ): Promise<ApiResponse<AIAnalysis>> {
     return this.request(`/incidents/${incidentId}/analyze`, {
       method: 'POST',
       body: JSON.stringify({ analysisType }),
     });
   }
 
-  async getRecommendations(incidentId: string): Promise<ApiResponse<{
-    recommendations: string[];
-    playbooks: Playbook[];
-    aiPowered: boolean;
-  }>> {
+  async getRecommendations(incidentId: string): Promise<
+    ApiResponse<{
+      recommendations: string[];
+      playbooks: Playbook[];
+      aiPowered: boolean;
+    }>
+  > {
     return this.request(`/incidents/${incidentId}/recommendations`);
   }
 
-  async correlateIndicators(indicators: Partial<Indicator>[]): Promise<ApiResponse<{
-    relatedIncidents: IncidentSummary[];
-    threatIntel: any[];
-    riskScore: number;
-  }>> {
+  async correlateIndicators(indicators: Partial<Indicator>[]): Promise<
+    ApiResponse<{
+      relatedIncidents: IncidentSummary[];
+      threatIntel: any[];
+      riskScore: number;
+    }>
+  > {
     return this.request('/correlate', {
       method: 'POST',
       body: JSON.stringify({ indicators }),
@@ -367,7 +410,7 @@ class IncidentResponseApi {
     if (filters?.category) params.append('category', filters.category);
     if (filters?.severity) params.append('severity', filters.severity);
     if (filters?.active !== undefined) params.append('active', String(filters.active));
-    
+
     return this.request(`/playbooks?${params.toString()}`);
   }
 
@@ -375,14 +418,19 @@ class IncidentResponseApi {
     return this.request(`/playbooks/${playbookId}`);
   }
 
-  async executePlaybook(incidentId: string, playbookId: string): Promise<ApiResponse<{
-    execution: {
-      executionId: string;
-      status: string;
-      currentStep: number;
-      results: any[];
-    };
-  }>> {
+  async executePlaybook(
+    incidentId: string,
+    playbookId: string
+  ): Promise<
+    ApiResponse<{
+      execution: {
+        executionId: string;
+        status: string;
+        currentStep: number;
+        results: any[];
+      };
+    }>
+  > {
     return this.request(`/incidents/${incidentId}/execute-playbook`, {
       method: 'POST',
       body: JSON.stringify({ playbookId }),
@@ -391,22 +439,28 @@ class IncidentResponseApi {
 
   // ============= Team & Communication =============
 
-  async notifyTeam(incidentId: string, data: {
-    channel: 'email' | 'slack' | 'pagerduty' | 'teams';
-    recipients?: string[];
-    message?: string;
-  }): Promise<ApiResponse<{ sent: boolean }>> {
+  async notifyTeam(
+    incidentId: string,
+    data: {
+      channel: 'email' | 'slack' | 'pagerduty' | 'teams';
+      recipients?: string[];
+      message?: string;
+    }
+  ): Promise<ApiResponse<{ sent: boolean }>> {
     return this.request(`/incidents/${incidentId}/notify`, {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  async escalateIncident(incidentId: string, data: {
-    escalateTo: string;
-    reason: string;
-    newSeverity?: IncidentSeverity;
-  }): Promise<ApiResponse<{ incident: Incident }>> {
+  async escalateIncident(
+    incidentId: string,
+    data: {
+      escalateTo: string;
+      reason: string;
+      newSeverity?: IncidentSeverity;
+    }
+  ): Promise<ApiResponse<{ incident: Incident }>> {
     return this.request(`/incidents/${incidentId}/escalate`, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -415,10 +469,10 @@ class IncidentResponseApi {
 }
 
 // Export singleton instance
-export const incidentResponseApi = new IncidentResponseApi();
+export const incidentcommandApi = new incidentcommandApi();
 
 // Export class for testing/custom instances
-export { IncidentResponseApi };
+export { incidentcommandApi };
 
 // ============= Simulation Helper =============
 
@@ -429,12 +483,13 @@ export const simulatedData = {
   generateIncident(severity: IncidentSeverity = 'high', status: IncidentStatus = 'open'): Incident {
     const id = `INC-${Date.now()}`;
     const now = new Date();
-    
+
     return {
       _id: id,
       incidentId: id,
       title: 'Suspicious Login Activity Detected',
-      description: 'Multiple failed login attempts followed by successful login from unusual location',
+      description:
+        'Multiple failed login attempts followed by successful login from unusual location',
       severity,
       status,
       category: 'unauthorized-access',
@@ -494,11 +549,11 @@ export const simulatedData = {
     },
     byCategory: {
       'unauthorized-access': 45,
-      'malware': 32,
-      'phishing': 28,
+      malware: 32,
+      phishing: 28,
       'data-breach': 12,
-      'ddos': 8,
-      'other': 31,
+      ddos: 8,
+      other: 31,
     },
     metrics: {
       avgTimeToDetect: 15,
