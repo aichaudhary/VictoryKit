@@ -22,6 +22,8 @@ import {
   Skull,
   Flame,
   Radio,
+  ArrowLeft,
+  Bot,
 } from "lucide-react";
 import MalwareScanForm, { ScanConfig } from "./MalwareScanForm";
 import LiveScanPanel, { ScanStep, ScanEvent } from "./LiveScanPanel";
@@ -584,13 +586,25 @@ const RansomShieldTool: React.FC = () => {
       {/* Floating Threat Counter */}
       <FloatingThreatCounter count={threatsFound} isScanning={isScanning} />
 
+      {/* Back to Maula Button - Fixed Top Right */}
+      <a
+        href="https://maula.ai/#tool-section-4"
+        className="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl bg-slate-900/80 backdrop-blur-sm border border-purple-500/30 text-white hover:bg-slate-800/90 transition-all flex items-center gap-2 shadow-xl hover:shadow-purple-500/20 group"
+      >
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        <span className="font-bold text-sm">Back to Maula</span>
+      </a>
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-6">
         {/* Epic Header Section */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-5">
-              {/* Animated Logo */}
-              <div className="relative group">
+              {/* Animated Logo - Clickable Branding */}
+              <a
+                href="https://ransomshield.maula.ai"
+                className="relative group cursor-pointer"
+              >
                 <div className={`absolute -inset-2 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 opacity-50 blur-lg transition-all duration-500 ${isScanning ? 'animate-pulse opacity-75' : 'group-hover:opacity-75'}`} />
                 <div className={`relative w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-red-500 flex items-center justify-center shadow-2xl ${isScanning ? 'scanning-active' : ''}`}>
                   <Bug className={`w-9 h-9 text-white ${isScanning ? 'animate-bounce' : ''}`} />
@@ -610,7 +624,7 @@ const RansomShieldTool: React.FC = () => {
                 }`}>
                   {isScanning && <div className="w-2 h-2 bg-white rounded-full" />}
                 </div>
-              </div>
+              </a>
               
               <div>
                 <div className="flex items-center gap-3">
@@ -628,8 +642,20 @@ const RansomShieldTool: React.FC = () => {
               </div>
             </div>
             
-            {/* Status Beacon */}
-            <StatusBeacon status={currentStatus} />
+            {/* Right Side Actions */}
+            <div className="flex items-center gap-4">
+              {/* AI Assistant Button */}
+              <a
+                href="/neural-link/"
+                className="px-5 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold hover:brightness-110 transition-all flex items-center gap-2 shadow-lg hover:shadow-purple-500/50 group"
+              >
+                <Bot className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span className="text-sm">AI Assistant</span>
+              </a>
+
+              {/* Status Beacon */}
+              <StatusBeacon status={currentStatus} />
+            </div>
           </div>
 
           {/* Epic Stats Bar */}

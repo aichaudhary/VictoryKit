@@ -25,6 +25,9 @@ import {
   Unlock,
   FileText,
   FolderOpen,
+  Globe,
+  Hash,
+  Clock,
 } from 'lucide-react';
 import { RadarSweep, ParticleNetwork, DataStream, HexGrid, PulseRings, FloatingIcons } from '../components/AnimatedBackground';
 
@@ -461,71 +464,244 @@ const RansomShieldDetail: React.FC = () => {
             </div>
           </div>
 
-          {/* Ransom Shield Protection Matrix Visualization */}
-          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-red-500/20 shadow-2xl bg-black/80 backdrop-blur-sm">
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Central protection engine */}
-              <div className="relative w-80 h-80">
-                {/* Central protection engine */}
-                <div className="absolute inset-0 border-4 border-red-500/50 rounded-full flex items-center justify-center">
-                  <div className="w-64 h-64 border-2 border-red-400/40 rounded-full flex items-center justify-center">
-                    <div className="w-48 h-48 border border-red-300/30 rounded-full flex items-center justify-center">
-                      {/* Core protection engine */}
-                      <div className="w-32 h-32 bg-red-500/20 rounded-full flex items-center justify-center relative">
-                        <Shield className="w-16 h-16 text-red-400" />
-
-                        {/* Protection modules orbiting */}
-                        {[
-                          { icon: Lock, label: 'Encryption Block' },
-                          { icon: Key, label: 'Key Recovery' },
-                          { icon: FileText, label: 'File Protection' },
-                          { icon: Database, label: 'Backup Secure' },
-                          { icon: Activity, label: 'Behavior Analysis' },
-                          { icon: Target, label: 'Threat Detection' }
-                        ].map((module, i) => (
-                          <div
-                            key={i}
-                            className="absolute w-10 h-10 bg-red-400/15 rounded-full flex items-center justify-center border border-red-400/30"
-                            style={{
-                              top: `${50 + 45 * Math.sin((i * 60) * Math.PI / 180)}%`,
-                              left: `${50 + 45 * Math.cos((i * 60) * Math.PI / 180)}%`,
-                              transform: 'translate(-50%, -50%)',
-                              animationDelay: `${i * 0.15}s`
-                            }}
-                          >
-                            <module.icon className="w-5 h-5 text-red-300" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+          {/* Ransom Shield Malware Scanner Interface */}
+          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-purple-500/30 shadow-2xl bg-gradient-to-br from-purple-950/40 via-slate-900 to-pink-950/30">
+            {/* Header */}
+            <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-purple-900/90 to-pink-900/90 backdrop-blur-sm border-b border-purple-500/30 p-6 z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-xl flex items-center justify-center border border-purple-500/30">
+                    <Shield className="w-7 h-7 text-purple-400" />
+                  </div>
+                  <div>
+                    <div className="text-white font-black text-xl">RansomShield</div>
+                    <div className="text-purple-300 text-xs">AI-Powered Malware Detection & Analysis Engine</div>
                   </div>
                 </div>
-
-                {/* Protection rings */}
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute border border-red-500/20 rounded-full animate-pulse"
-                    style={{
-                      top: `${50 - (i + 1) * 12}%`,
-                      left: `${50 - (i + 1) * 12}%`,
-                      width: `${(i + 1) * 24}%`,
-                      height: `${(i + 1) * 24}%`,
-                      animationDelay: `${i * 0.4}s`
-                    }}
-                  ></div>
-                ))}
+                <div className="flex items-center gap-3">
+                  <div className="px-3 py-2 rounded-lg bg-red-500/20 border border-red-500/30">
+                    <div className="text-red-400 text-xs font-bold">⚠ THREATS FOUND</div>
+                    <div className="text-2xl font-black text-red-400 text-center">3</div>
+                  </div>
+                  <span className="text-xs text-gray-400">v3.0</span>
+                </div>
               </div>
             </div>
 
-            {/* Status overlay */}
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-red-400">PROTECTION: ACTIVE</span>
-                <span className="text-green-400 animate-pulse">● RANSOM SHIELD</span>
+            {/* Main Content Grid */}
+            <div className="absolute inset-0 pt-24 p-6 grid grid-cols-2 gap-4">
+              {/* Left Column - Scanner & Stats */}
+              <div className="space-y-4">
+                {/* Stats Row */}
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { label: 'ACTIVE SCANS', value: '0', icon: Activity, color: 'purple' },
+                    { label: 'FILES PROTECTED', value: '847,298', icon: FileText, color: 'green' },
+                    { label: 'THREATS BLOCKED', value: '12,850', icon: Shield, color: 'red' },
+                    { label: 'LAST UPDATE', value: '12:05:11 AM', icon: Clock, color: 'blue' },
+                  ].map((stat, i) => (
+                    <div key={i} className={`bg-slate-800/40 border border-${stat.color}-500/20 rounded-lg p-2 text-center`}>
+                      <stat.icon className={`w-3 h-3 text-${stat.color}-400 mx-auto mb-1`} />
+                      <div className="text-[7px] text-gray-500 uppercase">{stat.label}</div>
+                      <div className={`text-xs font-black text-${stat.color}-400 tabular-nums mt-0.5`}>{stat.value}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Malware Scanner Card */}
+                <div className="bg-slate-800/50 border border-purple-500/30 rounded-2xl p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Search className="w-4 h-4 text-purple-400" />
+                    <span className="text-sm font-bold text-white">Malware Scanner</span>
+                    <span className="text-[8px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 border border-purple-500/30">AI-Powered</span>
+                  </div>
+
+                  {/* Scan Type Tabs */}
+                  <div className="grid grid-cols-4 gap-1.5 mb-3">
+                    {[
+                      { icon: FileText, label: 'File', active: false },
+                      { icon: Globe, label: 'URL', active: true },
+                      { icon: Hash, label: 'Hash', active: false },
+                      { icon: HardDrive, label: 'Memory', active: false },
+                    ].map((tab, i) => (
+                      <button
+                        key={i}
+                        className={`flex flex-col items-center gap-1 p-2 rounded-lg transition ${
+                          tab.active ? 'bg-purple-500/20 border border-purple-500/40' : 'bg-slate-700/30'
+                        }`}
+                      >
+                        <tab.icon className={`w-3 h-3 ${tab.active ? 'text-purple-400' : 'text-gray-500'}`} />
+                        <span className={`text-[7px] ${tab.active ? 'text-purple-400' : 'text-gray-500'}`}>{tab.label}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* URL Input */}
+                  <div className="mb-3">
+                    <div className="text-[8px] text-gray-400 mb-1">Enter URL to Scan</div>
+                    <div className="bg-slate-900/70 border border-slate-600/50 rounded-lg px-2 py-1.5">
+                      <div className="text-[9px] font-mono text-white">https://ransomshield.maula.ai/</div>
+                    </div>
+                  </div>
+
+                  {/* Scan Depth */}
+                  <div className="text-[8px] text-gray-400 mb-2">Scan Depth</div>
+                  <div className="grid grid-cols-3 gap-1.5 mb-3">
+                    {['Quick', 'Standard', 'Deep'].map((depth, i) => (
+                      <button
+                        key={i}
+                        className={`p-1.5 rounded text-center text-[8px] ${
+                          i === 1 ? 'bg-purple-500 text-white font-bold' : 'bg-slate-700/30 text-gray-400'
+                        }`}
+                      >
+                        <div>{depth}</div>
+                        <div className="text-[7px] opacity-60">{['~10s', '~30s', '~2min'][i]}</div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Start Button */}
+                  <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-2 rounded-lg text-[9px] flex items-center justify-center gap-1.5">
+                    <Zap className="w-3 h-3" />
+                    Start Malware Scan
+                  </button>
+
+                  {/* Footer Stats */}
+                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-700/30">
+                    <span className="text-[7px] text-gray-500">12.8M signatures</span>
+                    <span className="text-[7px] text-green-400">● Real-time protection</span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-2 w-full bg-red-500/10 rounded-full h-1">
-                <div className="bg-red-500 h-1 rounded-full animate-pulse" style={{width: '99%'}}></div>
+
+              {/* Right Column - Analysis & Results */}
+              <div className="space-y-4">
+                {/* Live Analysis */}
+                <div className="bg-slate-800/50 border border-purple-500/30 rounded-2xl p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <div className="text-sm font-bold text-white flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-purple-400" />
+                        Live Analysis
+                      </div>
+                      <div className="text-[8px] text-gray-500">Awaiting scan command</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-black text-purple-400">10/10</div>
+                      <div className="text-[7px] text-gray-500">STEPS</div>
+                    </div>
+                  </div>
+
+                  {/* Quick Stats */}
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="bg-slate-900/50 border border-slate-700/30 rounded p-2">
+                      <div className="text-[8px] text-gray-400">FILES SCANNED</div>
+                      <div className="text-lg font-black text-white">1</div>
+                    </div>
+                    <div className="bg-red-500/10 border border-red-500/30 rounded p-2">
+                      <div className="text-[8px] text-red-400">THREATS FOUND</div>
+                      <div className="text-lg font-black text-red-400">3</div>
+                      <div className="text-[7px] text-red-400">⚠ Action Required</div>
+                    </div>
+                  </div>
+
+                  {/* Analysis Stages */}
+                  <div className="text-[8px] text-gray-400 mb-2 flex items-center gap-1">
+                    <Target className="w-3 h-3" />
+                    ANALYSIS STAGES
+                  </div>
+                  <div className="space-y-1.5">
+                    {[
+                      { name: 'Initializing Engine', complete: true },
+                      { name: 'Signature Scan', complete: true },
+                      { name: 'Heuristic Analysis', complete: true },
+                      { name: 'Behavioral Detection', complete: true },
+                    ].map((stage, i) => (
+                      <div key={i} className={`flex items-center justify-between p-1.5 rounded ${
+                        stage.complete ? 'bg-green-500/10 border border-green-500/30' : 'bg-slate-900/30'
+                      }`}>
+                        <div className="flex items-center gap-2">
+                          <div className={`w-1.5 h-1.5 rounded-full ${stage.complete ? 'bg-green-400' : 'bg-gray-600'}`} />
+                          <span className={`text-[8px] ${stage.complete ? 'text-white' : 'text-gray-500'}`}>{stage.name}</span>
+                        </div>
+                        <span className="text-[7px] text-green-400">{stage.complete && '✓ Complete'}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Scan Results */}
+                <div className="bg-gradient-to-br from-red-500/10 to-pink-500/10 border border-red-500/30 rounded-2xl p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <div className="text-sm font-bold text-white">Scan Results</div>
+                      <div className="text-[8px] text-gray-400">Completed in 20.0s</div>
+                    </div>
+                    <AlertTriangle className="w-5 h-5 text-red-400 animate-pulse" />
+                  </div>
+
+                  {/* Risk Score */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="relative w-16 h-16">
+                      <svg className="w-full h-full -rotate-90">
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="none" className="text-slate-700" />
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="none" className="text-red-500" strokeDasharray={`${(40/100) * 175.93} 175.93`} />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <div className="text-xl font-black text-red-400">40</div>
+                        <div className="text-[6px] text-gray-500">RISK</div>
+                      </div>
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[8px] text-gray-400">Malware</span>
+                        <span className="text-[9px] font-bold text-red-400">1</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[8px] text-gray-400">Suspicious</span>
+                        <span className="text-[9px] font-bold text-yellow-400">2</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[8px] text-gray-400">Threats</span>
+                        <span className="text-[9px] font-bold text-red-400">3</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Detected Threats */}
+                  <div className="text-[8px] text-red-400 mb-2 flex items-center gap-1">
+                    <Shield className="w-3 h-3" />
+                    DETECTED THREATS
+                  </div>
+                  <div className="space-y-1">
+                    {[
+                      { name: 'Adware.BrowserModifier.Win32', severity: 'CRITICAL' },
+                      { name: 'Rootkit.MBR.Infection', severity: 'HIGH' },
+                    ].map((threat, i) => (
+                      <div key={i} className="flex items-center justify-between p-1.5 bg-slate-900/50 border border-red-500/20 rounded">
+                        <span className="text-[8px] text-white font-mono">{threat.name}</span>
+                        <span className="text-[7px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30 font-bold">
+                          {threat.severity}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Status Bar */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-purple-900/90 to-pink-900/90 backdrop-blur-sm border-t border-purple-500/30 px-6 py-3 z-10">
+              <div className="flex items-center justify-between text-[9px] font-mono">
+                <div className="flex items-center gap-4">
+                  <span className="text-purple-400 font-bold">PROTECTION: ACTIVE</span>
+                  <span className="text-gray-500">|</span>
+                  <span className="text-gray-400">Engine: <span className="text-green-400">Online</span></span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <span className="text-gray-400">Scanning: <span className="text-blue-400">Idle</span></span>
+                  <span className="text-green-400 animate-pulse">● MONITORING 24/7</span>
+                </div>
               </div>
             </div>
           </div>
