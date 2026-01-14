@@ -10,6 +10,7 @@ import FraudGuardHomeVisual from './tool-visuals/FraudGuardHomeVisual';
 import DarkWebMonitorHomeVisual from './tool-visuals/DarkWebMonitorHomeVisual';
 import ZeroDayDetectHomeVisual from './tool-visuals/ZeroDayDetectHomeVisual';
 import RansomShieldHomeVisual from './tool-visuals/RansomShieldHomeVisual';
+import PhishNetAIHomeVisual from './tool-visuals/PhishNetAIHomeVisual';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -247,7 +248,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
             ref={imgRef} 
             className="flex-1 relative w-full aspect-video md:aspect-square max-w-2xl rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] group border border-white/10 will-change-transform"
           >
-            {/* Render animated visuals for first 4 tools, static image for others */}
+            {/* Render animated visuals for first 5 tools, static image for others */}
             {tool.id === 1 ? (
               <FraudGuardHomeVisual />
             ) : tool.id === 2 ? (
@@ -256,6 +257,8 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
               <ZeroDayDetectHomeVisual />
             ) : tool.id === 4 ? (
               <RansomShieldHomeVisual />
+            ) : tool.id === 5 ? (
+              <PhishNetAIHomeVisual />
             ) : (
               <>
                 <img 

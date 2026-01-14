@@ -29,6 +29,7 @@ import {
   MousePointer,
 } from 'lucide-react';
 import { RadarSweep, ParticleNetwork, DataStream, HexGrid, PulseRings, FloatingIcons } from '../components/AnimatedBackground';
+import PhishNetAIHomeVisual from '../components/tool-visuals/PhishNetAIHomeVisual';
 
 // ============================================================================
 // EPIC ANIMATED VISUAL COMPONENTS - PHISH NET AI
@@ -548,69 +549,16 @@ const PhishNetAIDetail: React.FC = () => {
 
           {/* AI Detection Network Visualization */}
           <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-purple-500/20 shadow-2xl bg-black/80 backdrop-blur-sm">
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Central AI detection engine */}
-              <div className="relative w-80 h-80">
-                {/* Central AI engine */}
-                <div className="absolute inset-0 border-4 border-purple-500/50 rounded-full flex items-center justify-center">
-                  <div className="w-64 h-64 border-2 border-purple-400/40 rounded-full flex items-center justify-center">
-                    <div className="w-48 h-48 border border-purple-300/30 rounded-full flex items-center justify-center">
-                      {/* Core AI engine */}
-                      <div className="w-32 h-32 bg-purple-500/20 rounded-full flex items-center justify-center relative">
-                        <Brain className="w-16 h-16 text-purple-400" />
-
-                        {/* Detection modules orbiting */}
-                        {[
-                          { icon: Mail, label: 'Email Analysis' },
-                          { icon: Link, label: 'URL Scanner' },
-                          { icon: Globe, label: 'Web Content' },
-                          { icon: MousePointer, label: 'Behavior Analysis' },
-                          { icon: Activity, label: 'Pattern Matching' },
-                          { icon: Target, label: 'Threat Detection' }
-                        ].map((module, i) => (
-                          <div
-                            key={i}
-                            className="absolute w-10 h-10 bg-purple-400/15 rounded-full flex items-center justify-center border border-purple-400/30"
-                            style={{
-                              top: `${50 + 45 * Math.sin((i * 60) * Math.PI / 180)}%`,
-                              left: `${50 + 45 * Math.cos((i * 60) * Math.PI / 180)}%`,
-                              transform: 'translate(-50%, -50%)',
-                              animationDelay: `${i * 0.15}s`
-                            }}
-                          >
-                            <module.icon className="w-5 h-5 text-purple-300" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Detection rings */}
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute border border-purple-500/20 rounded-full animate-pulse"
-                    style={{
-                      top: `${50 - (i + 1) * 12}%`,
-                      left: `${50 - (i + 1) * 12}%`,
-                      width: `${(i + 1) * 24}%`,
-                      height: `${(i + 1) * 24}%`,
-                      animationDelay: `${i * 0.4}s`
-                    }}
-                  ></div>
-                ))}
-              </div>
-            </div>
+            <PhishNetAIHomeVisual />
 
             {/* Status overlay */}
             <div className="absolute bottom-6 left-6 right-6">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-purple-400">AI DETECTION: ACTIVE</span>
-                <span className="text-green-400 animate-pulse">● NEURAL NET</span>
+                <span className="text-emerald-400">PHISHING DETECTION: ACTIVE</span>
+                <span className="text-green-400 animate-pulse">● LIVE SCAN</span>
               </div>
-              <div className="mt-2 w-full bg-purple-500/10 rounded-full h-1">
-                <div className="bg-purple-500 h-1 rounded-full animate-pulse" style={{width: '98%'}}></div>
+              <div className="mt-2 w-full bg-emerald-500/10 rounded-full h-1">
+                <div className="bg-emerald-500 h-1 rounded-full animate-pulse" style={{width: '98%'}}></div>
               </div>
             </div>
           </div>
