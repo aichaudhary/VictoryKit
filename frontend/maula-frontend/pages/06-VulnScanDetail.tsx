@@ -23,6 +23,8 @@ import {
   Crosshair,
   Layers,
   Radar,
+  Bug,
+  Clock,
 } from 'lucide-react';
 import { RadarSweep, ParticleNetwork, DataStream, HexGrid, PulseRings, FloatingIcons } from '../components/AnimatedBackground';
 
@@ -489,21 +491,106 @@ const VulnScanDetail: React.FC = () => {
       ref={containerRef}
       className="min-h-screen bg-[#0a0802] text-white selection:bg-amber-500/30 font-sans overflow-hidden"
     >
-      {/* Epic Animated Background Layers */}
+      {/* Epic Animated Background Layers - Unique VulnScan Theme */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-amber-600/8 blur-[200px] rounded-full" />
-        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-orange-600/6 blur-[250px] rounded-full" />
+        {/* Gradient Blobs - Amber/Orange Theme positioned uniquely */}
+        <div className="absolute top-[15%] right-[-10%] w-[700px] h-[700px] bg-amber-500/10 blur-[180px] rounded-full" />
+        <div className="absolute bottom-[10%] left-[-15%] w-[900px] h-[900px] bg-orange-600/8 blur-[220px] rounded-full" />
+        <div className="absolute top-[50%] left-[40%] w-[500px] h-[500px] bg-yellow-500/5 blur-[150px] rounded-full animate-pulse" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
-        <RadarSweep color="#a855f7" />
-        <ParticleNetwork color="#a855f7" />
-        <RadarSweep color="#a855f7" />
-        <ParticleNetwork color="#a855f7" />
+        
+        {/* Scanning Grid Lines - Unique to VulnScan */}
+        <div className="absolute inset-0 overflow-hidden opacity-20">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <div
+              key={`h-${i}`}
+              className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent"
+              style={{ 
+                top: `${i * 5}%`,
+                animation: `scanLine ${3 + (i % 5) * 0.5}s ease-in-out infinite`,
+                animationDelay: `${i * 0.1}s`
+              }}
+            />
+          ))}
+          {Array.from({ length: 15 }).map((_, i) => (
+            <div
+              key={`v-${i}`}
+              className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-amber-500/20 to-transparent"
+              style={{ 
+                left: `${i * 7}%`,
+                animation: `scanLineV ${4 + (i % 4) * 0.5}s ease-in-out infinite`,
+                animationDelay: `${i * 0.15}s`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Floating Vulnerability Indicators */}
+        <div className="absolute inset-0 overflow-hidden opacity-30">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div
+              key={`vuln-${i}`}
+              className="absolute"
+              style={{
+                left: `${10 + (i * 7) % 80}%`,
+                top: `${15 + (i * 11) % 70}%`,
+                animation: `floatVuln ${8 + (i % 4) * 2}s ease-in-out infinite`,
+                animationDelay: `${i * 0.5}s`
+              }}
+            >
+              <div className={`w-2 h-2 rounded-full ${
+                i % 4 === 0 ? 'bg-red-500' : 
+                i % 4 === 1 ? 'bg-orange-500' : 
+                i % 4 === 2 ? 'bg-yellow-500' : 'bg-amber-500'
+              } animate-ping`} style={{ animationDuration: `${1.5 + (i % 3) * 0.5}s` }} />
+            </div>
+          ))}
+        </div>
+
+        {/* Port Scan Sweep Effect */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div 
+            className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-400/50 to-transparent"
+            style={{ animation: 'portSweep 6s ease-in-out infinite' }}
+          />
+          <div 
+            className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-400/50 to-transparent"
+            style={{ animation: 'portSweep 6s ease-in-out infinite', animationDelay: '3s' }}
+          />
+        </div>
+
+        <RadarSweep color="#f59e0b" />
+        <ParticleNetwork color="#f59e0b" />
         <VulnerabilityRadar />
         <AttackSurfaceMapper />
         <CVEDetector />
         <ConfigurationScanner />
         <RiskAssessmentEngine />
       </div>
+      
+      {/* VulnScan Unique Background Animations */}
+      <style>{`
+        @keyframes scanLine {
+          0%, 100% { opacity: 0.1; transform: scaleX(0.8); }
+          50% { opacity: 0.4; transform: scaleX(1); }
+        }
+        @keyframes scanLineV {
+          0%, 100% { opacity: 0.1; transform: scaleY(0.8); }
+          50% { opacity: 0.3; transform: scaleY(1); }
+        }
+        @keyframes floatVuln {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          25% { transform: translate(10px, -15px) scale(1.2); }
+          50% { transform: translate(-5px, -25px) scale(0.8); }
+          75% { transform: translate(-15px, -10px) scale(1.1); }
+        }
+        @keyframes portSweep {
+          0% { transform: translateY(0); opacity: 0; }
+          10% { opacity: 0.8; }
+          90% { opacity: 0.8; }
+          100% { transform: translateY(100vh); opacity: 0; }
+        }
+      `}</style>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12">
         {/* Header */}
@@ -551,74 +638,191 @@ const VulnScanDetail: React.FC = () => {
             </div>
           </div>
 
-          {/* Vulnerability Scanning Matrix Visualization */}
-          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-amber-500/20 shadow-2xl bg-black/80 backdrop-blur-sm">
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Central scanning engine */}
-              <div className="relative w-80 h-80">
-                {/* Central scanning engine */}
-                <div className="absolute inset-0 border-4 border-amber-500/50 rounded-full flex items-center justify-center">
-                  <div className="w-64 h-64 border-2 border-amber-400/40 rounded-full flex items-center justify-center">
-                    <div className="w-48 h-48 border border-amber-300/30 rounded-full flex items-center justify-center">
-                      {/* Core scanning engine */}
-                      <div className="w-32 h-32 bg-amber-500/20 rounded-full flex items-center justify-center relative">
-                        <Search className="w-16 h-16 text-amber-400" />
-
-                        {/* Scanning modules orbiting */}
-                        {[
-                          { icon: Server, label: 'Asset Discovery' },
-                          { icon: Database, label: 'Vuln Database' },
-                          { icon: Cpu, label: 'Config Scan' },
-                          { icon: Layers, label: 'Risk Assessment' },
-                          { icon: Activity, label: 'Continuous Monitor' },
-                          { icon: Target, label: 'Attack Surface' },
-                        ].map((module, i) => (
-                          <div
-                            key={i}
-                            className="absolute w-10 h-10 bg-amber-400/15 rounded-full flex items-center justify-center border border-amber-400/30"
-                            style={{
-                              top: `${50 + 45 * Math.sin((i * 60 * Math.PI) / 180)}%`,
-                              left: `${50 + 45 * Math.cos((i * 60 * Math.PI) / 180)}%`,
-                              transform: 'translate(-50%, -50%)',
-                              animationDelay: `${i * 0.15}s`,
-                            }}
-                          >
-                            <module.icon className="w-5 h-5 text-amber-300" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+          {/* VulnScan Tool Preview - Realistic Dashboard */}
+          <div className="relative group rounded-[2rem] overflow-hidden border border-amber-500/30 shadow-2xl bg-[#0f0d0a]">
+            {/* Tool Header */}
+            <div className="bg-slate-900/90 border-b border-amber-500/20 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-white">VulnScan</div>
+                    <div className="text-[10px] text-gray-500">Enterprise Vulnerability Scanner v6.0</div>
                   </div>
                 </div>
-
-                {/* Scanning rings */}
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute border border-amber-500/20 rounded-full animate-pulse"
-                    style={{
-                      top: `${50 - (i + 1) * 12}%`,
-                      left: `${50 - (i + 1) * 12}%`,
-                      width: `${(i + 1) * 24}%`,
-                      height: `${(i + 1) * 24}%`,
-                      animationDelay: `${i * 0.4}s`,
-                    }}
-                  ></div>
+                <div className="px-2 py-1 bg-green-500/20 rounded text-[9px] font-mono text-green-400 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span> SIM
+                </div>
+              </div>
+              
+              {/* Stats Row */}
+              <div className="flex items-center gap-4 mt-3 pt-3 border-t border-slate-700/50">
+                {[
+                  { label: 'Scans Today', value: '1,284', icon: Search },
+                  { label: 'Vulns Found', value: '3,847', icon: Bug, color: 'text-red-400' },
+                  { label: 'Avg Scan', value: '12.4s', icon: Clock },
+                  { label: 'Hosts', value: '847', icon: Server }
+                ].map((stat, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
+                      <stat.icon className={`w-3 h-3 ${stat.color || 'text-gray-400'}`} />
+                    </div>
+                    <div>
+                      <div className="text-[9px] text-gray-500">{stat.label}</div>
+                      <div className={`text-xs font-bold ${stat.color || 'text-white'}`}>{stat.value}</div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Status overlay */}
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-amber-400">SCANNING: ACTIVE</span>
-                <span className="text-green-400 animate-pulse">● VULN DETECTOR</span>
+            {/* Main Content - 3 Column Layout */}
+            <div className="p-3 grid grid-cols-3 gap-3">
+              {/* Scan Configuration Panel */}
+              <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-6 h-6 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                    <Target className="w-3 h-3 text-amber-400" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">Scan Configuration</div>
+                    <div className="text-[8px] text-gray-500">Configure your scan</div>
+                  </div>
+                </div>
+                <div className="text-[9px] text-gray-400 mb-2">Scan Type</div>
+                <div className="grid grid-cols-2 gap-1.5 mb-3">
+                  {['Single Host', 'Network Range', 'Web Application', 'API Endpoint'].map((type, i) => (
+                    <div key={i} className={`px-2 py-1.5 rounded text-[8px] text-center ${i === 0 ? 'bg-amber-500/20 border border-amber-500/30 text-amber-400' : 'bg-slate-700/30 text-gray-500'}`}>
+                      {type}
+                    </div>
+                  ))}
+                </div>
+                <div className="text-[9px] text-gray-400 mb-1">Target</div>
+                <div className="bg-slate-900/50 rounded px-2 py-1.5 text-[9px] font-mono text-gray-400 mb-2 flex items-center justify-between">
+                  <span>https://vulnscan.maula.ai/</span>
+                  <span className="px-1.5 py-0.5 bg-amber-500 rounded text-[8px] text-white">Sample</span>
+                </div>
+                <div className="text-[9px] text-gray-400 mb-1">Scan Depth</div>
+                <div className="flex gap-1">
+                  {['Quick', 'Standard', 'Deep'].map((depth, i) => (
+                    <div key={i} className={`flex-1 px-2 py-1 rounded text-[8px] text-center ${i === 1 ? 'bg-amber-500 text-white' : 'bg-slate-700/30 text-gray-500'}`}>
+                      {depth}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="mt-2 w-full bg-amber-500/10 rounded-full h-1">
-                <div
-                  className="bg-amber-500 h-1 rounded-full animate-pulse"
-                  style={{ width: '96%' }}
-                ></div>
+
+              {/* Live Scan Panel */}
+              <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center">
+                      <Activity className="w-3 h-3 text-green-400" />
+                    </div>
+                    <div className="text-xs font-bold text-white">Live Scan</div>
+                  </div>
+                  <div className="text-[9px] text-gray-400">8/9 stages</div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 mb-3">
+                  <div className="text-center">
+                    <div className="text-[8px] text-gray-500">Ports</div>
+                    <div className="text-sm font-bold text-white">100</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[8px] text-gray-500">Open</div>
+                    <div className="text-sm font-bold text-green-400">10</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[8px] text-gray-500">Vulns</div>
+                    <div className="text-sm font-bold text-red-400">4</div>
+                  </div>
+                </div>
+                <div className="text-[8px] text-gray-400 mb-1">Open Ports (10)</div>
+                <div className="space-y-1 mb-2">
+                  {[
+                    { port: 21, service: 'FTP', version: 'vsftpd 3.0.3', cve: true },
+                    { port: 22, service: 'SSH', version: 'OpenSSH 8.4', cve: false },
+                    { port: 25, service: 'SMTP', version: 'Postfix', cve: true }
+                  ].map((p, i) => (
+                    <div key={i} className="flex items-center gap-2 text-[8px]">
+                      <span className="text-gray-500 w-5">{p.port}</span>
+                      <span className="px-1.5 py-0.5 bg-slate-700 rounded text-gray-300">{p.service}</span>
+                      <span className="text-gray-500 flex-1 truncate">{p.version}</span>
+                      {p.cve && <span className="px-1 py-0.5 bg-red-500/20 rounded text-red-400">1 CVE</span>}
+                    </div>
+                  ))}
+                </div>
+                <div className="text-[8px] text-gray-400 mb-1">Scan Stages</div>
+                <div className="space-y-1">
+                  {['Initialize Scanner', 'Host Discovery', 'Port Scanning', 'Service Detection'].map((stage, i) => (
+                    <div key={i} className="flex items-center gap-2 text-[8px]">
+                      <div className="w-3 h-3 rounded-full bg-green-500/20 flex items-center justify-center">
+                        <CheckCircle2 className="w-2 h-2 text-green-400" />
+                      </div>
+                      <span className="text-gray-400">{stage}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Critical Risk Panel */}
+              <div className="bg-gradient-to-br from-red-500/10 to-red-900/20 rounded-xl p-3 border border-red-500/30">
+                <div className="flex flex-col items-center text-center mb-3">
+                  <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mb-2">
+                    <AlertTriangle className="w-6 h-6 text-red-400" />
+                  </div>
+                  <div className="text-lg font-black text-red-400">CRITICAL RISK</div>
+                  <div className="text-[9px] text-gray-400">Immediate action required</div>
+                </div>
+                <div className="text-[9px] text-gray-400 mb-1">Risk Score</div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex-1 bg-slate-900/50 rounded-full h-2">
+                    <div className="bg-gradient-to-r from-red-500 to-red-400 h-2 rounded-full" style={{width: '85%'}}></div>
+                  </div>
+                  <span className="text-lg font-bold text-red-400">85<span className="text-xs text-gray-500">/100</span></span>
+                </div>
+                <div className="grid grid-cols-4 gap-1 mb-3 text-center">
+                  {[
+                    { label: 'Ports', value: '100' },
+                    { label: 'Open', value: '10', color: 'text-green-400' },
+                    { label: 'Services', value: '10', color: 'text-green-400' },
+                    { label: 'Vulns', value: '4', color: 'text-red-400' }
+                  ].map((s, i) => (
+                    <div key={i}>
+                      <div className={`text-sm font-bold ${s.color || 'text-white'}`}>{s.value}</div>
+                      <div className="text-[7px] text-gray-500">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="text-[8px] text-gray-400 mb-1">Vulnerability Breakdown</div>
+                <div className="flex gap-1">
+                  {[
+                    { label: 'Critical', count: 1, color: 'bg-red-500' },
+                    { label: 'High', count: 1, color: 'bg-orange-500' },
+                    { label: 'Medium', count: 1, color: 'bg-yellow-500' },
+                    { label: 'Low', count: 1, color: 'bg-green-500' }
+                  ].map((v, i) => (
+                    <div key={i} className={`${v.color} px-2 py-1 rounded text-[8px] text-white font-bold`}>
+                      {v.count} {v.label}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Status Bar */}
+            <div className="bg-slate-900/90 border-t border-amber-500/20 px-4 py-2 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] font-mono text-amber-400">SCANNING: ACTIVE</span>
+                <div className="w-16 h-1 bg-amber-500/20 rounded-full">
+                  <div className="w-4/5 h-1 bg-amber-500 rounded-full"></div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-[9px] font-mono">
+                <span className="text-gray-500">CVE Database: Updated</span>
+                <span className="text-green-400 animate-pulse">● LIVE</span>
               </div>
             </div>
           </div>

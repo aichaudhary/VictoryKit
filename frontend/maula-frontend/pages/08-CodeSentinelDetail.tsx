@@ -28,6 +28,10 @@ import {
   Bug,
   ShieldCheck,
   FileSearch,
+  Globe,
+  FileCode,
+  Package,
+  Clock,
 } from 'lucide-react';
 import { HexGrid, FloatingIcons } from '../components/AnimatedBackground';
 
@@ -609,7 +613,219 @@ const CodeSentinelDetail: React.FC = () => {
             </div>
           </div>
           <div className="hero-element relative group">
-            <CodeAnalysisRadar />
+            {/* CodeSentinel Tool Preview - Realistic Dashboard */}
+            <div className="rounded-[2rem] overflow-hidden border border-emerald-500/30 shadow-2xl bg-[#0a0f0d]">
+              {/* Tool Header */}
+              <div className="bg-slate-900/90 border-b border-emerald-500/20 p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-xl flex items-center justify-center">
+                      <Code className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-white">CodeSentinel</div>
+                      <div className="text-[10px] text-gray-500">AI-Powered Code Security Analysis Fortress</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="px-2 py-1 bg-yellow-500/20 rounded text-[9px] font-mono text-yellow-400 border border-yellow-500/30">
+                      SAST ENGINE
+                    </div>
+                    <div className="px-2 py-1 bg-emerald-500/20 rounded text-[9px] font-mono text-emerald-400 flex items-center gap-1">
+                      <Zap className="w-3 h-3" /> Engine Active
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Stats Row */}
+                <div className="flex items-center gap-4 mt-3 pt-3 border-t border-slate-700/50">
+                  {[
+                    { label: 'Security Rules', value: '50+' },
+                    { label: 'CVE Patterns', value: '100+', color: 'text-orange-400' },
+                    { label: 'Secret Types', value: '200+' },
+                    { label: 'Scan Speed', value: '<1s', color: 'text-yellow-400' },
+                  ].map((stat, i) => (
+                    <div key={i} className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/50 rounded-lg border border-slate-700/30">
+                      <div>
+                        <div className="text-[9px] text-gray-500">{stat.label}</div>
+                        <div className={`text-xs font-bold ${stat.color || 'text-white'}`}>{stat.value}</div>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
+                    <div className="text-[9px] text-gray-500">Powered by</div>
+                    <div className="text-xs font-bold text-cyan-400">VictoryKit AI</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Content - 3 Column Layout */}
+              <div className="p-3 grid grid-cols-3 gap-3">
+                {/* Code Analysis Panel */}
+                <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-6 h-6 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                      <Code className="w-3 h-3 text-emerald-400" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-white">Code Analysis</div>
+                      <div className="text-[8px] text-gray-500">Scan for security vulnerabilities</div>
+                    </div>
+                  </div>
+                  <div className="text-[9px] text-gray-400 mb-2">Source Type</div>
+                  <div className="flex gap-1.5 mb-3">
+                    {[
+                      { icon: FileCode, label: 'Paste Code', active: false },
+                      { icon: Globe, label: 'File URL', active: false },
+                      { icon: GitBranch, label: 'Repository', active: true },
+                    ].map((type, i) => (
+                      <div key={i} className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-[8px] ${type.active ? 'bg-emerald-500 text-white' : 'bg-slate-700/30 text-gray-500'}`}>
+                        <type.icon className="w-3 h-3" />
+                        {type.label}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="text-[9px] text-gray-400 mb-1">Repository URL</div>
+                  <div className="bg-slate-900/50 rounded px-2 py-1.5 text-[9px] font-mono text-gray-400 mb-2">
+                    https://codesentinel.maula.ai/
+                  </div>
+                  <div className="text-[9px] text-gray-400 mb-1">Branch</div>
+                  <div className="bg-slate-900/50 rounded px-2 py-1.5 text-[9px] font-mono text-white mb-2">
+                    main
+                  </div>
+                  <div className="text-[9px] text-gray-400 mb-1">Language</div>
+                  <div className="bg-slate-900/50 rounded px-2 py-1.5 text-[9px] text-gray-400">
+                    Auto-detect
+                  </div>
+                </div>
+
+                {/* Live Analysis Panel */}
+                <div className="bg-slate-800/30 rounded-xl p-3 border border-slate-700/30">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-red-500/20 rounded-lg flex items-center justify-center">
+                        <Eye className="w-3 h-3 text-red-400" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-white">Live Analysis</div>
+                        <div className="text-[8px] text-gray-500">javascript • 1 lines</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 mb-3 text-[8px]">
+                    <span className="text-gray-400">📄 5 files</span>
+                    <span className="text-gray-400">📦 5 deps</span>
+                    <span className="text-emerald-400">⚠️ 0 issues</span>
+                  </div>
+                  {/* Analysis Stages */}
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {['Parsing', 'SAST', 'Secrets', 'Dependencies', 'Reporting'].map((stage, i) => (
+                      <div key={i} className="flex items-center gap-1 px-2 py-1 bg-slate-700/50 rounded text-[8px] text-gray-300 border border-slate-600/30">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        {stage}
+                      </div>
+                    ))}
+                  </div>
+                  {/* Code Editor */}
+                  <div className="bg-slate-900/80 rounded p-2 font-mono text-[8px] mb-3 h-16">
+                    <span className="text-gray-500">1</span>
+                    <span className="text-gray-400 ml-2">// Paste code and start analysis to see...</span>
+                  </div>
+                  {/* Live Events */}
+                  <div className="text-[9px] text-gray-400 mb-2">Live Events</div>
+                  <div className="space-y-1">
+                    {[
+                      { icon: Zap, label: 'Reporting', color: 'yellow' },
+                      { icon: Package, label: 'jsonwebtoken', color: 'gray' },
+                      { icon: Package, label: 'axios', color: 'gray' },
+                    ].map((event, i) => (
+                      <div key={i} className="flex items-center gap-2 text-[8px] text-gray-400">
+                        <event.icon className={`w-3 h-3 text-${event.color}-400`} />
+                        {event.label}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Results Panel */}
+                <div className="bg-slate-800/30 rounded-xl p-3 border border-emerald-500/20">
+                  {/* Score Circle */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="relative w-16 h-16">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle cx="32" cy="32" r="28" fill="none" stroke="#1e293b" strokeWidth="4" />
+                        <circle cx="32" cy="32" r="28" fill="none" stroke="#10b981" strokeWidth="4" strokeLinecap="round" strokeDasharray="176" strokeDashoffset="0" />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="text-xl font-black text-emerald-400">100</span>
+                        <span className="text-[7px] text-gray-500">/ 100</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded text-[9px] font-bold text-emerald-400 mb-1">
+                        Grade A
+                      </div>
+                      <div className="text-[8px] text-gray-400">Excellent security posture</div>
+                    </div>
+                  </div>
+
+                  {/* Quick Stats */}
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    {[
+                      { label: 'Files Scanned', value: '5' },
+                      { label: 'Lines Analyzed', value: '1' },
+                      { label: 'Issues Found', value: '0', color: 'emerald' },
+                      { label: 'Analysis Time', value: '3.2s' },
+                    ].map((stat, i) => (
+                      <div key={i} className="bg-slate-900/50 rounded-lg p-2 text-center">
+                        <div className={`text-sm font-bold ${stat.color ? `text-${stat.color}-400` : 'text-white'}`}>{stat.value}</div>
+                        <div className="text-[7px] text-gray-500">{stat.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Issues by Severity */}
+                  <div className="text-[9px] text-gray-400 mb-2 flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" /> Issues by Severity
+                  </div>
+                  <div className="grid grid-cols-4 gap-1 mb-3">
+                    {[
+                      { level: 'Critical', count: 0, color: 'red' },
+                      { level: 'High', count: 0, color: 'orange' },
+                      { level: 'Medium', count: 0, color: 'yellow' },
+                      { level: 'Low', count: 0, color: 'blue' },
+                    ].map((sev, i) => (
+                      <div key={i} className="bg-slate-900/50 rounded p-1.5 text-center">
+                        <div className="flex items-center justify-center gap-1 mb-0.5">
+                          <div className={`w-1.5 h-1.5 rounded-full bg-${sev.color}-500`} />
+                          <span className="text-[7px] text-gray-500">{sev.level}</span>
+                        </div>
+                        <div className="text-sm font-bold text-gray-400">{sev.count}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Vulnerable Dependencies */}
+                  <div className="flex items-center justify-between text-[9px]">
+                    <div className="flex items-center gap-1 text-gray-400">
+                      <Package className="w-3 h-3" /> Vulnerable Dependencies
+                    </div>
+                    <span className="px-2 py-0.5 bg-red-500/20 text-red-400 rounded text-[8px]">2</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Bar */}
+              <div className="px-4 py-2 bg-slate-900/50 border-t border-slate-700/30 flex items-center justify-between text-[9px]">
+                <div className="flex items-center gap-4">
+                  <span className="text-gray-400">Static Application Security Testing</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-emerald-400 font-mono">READY</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

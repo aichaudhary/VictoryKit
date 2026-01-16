@@ -150,7 +150,7 @@ const LiveCompliancePanel: React.FC<LiveCompliancePanelProps> = ({
   const recentEvents = events.slice(-10).reverse();
 
   return (
-    <div className="compliance-card h-full flex flex-col overflow-hidden">
+    <div className="compliance-card h-full flex flex-col overflow-hidden max-h-full">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-indigo-900/30">
         <div className="flex items-center gap-3">

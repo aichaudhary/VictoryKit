@@ -16,6 +16,9 @@ import {
   Zap,
   AlertTriangle,
   CheckCircle2,
+  Home,
+  ArrowLeft,
+  Sparkles,
 } from "lucide-react";
 import ComplianceForm, { ComplianceFormData } from "./ComplianceForm";
 import LiveCompliancePanel, {
@@ -693,6 +696,15 @@ const RuntimeGuardTool: React.FC = () => {
         <div className="max-w-[1800px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              {/* Back to Home Button */}
+              <a
+                href="https://maula.ai"
+                className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 rounded-lg text-gray-400 hover:text-white transition-all group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                <span className="text-xs font-medium">Back to Home</span>
+              </a>
+              <div className="w-px h-8 bg-slate-700/50" />
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <ClipboardCheck className="w-6 h-6 text-white" />
               </div>
@@ -765,6 +777,15 @@ const RuntimeGuardTool: React.FC = () => {
                     : "Ready"}
                 </span>
               </div>
+              
+              {/* AI Assistant */}
+              <a
+                href="/neural-link/"
+                className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
+              >
+                <Sparkles className="w-5 h-5" />
+                <span className="font-medium">AI Assistant</span>
+              </a>
             </div>
           </div>
         </div>
@@ -782,8 +803,8 @@ const RuntimeGuardTool: React.FC = () => {
             />
           </div>
 
-          {/* Middle Column - Live Panel */}
-          <div className="col-span-5">
+          {/* Middle Column - Live Panel - Fixed Height with Internal Scroll */}
+          <div className="col-span-5 h-full overflow-hidden">
             <LiveCompliancePanel
               frameworks={frameworks}
               isAssessing={isAssessing}

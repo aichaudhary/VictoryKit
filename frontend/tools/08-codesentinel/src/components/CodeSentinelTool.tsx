@@ -29,6 +29,8 @@ import {
   ShieldCheck,
   ShieldAlert,
   ShieldOff,
+  ArrowLeft,
+  Sparkles,
 } from "lucide-react";
 import CodeAnalysisForm, { CodeAnalysisFormData } from "./CodeAnalysisForm";
 import LiveCodePanel, {
@@ -1008,14 +1010,12 @@ const CodeSentinelTool: React.FC = () => {
               {/* Back to Homepage Button */}
               <a
                 href="https://maula.ai"
-                className="flex items-center gap-2 px-3 py-2 bg-slate-800/60 border border-slate-700 rounded-xl text-gray-300 hover:bg-slate-700 hover:border-green-500/30 hover:text-green-400 transition-all group"
-                title="Back to Maula.AI"
+                className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 rounded-lg text-gray-400 hover:text-white transition-all group"
               >
-                <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                <span className="text-sm font-medium">Maula.AI</span>
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                <span className="text-xs font-medium">Back to Home</span>
               </a>
+              <div className="w-px h-8 bg-slate-700/50" />
               
               {/* Epic Animated Logo */}
               <div className="relative group">
@@ -1131,6 +1131,15 @@ const CodeSentinelTool: React.FC = () => {
                     : "⏳ Ready"}
                 </span>
               </div>
+              
+              {/* AI Assistant */}
+              <a
+                href="/neural-link/"
+                className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
+              >
+                <Sparkles className="w-5 h-5" />
+                <span className="font-medium">AI Assistant</span>
+              </a>
             </div>
           </div>
           

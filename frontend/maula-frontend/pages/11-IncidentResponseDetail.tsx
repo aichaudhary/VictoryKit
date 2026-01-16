@@ -424,22 +424,14 @@ const IncidentResponseDetail: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-[#0d0408] text-white selection:bg-red-500/30 font-sans overflow-hidden"
+      className="min-h-screen bg-[#0d0408] text-white selection:bg-rose-500/30 font-sans overflow-hidden"
     >
-      {/* Epic Animated Background Layers */}
+      {/* Subtle Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-red-600/8 blur-[200px] rounded-full" />
-        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-orange-600/6 blur-[250px] rounded-full" />
+        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-rose-600/5 blur-[200px] rounded-full" />
+        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-rose-800/4 blur-[250px] rounded-full" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/3 blur-[180px] rounded-full" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
-        <RadarSweep color="#a855f7" />
-        <FloatingIcons icons={[Shield, AlertTriangle, Lock, Eye]} color="#a855f7" />
-        <RadarSweep color="#a855f7" />
-        <FloatingIcons icons={[Shield, AlertTriangle, Lock, Eye]} color="#a855f7" />
-        <IncidentDetectionRadar />
-        <ResponseCoordinationEngine />
-        <TimelineReconstruction />
-        <AutomatedPlaybookSystem />
-        <EscalationMatrix />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12">
@@ -448,24 +440,24 @@ const IncidentResponseDetail: React.FC = () => {
           <button onClick={() => setView('home')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Ecosystem
           </button>
-          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">IncidentResponse Enterprise v3.1</span>
+          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">IncidentCommand Enterprise v3.1</span>
         </div>
 
         {/* Hero Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 md:gap-24 items-center mb-40">
           <div ref={heroTextRef} className="space-y-10">
-            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-red-500/20 backdrop-blur-3xl">
-              <AlertTriangle className="w-4 h-4 text-red-500 animate-pulse" />
-              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-red-500">Incident Management Platform</span>
+            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-rose-500/20 backdrop-blur-3xl">
+              <AlertTriangle className="w-4 h-4 text-rose-500 animate-pulse" />
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-rose-500">Incident Management Platform</span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] uppercase">
-              INCIDENT <span className="text-red-500">RESPONSE</span>
+              INCIDENT <span className="text-rose-500">COMMAND</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/60 font-medium leading-relaxed max-w-xl">
-              Incident response platform. Streamlined security incident management with automated playbooks and coordinated team response workflows.
+              AI-Powered Security Incident Management. Streamline incident response with automated playbooks, real-time coordination, and comprehensive analytics.
             </p>
             <div className="flex gap-6 pt-4">
-              <a href="https://incidentresponse.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-red-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-red-500/20 flex items-center gap-2">
+              <a href="https://incidentcommand.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-rose-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-rose-500/20 flex items-center gap-2">
                 <Bell className="w-4 h-4" /> Response: Active
               </a>
               <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">
@@ -474,71 +466,116 @@ const IncidentResponseDetail: React.FC = () => {
             </div>
           </div>
 
-          {/* Incident Response Command Center Visualization */}
-          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-red-500/20 shadow-2xl bg-black/80 backdrop-blur-sm">
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Central incident response command center */}
-              <div className="relative w-80 h-80">
-                {/* Central command center */}
-                <div className="absolute inset-0 border-4 border-red-500/50 rounded-full flex items-center justify-center">
-                  <div className="w-64 h-64 border-2 border-red-400/40 rounded-full flex items-center justify-center">
-                    <div className="w-48 h-48 border border-red-300/30 rounded-full flex items-center justify-center">
-                      {/* Core incident response engine */}
-                      <div className="w-32 h-32 bg-red-500/20 rounded-full flex items-center justify-center relative">
-                        <AlertTriangle className="w-16 h-16 text-red-400" />
+          {/* Incident Command Dashboard Preview */}
+          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-rose-500/20 shadow-2xl bg-gradient-to-br from-gray-950 via-gray-900 to-rose-950/30 backdrop-blur-sm">
+            <div className="absolute inset-0 p-4 flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-between px-3 py-2 border-b border-rose-500/20 bg-black/40 rounded-t-2xl">
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-lg bg-rose-500 flex items-center justify-center">
+                    <AlertTriangle className="w-3 h-3 text-white" />
+                  </div>
+                  <span className="text-white text-[10px] font-bold">incidentcommand</span>
+                </div>
+                <div className="px-2 py-0.5 bg-rose-500 rounded text-[8px] text-white font-medium">
+                  ✨ AI Assistant
+                </div>
+              </div>
 
-                        {/* Response modules orbiting */}
-                        {[
-                          { icon: Bell, label: 'Detection' },
-                          { icon: Users, label: 'Coordination' },
-                          { icon: Clock, label: 'Timeline' },
-                          { icon: Play, label: 'Playbooks' },
-                          { icon: Target, label: 'Escalation' },
-                          { icon: ShieldCheck, label: 'Containment' }
-                        ].map((module, i) => (
-                          <div
-                            key={i}
-                            className="absolute w-10 h-10 bg-red-400/15 rounded-full flex items-center justify-center border border-red-400/30"
-                            style={{
-                              top: `${50 + 45 * Math.sin((i * 60) * Math.PI / 180)}%`,
-                              left: `${50 + 45 * Math.cos((i * 60) * Math.PI / 180)}%`,
-                              transform: 'translate(-50%, -50%)',
-                              animationDelay: `${i * 0.15}s`
-                            }}
-                          >
-                            <module.icon className="w-5 h-5 text-red-300" />
-                          </div>
-                        ))}
+              {/* Tabs */}
+              <div className="flex gap-1 px-2 py-2 bg-black/20">
+                {['Dashboard', 'Incidents', 'Playbooks', 'New Incident'].map((tab, i) => (
+                  <div key={tab} className={`px-2 py-1 rounded text-[7px] font-medium ${i === 0 ? 'bg-rose-500 text-white' : 'text-white/50'}`}>
+                    {tab}
+                  </div>
+                ))}
+              </div>
+
+              {/* Stats Row */}
+              <div className="grid grid-cols-5 gap-1 p-2">
+                {[
+                  { value: '23', label: 'Open', color: 'text-rose-400' },
+                  { value: '18', label: 'Investigating', color: 'text-yellow-400' },
+                  { value: '8', label: 'Contained', color: 'text-orange-400' },
+                  { value: '107', label: 'Closed', color: 'text-green-400' },
+                  { value: '156', label: 'Total', color: 'text-blue-400' },
+                ].map((stat, i) => (
+                  <div key={i} className="bg-white/5 rounded p-1.5 border border-white/5">
+                    <div className={`text-sm font-bold ${stat.color}`}>{stat.value}</div>
+                    <div className="text-white/40 text-[6px]">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Time Metrics */}
+              <div className="grid grid-cols-4 gap-1 px-2">
+                {[
+                  { label: 'Avg Time to Detect', value: '15m' },
+                  { label: 'Avg Time to Contain', value: '45m' },
+                  { label: 'Avg Time to Resolve', value: '3h 0m' },
+                  { label: 'MTTR', value: '4h 0m' },
+                ].map((metric, i) => (
+                  <div key={i} className="bg-white/5 rounded p-1.5 border border-white/5">
+                    <div className="text-white/40 text-[6px]">{metric.label}</div>
+                    <div className="text-rose-400 text-[10px] font-bold">{metric.value}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Severity & Category */}
+              <div className="grid grid-cols-2 gap-1 p-2 flex-1">
+                <div className="bg-white/5 rounded p-2 border border-white/5">
+                  <div className="text-white text-[8px] font-bold mb-1">By Severity</div>
+                  <div className="space-y-0.5">
+                    {[
+                      { label: 'Critical', value: 5, color: 'bg-rose-500' },
+                      { label: 'High', value: 28, color: 'bg-orange-500' },
+                      { label: 'Medium', value: 67, color: 'bg-yellow-500' },
+                      { label: 'Low', value: 45, color: 'bg-gray-400' },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-1">
+                        <div className={`w-1 h-1 rounded-full ${item.color}`}></div>
+                        <span className="text-white/50 text-[6px] flex-1">{item.label}</span>
+                        <span className="text-white/70 text-[6px] font-mono">{item.value}</span>
+                        <div className="w-6 h-0.5 bg-white/10 rounded-full overflow-hidden">
+                          <div className={`h-full ${item.color}`} style={{ width: `${Math.min(item.value, 100)}%` }}></div>
+                        </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Response rings */}
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute border border-red-500/20 rounded-full animate-pulse"
-                    style={{
-                      top: `${50 - (i + 1) * 12}%`,
-                      left: `${50 - (i + 1) * 12}%`,
-                      width: `${(i + 1) * 24}%`,
-                      height: `${(i + 1) * 24}%`,
-                      animationDelay: `${i * 0.4}s`
-                    }}
-                  ></div>
-                ))}
+                <div className="bg-white/5 rounded p-2 border border-white/5">
+                  <div className="text-white text-[8px] font-bold mb-1">By Category</div>
+                  <div className="space-y-0.5">
+                    {[
+                      { label: 'Unauthorized Access', value: 45 },
+                      { label: 'Malware', value: 32 },
+                      { label: 'Phishing', value: 28 },
+                      { label: 'Data Breach', value: 12 },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center justify-between">
+                        <span className="text-white/50 text-[6px]">{item.label}</span>
+                        <span className="text-white/70 text-[6px] font-mono">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Status overlay */}
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-red-400">RESPONSE: ACTIVE</span>
-                <span className="text-green-400 animate-pulse">● INCIDENT COMMAND</span>
-              </div>
-              <div className="mt-2 w-full bg-red-500/10 rounded-full h-1">
-                <div className="bg-red-500 h-1 rounded-full animate-pulse" style={{width: '94%'}}></div>
+              {/* Trending */}
+              <div className="px-2 pb-2">
+                <div className="bg-white/5 rounded p-2 border border-white/5">
+                  <div className="text-white text-[8px] font-bold mb-1">Trending Categories</div>
+                  <div className="flex gap-1">
+                    <span className="px-1.5 py-0.5 bg-rose-500/20 border border-rose-500/30 rounded text-[6px] text-rose-400">
+                      Phishing 15 ↑
+                    </span>
+                    <span className="px-1.5 py-0.5 bg-green-500/20 border border-green-500/30 rounded text-[6px] text-green-400">
+                      Malware 8 ↓
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -546,141 +583,141 @@ const IncidentResponseDetail: React.FC = () => {
 
         {/* Stats Section */}
         <div ref={contentRef} className="space-y-40 mb-40">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-red-500/10 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-rose-500/10 text-center">
             <div className="space-y-4">
-              <div className="text-6xl font-black text-red-500 tabular-nums">{liveMetrics.incidentsDetected.toLocaleString()}</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Incidents Detected</div>
-              <div className="w-full bg-red-500/10 rounded-full h-1">
-                <div className="bg-red-500 h-1 rounded-full animate-pulse" style={{width: '96%'}}></div>
+              <div className="text-6xl font-black text-rose-500 tabular-nums">23</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Open Incidents</div>
+              <div className="w-full bg-rose-500/10 rounded-full h-1">
+                <div className="bg-rose-500 h-1 rounded-full animate-pulse" style={{width: '96%'}}></div>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="text-6xl font-black text-white">{liveMetrics.responseTime.toFixed(1)}min</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Mean Response Time</div>
+              <div className="text-6xl font-black text-white">15m</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Avg Detection Time</div>
               <div className="w-full bg-white/5 rounded-full h-1">
                 <div className="bg-green-500 h-1 rounded-full animate-pulse" style={{width: '85%'}}></div>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="text-6xl font-black text-white">{liveMetrics.playbooksExecuted.toLocaleString()}</div>
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Playbooks Executed</div>
+              <div className="text-6xl font-black text-white">156</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Total Incidents</div>
               <div className="w-full bg-white/5 rounded-full h-1">
-                <div className="bg-blue-500 h-1 rounded-full" style={{width: '78%'}}></div>
+                <div className="bg-rose-500 h-1 rounded-full" style={{width: '78%'}}></div>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="text-6xl font-black text-red-500">{liveMetrics.containmentRate.toFixed(1)}%</div>
+              <div className="text-6xl font-black text-rose-500">97.8%</div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">Containment Rate</div>
-              <div className="w-full bg-red-500/10 rounded-full h-1">
-                <div className="bg-red-500 h-1 rounded-full animate-pulse" style={{width: `${liveMetrics.containmentRate}%`}}></div>
+              <div className="w-full bg-rose-500/10 rounded-full h-1">
+                <div className="bg-rose-500 h-1 rounded-full animate-pulse" style={{width: '97.8%'}}></div>
               </div>
             </div>
           </div>
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-red-500/20 transition-all group hover:shadow-2xl hover:shadow-red-500/5">
-              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-rose-500/20 transition-all group hover:shadow-2xl hover:shadow-rose-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 group-hover:scale-110 transition-transform">
                 <Clock className="w-8 h-8" />
               </div>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Rapid Triage</h3>
               <p className="text-white/50 leading-relaxed">AI-powered incident classification and prioritization to focus resources on critical threats first.</p>
-              <div className="flex items-center gap-2 text-red-400 text-sm font-mono">
+              <div className="flex items-center gap-2 text-rose-400 text-sm font-mono">
                 <Activity className="w-4 h-4 animate-pulse" />
                 Processing 47 incidents/min
               </div>
             </div>
 
-            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-red-500/20 transition-all group hover:shadow-2xl hover:shadow-red-500/5">
-              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-rose-500/20 transition-all group hover:shadow-2xl hover:shadow-rose-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 group-hover:scale-110 transition-transform">
                 <Users className="w-8 h-8" />
               </div>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Team Coordination</h3>
               <p className="text-white/50 leading-relaxed">Real-time collaboration tools for security teams with role-based task assignment and escalation.</p>
-              <div className="flex items-center gap-2 text-red-400 text-sm font-mono">
+              <div className="flex items-center gap-2 text-rose-400 text-sm font-mono">
                 <ShieldCheck className="w-4 h-4 animate-pulse" />
                 12 teams coordinated
               </div>
             </div>
 
-            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-red-500/20 transition-all group hover:shadow-2xl hover:shadow-red-500/5">
-              <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
-                <Target className="w-8 h-8" />
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-rose-500/20 transition-all group hover:shadow-2xl hover:shadow-rose-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-500 group-hover:scale-110 transition-transform">
+                <Play className="w-8 h-8" />
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Root Cause Analysis</h3>
-              <p className="text-white/50 leading-relaxed">Automated timeline reconstruction and evidence collection for thorough post-incident analysis.</p>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Automated Playbooks</h3>
+              <p className="text-white/50 leading-relaxed">Pre-defined response procedures that execute automatically based on incident type and severity.</p>
               <div className="flex items-center gap-2 text-green-400 text-sm font-mono">
                 <FileText className="w-4 h-4 animate-pulse" />
-                99.2% evidence collected
+                15 playbooks active
               </div>
             </div>
           </div>
 
           {/* Incident Response Command Center Visualization */}
-          <div className="glass p-16 rounded-[4rem] border border-red-500/10">
+          <div className="glass p-16 rounded-[4rem] border border-rose-500/10">
             <div className="text-center mb-8 sm:mb-12 md:mb-16">
-              <h2 className="text-5xl font-black mb-6">Incident Response Command Center</h2>
-              <p className="text-white/50 text-xl max-w-2xl mx-auto">Advanced incident management platform with automated response orchestration, team coordination, and comprehensive evidence collection for rapid threat containment.</p>
+              <h2 className="text-5xl font-black mb-6">Incident Command Center</h2>
+              <p className="text-white/50 text-xl max-w-2xl mx-auto">Advanced incident management platform with automated response orchestration, team coordination, and comprehensive analytics for rapid threat containment.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div className="space-y-8">
                 {/* Response capabilities */}
                 {[
-                  { capability: 'Incident Detection', coverage: 99.8, icon: Bell, color: 'text-red-400' },
+                  { capability: 'Incident Detection', coverage: 99.8, icon: Bell, color: 'text-rose-400' },
                   { capability: 'Team Coordination', coverage: 97.3, icon: Users, color: 'text-cyan-400' },
-                  { capability: 'Timeline Reconstruction', coverage: 96.7, icon: Clock, color: 'text-orange-400' },
                   { capability: 'Automated Playbooks', coverage: 94.5, icon: Play, color: 'text-purple-400' },
-                  { capability: 'Escalation Management', coverage: 98.9, icon: Target, color: 'text-green-400' },
-                  { capability: 'Evidence Collection', coverage: 99.2, icon: FileText, color: 'text-blue-400' }
+                  { capability: 'Severity Triage', coverage: 98.9, icon: Target, color: 'text-orange-400' },
+                  { capability: 'Metrics Dashboard', coverage: 99.2, icon: Activity, color: 'text-green-400' },
+                  { capability: 'Status Tracking', coverage: 96.7, icon: Clock, color: 'text-blue-400' }
                 ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-6 p-4 bg-red-500/5 rounded-2xl border border-red-500/10">
-                    <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center">
+                  <div key={index} className="flex items-center gap-6 p-4 bg-rose-500/5 rounded-2xl border border-rose-500/10">
+                    <div className="w-12 h-12 rounded-xl bg-rose-500/10 flex items-center justify-center">
                       <item.icon className={`w-6 h-6 ${item.color}`} />
                     </div>
                     <div className="flex-1">
                       <div className="font-bold text-lg">{item.capability}</div>
-                      <div className="text-red-400 font-mono text-sm">{item.coverage}% coverage</div>
+                      <div className="text-rose-400 font-mono text-sm">{item.coverage}% coverage</div>
                     </div>
-                    <div className="w-16 h-2 bg-red-500/20 rounded-full">
-                      <div className="h-2 bg-red-500 rounded-full" style={{width: `${item.coverage}%`}}></div>
+                    <div className="w-16 h-2 bg-rose-500/20 rounded-full">
+                      <div className="h-2 bg-rose-500 rounded-full" style={{width: `${item.coverage}%`}}></div>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Response dashboard */}
-              <div className="relative h-96 bg-black/50 rounded-3xl border border-red-500/10 p-8">
+              <div className="relative h-96 bg-black/50 rounded-3xl border border-rose-500/10 p-8">
                 <div className="space-y-6">
                   {/* Response metrics */}
                   {[
                     { metric: 'Detection Accuracy', value: 99.8, status: 'excellent' },
-                    { metric: 'Response Time', value: 8.3, status: 'rapid' },
-                    { metric: 'Containment Success', value: 97.8, status: 'effective' },
-                    { metric: 'Evidence Integrity', value: 99.9, status: 'complete' },
-                    { metric: 'Team Coordination', value: 96.5, status: 'optimal' }
+                    { metric: 'Avg Response Time', value: 15, status: 'fast' },
+                    { metric: 'Containment Rate', value: 97.8, status: 'effective' },
+                    { metric: 'MTTR', value: 4, status: 'optimal' },
+                    { metric: 'Team Sync', value: 96.5, status: 'active' }
                   ].map((item, index) => (
                     <div key={index} className="flex items-center gap-4">
-                      <div className="w-32 text-sm font-mono text-red-400">{item.metric}</div>
-                      <div className="flex-1 bg-red-500/10 rounded-full h-3">
+                      <div className="w-32 text-sm font-mono text-rose-400">{item.metric}</div>
+                      <div className="flex-1 bg-rose-500/10 rounded-full h-3">
                         <div
                           className={`h-3 rounded-full ${
                             item.status === 'excellent' ? 'bg-green-500' :
-                            item.status === 'rapid' ? 'bg-blue-500' :
+                            item.status === 'fast' ? 'bg-rose-500' :
                             item.status === 'effective' ? 'bg-cyan-500' :
-                            item.status === 'complete' ? 'bg-purple-500' : 'bg-yellow-500'
+                            item.status === 'optimal' ? 'bg-purple-500' : 'bg-yellow-500'
                           } transition-all duration-1000`}
                           style={{width: `${item.value > 10 ? item.value : item.value * 10}%`}}
                         ></div>
                       </div>
-                      <div className="w-20 text-sm font-mono text-right text-white">{item.value}{item.value < 10 ? 'min' : '%'}</div>
-                      <div className="w-20 text-xs font-mono text-red-400 text-right capitalize">{item.status}</div>
+                      <div className="w-20 text-sm font-mono text-right text-white">{item.value}{item.value < 10 ? 'h' : item.value < 100 ? 'm' : '%'}</div>
+                      <div className="w-20 text-xs font-mono text-rose-400 text-right capitalize">{item.status}</div>
                     </div>
                   ))}
                 </div>
 
-                <div className="absolute bottom-4 left-4 right-4 flex justify-between text-xs font-mono text-red-400">
-                  <span>Incident Response Status</span>
+                <div className="absolute bottom-4 left-4 right-4 flex justify-between text-xs font-mono text-rose-400">
+                  <span>Incident Command Status</span>
                   <span>All Teams Activated</span>
                 </div>
               </div>
@@ -689,11 +726,11 @@ const IncidentResponseDetail: React.FC = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-red-500/10">
+        <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-rose-500/10">
           <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">
             Return Home
           </button>
-          <a href="https://incidentresponse.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-red-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl shadow-red-500/20 flex items-center gap-4">
+          <a href="https://incidentcommand.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-rose-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl shadow-rose-500/20 flex items-center gap-4">
             Manage Incidents <AlertTriangle className="w-5 h-5" />
           </a>
         </div>

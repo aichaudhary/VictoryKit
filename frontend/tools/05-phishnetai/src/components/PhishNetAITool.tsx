@@ -48,6 +48,8 @@ import {
   Anchor,
   Radio,
   Radar,
+  ArrowLeft,
+  Sparkles,
 } from 'lucide-react';
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1028,6 +1030,15 @@ const PhishNetAITool: React.FC = () => {
         <div className="relative max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
+              {/* Back to Home */}
+              <a
+                href="https://maula.ai"
+                className="flex items-center gap-2 px-3 py-2 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700/50 rounded-lg text-gray-400 hover:text-white transition-all group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                <span className="text-xs font-medium">Back to Home</span>
+              </a>
+              <div className="w-px h-8 bg-slate-700/50" />
               <CyberShieldPulse
                 status={
                   isAnalyzing
@@ -1050,25 +1061,35 @@ const PhishNetAITool: React.FC = () => {
               </div>
             </div>
 
-            <div className="hidden lg:flex items-center gap-3">
-              <AnimatedThreatCounter
-                label="Scans Today"
-                value={stats.scansToday}
-                icon={<Search className="w-4 h-4 text-cyan-400" />}
-                color="#06b6d4"
-              />
-              <AnimatedThreatCounter
-                label="Threats Blocked"
-                value={stats.phishingBlocked}
-                icon={<ShieldAlert className="w-4 h-4 text-red-400" />}
-                color="#ef4444"
-              />
-              <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-xl border border-orange-500/30 backdrop-blur-sm">
-                <Radio className="w-4 h-4 text-orange-400 animate-pulse" />
-                <span className="text-sm font-bold text-orange-400">
-                  {stats.activeAPIs} APIs Live
-                </span>
+            <div className="flex items-center gap-3">
+              <div className="hidden lg:flex items-center gap-3">
+                <AnimatedThreatCounter
+                  label="Scans Today"
+                  value={stats.scansToday}
+                  icon={<Search className="w-4 h-4 text-cyan-400" />}
+                  color="#06b6d4"
+                />
+                <AnimatedThreatCounter
+                  label="Threats Blocked"
+                  value={stats.phishingBlocked}
+                  icon={<ShieldAlert className="w-4 h-4 text-red-400" />}
+                  color="#ef4444"
+                />
+                <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-xl border border-orange-500/30 backdrop-blur-sm">
+                  <Radio className="w-4 h-4 text-orange-400 animate-pulse" />
+                  <span className="text-sm font-bold text-orange-400">
+                    {stats.activeAPIs} APIs Live
+                  </span>
+                </div>
               </div>
+              {/* AI Assistant */}
+              <a
+                href="/neural-link/"
+                className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
+              >
+                <Sparkles className="w-5 h-5" />
+                <span className="font-medium">AI Assistant</span>
+              </a>
             </div>
           </div>
         </div>

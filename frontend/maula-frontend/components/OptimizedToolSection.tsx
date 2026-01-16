@@ -11,6 +11,13 @@ import DarkWebMonitorHomeVisual from './tool-visuals/DarkWebMonitorHomeVisual';
 import ZeroDayDetectHomeVisual from './tool-visuals/ZeroDayDetectHomeVisual';
 import RansomShieldHomeVisual from './tool-visuals/RansomShieldHomeVisual';
 import PhishNetAIHomeVisual from './tool-visuals/PhishNetAIHomeVisual';
+import VulnScanHomeVisual from './tool-visuals/VulnScanHomeVisual';
+import PenTestAIHomeVisual from './tool-visuals/PenTestAIHomeVisual';
+import CodeSentinelHomeVisual from './tool-visuals/CodeSentinelHomeVisual';
+import RuntimeGuardHomeVisual from './tool-visuals/RuntimeGuardHomeVisual';
+import DataGuardianHomeVisual from './tool-visuals/DataGuardianHomeVisual';
+import IncidentCommandHomeVisual from './tool-visuals/IncidentCommandHomeVisual';
+import XDRPlatformHomeVisual from './tool-visuals/XDRPlatformHomeVisual';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -145,17 +152,17 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
     const routeMap: Record<number, string> = {
       1: 'fraud-guard', 2: 'dark-web-monitor', 3: 'threat-radar', 4: 'ransom-shield',
       5: 'phish-guard', 6: 'vuln-scan', 7: 'pen-test-ai', 8: 'secure-code',
-      9: 'compliance-check', 10: 'data-guardian', 11: 'crypto-shield',
-      12: 'iam-control', 13: 'log-intel', 14: 'net-defender', 15: 'endpoint-shield',
-      16: 'cloud-secure', 17: 'api-guardian', 18: 'container-watch', 19: 'devsecops',
-      20: 'incident-command', 21: 'waf-manager', 22: 'api-shield', 23: 'bot-mitigation',
-      24: 'ddos-defender', 25: 'ssl-monitor', 26: 'blue-team-ai', 27: 'siem-commander',
-      28: 'soar-engine', 29: 'risk-score-ai', 30: 'policy-engine', 31: 'audit-tracker',
-      32: 'zero-trust-ai', 33: 'password-vault', 34: 'biometric-ai', 35: 'email-guard',
-      36: 'browser-isolation', 37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian',
-      40: 'wireless-watch', 41: 'iot-secure', 42: 'mobile-defend', 43: 'backup-guard',
-      44: 'dr-plan', 45: 'privacy-shield', 46: 'gdpr-compliance', 47: 'hipaa-guard',
-      48: 'pcidss-guard', 49: 'bug-bounty-ai', 50: 'cyber-edu-ai'
+      9: 'compliance-check', 10: 'data-guardian', 11: 'crypto-shield', 12: 'iam-control',
+      13: 'log-intel', 14: 'net-defender', 15: 'endpoint-shield', 16: 'cloud-secure',
+      17: 'api-guardian', 18: 'container-watch', 19: 'devsecops', 20: 'incident-command',
+      21: 'waf-manager', 22: 'api-shield', 23: 'bot-mitigation', 24: 'ddos-defender',
+      25: 'ssl-monitor', 26: 'blue-team-ai', 27: 'siem-commander', 28: 'soar-engine',
+      29: 'risk-score-ai', 30: 'policy-engine', 31: 'audit-tracker', 32: 'zero-trust-ai',
+      33: 'password-vault', 34: 'biometric-ai', 35: 'email-guard', 36: 'browser-isolation',
+      37: 'dns-shield', 38: 'firewall-ai', 39: 'vpn-guardian', 40: 'wireless-watch',
+      41: 'iot-secure', 42: 'mobile-defend', 43: 'backup-guard', 44: 'dr-plan',
+      45: 'privacy-shield', 46: 'gdpr-compliance', 47: 'hipaa-guard', 48: 'pcidss-guard',
+      49: 'bug-bounty-ai', 50: 'cyber-edu-ai'
     };
     
     if (routeMap[tool.id]) {
@@ -215,9 +222,38 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
 
             <div className="space-y-3">
               <h2 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tighter text-white">
-                {tool.name.split(' ').map((word, i) => (
-                  <span key={i} className={i === tool.name.split(' ').length - 1 ? themeClass : ''}>{word} </span>
-                ))}
+                {/* Smart split: keep AI/XDR together, split on word boundaries */}
+                {(() => {
+                  // Handle special compound names - keep certain suffixes together
+                  const name = tool.name
+                    .replace(/AI$/i, '_AI_')  // Preserve AI suffix
+                    .replace(/XDR/i, '_XDR_') // Preserve XDR
+                    .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space before capitals
+                    .replace(/_/g, '')        // Remove markers
+                    .trim();
+                  
+                  const words = name.split(/\s+/).filter(Boolean);
+                  
+                  // Group into max 2-3 lines for balance
+                  if (words.length <= 2) {
+                    return words.map((word, i) => (
+                      <span key={i} className={`block ${i === words.length - 1 ? themeClass : ''}`}>{word}</span>
+                    ));
+                  } else {
+                    // For 3+ words, keep last word(s) together if short
+                    const lastWord = words[words.length - 1];
+                    if (lastWord.length <= 3 && words.length > 2) {
+                      // Merge last two words: "Pen" "Test" "AI" -> "Pen" "TestAI"
+                      const merged = [...words.slice(0, -2), words.slice(-2).join('')];
+                      return merged.map((word, i) => (
+                        <span key={i} className={`block ${i === merged.length - 1 ? themeClass : ''}`}>{word}</span>
+                      ));
+                    }
+                    return words.map((word, i) => (
+                      <span key={i} className={`block ${i === words.length - 1 ? themeClass : ''}`}>{word}</span>
+                    ));
+                  }
+                })()}
               </h2>
               <p className="text-base md:text-xl font-medium text-white/40 max-w-lg leading-relaxed">
                 {tool.description}
@@ -248,7 +284,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
             ref={imgRef} 
             className="flex-1 relative w-full aspect-video md:aspect-square max-w-2xl rounded-[3.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9)] group border border-white/10 will-change-transform"
           >
-            {/* Render animated visuals for first 5 tools, static image for others */}
+            {/* Render animated visuals for first 8 tools, static image for others */}
             {tool.id === 1 ? (
               <FraudGuardHomeVisual />
             ) : tool.id === 2 ? (
@@ -259,6 +295,20 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
               <RansomShieldHomeVisual />
             ) : tool.id === 5 ? (
               <PhishNetAIHomeVisual />
+            ) : tool.id === 6 ? (
+              <VulnScanHomeVisual />
+            ) : tool.id === 7 ? (
+              <PenTestAIHomeVisual />
+            ) : tool.id === 8 ? (
+              <CodeSentinelHomeVisual />
+            ) : tool.id === 9 ? (
+              <RuntimeGuardHomeVisual />
+            ) : tool.id === 10 ? (
+              <DataGuardianHomeVisual />
+            ) : tool.id === 11 ? (
+              <IncidentCommandHomeVisual />
+            ) : tool.id === 12 ? (
+              <XDRPlatformHomeVisual />
             ) : (
               <>
                 <img 
@@ -271,7 +321,7 @@ const OptimizedToolSection: React.FC<Props> = ({ tool, index }) => {
             )}
             
             {/* AI Interface only for non-animated tools */}
-            {tool.id > 4 && (
+            {tool.id > 12 && (
               <div className="absolute bottom-6 left-6 right-6 z-20">
                 <AIInterface currentImageUrl={currentImageUrl} onUpdateImage={set => setCurrentImageUrl(set)} />
               </div>

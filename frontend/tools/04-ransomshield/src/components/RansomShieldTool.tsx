@@ -586,15 +586,6 @@ const RansomShieldTool: React.FC = () => {
       {/* Floating Threat Counter */}
       <FloatingThreatCounter count={threatsFound} isScanning={isScanning} />
 
-      {/* Back to Maula Button - Fixed Top Right */}
-      <a
-        href="https://maula.ai/#tool-section-4"
-        className="fixed top-6 right-6 z-50 px-5 py-3 rounded-xl bg-slate-900/80 backdrop-blur-sm border border-purple-500/30 text-white hover:bg-slate-800/90 transition-all flex items-center gap-2 shadow-xl hover:shadow-purple-500/20 group"
-      >
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        <span className="font-bold text-sm">Back to Maula</span>
-      </a>
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-6">
         {/* Epic Header Section */}
         <div className="mb-8">
@@ -643,11 +634,20 @@ const RansomShieldTool: React.FC = () => {
             </div>
             
             {/* Right Side Actions */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              {/* Back to Home Button */}
+              <a
+                href="https://maula.ai/#tool-section-4"
+                className="px-4 py-2.5 rounded-xl bg-slate-800/80 backdrop-blur-sm border border-purple-500/30 text-white hover:bg-slate-700/90 transition-all flex items-center gap-2 shadow-lg hover:shadow-purple-500/20 group"
+              >
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span className="font-medium text-sm">Back to Home</span>
+              </a>
+
               {/* AI Assistant Button */}
               <a
                 href="/neural-link/"
-                className="px-5 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold hover:brightness-110 transition-all flex items-center gap-2 shadow-lg hover:shadow-purple-500/50 group"
+                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold hover:brightness-110 transition-all flex items-center gap-2 shadow-lg hover:shadow-purple-500/50 group"
               >
                 <Bot className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 <span className="text-sm">AI Assistant</span>

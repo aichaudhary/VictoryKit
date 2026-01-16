@@ -18,6 +18,7 @@ import {
   Zap,
   Radio,
   Crosshair,
+  ArrowLeft,
 } from "lucide-react";
 import VulnScanForm, { ScanFormData } from "./VulnScanForm";
 import LiveScanPanel, {
@@ -1414,6 +1415,29 @@ const VulnScanTool: React.FC = () => {
                   {USE_REAL_API && isOnline ? 'LIVE' : 'SIM'}
                 </span>
               </div>
+
+              {/* AI Assistant Button */}
+              <a
+                href="/neural-link/"
+                className="group relative flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 rounded-xl border border-purple-500/30 hover:border-purple-400/50 hover:from-purple-500/30 hover:to-cyan-500/30 transition-all backdrop-blur-sm"
+              >
+                <div className="absolute inset-0 rounded-xl animate-pulse bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Zap className="w-4 h-4 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                <span className="text-sm font-medium text-purple-300 group-hover:text-purple-200 transition-colors">
+                  AI Assistant
+                </span>
+              </a>
+
+              {/* Back to Maula Button */}
+              <a
+                href="https://maula.ai/#tool-section-6"
+                className="group relative flex items-center gap-2 px-4 py-2.5 bg-slate-800/60 rounded-xl border border-slate-700/50 hover:border-amber-500/30 hover:bg-slate-800/80 transition-all backdrop-blur-sm"
+              >
+                <Globe className="w-4 h-4 text-gray-400 group-hover:text-amber-400 transition-colors" />
+                <span className="text-sm font-medium text-gray-400 group-hover:text-amber-400 transition-colors">
+                  Back to Maula
+                </span>
+              </a>
             </div>
           </div>
         </div>

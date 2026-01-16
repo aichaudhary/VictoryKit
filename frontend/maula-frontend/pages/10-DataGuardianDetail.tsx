@@ -26,6 +26,7 @@ import {
   Key,
   ShieldCheck,
   FileSearch,
+  Globe,
 } from 'lucide-react';
 import {
   RadarSweep,
@@ -479,22 +480,17 @@ const DataGuardianDetail: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-[#04080d] text-white selection:bg-blue-500/30 font-sans overflow-hidden"
+      className="min-h-screen bg-slate-950 text-white selection:bg-emerald-500/30 font-sans overflow-hidden"
     >
-      {/* Epic Animated Background Layers */}
+      {/* Clean Dark Background with Emerald Accents */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-blue-600/8 blur-[200px] rounded-full" />
-        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-indigo-600/6 blur-[250px] rounded-full" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
-        <HexGrid color="#a855f7" />
-        <FloatingIcons icons={[Database, HardDrive, FileSearch, Lock]} color="#a855f7" />
-        <HexGrid color="#a855f7" />
-        <FloatingIcons icons={[Database, HardDrive, FileSearch, Lock]} color="#a855f7" />
-        <DataDiscoveryRadar />
-        <ContentInspectionEngine />
-        <EncryptionMatrix />
-        <DataFlowMonitor />
-        <ComplianceDashboard />
+        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-emerald-900/15 blur-[250px] rounded-full" />
+        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-green-900/10 blur-[300px] rounded-full" />
+        <div className="absolute top-[50%] left-[50%] w-[600px] h-[600px] bg-teal-900/8 blur-[200px] rounded-full transform -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.015]" />
+        {/* Subtle effects only */}
+        <RadarSweep color="#10b981" />
+        <ParticleNetwork color="#059669" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12">
@@ -515,102 +511,128 @@ const DataGuardianDetail: React.FC = () => {
         {/* Hero Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 md:gap-24 items-center mb-40">
           <div ref={heroTextRef} className="space-y-10">
-            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-blue-500/20 backdrop-blur-3xl">
-              <Database className="w-4 h-4 text-blue-500 animate-pulse" />
-              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-blue-500">
-                Asset Discovery & DLP
+            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full glass border border-emerald-500/20 backdrop-blur-3xl">
+              <Shield className="w-4 h-4 text-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-emerald-500">
+                Personal Data Protection Hub
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter leading-[0.85] uppercase">
-              DATA <span className="text-blue-500">GUARDIAN</span>
+              DATA <span className="text-emerald-500">GUARDIAN</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/60 font-medium leading-relaxed max-w-xl">
-              Protect what matters most. Enterprise DLP with intelligent content inspection
-              identifying sensitive data across your entire organization.
+              Protect your digital identity. Check for breaches, monitor your digital footprint, and request data removal under privacy laws.
             </p>
             <div className="flex gap-6 pt-4">
               <a
                 href="https://dataguardian.maula.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 bg-blue-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-blue-500/20 flex items-center gap-2"
+                className="px-8 py-4 bg-emerald-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-emerald-500/20 flex items-center gap-2"
               >
-                <Search className="w-4 h-4" /> Analyze Store
+                <Search className="w-4 h-4" /> Scan Now
               </a>
               <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">
-                Types: {liveMetrics.dataTypes}+
+                6 Features
               </div>
             </div>
           </div>
 
-          {/* Data Protection Matrix Visualization */}
-          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-blue-500/20 shadow-2xl bg-black/80 backdrop-blur-sm">
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Central data protection engine */}
-              <div className="relative w-80 h-80">
-                {/* Central protection engine */}
-                <div className="absolute inset-0 border-4 border-blue-500/50 rounded-full flex items-center justify-center">
-                  <div className="w-64 h-64 border-2 border-blue-400/40 rounded-full flex items-center justify-center">
-                    <div className="w-48 h-48 border border-blue-300/30 rounded-full flex items-center justify-center">
-                      {/* Core data guardian */}
-                      <div className="w-32 h-32 bg-blue-500/20 rounded-full flex items-center justify-center relative">
-                        <Database className="w-16 h-16 text-blue-400" />
+          {/* DataGuardian Dashboard Visualization */}
+          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-emerald-500/20 shadow-2xl bg-slate-900/90 backdrop-blur-sm p-6">
+            {/* Subtle animated glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-green-500/5 animate-pulse" />
+            
+            <div className="h-full flex flex-col relative z-10">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <Shield className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-white">DataGuardian</span>
+                    <div className="text-[9px] text-emerald-400">Personal Data Protection Hub</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-[9px] text-gray-400">Protected</span>
+                </div>
+              </div>
 
-                        {/* Protection modules orbiting */}
-                        {[
-                          { icon: Search, label: 'Discovery' },
-                          { icon: EyeOff, label: 'Redaction' },
-                          { icon: Key, label: 'Encryption' },
-                          { icon: Activity, label: 'Monitoring' },
-                          { icon: ShieldCheck, label: 'Compliance' },
-                          { icon: Lock, label: 'Protection' },
-                        ].map((module, i) => (
-                          <div
-                            key={i}
-                            className="absolute w-10 h-10 bg-blue-400/15 rounded-full flex items-center justify-center border border-blue-400/30"
-                            style={{
-                              top: `${50 + 45 * Math.sin((i * 60 * Math.PI) / 180)}%`,
-                              left: `${50 + 45 * Math.cos((i * 60 * Math.PI) / 180)}%`,
-                              transform: 'translate(-50%, -50%)',
-                              animationDelay: `${i * 0.15}s`,
-                            }}
-                          >
-                            <module.icon className="w-5 h-5 text-blue-300" />
-                          </div>
-                        ))}
-                      </div>
+              {/* Tabs */}
+              <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
+                {['Breach Check', 'Password', 'Privacy', 'Dark Web', 'Footprint', 'Removal'].map((tab, i) => (
+                  <span key={i} className={`px-2 py-1 rounded text-[8px] whitespace-nowrap ${i === 0 ? 'text-emerald-400 border-b border-emerald-400' : 'text-gray-500'}`}>
+                    {tab}
+                  </span>
+                ))}
+              </div>
+
+              {/* Main Content */}
+              <div className="flex-1 grid grid-rows-3 gap-3 min-h-0">
+                {/* Email Input */}
+                <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/30">
+                  <div className="text-[10px] font-bold text-white mb-1">Check Your Data Protection Status</div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 bg-slate-900/50 border border-emerald-500/30 rounded px-2 py-1.5 text-[9px] text-gray-400">
+                      test@maula.ai
+                    </div>
+                    <button className="px-3 py-1.5 bg-emerald-500 rounded text-[8px] text-white font-medium">
+                      Scan Now
+                    </button>
+                  </div>
+                </div>
+
+                {/* Results Row */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-amber-900/20 border border-amber-500/30 rounded-xl p-3">
+                    <div className="text-[8px] text-gray-400 mb-1">Breach Status</div>
+                    <div className="flex items-center gap-1">
+                      <AlertTriangle className="w-4 h-4 text-amber-400" />
+                      <span className="text-[10px] font-bold text-amber-400">Found in 6 Breaches</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-1">
+                      <span className="text-[7px] text-gray-500">Risk Level</span>
+                      <span className="text-[9px] font-bold text-amber-400">High</span>
+                    </div>
+                  </div>
+                  <div className="bg-emerald-900/20 border border-emerald-500/30 rounded-xl p-3">
+                    <div className="text-[8px] text-gray-400 mb-1">Breach Exposure</div>
+                    <div className="flex items-center justify-center gap-2 mt-1">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                      <span className="text-[12px] font-bold text-emerald-400">SAFE</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Protection rings */}
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute border border-blue-500/20 rounded-full animate-pulse"
-                    style={{
-                      top: `${50 - (i + 1) * 12}%`,
-                      left: `${50 - (i + 1) * 12}%`,
-                      width: `${(i + 1) * 24}%`,
-                      height: `${(i + 1) * 24}%`,
-                      animationDelay: `${i * 0.4}s`,
-                    }}
-                  ></div>
-                ))}
+                {/* Digital Footprint */}
+                <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/30 overflow-hidden">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[9px] font-bold text-white">Digital Footprint</span>
+                    <span className="text-[10px] font-bold text-emerald-400">6 Accounts</span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-1">
+                    {['Google', 'Facebook', 'Amazon', 'LinkedIn'].map((platform, i) => (
+                      <div key={i} className={`p-1.5 rounded text-center ${i < 2 ? 'bg-red-900/20 border border-red-500/20' : 'bg-amber-900/20 border border-amber-500/20'}`}>
+                        <div className="text-[7px] font-medium text-white">{platform}</div>
+                        <div className={`text-[5px] ${i < 2 ? 'text-red-400' : 'text-amber-400'}`}>
+                          {i < 2 ? 'High' : 'Medium'}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Status overlay */}
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-blue-400">PROTECTION: ACTIVE</span>
-                <span className="text-green-400 animate-pulse">● DATA GUARDIAN</span>
-              </div>
-              <div className="mt-2 w-full bg-blue-500/10 rounded-full h-1">
-                <div
-                  className="bg-blue-500 h-1 rounded-full animate-pulse"
-                  style={{ width: '96%' }}
-                ></div>
+              {/* Status Bar */}
+              <div className="mt-3 flex items-center justify-between text-xs flex-shrink-0">
+                <span className="text-gray-500">Privacy Score: <span className="text-emerald-400">85/100</span></span>
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/50" />
+                  <span className="text-emerald-400">PROTECTION ACTIVE</span>
+                </span>
               </div>
             </div>
           </div>
@@ -618,25 +640,25 @@ const DataGuardianDetail: React.FC = () => {
 
         {/* Stats Section */}
         <div ref={contentRef} className="space-y-40 mb-40">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-blue-500/10 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-emerald-500/10 text-center">
             <div className="space-y-4">
-              <div className="text-6xl font-black text-blue-500 tabular-nums">
-                {liveMetrics.assetsDiscovered.toLocaleString()}
+              <div className="text-6xl font-black text-emerald-500 tabular-nums">
+                6+
               </div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                Assets Discovered
+                Features
               </div>
-              <div className="w-full bg-blue-500/10 rounded-full h-1">
+              <div className="w-full bg-emerald-500/10 rounded-full h-1">
                 <div
-                  className="bg-blue-500 h-1 rounded-full animate-pulse"
+                  className="bg-emerald-500 h-1 rounded-full animate-pulse"
                   style={{ width: '98%' }}
                 ></div>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="text-6xl font-black text-white">{liveMetrics.dataTypes}</div>
+              <div className="text-6xl font-black text-white">4</div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                Data Types
+                Privacy Laws
               </div>
               <div className="w-full bg-white/5 rounded-full h-1">
                 <div
@@ -647,29 +669,29 @@ const DataGuardianDetail: React.FC = () => {
             </div>
             <div className="space-y-4">
               <div className="text-6xl font-black text-white">
-                {liveMetrics.encryptionRate.toFixed(1)}%
+                85%
               </div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                Encryption Rate
+                Privacy Score
               </div>
               <div className="w-full bg-white/5 rounded-full h-1">
                 <div
-                  className="bg-blue-500 h-1 rounded-full"
-                  style={{ width: `${liveMetrics.encryptionRate}%` }}
+                  className="bg-emerald-500 h-1 rounded-full"
+                  style={{ width: '85%' }}
                 ></div>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="text-6xl font-black text-blue-500">
-                {liveMetrics.complianceScore.toFixed(1)}%
+              <div className="text-6xl font-black text-emerald-500">
+                24/7
               </div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                Compliance Score
+                Protection
               </div>
-              <div className="w-full bg-blue-500/10 rounded-full h-1">
+              <div className="w-full bg-emerald-500/10 rounded-full h-1">
                 <div
-                  className="bg-blue-500 h-1 rounded-full animate-pulse"
-                  style={{ width: `${liveMetrics.complianceScore}%` }}
+                  className="bg-emerald-500 h-1 rounded-full animate-pulse"
+                  style={{ width: '100%' }}
                 ></div>
               </div>
             </div>
@@ -677,59 +699,56 @@ const DataGuardianDetail: React.FC = () => {
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-blue-500/20 transition-all group hover:shadow-2xl hover:shadow-blue-500/5">
-              <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-emerald-500/20 transition-all group hover:shadow-2xl hover:shadow-emerald-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
                 <Search className="w-8 h-8" />
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Deep Content Scan</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Breach Detection</h3>
               <p className="text-white/50 leading-relaxed">
-                Uses OCR and NLP to identify PII, PCI, and proprietary secrets inside images, PDFs,
-                and unstructured logs.
+                Scan your email across known data breaches. Get alerted when your data appears in new breaches.
               </p>
-              <div className="flex items-center gap-2 text-blue-400 text-sm font-mono">
+              <div className="flex items-center gap-2 text-emerald-400 text-sm font-mono">
                 <Activity className="w-4 h-4 animate-pulse" />
-                Scanning 2.4TB data/min
+                Real-time monitoring
               </div>
             </div>
 
-            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-blue-500/20 transition-all group hover:shadow-2xl hover:shadow-blue-500/5">
-              <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
-                <EyeOff className="w-8 h-8" />
-              </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Auto-Redaction</h3>
-              <p className="text-white/50 leading-relaxed">
-                Dynamically masks sensitive data in transit to ensure compliance without
-                interrupting business workflows.
-              </p>
-              <div className="flex items-center gap-2 text-blue-400 text-sm font-mono">
-                <ShieldCheck className="w-4 h-4 animate-pulse" />
-                99.8% redaction accuracy
-              </div>
-            </div>
-
-            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-blue-500/20 transition-all group hover:shadow-2xl hover:shadow-blue-500/5">
-              <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform">
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-emerald-500/20 transition-all group hover:shadow-2xl hover:shadow-emerald-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
                 <Key className="w-8 h-8" />
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Encryption Guard</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Password Security</h3>
               <p className="text-white/50 leading-relaxed">
-                Automated key rotation and certificate management to keep data encrypted both at
-                rest and in transit.
+                Check password strength and exposure. Get recommendations for stronger, unique passwords.
+              </p>
+              <div className="flex items-center gap-2 text-emerald-400 text-sm font-mono">
+                <ShieldCheck className="w-4 h-4 animate-pulse" />
+                Breach database check
+              </div>
+            </div>
+
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-emerald-500/20 transition-all group hover:shadow-2xl hover:shadow-emerald-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
+                <Globe className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Digital Footprint</h3>
+              <p className="text-white/50 leading-relaxed">
+                Discover your online presence across platforms. Identify accounts and assess privacy risks.
               </p>
               <div className="flex items-center gap-2 text-green-400 text-sm font-mono">
-                <Lock className="w-4 h-4 animate-pulse" />
-                AES-256 encryption
+                <Activity className="w-4 h-4 animate-pulse" />
+                Platform analysis
               </div>
             </div>
           </div>
 
           {/* Data Protection Engine Visualization */}
-          <div className="glass p-16 rounded-[4rem] border border-blue-500/10">
+          <div className="glass p-16 rounded-[4rem] border border-emerald-500/10">
             <div className="text-center mb-8 sm:mb-12 md:mb-16">
-              <h2 className="text-5xl font-black mb-6">Data Protection Engine</h2>
+              <h2 className="text-5xl font-black mb-6">Privacy Protection Hub</h2>
               <p className="text-white/50 text-xl max-w-2xl mx-auto">
-                Advanced Data Loss Prevention with intelligent asset discovery, content inspection,
-                and automated protection across your entire data landscape.
+                Complete personal data protection with breach monitoring, password security,
+                and compliance-ready data removal requests.
               </p>
             </div>
 
@@ -738,58 +757,58 @@ const DataGuardianDetail: React.FC = () => {
                 {/* Protection capabilities */}
                 {[
                   {
-                    capability: 'Asset Discovery',
+                    capability: 'Breach Detection',
                     coverage: 99.7,
                     icon: Search,
-                    color: 'text-blue-400',
+                    color: 'text-emerald-400',
                   },
                   {
-                    capability: 'Content Classification',
+                    capability: 'Password Analysis',
                     coverage: 98.3,
-                    icon: FileText,
-                    color: 'text-cyan-400',
-                  },
-                  {
-                    capability: 'Encryption Management',
-                    coverage: 99.9,
                     icon: Key,
-                    color: 'text-purple-400',
-                  },
-                  {
-                    capability: 'Data Flow Monitoring',
-                    coverage: 97.8,
-                    icon: Activity,
                     color: 'text-green-400',
                   },
                   {
-                    capability: 'Compliance Automation',
-                    coverage: 96.5,
-                    icon: ShieldCheck,
-                    color: 'text-yellow-400',
+                    capability: 'Dark Web Monitoring',
+                    coverage: 99.9,
+                    icon: Eye,
+                    color: 'text-amber-400',
                   },
                   {
-                    capability: 'Real-time Protection',
+                    capability: 'Digital Footprint',
+                    coverage: 97.8,
+                    icon: Globe,
+                    color: 'text-teal-400',
+                  },
+                  {
+                    capability: 'Privacy Compliance',
+                    coverage: 96.5,
+                    icon: ShieldCheck,
+                    color: 'text-cyan-400',
+                  },
+                  {
+                    capability: 'Data Removal',
                     coverage: 99.2,
                     icon: Shield,
-                    color: 'text-red-400',
+                    color: 'text-emerald-400',
                   },
                 ].map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-6 p-4 bg-blue-500/5 rounded-2xl border border-blue-500/10"
+                    className="flex items-center gap-6 p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                       <item.icon className={`w-6 h-6 ${item.color}`} />
                     </div>
                     <div className="flex-1">
                       <div className="font-bold text-lg">{item.capability}</div>
-                      <div className="text-blue-400 font-mono text-sm">
+                      <div className="text-emerald-400 font-mono text-sm">
                         {item.coverage}% coverage
                       </div>
                     </div>
-                    <div className="w-16 h-2 bg-blue-500/20 rounded-full">
+                    <div className="w-16 h-2 bg-emerald-500/20 rounded-full">
                       <div
-                        className="h-2 bg-blue-500 rounded-full"
+                        className="h-2 bg-emerald-500 rounded-full"
                         style={{ width: `${item.coverage}%` }}
                       ></div>
                     </div>
@@ -798,48 +817,48 @@ const DataGuardianDetail: React.FC = () => {
               </div>
 
               {/* Protection dashboard */}
-              <div className="relative h-96 bg-black/50 rounded-3xl border border-blue-500/10 p-8">
+              <div className="relative h-96 bg-black/50 rounded-3xl border border-emerald-500/10 p-8">
                 <div className="space-y-6">
                   {/* Protection metrics */}
                   {[
-                    { metric: 'Data Classification Rate', value: 99.5, status: 'excellent' },
-                    { metric: 'False Positive Rate', value: 0.8, status: 'minimal' },
-                    { metric: 'Encryption Coverage', value: 99.8, status: 'comprehensive' },
-                    { metric: 'Compliance Violations', value: 0.2, status: 'negligible' },
-                    { metric: 'Response Time', value: 0.3, status: 'instant' },
+                    { metric: 'Breach Detection', value: 99.5, status: 'excellent' },
+                    { metric: 'Password Strength', value: 92, status: 'strong' },
+                    { metric: 'Privacy Score', value: 85, status: 'good' },
+                    { metric: 'Accounts Found', value: 6, status: 'monitored' },
+                    { metric: 'Risk Level', value: 25, status: 'low' },
                   ].map((item, index) => (
                     <div key={index} className="flex items-center gap-4">
-                      <div className="w-32 text-sm font-mono text-blue-400">{item.metric}</div>
-                      <div className="flex-1 bg-blue-500/10 rounded-full h-3">
+                      <div className="w-32 text-sm font-mono text-emerald-400">{item.metric}</div>
+                      <div className="flex-1 bg-emerald-500/10 rounded-full h-3">
                         <div
                           className={`h-3 rounded-full ${
                             item.status === 'excellent'
                               ? 'bg-green-500'
-                              : item.status === 'minimal'
-                                ? 'bg-blue-500'
-                                : item.status === 'comprehensive'
-                                  ? 'bg-cyan-500'
-                                  : item.status === 'negligible'
-                                    ? 'bg-purple-500'
-                                    : 'bg-yellow-500'
+                              : item.status === 'strong'
+                                ? 'bg-emerald-500'
+                                : item.status === 'good'
+                                  ? 'bg-teal-500'
+                                  : item.status === 'monitored'
+                                    ? 'bg-amber-500'
+                                    : 'bg-green-500'
                           } transition-all duration-1000`}
-                          style={{ width: `${item.value > 10 ? item.value : item.value * 10}%` }}
+                          style={{ width: `${item.value}%` }}
                         ></div>
                       </div>
                       <div className="w-20 text-sm font-mono text-right text-white">
                         {item.value}
-                        {item.value < 10 ? 'ms' : '%'}
+                        {item.value > 10 ? '%' : ''}
                       </div>
-                      <div className="w-20 text-xs font-mono text-blue-400 text-right capitalize">
+                      <div className="w-20 text-xs font-mono text-emerald-400 text-right capitalize">
                         {item.status}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="absolute bottom-4 left-4 right-4 flex justify-between text-xs font-mono text-blue-400">
-                  <span>Data Protection Status</span>
-                  <span>All Assets Secured</span>
+                <div className="absolute bottom-4 left-4 right-4 flex justify-between text-xs font-mono text-emerald-400">
+                  <span>Privacy Protection Status</span>
+                  <span>Active Monitoring</span>
                 </div>
               </div>
             </div>
@@ -847,7 +866,7 @@ const DataGuardianDetail: React.FC = () => {
         </div>
 
         {/* CTA Section */}
-        <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-blue-500/10">
+        <div className="flex flex-col md:flex-row gap-8 items-center justify-center py-40 border-t border-emerald-500/10">
           <button
             onClick={() => setView('home')}
             className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all"
@@ -858,9 +877,9 @@ const DataGuardianDetail: React.FC = () => {
             href="https://dataguardian.maula.ai"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-16 py-8 bg-blue-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl shadow-blue-500/20 flex items-center gap-4"
+            className="px-16 py-8 bg-emerald-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl shadow-emerald-500/20 flex items-center gap-4"
           >
-            Secure Assets <Database className="w-5 h-5" />
+            Protect Data <Shield className="w-5 h-5" />
           </a>
         </div>
       </div>

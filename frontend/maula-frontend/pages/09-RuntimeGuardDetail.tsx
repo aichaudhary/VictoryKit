@@ -495,22 +495,17 @@ const RuntimeGuardDetail: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-[#040a0f] text-white selection:bg-cyan-500/30 font-sans overflow-hidden"
+      className="min-h-screen bg-slate-950 text-white selection:bg-purple-500/30 font-sans overflow-hidden"
     >
-      {/* Epic Animated Background Layers */}
+      {/* Clean Dark Background with Subtle Purple Accents */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-cyan-600/8 blur-[200px] rounded-full" />
-        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-blue-600/6 blur-[250px] rounded-full" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
-        <RadarSweep color="#a855f7" />
-        <ParticleNetwork color="#a855f7" />
-        <RadarSweep color="#a855f7" />
-        <ParticleNetwork color="#a855f7" />
-        <RuntimeProtectionMatrix />
-        <AttackDetectionEngine />
-        <BehaviorAnomalyDetector />
-        <ZeroDayDefenseSystem />
-        <ResponseTimeMonitor />
+        <div className="absolute top-[-20%] left-[-15%] w-[800px] h-[800px] bg-purple-900/15 blur-[250px] rounded-full" />
+        <div className="absolute bottom-[-25%] right-[-20%] w-[1000px] h-[1000px] bg-indigo-900/10 blur-[300px] rounded-full" />
+        <div className="absolute top-[50%] left-[50%] w-[600px] h-[600px] bg-violet-900/8 blur-[200px] rounded-full transform -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.015]" />
+        {/* Subtle radar sweep only */}
+        <RadarSweep color="#7c3aed" />
+        <ParticleNetwork color="#6d28d9" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12">
@@ -549,84 +544,144 @@ const RuntimeGuardDetail: React.FC = () => {
                 href="https://runtimeguard.maula.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 bg-cyan-500 text-black rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-cyan-500/20 flex items-center gap-2"
+                className="px-8 py-4 bg-purple-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-purple-500/20 flex items-center gap-2"
               >
-                <Shield className="w-4 h-4" /> Protection: Active
+                <Shield className="w-4 h-4" /> Start Assessment
               </a>
               <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">
-                Response: &lt;{liveMetrics.responseTime.toFixed(1)}ms
+                8 Frameworks
               </div>
             </div>
           </div>
 
-          {/* Runtime Protection Matrix Visualization */}
-          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-cyan-500/20 shadow-2xl bg-black/80 backdrop-blur-sm">
-            <div className="absolute inset-0 flex items-center justify-center">
-              {/* Central runtime protection engine */}
-              <div className="relative w-80 h-80">
-                {/* Central protection engine */}
-                <div className="absolute inset-0 border-4 border-cyan-500/50 rounded-full flex items-center justify-center">
-                  <div className="w-64 h-64 border-2 border-cyan-400/40 rounded-full flex items-center justify-center">
-                    <div className="w-48 h-48 border border-cyan-300/30 rounded-full flex items-center justify-center">
-                      {/* Core runtime engine */}
-                      <div className="w-32 h-32 bg-cyan-500/20 rounded-full flex items-center justify-center relative">
-                        <Shield className="w-16 h-16 text-cyan-400" />
+          {/* GRC Compliance Dashboard Visualization */}
+          <div className="relative group aspect-square rounded-[4rem] overflow-hidden border border-purple-500/20 shadow-2xl bg-slate-900/90 backdrop-blur-sm p-6">
+            {/* Subtle animated glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-indigo-500/5 animate-pulse" />
+            
+            {/* 3-Panel Preview */}
+            <div className="h-full flex flex-col relative z-10">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                    <CheckCircle2 className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-bold text-white">RuntimeGuard</span>
+                    <span className="ml-2 px-2 py-0.5 text-[8px] bg-indigo-500/20 text-indigo-400 rounded">GRC</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {['GDPR', 'HIPAA', 'PCI', 'SOX'].map((fw, i) => (
+                    <span key={i} className="px-2 py-1 bg-slate-800 text-[10px] text-gray-300 rounded hover:bg-slate-700 transition-colors">{fw}</span>
+                  ))}
+                </div>
+              </div>
 
-                        {/* Protection modules orbiting */}
-                        {[
-                          { icon: Target, label: 'Attack Detection' },
-                          { icon: Activity, label: 'Behavior Monitor' },
-                          { icon: ShieldOff, label: 'Zero-Day Defense' },
-                          { icon: Zap, label: 'Instant Response' },
-                          { icon: Eye, label: 'Real-time Analysis' },
-                          { icon: Binary, label: 'Pattern Learning' },
-                        ].map((module, i) => (
-                          <div
-                            key={i}
-                            className="absolute w-10 h-10 bg-cyan-400/15 rounded-full flex items-center justify-center border border-cyan-400/30"
-                            style={{
-                              top: `${50 + 45 * Math.sin((i * 60 * Math.PI) / 180)}%`,
-                              left: `${50 + 45 * Math.cos((i * 60 * Math.PI) / 180)}%`,
-                              transform: 'translate(-50%, -50%)',
-                              animationDelay: `${i * 0.15}s`,
-                            }}
-                          >
-                            <module.icon className="w-5 h-5 text-cyan-300" />
-                          </div>
-                        ))}
-                      </div>
+              {/* 3 Panels Grid - Each panel with overflow hidden */}
+              <div className="flex-1 grid grid-cols-3 gap-3 min-h-0">
+                {/* Left - Assessment Config */}
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-slate-700/30 overflow-hidden flex flex-col">
+                  <div className="flex items-center gap-2 mb-3 flex-shrink-0">
+                    <FileText className="w-4 h-4 text-indigo-400" />
+                    <span className="text-xs font-bold text-white">Assessment</span>
+                  </div>
+                  <div className="space-y-2 flex-1 overflow-hidden">
+                    <div>
+                      <div className="text-[9px] text-gray-500 mb-1">Organization</div>
+                      <div className="bg-slate-900/50 rounded px-2 py-1.5 text-[10px] text-gray-400 truncate">Enterprise Corp</div>
+                    </div>
+                    <div>
+                      <div className="text-[9px] text-gray-500 mb-1">Industry</div>
+                      <div className="bg-slate-900/50 rounded px-2 py-1.5 text-[10px] text-gray-400 truncate">Financial Services</div>
+                    </div>
+                    <div className="text-[9px] text-gray-500 mb-1">Frameworks</div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {['GDPR', 'HIPAA', 'PCI DSS', 'SOX', 'ISO 27001', 'NIST'].map((fw, i) => (
+                        <div key={i} className={`px-1.5 py-1 rounded text-[9px] text-center truncate ${i < 4 ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'bg-slate-800 text-gray-500'}`}>
+                          {fw}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Protection rings */}
-                {[...Array(4)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute border border-cyan-500/20 rounded-full animate-pulse"
-                    style={{
-                      top: `${50 - (i + 1) * 12}%`,
-                      left: `${50 - (i + 1) * 12}%`,
-                      width: `${(i + 1) * 24}%`,
-                      height: `${(i + 1) * 24}%`,
-                      animationDelay: `${i * 0.4}s`,
-                    }}
-                  ></div>
-                ))}
-              </div>
-            </div>
+                {/* Middle - Live Assessment - Fixed overflow */}
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-slate-700/30 overflow-hidden flex flex-col">
+                  <div className="flex items-center justify-between mb-2 flex-shrink-0">
+                    <div className="flex items-center gap-2">
+                      <Eye className="w-4 h-4 text-purple-400" />
+                      <span className="text-xs font-bold text-white">Live Assessment</span>
+                    </div>
+                    <span className="text-[9px] text-emerald-400 flex-shrink-0">61/61</span>
+                  </div>
+                  <div className="h-1.5 bg-slate-700 rounded-full mb-3 flex-shrink-0">
+                    <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full w-full" />
+                  </div>
+                  <div className="space-y-1.5 flex-1 overflow-hidden">
+                    {[
+                      { name: 'Data Protection', progress: 100 },
+                      { name: 'Security Measures', progress: 100 },
+                      { name: 'Access Controls', progress: 100 },
+                      { name: 'Audit Logging', progress: 100 },
+                    ].map((cat, i) => (
+                      <div key={i} className="bg-slate-900/50 rounded p-1.5 flex items-center gap-2">
+                        <Lock className="w-3 h-3 text-indigo-400 flex-shrink-0" />
+                        <span className="text-[9px] text-gray-300 truncate flex-1 min-w-0">{cat.name}</span>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <div className="w-8 h-1 bg-slate-700 rounded-full overflow-hidden">
+                            <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${cat.progress}%` }} />
+                          </div>
+                          <span className="text-[8px] text-emerald-400 w-6 text-right">{cat.progress}%</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Status overlay */}
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-cyan-400">PROTECTION: ACTIVE</span>
-                <span className="text-green-400 animate-pulse">● RUNTIME GUARD</span>
+                {/* Right - Results */}
+                <div className="bg-slate-800/50 rounded-2xl p-3 border border-emerald-500/20 overflow-hidden flex flex-col">
+                  <div className="flex items-center justify-between mb-3 flex-shrink-0">
+                    <div className="relative w-14 h-14 flex-shrink-0">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle cx="28" cy="28" r="24" fill="none" stroke="#1e293b" strokeWidth="3" />
+                        <circle cx="28" cy="28" r="24" fill="none" stroke="#10b981" strokeWidth="3" strokeDasharray="151" strokeDashoffset="0" className="drop-shadow-[0_0_6px_#10b981]" />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-sm font-black text-emerald-400">100%</span>
+                      </div>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <div className="px-2 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded text-[9px] font-bold text-emerald-400 mb-1 shadow-lg shadow-emerald-500/10">
+                        Grade A
+                      </div>
+                      <div className="text-[8px] text-gray-400">Compliant</div>
+                    </div>
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <div className="text-[9px] text-gray-400 mb-1.5">Risk Areas</div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded p-2 text-center">
+                        <div className="text-sm font-bold text-emerald-400">0</div>
+                        <div className="text-[7px] text-gray-500">Critical</div>
+                      </div>
+                      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded p-2 text-center">
+                        <div className="text-sm font-bold text-emerald-400">0</div>
+                        <div className="text-[7px] text-gray-500">High</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="mt-2 w-full bg-cyan-500/10 rounded-full h-1">
-                <div
-                  className="bg-cyan-500 h-1 rounded-full animate-pulse"
-                  style={{ width: '95%' }}
-                ></div>
+
+              {/* Status Bar */}
+              <div className="mt-3 flex items-center justify-between text-xs flex-shrink-0">
+                <span className="text-gray-500">Engine: <span className="text-emerald-400">Ready</span></span>
+                <span className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/50" />
+                  <span className="text-emerald-400">ASSESSMENT COMPLETE</span>
+                </span>
               </div>
             </div>
           </div>
@@ -634,57 +689,57 @@ const RuntimeGuardDetail: React.FC = () => {
 
         {/* Stats Section */}
         <div ref={contentRef} className="space-y-40 mb-40">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-cyan-500/10 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-24 border-y border-purple-500/10 text-center">
             <div className="space-y-4">
-              <div className="text-6xl font-black text-cyan-500 tabular-nums">
-                {liveMetrics.attacksBlocked.toLocaleString()}
+              <div className="text-6xl font-black text-purple-500 tabular-nums">
+                8+
               </div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                Attacks Blocked
+                Frameworks
               </div>
-              <div className="w-full bg-cyan-500/10 rounded-full h-1">
+              <div className="w-full bg-purple-500/10 rounded-full h-1">
                 <div
-                  className="bg-cyan-500 h-1 rounded-full animate-pulse"
+                  className="bg-purple-500 h-1 rounded-full animate-pulse"
                   style={{ width: '97%' }}
                 ></div>
               </div>
             </div>
             <div className="space-y-4">
               <div className="text-6xl font-black text-white">
-                {liveMetrics.responseTime.toFixed(1)}ms
+                100+
               </div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                Response Time
+                Controls
               </div>
               <div className="w-full bg-white/5 rounded-full h-1">
                 <div
-                  className="bg-green-500 h-1 rounded-full animate-pulse"
+                  className="bg-indigo-500 h-1 rounded-full animate-pulse"
                   style={{ width: '99%' }}
                 ></div>
               </div>
             </div>
             <div className="space-y-4">
               <div className="text-6xl font-black text-white">
-                {liveMetrics.frameworksProtected}
+                &lt;3s
               </div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                Frameworks Protected
+                Assessment Time
               </div>
               <div className="w-full bg-white/5 rounded-full h-1">
-                <div className="bg-blue-500 h-1 rounded-full" style={{ width: '85%' }}></div>
+                <div className="bg-emerald-500 h-1 rounded-full" style={{ width: '85%' }}></div>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="text-6xl font-black text-cyan-500">
-                {liveMetrics.uptime.toFixed(2)}%
+              <div className="text-6xl font-black text-purple-500">
+                AI
               </div>
               <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30">
-                Uptime
+                Powered
               </div>
-              <div className="w-full bg-cyan-500/10 rounded-full h-1">
+              <div className="w-full bg-purple-500/10 rounded-full h-1">
                 <div
-                  className="bg-cyan-500 h-1 rounded-full animate-pulse"
-                  style={{ width: `${liveMetrics.uptime}%` }}
+                  className="bg-purple-500 h-1 rounded-full animate-pulse"
+                  style={{ width: '100%' }}
                 ></div>
               </div>
             </div>
@@ -692,13 +747,13 @@ const RuntimeGuardDetail: React.FC = () => {
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-cyan-500/20 transition-all group hover:shadow-2xl hover:shadow-cyan-500/5">
-              <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-500 group-hover:scale-110 transition-transform">
+            <div className="space-y-8 glass p-10 rounded-[3rem] border border-white/5 hover:border-purple-500/20 transition-all group hover:shadow-2xl hover:shadow-purple-500/5">
+              <div className="w-16 h-16 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
                 <Shield className="w-8 h-8" />
               </div>
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">RASP Protection</h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold">Multi-Framework</h3>
               <p className="text-white/50 leading-relaxed">
-                Runtime Application Self-Protection that blocks attacks from within the application
+                Support for GDPR, HIPAA, PCI DSS, SOX, ISO 27001, NIST CSF, SOC 2, and CCPA
                 context.
               </p>
               <div className="flex items-center gap-2 text-cyan-400 text-sm font-mono">

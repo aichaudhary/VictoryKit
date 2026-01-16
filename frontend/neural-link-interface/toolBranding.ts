@@ -81,6 +81,19 @@ export const TOOL_BRANDINGS: Record<string, ToolBranding> = {
     icon: '🎣',
     subdomain: 'phishnetai',
   },
+  vulnscan: {
+    id: 'vulnscan',
+    name: 'VulnScan',
+    tagline: 'Enterprise Vulnerability Scanner',
+    primaryColor: '#f59e0b',
+    gradientFrom: 'from-amber-500',
+    gradientTo: 'to-orange-600',
+    textColor: 'text-amber-400',
+    borderColor: 'border-amber-500/30',
+    bgColor: 'bg-amber-500/10',
+    icon: '🔍',
+    subdomain: 'vulnscan',
+  },
   // Default branding (fallback)
   default: {
     id: 'default',

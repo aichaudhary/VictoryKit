@@ -45,6 +45,9 @@ get_server_path() {
 	vulnscan) echo "/var/www/tools/vulnscan" ;;
 	pentestai) echo "/var/www/tools/pentestai" ;;
 	codesentinel) echo "/var/www/tools/codesentinel" ;;
+	runtimeguard) echo "/var/www/tools/runtimeguard" ;;
+	dataguardian) echo "/var/www/tools/dataguardian" ;;
+	incidentresponse) echo "/var/www/tools/incidentresponse" ;;
 	firewallai) echo "/var/www/tools/firewallai" ;;
 	threatradar) echo "/var/www/tools/threatradar" ;;
 	intrusiondetect) echo "/var/www/tools/intrusiondetect" ;;
@@ -79,6 +82,9 @@ get_local_path() {
 	vulnscan) echo "$PROJECT_ROOT/frontend/tools/06-vulnscan/dist" ;;
 	pentestai) echo "$PROJECT_ROOT/frontend/tools/07-pentestai/dist" ;;
 	codesentinel) echo "$PROJECT_ROOT/frontend/tools/08-codesentinel/dist" ;;
+	runtimeguard) echo "$PROJECT_ROOT/frontend/tools/09-runtimeguard/dist" ;;
+	dataguardian) echo "$PROJECT_ROOT/frontend/tools/10-dataguardian/dist" ;;
+	incidentresponse) echo "$PROJECT_ROOT/frontend/tools/11-incidentresponse/dist" ;;
 	firewallai) echo "$PROJECT_ROOT/frontend/tools/05-firewallai/dist" ;;
 	threatradar) echo "$PROJECT_ROOT/frontend/tools/06-threatradar/dist" ;;
 	intrusiondetect) echo "$PROJECT_ROOT/frontend/tools/07-intrusiondetect/dist" ;;
@@ -113,6 +119,9 @@ get_build_dir() {
 	vulnscan) echo "$PROJECT_ROOT/frontend/tools/06-vulnscan" ;;
 	pentestai) echo "$PROJECT_ROOT/frontend/tools/07-pentestai" ;;
 	codesentinel) echo "$PROJECT_ROOT/frontend/tools/08-codesentinel" ;;
+	runtimeguard) echo "$PROJECT_ROOT/frontend/tools/09-runtimeguard" ;;
+	dataguardian) echo "$PROJECT_ROOT/frontend/tools/10-dataguardian" ;;
+	incidentresponse) echo "$PROJECT_ROOT/frontend/tools/11-incidentresponse" ;;
 	firewallai) echo "$PROJECT_ROOT/frontend/tools/05-firewallai" ;;
 	threatradar) echo "$PROJECT_ROOT/frontend/tools/06-threatradar" ;;
 	intrusiondetect) echo "$PROJECT_ROOT/frontend/tools/07-intrusiondetect" ;;
@@ -135,7 +144,7 @@ get_build_dir() {
 }
 
 # All available targets
-ALL_TARGETS="maula-frontend neural-link phishguard darkwebmonitor zerodaydetect ransomshield phishnetai vulnscan pentestai codesentinel firewallai threatradar intrusiondetect fraudguard secureauth datafortress apishield logsentry accesscontrol encryptionmanager cryptovault networkmonitor audittrail threatmodel riskassess securityscore xdrplatform"
+ALL_TARGETS="maula-frontend neural-link phishguard darkwebmonitor zerodaydetect ransomshield phishnetai vulnscan pentestai codesentinel runtimeguard firewallai threatradar intrusiondetect fraudguard secureauth datafortress apishield logsentry accesscontrol encryptionmanager cryptovault networkmonitor audittrail threatmodel riskassess securityscore xdrplatform"
 
 # Colors for output
 RED='\033[0;31m'
