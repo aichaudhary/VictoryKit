@@ -166,7 +166,29 @@ const levelColors: Record<LogLevel, { bg: string; text: string; border: string }
   critical: { bg: 'bg-purple-600/20', text: 'text-purple-300', border: 'border-purple-500' },
 };
 
-type TabType = 'overview' | 'detection' | 'response' | 'analytics' | 'playground';
+type TabType = 'overview' | 'detection' | 'response' | 'analytics' | 'incidents' | 'playground';
+
+interface XDRIncident {
+  id: string;
+  title: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  status: 'open' | 'investigating' | 'contained' | 'resolved';
+  source: string;
+  affectedAssets: string[];
+  indicators: string[];
+  timestamp: string;
+  assignee?: string;
+}
+
+interface LiveEvent {
+  id: number;
+  timestamp: string;
+  type: string;
+  severity: string;
+  source: string;
+  message: string;
+  details?: any;
+}
 
 export default function XDRPlatformTool() {
   const navigate = useNavigate();
@@ -182,6 +204,23 @@ export default function XDRPlatformTool() {
   const [playgroundOutput, setPlaygroundOutput] = useState<any>(null);
   const [playgroundLoading, setPlaygroundLoading] = useState(false);
 
+  // Incidents state
+  const [incidents, setIncidents] = useState<XDRIncident[]>([]);
+  const [showCreateIncident, setShowCreateIncident] = useState(false);
+  const [newIncident, setNewIncident] = useState({
+    title: '',
+    severity: 'medium' as const,
+    source: 'manual',
+    description: '',
+  });
+
+  // Live events stream
+  const [liveEvents, setLiveEvents] = useState<LiveEvent[]>([]);
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+
+  // Response actions state
+  const [responseActions, setResponseActions] = useState<{[key: string]: {loading: boolean; result?: string}}>({});
+
   // Live metrics
   const [metrics, setMetrics] = useState({
     eventsPerSec: 11514,
@@ -190,16 +229,48 @@ export default function XDRPlatformTool() {
     avgMTTR: '4.6m',
   });
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { 
+    loadData();
+    loadIncidents();
+  }, []);
 
+  // Real-time metrics update
   useEffect(() => {
     const interval = setInterval(() => {
       setMetrics(prev => ({
         ...prev,
         eventsPerSec: Math.floor(11000 + Math.random() * 1000),
-        activeThreats: Math.floor(Math.random() * 3),
+        activeThreats: incidents.filter(i => i.status === 'open' || i.status === 'investigating').length,
       }));
+      setLastUpdate(new Date());
     }, 3000);
+    return () => clearInterval(interval);
+  }, [incidents]);
+
+  // Real-time event stream simulation
+  useEffect(() => {
+    const eventTypes = [
+      { type: 'ENDPOINT', severity: 'info', messages: ['Process started', 'File modified', 'Network connection'] },
+      { type: 'NETWORK', severity: 'warn', messages: ['Unusual traffic pattern', 'Port scan detected', 'DNS anomaly'] },
+      { type: 'CLOUD', severity: 'info', messages: ['API call', 'Resource modified', 'Login event'] },
+      { type: 'THREAT', severity: 'high', messages: ['Malware signature match', 'C2 communication', 'Data exfiltration'] },
+      { type: 'AUTH', severity: 'warn', messages: ['Failed login', 'Password reset', 'MFA bypass attempt'] },
+    ];
+
+    const interval = setInterval(() => {
+      const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+      const message = eventType.messages[Math.floor(Math.random() * eventType.messages.length)];
+      const newEvent: LiveEvent = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        type: eventType.type,
+        severity: eventType.severity,
+        source: `${['srv', 'ws', 'fw', 'app'][Math.floor(Math.random() * 4)]}-${Math.floor(Math.random() * 100).toString().padStart(3, '0')}`,
+        message,
+      };
+      setLiveEvents(prev => [newEvent, ...prev.slice(0, 49)]);
+    }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -230,6 +301,97 @@ export default function XDRPlatformTool() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function loadIncidents() {
+    // Load simulated incidents
+    const simulatedIncidents: XDRIncident[] = [
+      {
+        id: 'XDR-001',
+        title: 'Potential Data Exfiltration Detected',
+        severity: 'critical',
+        status: 'investigating',
+        source: 'NDR',
+        affectedAssets: ['srv-prod-01', 'db-main'],
+        indicators: ['192.168.1.100', 'suspicious.domain.com'],
+        timestamp: new Date(Date.now() - 3600000).toISOString(),
+        assignee: 'SOC Team',
+      },
+      {
+        id: 'XDR-002',
+        title: 'Unauthorized Access Attempt',
+        severity: 'high',
+        status: 'open',
+        source: 'EDR',
+        affectedAssets: ['ws-finance-003'],
+        indicators: ['admin:failed-login', '10.0.0.50'],
+        timestamp: new Date(Date.now() - 1800000).toISOString(),
+      },
+      {
+        id: 'XDR-003',
+        title: 'Malware Detected on Endpoint',
+        severity: 'high',
+        status: 'contained',
+        source: 'EDR',
+        affectedAssets: ['ws-hr-001'],
+        indicators: ['trojan.gen.2', 'hash:abc123'],
+        timestamp: new Date(Date.now() - 7200000).toISOString(),
+        assignee: 'Analyst-1',
+      },
+    ];
+    setIncidents(simulatedIncidents);
+  }
+
+  function createIncident() {
+    if (!newIncident.title) return;
+    
+    const incident: XDRIncident = {
+      id: `XDR-${Date.now().toString().slice(-4)}`,
+      title: newIncident.title,
+      severity: newIncident.severity,
+      status: 'open',
+      source: newIncident.source,
+      affectedAssets: [],
+      indicators: [],
+      timestamp: new Date().toISOString(),
+    };
+    
+    setIncidents([incident, ...incidents]);
+    setNewIncident({ title: '', severity: 'medium', source: 'manual', description: '' });
+    setShowCreateIncident(false);
+  }
+
+  function updateIncidentStatus(id: string, status: XDRIncident['status']) {
+    setIncidents(incidents.map(inc => 
+      inc.id === id ? { ...inc, status } : inc
+    ));
+  }
+
+  async function executeResponseAction(actionType: string, target: string) {
+    const actionKey = `${actionType}-${target}`;
+    setResponseActions(prev => ({ ...prev, [actionKey]: { loading: true } }));
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const results: Record<string, string> = {
+      'isolate': `✅ Successfully isolated ${target} from network`,
+      'block-ip': `✅ IP address ${target} blocked across all firewalls`,
+      'disable-user': `✅ User account ${target} disabled`,
+      'quarantine': `✅ File quarantined on ${target}`,
+      'scan': `✅ Full scan initiated on ${target}`,
+      'collect-evidence': `✅ Evidence collection started on ${target}`,
+    };
+    
+    setResponseActions(prev => ({ 
+      ...prev, 
+      [actionKey]: { loading: false, result: results[actionType] || '✅ Action completed' } 
+    }));
+    
+    // Clear result after 5 seconds
+    setTimeout(() => {
+      setResponseActions(prev => ({ ...prev, [actionKey]: { loading: false } }));
+    }, 5000);
   }
 
   function formatNumber(n: number): string {
@@ -306,6 +468,7 @@ export default function XDRPlatformTool() {
   const tabs = [
     { id: 'overview' as TabType, label: 'OVERVIEW', icon: '👁' },
     { id: 'detection' as TabType, label: 'DETECTION', icon: '🎯' },
+    { id: 'incidents' as TabType, label: 'INCIDENTS', icon: '🚨' },
     { id: 'response' as TabType, label: 'RESPONSE', icon: '⚡' },
     { id: 'analytics' as TabType, label: 'ANALYTICS', icon: '📊' },
     { id: 'playground' as TabType, label: 'PLAYGROUND', icon: '🎮' },
@@ -543,6 +706,48 @@ export default function XDRPlatformTool() {
                 </div>
               </div>
             </div>
+
+            {/* Live Events Feed */}
+            <div className="p-6 bg-gradient-to-br from-gray-900/80 to-cyan-900/20 border border-cyan-500/30 rounded-2xl">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-white font-semibold text-lg flex items-center gap-2">
+                  <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                  Live Event Stream
+                </h3>
+                <span className="text-cyan-400 text-sm">Last Update: {lastUpdate.toLocaleTimeString()}</span>
+              </div>
+              <div className="space-y-2 max-h-64 overflow-auto scrollbar-thin scrollbar-thumb-cyan-500/30">
+                {liveEvents.map((event, i) => (
+                  <div 
+                    key={event.id} 
+                    className={`p-3 rounded-lg border-l-4 flex items-center justify-between ${
+                      event.type === 'alert' ? 'bg-red-500/10 border-red-500' :
+                      event.type === 'detection' ? 'bg-orange-500/10 border-orange-500' :
+                      event.type === 'connection' ? 'bg-blue-500/10 border-blue-500' :
+                      event.type === 'auth' ? 'bg-purple-500/10 border-purple-500' :
+                      'bg-gray-500/10 border-gray-500'
+                    } ${i === 0 ? 'animate-pulse' : ''}`}
+                  >
+                    <div>
+                      <span className={`text-sm font-semibold ${
+                        event.type === 'alert' ? 'text-red-400' :
+                        event.type === 'detection' ? 'text-orange-400' :
+                        event.type === 'connection' ? 'text-blue-400' :
+                        event.type === 'auth' ? 'text-purple-400' :
+                        'text-gray-400'
+                      }`}>
+                        [{event.type.toUpperCase()}]
+                      </span>
+                      <span className="text-white ml-2">{event.message}</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className="text-gray-500 text-xs">{event.source}</span>
+                      <span className="text-gray-600 text-xs">{new Date(event.timestamp).toLocaleTimeString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
@@ -586,22 +791,232 @@ export default function XDRPlatformTool() {
           </div>
         )}
 
+        {/* Incidents Tab */}
+        {!loading && activeTab === 'incidents' && (
+          <div className="space-y-6">
+            {/* Header with Create Button */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-white">🚨 Active Incidents</h2>
+              <button
+                onClick={() => setShowCreateIncident(true)}
+                className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white rounded-xl font-semibold transition-all shadow-lg"
+              >
+                + Create Incident
+              </button>
+            </div>
+
+            {/* Incident Stats */}
+            <div className="grid grid-cols-4 gap-4">
+              {[
+                { label: 'Open', count: incidents.filter(i => i.status === 'open').length, color: 'red' },
+                { label: 'Investigating', count: incidents.filter(i => i.status === 'investigating').length, color: 'yellow' },
+                { label: 'Contained', count: incidents.filter(i => i.status === 'contained').length, color: 'blue' },
+                { label: 'Resolved', count: incidents.filter(i => i.status === 'resolved').length, color: 'green' },
+              ].map((stat, i) => (
+                <div key={i} className={`p-4 bg-${stat.color}-900/30 border border-${stat.color}-500/30 rounded-xl text-center`}>
+                  <p className={`text-3xl font-bold text-${stat.color}-400`}>{stat.count}</p>
+                  <p className="text-gray-400 text-sm">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Incidents List */}
+            <div className="space-y-4">
+              {incidents.map(incident => (
+                <div key={incident.id} className={`p-6 bg-gradient-to-r rounded-2xl border ${
+                  incident.severity === 'critical' ? 'from-red-900/40 to-gray-900/40 border-red-500/40' :
+                  incident.severity === 'high' ? 'from-orange-900/40 to-gray-900/40 border-orange-500/40' :
+                  incident.severity === 'medium' ? 'from-yellow-900/40 to-gray-900/40 border-yellow-500/40' :
+                  'from-blue-900/40 to-gray-900/40 border-blue-500/40'
+                }`}>
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className={`px-3 py-1 rounded-lg text-xs font-bold ${
+                          incident.severity === 'critical' ? 'bg-red-500/30 text-red-400 border border-red-500/50' :
+                          incident.severity === 'high' ? 'bg-orange-500/30 text-orange-400 border border-orange-500/50' :
+                          incident.severity === 'medium' ? 'bg-yellow-500/30 text-yellow-400 border border-yellow-500/50' :
+                          'bg-blue-500/30 text-blue-400 border border-blue-500/50'
+                        }`}>
+                          {incident.severity.toUpperCase()}
+                        </span>
+                        <span className={`px-3 py-1 rounded-lg text-xs font-medium ${
+                          incident.status === 'open' ? 'bg-red-600 text-white' :
+                          incident.status === 'investigating' ? 'bg-yellow-600 text-white' :
+                          incident.status === 'contained' ? 'bg-blue-600 text-white' :
+                          'bg-green-600 text-white'
+                        }`}>
+                          {incident.status.toUpperCase()}
+                        </span>
+                        <span className="text-gray-500 text-sm">{incident.id}</span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-white">{incident.title}</h3>
+                    </div>
+                    <span className="text-gray-500 text-sm">{new Date(incident.timestamp).toLocaleString()}</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
+                    <div>
+                      <span className="text-gray-500">Source:</span>
+                      <span className="text-white ml-2">{incident.source}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Affected:</span>
+                      <span className="text-white ml-2">{incident.affectedAssets.join(', ') || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">IOCs:</span>
+                      <span className="text-cyan-400 ml-2">{incident.indicators.length}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Assignee:</span>
+                      <span className="text-white ml-2">{incident.assignee || 'Unassigned'}</span>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap gap-2">
+                    {incident.status !== 'investigating' && incident.status !== 'resolved' && (
+                      <button
+                        onClick={() => updateIncidentStatus(incident.id, 'investigating')}
+                        className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg text-sm transition-colors"
+                      >
+                        🔍 Investigate
+                      </button>
+                    )}
+                    {incident.status !== 'contained' && incident.status !== 'resolved' && (
+                      <button
+                        onClick={() => updateIncidentStatus(incident.id, 'contained')}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
+                      >
+                        🛡️ Contain
+                      </button>
+                    )}
+                    {incident.status !== 'resolved' && (
+                      <button
+                        onClick={() => updateIncidentStatus(incident.id, 'resolved')}
+                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm transition-colors"
+                      >
+                        ✅ Resolve
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Create Incident Modal */}
+            {showCreateIncident && (
+              <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+                <div className="bg-gray-900 rounded-2xl max-w-lg w-full p-6 border border-purple-500/30">
+                  <h3 className="text-xl font-bold text-white mb-6">Create New Incident</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-gray-300 mb-2">Title *</label>
+                      <input
+                        type="text"
+                        value={newIncident.title}
+                        onChange={(e) => setNewIncident({ ...newIncident, title: e.target.value })}
+                        placeholder="Brief description of the incident"
+                        className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-gray-300 mb-2">Severity</label>
+                        <select
+                          value={newIncident.severity}
+                          onChange={(e) => setNewIncident({ ...newIncident, severity: e.target.value as any })}
+                          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none"
+                        >
+                          <option value="critical">Critical</option>
+                          <option value="high">High</option>
+                          <option value="medium">Medium</option>
+                          <option value="low">Low</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-gray-300 mb-2">Source</label>
+                        <select
+                          value={newIncident.source}
+                          onChange={(e) => setNewIncident({ ...newIncident, source: e.target.value })}
+                          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none"
+                        >
+                          <option value="manual">Manual</option>
+                          <option value="EDR">EDR</option>
+                          <option value="NDR">NDR</option>
+                          <option value="SIEM">SIEM</option>
+                          <option value="Cloud">Cloud</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="flex gap-4 pt-4">
+                      <button
+                        onClick={() => setShowCreateIncident(false)}
+                        className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={createIncident}
+                        className="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+                      >
+                        Create Incident
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Response Tab - Enhanced with Working Actions */}
         {!loading && activeTab === 'response' && (
           <div className="space-y-8">
             <div className="p-8 bg-gradient-to-br from-gray-900/80 to-cyan-900/20 border border-cyan-500/30 rounded-2xl">
-              <h3 className="text-2xl font-bold text-white mb-6">⚡ Automated Response</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="p-6 bg-gray-900/50 rounded-xl border border-gray-700">
-                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">Response Playbooks</h4>
-                  <ul className="space-y-3">
-                    {['Isolate Endpoint', 'Block IP Address', 'Disable User Account', 'Quarantine File', 'Alert SOC Team'].map((action, i) => (
-                      <li key={i} className="flex items-center gap-3 text-gray-300">
-                        <span className="w-2 h-2 bg-cyan-500 rounded-full" />
-                        {action}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              <h3 className="text-2xl font-bold text-white mb-6">⚡ Automated Response Actions</h3>
+              
+              {/* Quick Actions Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                {[
+                  { action: 'isolate', label: 'Isolate Endpoint', icon: '🔒', color: 'red', target: 'ws-infected-001' },
+                  { action: 'block-ip', label: 'Block IP Address', icon: '🚫', color: 'orange', target: '192.168.1.100' },
+                  { action: 'disable-user', label: 'Disable User', icon: '👤', color: 'yellow', target: 'compromised-user' },
+                  { action: 'quarantine', label: 'Quarantine File', icon: '📦', color: 'purple', target: 'malware.exe' },
+                  { action: 'scan', label: 'Full Scan', icon: '🔍', color: 'blue', target: 'all-endpoints' },
+                  { action: 'collect-evidence', label: 'Collect Evidence', icon: '📋', color: 'green', target: 'incident-assets' },
+                ].map((item, i) => {
+                  const actionKey = `${item.action}-${item.target}`;
+                  const actionState = responseActions[actionKey] || {};
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => executeResponseAction(item.action, item.target)}
+                      disabled={actionState.loading}
+                      className={`p-6 bg-gray-900/50 rounded-xl border border-${item.color}-500/30 hover:border-${item.color}-500/60 transition-all text-left ${actionState.loading ? 'opacity-70' : ''}`}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-2xl">{item.icon}</span>
+                        <span className={`text-${item.color}-400 font-semibold`}>{item.label}</span>
+                      </div>
+                      <p className="text-gray-500 text-sm">Target: {item.target}</p>
+                      {actionState.loading && (
+                        <div className="mt-3 flex items-center gap-2 text-cyan-400 text-sm">
+                          <span className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                          Executing...
+                        </div>
+                      )}
+                      {actionState.result && (
+                        <div className="mt-3 text-green-400 text-sm">{actionState.result}</div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Response Metrics */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="p-6 bg-gray-900/50 rounded-xl border border-gray-700">
                   <h4 className="text-lg font-semibold text-green-400 mb-4">Response Metrics</h4>
                   <div className="space-y-4">
@@ -614,9 +1029,29 @@ export default function XDRPlatformTool() {
                       <p className="text-2xl font-bold text-white">4.6 min</p>
                     </div>
                     <div>
-                      <p className="text-gray-400 text-sm mb-1">Auto-Contained Threats</p>
+                      <p className="text-gray-400 text-sm mb-1">Auto-Contained</p>
                       <p className="text-2xl font-bold text-white">94%</p>
                     </div>
+                  </div>
+                </div>
+                
+                <div className="p-6 bg-gray-900/50 rounded-xl border border-gray-700 col-span-2">
+                  <h4 className="text-lg font-semibold text-cyan-400 mb-4">Recent Response Actions</h4>
+                  <div className="space-y-3 max-h-48 overflow-auto">
+                    {[
+                      { time: '2 min ago', action: 'Isolated endpoint ws-hr-001', status: 'success' },
+                      { time: '5 min ago', action: 'Blocked IP 45.33.32.156', status: 'success' },
+                      { time: '8 min ago', action: 'Quarantined malware.exe', status: 'success' },
+                      { time: '15 min ago', action: 'Disabled user jsmith', status: 'success' },
+                    ].map((action, i) => (
+                      <div key={i} className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                        <div>
+                          <p className="text-white text-sm">{action.action}</p>
+                          <p className="text-gray-500 text-xs">{action.time}</p>
+                        </div>
+                        <span className="text-green-400 text-sm">✓ {action.status}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

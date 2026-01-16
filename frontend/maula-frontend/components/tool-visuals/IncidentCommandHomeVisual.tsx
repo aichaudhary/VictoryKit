@@ -32,7 +32,7 @@ const IncidentCommandHomeVisual: React.FC = () => {
             <AlertTriangle className="w-3.5 h-3.5 text-white" />
           </div>
           <div>
-            <span className="text-white text-xs font-bold">incidentcommand</span>
+            <span className="text-white text-xs font-bold">Incident Response</span>
             <p className="text-white/40 text-[8px]">AI-Powered Security Incident Management</p>
           </div>
         </div>

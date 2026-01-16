@@ -1,15 +1,34 @@
 /**
  * WebSocket Hook for Real-Time Incident Updates
- * Connects to incidentcommand backend WebSocket
+ * Connects to incidentresponse backend WebSocket
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-const WS_URL = import.meta.env.VITE_incidentcommand_WS_URL || 'http://localhost:4011';
+const WS_URL = import.meta.env.VITE_INCIDENTRESPONSE_WS_URL || 'http://localhost:4011';
 
 export interface WebSocketEvent {
   type: string;
+  incidentId?: string;
+  incident?: {
+    title?: string;
+    severity?: string;
+    status?: string;
+  };
+  event?: {
+    event?: string;
+  };
+  results?: {
+    enrichedCount?: number;
+  };
+  eventsFound?: number;
+  matchCount?: number;
+  endpointsAffected?: number;
+  provider?: string;
+  riskScore?: number;
+  channels?: string[];
+  action?: string;
   [key: string]: unknown;
 }
 

@@ -440,7 +440,7 @@ const IncidentResponseDetail: React.FC = () => {
           <button onClick={() => setView('home')} className="group flex items-center gap-3 text-[10px] font-black tracking-[0.4em] uppercase text-white/40 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Ecosystem
           </button>
-          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">IncidentCommand Enterprise v3.1</span>
+          <span className="text-[10px] font-black tracking-[0.4em] uppercase text-white/40">Incident Response Enterprise v3.1</span>
         </div>
 
         {/* Hero Section */}
@@ -457,7 +457,7 @@ const IncidentResponseDetail: React.FC = () => {
               AI-Powered Security Incident Management. Streamline incident response with automated playbooks, real-time coordination, and comprehensive analytics.
             </p>
             <div className="flex gap-6 pt-4">
-              <a href="https://incidentcommand.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-rose-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-rose-500/20 flex items-center gap-2">
+              <a href="https://incidentresponse.maula.ai" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-rose-500 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:brightness-125 transition-all shadow-2xl shadow-rose-500/20 flex items-center gap-2">
                 <Bell className="w-4 h-4" /> Response: Active
               </a>
               <div className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-xs tracking-[0.3em] uppercase hover:bg-white/10 transition-all">
@@ -475,7 +475,7 @@ const IncidentResponseDetail: React.FC = () => {
                   <div className="w-5 h-5 rounded-lg bg-rose-500 flex items-center justify-center">
                     <AlertTriangle className="w-3 h-3 text-white" />
                   </div>
-                  <span className="text-white text-[10px] font-bold">incidentcommand</span>
+                  <span className="text-white text-[10px] font-bold">Incident Response</span>
                 </div>
                 <div className="px-2 py-0.5 bg-rose-500 rounded text-[8px] text-white font-medium">
                   ✨ AI Assistant
@@ -730,7 +730,7 @@ const IncidentResponseDetail: React.FC = () => {
           <button onClick={() => setView('home')} className="px-16 py-8 bg-white/5 border border-white/10 rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:bg-white/10 transition-all">
             Return Home
           </button>
-          <a href="https://incidentcommand.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-rose-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl shadow-rose-500/20 flex items-center gap-4">
+          <a href="https://incidentresponse.maula.ai" target="_blank" rel="noopener noreferrer" className="px-16 py-8 bg-rose-500 text-white rounded-[2.5rem] font-black text-sm tracking-[0.4em] uppercase hover:brightness-110 shadow-2xl shadow-rose-500/20 flex items-center gap-4">
             Manage Incidents <AlertTriangle className="w-5 h-5" />
           </a>
         </div>

@@ -46,11 +46,11 @@ const eventMessages: Record<string, (data: WebSocketEvent) => { message: string;
   }),
   'incident:edr': (data) => ({
     message: `EDR scan complete: ${data.matchCount || 0} matches, ${data.endpointsAffected || 0} endpoints`,
-    severity: data.matchCount > 0 ? 'warning' : 'success',
+    severity: (data.matchCount ?? 0) > 0 ? 'warning' : 'success',
   }),
   'incident:analysis': (data) => ({
     message: `AI analysis complete (${data.provider || 'AI'}): Risk score ${data.riskScore || 'N/A'}`,
-    severity: data.riskScore > 70 ? 'error' : 'info',
+    severity: (data.riskScore ?? 0) > 70 ? 'error' : 'info',
   }),
   'incident:notification': (data) => ({
     message: `Notifications sent via ${(data.channels as string[])?.join(', ') || 'channels'}`,

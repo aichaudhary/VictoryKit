@@ -8,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  incidentcommandApi,
+  incidentresponseApi,
   simulatedData,
   type Incident,
   type IncidentDashboard,
@@ -17,7 +17,7 @@ import {
   type IncidentSeverity,
   type IncidentStatus,
   type IncidentCategory,
-} from '../api/incidentcommand.api';
+} from '../api/incidentresponse.api';
 
 // ============= Severity Colors =============
 
@@ -232,9 +232,9 @@ function formatMinutes(minutes: number): string {
 
 // ============= Main Component =============
 
-type TabType = 'dashboard' | 'incidents' | 'playbooks' | 'create';
+type TabType = 'dashboard' | 'incidents' | 'playbooks' | 'create' | 'create-playbook';
 
-export default function incidentcommandTool() {
+export default function IncidentResponseTool() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [dashboard, setDashboard] = useState<IncidentDashboard | null>(null);
@@ -258,11 +258,33 @@ export default function incidentcommandTool() {
     category: 'other' as IncidentCategory,
   });
 
+  // New playbook form
+  const [newPlaybook, setNewPlaybook] = useState({
+    name: '',
+    description: '',
+    category: 'other' as IncidentCategory,
+    severity: ['medium'] as IncidentSeverity[],
+    automatable: false,
+    estimatedTime: 60,
+    steps: [{ order: 1, name: '', description: '', type: 'manual' as const, actions: [''], expectedDuration: 15 }],
+  });
+
+  // Real-time update interval
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+
   // ============= Data Fetching =============
 
   useEffect(() => {
     loadDashboard();
-  }, []);
+    // Set up real-time updates every 10 seconds
+    const interval = setInterval(() => {
+      setLastUpdate(new Date());
+      if (activeTab === 'dashboard') loadDashboard();
+      if (activeTab === 'incidents') loadIncidents();
+      if (activeTab === 'playbooks') loadPlaybooks();
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [activeTab]);
 
   useEffect(() => {
     if (activeTab === 'incidents') {
@@ -275,7 +297,7 @@ export default function incidentcommandTool() {
   async function loadDashboard() {
     setLoading(true);
     try {
-      const response = await incidentcommandApi.getDashboard();
+      const response = await incidentresponseApi.getDashboard();
       if (response.success && response.data) {
         setDashboard(response.data);
         setUsingSimulated(false);
@@ -299,7 +321,7 @@ export default function incidentcommandTool() {
       if (severityFilter) filters.severity = severityFilter;
       if (statusFilter) filters.status = statusFilter;
 
-      const response = await incidentcommandApi.getIncidents(filters);
+      const response = await incidentresponseApi.getIncidents(filters);
       if (response.success && response.data) {
         setIncidents(response.data.incidents);
         setUsingSimulated(false);
@@ -329,7 +351,7 @@ export default function incidentcommandTool() {
   async function loadPlaybooks() {
     setLoading(true);
     try {
-      const response = await incidentcommandApi.getPlaybooks();
+      const response = await incidentresponseApi.getPlaybooks();
       if (response.success && response.data) {
         setPlaybooks(response.data.playbooks);
         setUsingSimulated(false);
@@ -348,7 +370,7 @@ export default function incidentcommandTool() {
   async function analyzeIncident(incident: Incident) {
     setLoading(true);
     try {
-      const response = await incidentcommandApi.analyzeIncident(incident.incidentId);
+      const response = await incidentresponseApi.analyzeIncident(incident.incidentId);
       if (response.success && response.data) {
         setAnalysis(response.data);
       } else {
@@ -371,7 +393,7 @@ export default function incidentcommandTool() {
     setError(null);
 
     try {
-      const response = await incidentcommandApi.createIncident(newIncident);
+      const response = await incidentresponseApi.createIncident(newIncident);
       if (response.success && response.data) {
         setIncidents([response.data.incident, ...incidents]);
         setNewIncident({ title: '', description: '', severity: 'medium', category: 'other' });
@@ -396,9 +418,91 @@ export default function incidentcommandTool() {
     }
   }
 
+  async function createPlaybook() {
+    if (!newPlaybook.name) {
+      setError('Playbook name is required');
+      return;
+    }
+    if (!newPlaybook.steps[0]?.name) {
+      setError('At least one step with a name is required');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Create playbook via API (when backend is ready)
+      // For now, simulate creation
+      const playbookId = `PB-${Date.now()}`;
+      const simPlaybook: Playbook = {
+        _id: playbookId,
+        playbookId,
+        name: newPlaybook.name,
+        description: newPlaybook.description,
+        category: newPlaybook.category,
+        severity: newPlaybook.severity,
+        steps: newPlaybook.steps.map((step, idx) => ({
+          ...step,
+          order: idx + 1,
+          actions: step.actions.filter(a => a.trim()),
+          checklistItems: [],
+        })),
+        automatable: newPlaybook.automatable,
+        estimatedTime: newPlaybook.estimatedTime,
+        isActive: true,
+        version: '1.0.0',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      setPlaybooks([simPlaybook, ...playbooks]);
+      setNewPlaybook({
+        name: '',
+        description: '',
+        category: 'other',
+        severity: ['medium'],
+        automatable: false,
+        estimatedTime: 60,
+        steps: [{ order: 1, name: '', description: '', type: 'manual', actions: [''], expectedDuration: 15 }],
+      });
+      setActiveTab('playbooks');
+      setUsingSimulated(true);
+    } catch (err) {
+      setError('Failed to create playbook');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function addPlaybookStep() {
+    setNewPlaybook({
+      ...newPlaybook,
+      steps: [
+        ...newPlaybook.steps,
+        { order: newPlaybook.steps.length + 1, name: '', description: '', type: 'manual', actions: [''], expectedDuration: 15 }
+      ]
+    });
+  }
+
+  function removePlaybookStep(index: number) {
+    if (newPlaybook.steps.length > 1) {
+      setNewPlaybook({
+        ...newPlaybook,
+        steps: newPlaybook.steps.filter((_, i) => i !== index)
+      });
+    }
+  }
+
+  function updatePlaybookStep(index: number, field: string, value: any) {
+    const updatedSteps = [...newPlaybook.steps];
+    updatedSteps[index] = { ...updatedSteps[index], [field]: value };
+    setNewPlaybook({ ...newPlaybook, steps: updatedSteps });
+  }
+
   async function updateIncidentStatus(incident: Incident, status: IncidentStatus) {
     try {
-      const response = await incidentcommandApi.updateStatus(incident.incidentId, status);
+      const response = await incidentresponseApi.updateStatus(incident.incidentId, status);
       if (response.success && response.data) {
         setIncidents(
           incidents.map((i) => (i.incidentId === incident.incidentId ? response.data!.incident : i))
@@ -755,7 +859,10 @@ export default function incidentcommandTool() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-white">Response Playbooks</h2>
-          <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+          <button 
+            onClick={() => setActiveTab('create-playbook')}
+            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+          >
             + Create Playbook
           </button>
         </div>
@@ -879,6 +986,219 @@ export default function incidentcommandTool() {
     );
   }
 
+  function renderCreatePlaybookForm() {
+    const categories: IncidentCategory[] = [
+      'malware',
+      'phishing',
+      'data-breach',
+      'ddos',
+      'unauthorized-access',
+      'insider-threat',
+      'ransomware',
+      'other',
+    ];
+
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-gray-800/50 rounded-2xl p-6 border border-purple-500/30">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="text-3xl">📋</span>
+            <div>
+              <h2 className="text-xl font-bold text-white">Create Response Playbook</h2>
+              <p className="text-gray-400 text-sm">Define automated response procedures for incident types</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {/* Basic Info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Playbook Name *</label>
+                <input
+                  type="text"
+                  value={newPlaybook.name}
+                  onChange={(e) => setNewPlaybook({ ...newPlaybook, name: e.target.value })}
+                  placeholder="e.g., Ransomware Response Protocol"
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-300 mb-2">Category</label>
+                <select
+                  value={newPlaybook.category}
+                  onChange={(e) => setNewPlaybook({ ...newPlaybook, category: e.target.value as IncidentCategory })}
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none"
+                >
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat.replace('-', ' ')}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-300 mb-2">Description</label>
+              <textarea
+                value={newPlaybook.description}
+                onChange={(e) => setNewPlaybook({ ...newPlaybook, description: e.target.value })}
+                placeholder="Describe what this playbook does and when it should be used..."
+                rows={3}
+                className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none resize-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-gray-300 mb-2">Estimated Time (min)</label>
+                <input
+                  type="number"
+                  value={newPlaybook.estimatedTime}
+                  onChange={(e) => setNewPlaybook({ ...newPlaybook, estimatedTime: parseInt(e.target.value) || 0 })}
+                  min="1"
+                  className="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-purple-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-end">
+                <label className="flex items-center gap-3 p-3 bg-gray-900 border border-gray-700 rounded-lg cursor-pointer hover:border-purple-500 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={newPlaybook.automatable}
+                    onChange={(e) => setNewPlaybook({ ...newPlaybook, automatable: e.target.checked })}
+                    className="w-5 h-5 rounded bg-gray-800 border-gray-600 text-purple-500 focus:ring-purple-500"
+                  />
+                  <span className="text-gray-300">Automatable</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Steps Section */}
+            <div className="border-t border-gray-700 pt-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white">Response Steps</h3>
+                <button
+                  onClick={addPlaybookStep}
+                  className="px-3 py-1.5 bg-purple-600/30 hover:bg-purple-600/50 text-purple-400 rounded-lg text-sm transition-colors"
+                >
+                  + Add Step
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {newPlaybook.steps.map((step, index) => (
+                  <div key={index} className="bg-gray-900/50 rounded-xl p-4 border border-gray-700">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold">
+                          {index + 1}
+                        </span>
+                        <span className="text-gray-400 text-sm">Step {index + 1}</span>
+                      </span>
+                      {newPlaybook.steps.length > 1 && (
+                        <button
+                          onClick={() => removePlaybookStep(index)}
+                          className="text-red-400 hover:text-red-300 text-sm"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-gray-400 text-sm mb-1">Step Name *</label>
+                        <input
+                          type="text"
+                          value={step.name}
+                          onChange={(e) => updatePlaybookStep(index, 'name', e.target.value)}
+                          placeholder="e.g., Isolate Affected Systems"
+                          className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-400 text-sm mb-1">Type</label>
+                        <select
+                          value={step.type}
+                          onChange={(e) => updatePlaybookStep(index, 'type', e.target.value)}
+                          className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none text-sm"
+                        >
+                          <option value="manual">Manual</option>
+                          <option value="automated">Automated</option>
+                          <option value="approval">Requires Approval</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="mt-3">
+                      <label className="block text-gray-400 text-sm mb-1">Description</label>
+                      <textarea
+                        value={step.description}
+                        onChange={(e) => updatePlaybookStep(index, 'description', e.target.value)}
+                        placeholder="Detailed instructions for this step..."
+                        rows={2}
+                        className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none resize-none text-sm"
+                      />
+                    </div>
+
+                    <div className="mt-3">
+                      <label className="block text-gray-400 text-sm mb-1">Actions (comma-separated)</label>
+                      <input
+                        type="text"
+                        value={step.actions.join(', ')}
+                        onChange={(e) => updatePlaybookStep(index, 'actions', e.target.value.split(',').map(a => a.trim()))}
+                        placeholder="e.g., Block network access, Disable user account, Capture memory dump"
+                        className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none text-sm"
+                      />
+                    </div>
+
+                    <div className="mt-3 flex items-center gap-4">
+                      <div>
+                        <label className="block text-gray-400 text-sm mb-1">Expected Duration (min)</label>
+                        <input
+                          type="number"
+                          value={step.expectedDuration}
+                          onChange={(e) => updatePlaybookStep(index, 'expectedDuration', parseInt(e.target.value) || 0)}
+                          min="1"
+                          className="w-24 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-purple-500 focus:outline-none text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {error && (
+              <div className="p-3 bg-red-900/30 border border-red-500/50 rounded-lg text-red-400">
+                {error}
+              </div>
+            )}
+
+            <div className="flex gap-4 pt-4">
+              <button
+                onClick={() => setActiveTab('playbooks')}
+                className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={createPlaybook}
+                disabled={loading}
+                className="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Creating...' : 'Create Playbook'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // ============= Main Render =============
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
@@ -910,7 +1230,7 @@ export default function incidentcommandTool() {
                 🚨
               </div>
               <div>
-                <h1 className="text-xl font-bold">IncidentCommand</h1>
+                <h1 className="text-xl font-bold">Incident Response</h1>
                 <p className="text-gray-400 text-sm">AI-Powered Security Incident Management</p>
               </div>
             </div>
@@ -922,7 +1242,7 @@ export default function incidentcommandTool() {
                 </span>
               )}
 
-              {/* AI Assistant Button */}
+              {/* AI Assistant Button - Links to Neural Link Interface */}
               <a
                 href="/neural-link/"
                 className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-purple-500/30 hover:scale-105"
@@ -969,14 +1289,21 @@ export default function incidentcommandTool() {
             {activeTab === 'incidents' && renderIncidents()}
             {activeTab === 'playbooks' && renderPlaybooks()}
             {activeTab === 'create' && renderCreateForm()}
+            {activeTab === 'create-playbook' && renderCreatePlaybookForm()}
           </>
         )}
+
+        {/* Real-time Update Indicator */}
+        <div className="fixed bottom-4 right-4 flex items-center gap-2 px-3 py-2 bg-gray-800/90 rounded-lg border border-gray-700 text-xs text-gray-400">
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          Live • Updated {lastUpdate.toLocaleTimeString()}
+        </div>
       </main>
 
       {/* Footer */}
       <footer className="border-t border-gray-800 py-4 mt-12">
         <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-          <p>incidentcommand Tool 11 • VictoryKit Security Platform</p>
+          <p>Incident Response Tool 11 • VictoryKit Security Platform</p>
         </div>
       </footer>
     </div>

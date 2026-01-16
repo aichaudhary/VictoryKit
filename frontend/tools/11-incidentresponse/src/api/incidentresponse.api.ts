@@ -185,7 +185,7 @@ export interface Pagination {
 
 // ============= API Client =============
 
-class incidentcommandApi {
+class IncidentResponseApi {
   private baseUrl: string;
 
   constructor(baseUrl: string = API_BASE_URL) {
@@ -469,10 +469,10 @@ class incidentcommandApi {
 }
 
 // Export singleton instance
-export const incidentcommandApi = new incidentcommandApi();
+export const incidentresponseApi = new IncidentResponseApi();
 
-// Export class for testing/custom instances
-export { incidentcommandApi };
+// Alias for backward compatibility
+export const incidentApi = incidentresponseApi;
 
 // ============= Simulation Helper =============
 

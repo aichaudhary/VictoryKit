@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { incidentApi } from '../api/incidentcommand.api';
+import { incidentApi } from '../api/incidentresponse.api';
 
 interface IntegrationActionsPanelProps {
   incidentId: string;
@@ -213,7 +213,7 @@ export const IntegrationActionsPanel: React.FC<IntegrationActionsPanelProps> = (
                 </div>
               )}
 
-              {state.result && !state.loading && (
+              {Boolean(state.result) && !state.loading && (
                 <div className="mt-2 text-xs text-green-300 flex items-center gap-1">
                   <span>✓</span> Complete
                 </div>
