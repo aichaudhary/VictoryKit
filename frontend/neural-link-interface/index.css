@@ -95,3 +95,23 @@ body {
   animation: node-entry 0.5s ease-out forwards;
   opacity: 0;
 }
+
+/* Force dark mode for form elements */
+input, select, textarea, button {
+  background-color: #0a0a0a !important;
+  color: #d1d5db !important;
+  border-color: #374151 !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+select option {
+  background-color: #0a0a0a !important;
+  color: #d1d5db !important;
+}
+
+input[type="range"] {
+  background-color: #1f2937 !important;
+}
